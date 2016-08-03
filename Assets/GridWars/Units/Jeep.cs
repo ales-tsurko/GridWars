@@ -6,6 +6,7 @@ public class Jeep : GameUnit {
 	void Start () {
 		thrust = 20;
 	}
+		
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();

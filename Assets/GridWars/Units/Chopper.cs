@@ -15,12 +15,7 @@ public class Chopper : GameUnit {
 	GameObject tailRotor() {
 		return transform.Find("Group006").gameObject;
 	}
-
-	void Object_rotDY(GameObject obj, float dy) {
-		var e = obj.transform.eulerAngles;
-		obj.transform.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
-	}
-
+		
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
 		rigidBody().AddForce(transform.forward * thrust);

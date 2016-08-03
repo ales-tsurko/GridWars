@@ -7,8 +7,17 @@ public class Tank : GameUnit {
 		thrust = 14;
 	}
 
+	GameObject turret() {
+		return transform.Find("headdus1").gameObject;
+	}
+
+
 	public override void FixedUpdate () {
-		base.FixedUpdate();
+		//base.FixedUpdate();
+		rigidBody().AddForce(transform.forward * thrust);
+
+		Object_rotDY (turret (), 0.1f);
+
 	}
 
 }

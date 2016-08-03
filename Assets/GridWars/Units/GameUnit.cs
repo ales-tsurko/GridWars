@@ -76,7 +76,7 @@ public class GameUnit : MonoBehaviour {
 		return transform.position.x;
 	}
 
-	float y() {
+	public virtual float y() {
 		return transform.position.y;
 	}
 		
@@ -85,6 +85,12 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	// -----------------------
+
+	public virtual void Object_rotDY(GameObject obj, float dy) {
+		var e = obj.transform.eulerAngles;
+		obj.transform.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
+	}
+
 
 	public virtual float rotY() {
 		return transform.eulerAngles.y;
