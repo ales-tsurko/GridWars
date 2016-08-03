@@ -18,13 +18,21 @@ public class Chopper : GameUnit {
 		
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
-		rigidBody().AddForce(transform.forward * thrust);
 
 		Object_rotDY (mainRotor (), 20);
 		Object_rotDY (tailRotor (), 20);
 
-		setY(6);
+		//setY(6);
+		float cruiseHeight = 6f;
+		if (y () < cruiseHeight) {
+			rigidBody ().AddForce (transform.up * 10 * Mathf.Sqrt(cruiseHeight - y()));
 
+		} 
+
+		if (y () > 4) {
+			rigidBody().AddForce(transform.forward * thrust);
+
+		}
 	}
 		
 
