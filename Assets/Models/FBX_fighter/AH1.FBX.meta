@@ -3,6 +3,102 @@ guid: 6d662aaf3f43dd34db468f396905b995
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: Box008
+    100004: Box009
+    100006: Box011
+    100008: Box012
+    100010: Box013
+    100012: Box019
+    100014: Box020
+    100016: Box021
+    100018: Box025
+    100020: Box026
+    100022: Box027
+    100024: Box028
+    100026: Box029
+    100028: Box030
+    100030: Group001
+    100032: Group002
+    100034: Group003
+    100036: Group004
+    100038: Group005
+    100040: Group006
+    100042: Object001
+    100044: Object006
+    100046: Object007
+    100048: Object010
+    100050: Object012
+    100052: Object013
+    100054: Plane001
+    400000: //RootNode
+    400002: Box008
+    400004: Box009
+    400006: Box011
+    400008: Box012
+    400010: Box013
+    400012: Box019
+    400014: Box020
+    400016: Box021
+    400018: Box025
+    400020: Box026
+    400022: Box027
+    400024: Box028
+    400026: Box029
+    400028: Box030
+    400030: Group001
+    400032: Group002
+    400034: Group003
+    400036: Group004
+    400038: Group005
+    400040: Group006
+    400042: Object001
+    400044: Object006
+    400046: Object007
+    400048: Object010
+    400050: Object012
+    400052: Object013
+    400054: Plane001
+    2300000: Box008
+    2300002: Box009
+    2300004: Box011
+    2300006: Box012
+    2300008: Box013
+    2300010: Box019
+    2300012: Box020
+    2300014: Box021
+    2300016: Box025
+    2300018: Box026
+    2300020: Box027
+    2300022: Box028
+    2300024: Box029
+    2300026: Box030
+    2300028: Object001
+    2300030: Object006
+    2300032: Object007
+    2300034: Object010
+    2300036: Object012
+    2300038: Object013
+    3300000: Box008
+    3300002: Box009
+    3300004: Box011
+    3300006: Box012
+    3300008: Box013
+    3300010: Box019
+    3300012: Box020
+    3300014: Box021
+    3300016: Box025
+    3300018: Box026
+    3300020: Box027
+    3300022: Box028
+    3300024: Box029
+    3300026: Box030
+    3300028: Object001
+    3300030: Object006
+    3300032: Object007
+    3300034: Object010
+    3300036: Object012
+    3300038: Object013
     4300000: Object007
     4300002: Box012
     4300004: Box013
@@ -23,6 +119,7 @@ ModelImporter:
     4300034: Box021
     4300036: Box020
     4300038: Object010
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 3
@@ -30,7 +127,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 

@@ -3,8 +3,19 @@ guid: d6fd14fc2e83e444c999e8d06ae1ddf5
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: headusOBJexport
+    100004: Object005
+    400000: //RootNode
+    400002: headusOBJexport
+    400004: Object005
+    2300000: headusOBJexport
+    2300002: Object005
+    3300000: headusOBJexport
+    3300002: Object005
     4300000: headusOBJexport
     4300002: Object005
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 3
@@ -12,7 +23,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 

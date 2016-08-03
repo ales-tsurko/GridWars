@@ -6,9 +6,6 @@ public class PowerBar : MonoBehaviour {
 	public Text text;
 	public Slider slider;
 	public Image barColor;
-	public float minPower = 0f;
-	public float maxPower = 100f;
-	public float power = 0f;
 	RectTransform _t;
 
 
@@ -20,6 +17,7 @@ public class PowerBar : MonoBehaviour {
 	public void SetPosition (float left, float right, float top, float bottom){
 		_t = GetComponent<RectTransform> ();
 		_t.SetParent (GameUI.GetUIParent());
+		_t.localScale = Vector3.one;
 		_t.offsetMin = new Vector2(left, bottom);
 		_t.offsetMax = new Vector2 (-right, -top);
 	}
@@ -39,11 +37,9 @@ public class PowerBar : MonoBehaviour {
 		}
 	}
 
-	void Update() {
-		power = Mathf.Clamp(power, minPower, maxPower);
-		slider.minValue = minPower;
-		slider.maxValue = maxPower;
-		slider.value = power;
+	public void SetPower (int _amount){
+		text.text = _amount.ToString ();
+		slider.value = _amount;
 	}
 
 	public static PowerBar New(){

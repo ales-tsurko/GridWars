@@ -3,9 +3,24 @@ guid: 2f6c4188a641ba742b5448e56f478b09
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
+    100000: headdus1
+    100002: headusOBJexport
+    100004: Plane001
+    100006: //RootNode
+    400000: headdus1
+    400002: headusOBJexport
+    400004: Plane001
+    400006: //RootNode
+    2300000: headdus1
+    2300002: headusOBJexport
+    2300004: Plane001
+    3300000: headdus1
+    3300002: headusOBJexport
+    3300004: Plane001
     4300000: headusOBJexport
     4300002: Plane001
     4300004: headdus1
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 3
@@ -13,7 +28,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
     animationImportErrors: 
