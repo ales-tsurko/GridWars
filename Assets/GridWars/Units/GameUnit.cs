@@ -86,6 +86,16 @@ public class GameUnit : MonoBehaviour {
 
 	// -----------------------
 
+	public virtual float rotX() {
+		return transform.eulerAngles.x;
+	}
+
+	public virtual void setRotX(float v) {
+		var e = transform.eulerAngles;
+		transform.eulerAngles = new Vector3(v, e.y, e.z);
+	}
+
+
 	public virtual void Object_rotDY(GameObject obj, float dy) {
 		var e = obj.transform.eulerAngles;
 		obj.transform.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
@@ -99,6 +109,15 @@ public class GameUnit : MonoBehaviour {
 	public virtual void setRotY(float v) {
 		var e = transform.eulerAngles;
 		transform.eulerAngles = new Vector3(e.x, v, e.z);
+	}
+
+	public virtual float rotZ() {
+		return transform.eulerAngles.z;
+	}
+
+	public virtual void setRotZ(float v) {
+		var e = transform.eulerAngles;
+		transform.eulerAngles = new Vector3(e.x, e.y, v);
 	}
 
 	// -----------------------

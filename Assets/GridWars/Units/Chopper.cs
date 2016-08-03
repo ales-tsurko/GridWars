@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Chopper : GameUnit {
 
 	void Start () {
-		thrust = 20;
+		thrust = 10;
 	}
 		
 	GameObject mainRotor() {
@@ -18,12 +18,27 @@ public class Chopper : GameUnit {
 		
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
-		rigidBody().AddForce(transform.forward * thrust);
 
 		Object_rotDY (mainRotor (), 20);
 		Object_rotDY (tailRotor (), 20);
 
-		setY(6);
+		//setY(6);
+		float cruiseHeight = 15f;
+		float diff = cruiseHeight - y ();
+
+		if (y () < cruiseHeight) {
+			rigidBody ().AddForce (transform.up * 6 * Mathf.Sqrt(diff));
+		} 
+
+		if (y () > 4) {
+			rigidBody().AddForce(transform.forward * thrust);
+		}
+
+		/*
+		if (diff > 0) {
+			setRotZ ( diff * 2);
+		}
+		*/
 
 	}
 		
