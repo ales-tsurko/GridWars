@@ -15,6 +15,14 @@ public class Chopper : GameUnit {
 	GameObject tailRotor() {
 		return transform.Find("Group006").gameObject;
 	}
+
+	public override Vector3 forwardVector() {
+		return transform.forward;
+	}
+
+	public override Vector3 upVector() {
+		return transform.up;
+	}
 		
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
@@ -27,11 +35,11 @@ public class Chopper : GameUnit {
 		float diff = cruiseHeight - y ();
 
 		if (y () < cruiseHeight) {
-			rigidBody ().AddForce (transform.up * 6 * Mathf.Sqrt(diff));
+			rigidBody ().AddForce (upVector() * 6 * Mathf.Sqrt(diff));
 		} 
 
 		if (y () > 4) {
-			rigidBody().AddForce(transform.forward * thrust);
+			rigidBody().AddForce(forwardVector() * thrust);
 		}
 
 		/*
@@ -39,6 +47,7 @@ public class Chopper : GameUnit {
 			setRotZ ( diff * 2);
 		}
 		*/
+		//aimTowardsNearestEnemy ();
 
 	}
 		
