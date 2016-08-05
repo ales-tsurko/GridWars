@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
@@ -9,6 +10,7 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	[HideInInspector]
 	public Transform _t;
+
 	void Awake () {
 		_t = transform;
 	}
@@ -16,6 +18,21 @@ public class GameUnit : MonoBehaviour {
 	public virtual void Start () {
 		thrust = 0.0f;
 		rotationThrust = 0.1f;
+		this.EachRenderer(r => {
+			r.material = new Material(r.material);
+		});
+		GetComponent<Collider>().enabled = true;
+		GetComponent<Rigidbody>().useGravity = true;
+		this.EachMaterial(m => {
+			m.SetColor("_V_WIRE_Color", new Color(0, 0, 0, 0));
+			if (player == null) {
+				m.SetColor("_Color", Color.white);
+			}
+			else {
+				m.SetColor("_Color", player.color);
+			}
+
+		});
 	}
 
 	public virtual Rigidbody rigidBody() {

@@ -11,7 +11,15 @@ public class Tower : GameUnit {
 		}
 	}
 
-	public override void FixedUpdate () {
+	GameUnit iconUnit;
+
+	void Start() {
+		iconUnit = CreateUnit();
+		iconUnit.GetComponent<GameUnit>().enabled = false;
+		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
+	}
+
+	void FixedUpdate () {
 		GetComponent<MeshRenderer>().material = readyMaterial;
 	}
 
@@ -33,12 +41,18 @@ public class Tower : GameUnit {
 	}
 
 	void ReleaseUnit() {
+		CreateUnit();
+	}
+
+	GameUnit CreateUnit() {
 		var unitObject = Instantiate(prefabUnit);
 		unitObject.transform.position = transform.position + new Vector3(0, 1, 0);
 		unitObject.transform.rotation = transform.rotation;
 
 		var gameUnit = unitObject.GetComponent<GameUnit>();
 		gameUnit.player = player;
+
+		return gameUnit;
 	}
 
 }
