@@ -6,11 +6,16 @@ public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
 	public override void Start () {
+		isStaticUnit = true;
+
 		base.Start();
 		canAim = false;
+
+		/*
 		iconUnit = CreateUnit();
 		iconUnit.GetComponent<GameUnit>().enabled = false;
 		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
+		*/
 	}
 
 	public void OnMouseDown() {

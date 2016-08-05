@@ -40,6 +40,7 @@ GameObject:
   - 54: {fileID: 54000010246975316}
   - 65: {fileID: 65000010290668914}
   - 114: {fileID: 114000010979423438}
+  - 114: {fileID: 114000014247202992}
   m_Layer: 0
   m_Name: TankPrefab
   m_TagString: Player1
@@ -362,6 +363,7 @@ MonoBehaviour:
   _t: {fileID: 0}
   canAim: 1
   lastUpTorque: {x: 0, y: 0, z: 0}
+  isStaticUnit: 0
 --- !u!114 &114000011704038210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -382,5 +384,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eeee8a9bbe95440ca1e556eb7ececf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114000014247202992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010358598928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
