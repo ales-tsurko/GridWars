@@ -6,8 +6,16 @@ public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
 	public override void Start () {
+		isStaticUnit = true;
+
 		base.Start();
 		canAim = false;
+
+		/*
+		iconUnit = CreateUnit();
+		iconUnit.GetComponent<GameUnit>().enabled = false;
+		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
+		*/
 	}
 
 	public void OnMouseDown() {
@@ -15,6 +23,8 @@ public class Tower : GameUnit {
 			ReleaseUnit();
 		}
 	}
+
+	GameUnit iconUnit;
 
 	public override void FixedUpdate () {
 		GetComponent<MeshRenderer>().material = readyMaterial;
@@ -38,12 +48,18 @@ public class Tower : GameUnit {
 	}
 
 	public void ReleaseUnit() {
+		CreateUnit();
+	}
+
+	GameUnit CreateUnit() {
 		var unitObject = Instantiate(prefabUnit);
 		unitObject.transform.position = transform.position + new Vector3(0, 0.1f, 0);
 		unitObject.transform.rotation = transform.rotation;
 
 		var gameUnit = unitObject.GetComponent<GameUnit>();
 		gameUnit.player = player;
+
+		return gameUnit;
 	}
 
 }

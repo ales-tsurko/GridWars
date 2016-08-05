@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
@@ -10,8 +11,13 @@ public class GameUnit : MonoBehaviour {
 	public bool canAim = true;
 	[HideInInspector]
 	public Transform _t;
+
 	public GameObject target = null;
 	public float angleToTarget = 0;
+
+	public bool canAim = true;
+	public Vector3 lastUpTorque;
+	public bool isStaticUnit = false;
 
 	void Awake () {
 		_t = transform;
@@ -19,6 +25,25 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void Start () {
 		thrust = 0.0f;
+
+		if (!isStaticUnit) {
+			this.EachRenderer(r => {
+				r.material = new Material(r.material);
+			});
+			GetComponent<Collider>().enabled = true;
+			GetComponent<Rigidbody>().useGravity = true;
+			this.EachMaterial(m => {
+				m.SetColor("_V_WIRE_Color", new Color(0, 0, 0, 0));
+				if (player == null) {
+					m.SetColor("_Color", Color.white);
+				}
+				else {
+					m.SetColor("_Color", player.color);
+				}
+
+			});
+		}
+
 		rotationThrust = 1.0f;
 	}
 
