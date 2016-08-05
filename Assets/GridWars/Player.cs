@@ -9,7 +9,7 @@ public class Player {
 
 	// Use this for initialization
 	public void Start() {
-		Debug.Log(playerNumber);
+		//Debug.Log(playerNumber);
 		powerBar = PowerBar.New();
 		powerBar.SetPosition(playerNumber == 1 ? PowerBarPlacement.Left : PowerBarPlacement.Right);
 		powerBar.SetColor(playerNumber == 1 ? Color.red : Color.blue);

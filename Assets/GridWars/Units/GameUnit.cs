@@ -139,7 +139,7 @@ public class GameUnit : MonoBehaviour {
 	// -------------------
 
 	public virtual void rotateTowardObject(GameObject obj) {
-		print (tag + " target " + obj.tag);
+		//print (tag + " target " + obj.tag);
 		rotateTowardsPos (obj.transform.position);
 	}
 
