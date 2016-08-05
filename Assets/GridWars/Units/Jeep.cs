@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Jeep : GameUnit {
-	void Start () {
+	public override void Start () {
+		base.Start();
 		thrust = 20;
 	}
 

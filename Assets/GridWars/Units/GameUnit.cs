@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
+	public float rotationThrust;
 	public  Player player;
 
-	void Start () {
+	public virtual void Start () {
 		thrust = 0.0f;
+		rotationThrust = 0.1f;
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -192,7 +194,8 @@ public class GameUnit : MonoBehaviour {
 
 		//print ("angle " + Mathf.Floor(angle));
 
-		rigidBody().AddTorque(- f * angle * 0.1f, ForceMode.Force);
+		float v = angle > 0 ? Mathf.Sqrt(angle) : - Mathf.Sqrt(angle);
+		rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
 
 	}
 
