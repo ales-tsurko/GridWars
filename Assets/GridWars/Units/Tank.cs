@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Tank : GameUnit {
 	public override void Start () {
 		base.Start();
-		thrust = 14;
+		thrust = 200;
 	}
 
 	GameObject turret() {

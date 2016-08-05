@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Jeep : GameUnit {
 	public override void Start () {
 		base.Start();
-		thrust = 20;
+		thrust = 45;
+		rotationThrust = 10.0f;
 	}
 
 

@@ -53,7 +53,11 @@ public class GameManager : MonoBehaviour {
 				tower.setRotY (180*playerNum);
 				//print("adding tower " + towerNum + " for player " + players [playerNum].playerNumber);
 				tower.player = players[playerNum];
-				//tower.constructUnit ();
+
+				//if ((playerNum == 0 && towerNum == 0) || (playerNum == 1 && towerNum == 2)) {
+					tower.ReleaseUnit ();
+				//}
+
 			}
 		}
 

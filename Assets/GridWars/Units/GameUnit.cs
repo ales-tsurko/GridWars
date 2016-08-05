@@ -10,6 +10,11 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	[HideInInspector]
 	public Transform _t;
+<<<<<<< HEAD
+=======
+	public bool canAim = true;
+	public Vector3 lastUpTorque;
+>>>>>>> 8c0d8c9432640f90e30997ad32046d79e4747f8f
 
 	void Awake () {
 		_t = transform;
@@ -17,7 +22,6 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void Start () {
 		thrust = 0.0f;
-		rotationThrust = 0.1f;
 		this.EachRenderer(r => {
 			r.material = new Material(r.material);
 		});
@@ -33,6 +37,7 @@ public class GameUnit : MonoBehaviour {
 			}
 
 		});
+		rotationThrust = 1.0f;
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -209,20 +214,18 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void rotateTowardObject(GameObject obj) {
 		//print (tag + " target " + obj.tag);
-		rotateTowardsPos (obj.transform.position);
-	}
+		var targetPos = obj.transform.position;
 
-	public virtual void rotateTowardsPos(Vector3 targetPos)
-	{
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleSigned(_t.forward, targetDir, _t.up);
 
-		//print ("angle " + Mathf.Floor(angle));
+		Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+		Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
 
-		//float v = angle > 0 ? Mathf.Sqrt(Mathf.Abs(angle)) : - Mathf.Sqrt(Mathf.Abs(angle));
-		//rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
+
 		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
-		print ("aiming");
+
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -247,12 +250,20 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	void OnDrawGizmos() {
-		Gizmos.color = Color.yellow;
-//		Gizmos.DrawSphere(_t.position, 1);
 
-		var obj = closestEnemyObject ();
-		if (obj != null) {
-			Gizmos.DrawLine(_t.position, obj.transform.position);
+		/*
+		if (Application.isPlaying && canAim) {
+			//	Gizmos.DrawSphere(_t.position, 1);
+
+			var obj = closestEnemyObject ();
+			if (obj != null) {
+				Gizmos.color = Color.red;
+				Gizmos.DrawLine (_t.position, obj.transform.position);
+				Gizmos.color = Color.yellow;
+				Gizmos.DrawRay(_t.position,  lastUpTorque * 20.0f);
+
+			}
 		}
+		*/
 	}
 }
