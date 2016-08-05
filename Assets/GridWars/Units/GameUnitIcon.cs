@@ -13,12 +13,10 @@ public class GameUnitIcon : MonoBehaviour {
 
 		GetComponent<Collider>().enabled = false;
 		GetComponent<Rigidbody>().useGravity = false;
-		foreach (var renderer in GetComponentsInChildren<MeshRenderer>()) {
-			this.EachMaterial(m => {
-				m.SetColor("_V_WIRE_Color", Color.white);
-				m.SetColor("_Color", new Color(0, 0, 0, 0));
-			});
-		}
+		this.EachMaterial(m => {
+			m.SetColor("_V_WIRE_Color", Color.white);
+			m.SetColor("_Color", new Color(0, 0, 0, 0));
+		});
 	}
 	
 	// Update is called once per frame

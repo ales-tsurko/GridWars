@@ -21,7 +21,7 @@ public class Tower : GameUnit {
 
 	GameUnit iconUnit;
 
-	void FixedUpdate () {
+	public override void FixedUpdate () {
 		GetComponent<MeshRenderer>().material = readyMaterial;
 	}
 
