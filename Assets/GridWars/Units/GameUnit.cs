@@ -153,11 +153,9 @@ public class GameUnit : MonoBehaviour {
 	public virtual void FixedUpdate () {
 		rigidBody().AddForce(forwardVector() * thrust);
 
-		/*
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
 		}
-		*/
 	}
 
 	// -------------------
@@ -199,7 +197,6 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		/*
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 
 		if (isEnemyOf (otherUnit)) {
@@ -214,6 +211,5 @@ public class GameUnit : MonoBehaviour {
 			//audio.Play ();
 			//print("collision");
 		}
-		*/
 	}
 }

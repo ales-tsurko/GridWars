@@ -9,9 +9,8 @@ public class Jeep : GameUnit {
 
 
 	public override void FixedUpdate () {
-		//base.FixedUpdate();
-		//aimTowardsNearestEnemy ();
-		rigidBody().AddForce(- forwardVector() * thrust);
+		base.FixedUpdate();
+		aimTowardsNearestEnemy ();
 
 	}
 

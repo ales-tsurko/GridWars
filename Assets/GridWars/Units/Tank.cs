@@ -17,7 +17,6 @@ public class Tank : GameUnit {
 
 		Object_rotDY (turret (), 0.1f);
 		aimTowardsNearestEnemy ();
-
 	}
 
 }

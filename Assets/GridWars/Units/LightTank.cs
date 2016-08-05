@@ -10,7 +10,7 @@ public class LightTank : GameUnit {
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();
-		//aimTowardsNearestEnemy ();
+		aimTowardsNearestEnemy ();
 	}
 
 }
