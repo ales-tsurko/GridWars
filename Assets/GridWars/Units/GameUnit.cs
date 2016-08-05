@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
+	public float rotationThrust;
 	public  Player player;
 
-	void Start () {
+	public virtual void Start () {
 		thrust = 0.0f;
+		rotationThrust = 0.1f;
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -45,7 +47,7 @@ public class GameUnit : MonoBehaviour {
 		foreach (GameObject obj in objs) {
 			GameUnit unit = obj.GetComponent<GameUnit> ();
 			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
-			if ((obj.tag != null) && (unit && isEnemyOf(unit))) {
+			if ((obj.tag != null) && (unit != null && isEnemyOf(unit))) {
 				results.Add(obj);
 			}
 		}
@@ -67,13 +69,6 @@ public class GameUnit : MonoBehaviour {
 			}
 		}
 		return closest;
-	}
-
-	public virtual void aimTowardsNearestEnemy() {
-		var obj = closestEnemyObject ();
-		if (obj != null) {
-			rotateTowardObject (obj);
-		}
 	}
 
 	// -----------------------
@@ -160,11 +155,9 @@ public class GameUnit : MonoBehaviour {
 
 	// -------------------
 
-	public virtual void rotateTowardObject(GameObject obj) {
-		//print (tag + " target " + obj.tag);
-		rotateTowardsPos (obj.transform.position);
-	}
-
+	/// Determine the signed angle between two vectors, with normal 'n'
+	/// as the rotation axis.
+	/// 
 	public static float AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)
 	{
 		return Mathf.Atan2(
@@ -184,20 +177,32 @@ public class GameUnit : MonoBehaviour {
 		return transform.right;
 	}
 
+	public virtual void aimTowardsNearestEnemy() {
+		var obj = closestEnemyObject ();
+		if (obj != null) {
+			rotateTowardObject (obj);
+		}
+	}
+
+	public virtual void rotateTowardObject(GameObject obj) {
+		//print (tag + " target " + obj.tag);
+		rotateTowardsPos (obj.transform.position);
+	}
+
 	public virtual void rotateTowardsPos(Vector3 targetPos)
 	{
-		Vector3 f = upVector ();
 		Vector3 targetDir = (targetPos - transform.position).normalized;
-		float angle = AngleSigned(upVector(), targetDir, f);
+		float angle = AngleSigned(transform.forward, targetDir, transform.up);
 
 		//print ("angle " + Mathf.Floor(angle));
 
-		rigidBody().AddTorque(- f * angle * 0.1f, ForceMode.Force);
-
+		//float v = angle > 0 ? Mathf.Sqrt(Mathf.Abs(angle)) : - Mathf.Sqrt(Mathf.Abs(angle));
+		//rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( transform.up * angle * rotationThrust, ForceMode.Force);
+		print ("aiming");
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		/*
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 
 		if (isEnemyOf (otherUnit)) {
@@ -212,6 +217,15 @@ public class GameUnit : MonoBehaviour {
 			//audio.Play ();
 			//print("collision");
 		}
-		*/
+	}
+
+	void OnDrawGizmos() {
+		Gizmos.color = Color.yellow;
+//		Gizmos.DrawSphere(transform.position, 1);
+
+		var obj = closestEnemyObject ();
+		if (obj != null) {
+			Gizmos.DrawLine(transform.position, obj.transform.position);
+		}
 	}
 }

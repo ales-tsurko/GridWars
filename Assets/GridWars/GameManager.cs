@@ -25,11 +25,13 @@ public class GameManager : MonoBehaviour {
 	void SetupTowers() {
 		//GameObject towerGameObject = Instantiate(Resources.Load("Tower")) as GameObject;
 
-		var prefabs = new List <GameObject> { prefabChopper, prefabTank, prefabLightTank, prefabJeep };
+		var prefabs = new List <GameObject> { prefabJeep, prefabLightTank, prefabChopper, prefabTank };
 
 
 		for (int playerNum = 0; playerNum < 2; playerNum ++) {
 			float z = 35*(playerNum == 0 ? -1 : 1);
+
+			//print("--- adding towers for player " + (playerNum + 1));
 
 			int maxTowers = prefabs.Count;
 			for (int towerNum = 0; towerNum < maxTowers; towerNum ++) {
@@ -49,9 +51,9 @@ public class GameManager : MonoBehaviour {
 				tower.setZ (z);
 
 				tower.setRotY (180*playerNum);
-				print("adding tower for player " + players [playerNum].playerNumber);
+				//print("adding tower " + towerNum + " for player " + players [playerNum].playerNumber);
 				tower.player = players[playerNum];
-				tower.constructUnit ();
+				//tower.constructUnit ();
 			}
 		}
 

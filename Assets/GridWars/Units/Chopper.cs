@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public class Chopper : GameUnit {
 
-	void Start () {
+	public override void Start () {
+		base.Start();
 		thrust = 10;
+		rotationThrust = 0.01f;
 	}
 		
 	GameObject mainRotor() {
@@ -16,13 +18,6 @@ public class Chopper : GameUnit {
 		return transform.Find("Group006").gameObject;
 	}
 
-	public override Vector3 forwardVector() {
-		return transform.forward;
-	}
-
-	public override Vector3 upVector() {
-		return transform.up;
-	}
 		
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
@@ -37,6 +32,7 @@ public class Chopper : GameUnit {
 		if (y () < cruiseHeight) {
 			rigidBody ().AddForce (upVector() * 6 * Mathf.Sqrt(diff));
 		} 
+		aimTowardsNearestEnemy();
 
 		if (y () > 4) {
 			rigidBody().AddForce(forwardVector() * thrust);

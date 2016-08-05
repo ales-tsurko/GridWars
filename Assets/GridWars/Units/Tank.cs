@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Tank : GameUnit {
-	void Start () {
+	public override void Start () {
+		base.Start();
 		thrust = 14;
 	}
 
@@ -17,7 +18,6 @@ public class Tank : GameUnit {
 
 		Object_rotDY (turret (), 0.1f);
 		aimTowardsNearestEnemy ();
-
 	}
 
 }

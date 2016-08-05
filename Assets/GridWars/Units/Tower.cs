@@ -5,23 +5,20 @@ using System.Collections.Generic;
 public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
-	void Start () {
 
-
-	}
 
 	public void constructUnit () {
 		GameObject unitGameObject = Instantiate(prefabUnit); 
 		GameUnit unit = unitGameObject.GetComponent<GameUnit> ();
 		unit.setX(transform.position.x);
 		unit.setZ(transform.position.z);
-		unit.setY(unit.y() + 0.5f);
+		unit.setY(unit.y() + 1.0f);
 		unit.player = player;
 		unit.setRotY (rotY());
 	}
 
 	public void OnMouseDown() {
-			constructUnit();
+		constructUnit();
 	}
 
 	public override void FixedUpdate () {
