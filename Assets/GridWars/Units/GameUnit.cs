@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameUnit : MonoBehaviour {
 	public float thrust;
 	public float rotationSpeed;
+	public  Player player;
 
 	void Start () {
 		thrust = 0.0f;
@@ -29,12 +30,24 @@ public class GameUnit : MonoBehaviour {
 		return results;
 	}
 
+	public virtual bool isEnemyOf(GameUnit otherUnit) {
+		//GameUnit otherUnit = otherGameObject.GetComponent<GameUnit> ();
+		//return otherUnit.tag.Contains("Player") && !otherUnit.tag.Equals(this.tag
+		if (player == null) {
+			print ("null player " + this);
+		}
+		return (player.playerNumber != otherUnit.player.playerNumber);
+		//return (player != null) && (otherUnit.player != null) && (player != otherUnit.player);
+	}
+
 	public virtual List<GameObject> enemyObjects() {
 		var objs = activeGameObjects();
 		var results = new List<GameObject>();
 
 		foreach (GameObject obj in objs) {
-			if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
+			GameUnit unit = obj.GetComponent<GameUnit> ();
+			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
+			if ((obj.tag != null) && (unit && isEnemyOf(unit))) {
 				results.Add(obj);
 			}
 		}
@@ -131,9 +144,20 @@ public class GameUnit : MonoBehaviour {
 
 	// -----------------------
 
+	public virtual bool isOutOfBounds () {
+		return (
+			(y() < -3) || (y() > 50) ||
+			(x() > 50) || (x() > 50) ||
+			(z() > 50) || (z() > 50) 
+		);
+	}
+		
 	public virtual void FixedUpdate () {
 		rigidBody().AddForce(-upVector() * thrust);
 
+		if (isOutOfBounds() ) {
+			Destroy (gameObject);
+		}
 	}
 
 	// -------------------
@@ -169,4 +193,20 @@ public class GameUnit : MonoBehaviour {
 
 	}
 
+	void OnCollisionEnter(Collision collision) {
+		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
+
+		if (isEnemyOf (otherUnit)) {
+			print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
+			Destroy (gameObject);
+		}
+
+		foreach (ContactPoint contact in collision.contacts) {
+			Debug.DrawRay (contact.point, contact.normal, Color.white);
+		}
+		if (collision.relativeVelocity.magnitude > 2) {
+			//audio.Play ();
+			//print("collision");
+		}
+	}
 }
