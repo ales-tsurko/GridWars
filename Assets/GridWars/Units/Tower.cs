@@ -15,7 +15,7 @@ public class Tower : GameUnit {
 		GameUnit unit = unitGameObject.GetComponent<GameUnit> ();
 		unit.setX(transform.position.x);
 		unit.setZ(transform.position.z);
-		unit.setY(unit.y() + 0.5f);
+		unit.setY(unit.y() + 1.0f);
 		unit.player = player;
 		unit.setRotY (rotY());
 	}

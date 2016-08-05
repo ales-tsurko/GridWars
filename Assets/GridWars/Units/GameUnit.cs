@@ -45,7 +45,7 @@ public class GameUnit : MonoBehaviour {
 		foreach (GameObject obj in objs) {
 			GameUnit unit = obj.GetComponent<GameUnit> ();
 			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
-			if ((obj.tag != null) && (unit && isEnemyOf(unit))) {
+			if ((obj.tag != null) && (unit != null && isEnemyOf(unit))) {
 				results.Add(obj);
 			}
 		}
@@ -153,9 +153,11 @@ public class GameUnit : MonoBehaviour {
 	public virtual void FixedUpdate () {
 		rigidBody().AddForce(forwardVector() * thrust);
 
+		/*
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
 		}
+		*/
 	}
 
 	// -------------------
