@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class LightTank : GameUnit {
 	public override void Start () {
 		base.Start();
-		thrust = 18;
+		thrust = 200;
+		rotationThrust = 5;
 	}
 		
 

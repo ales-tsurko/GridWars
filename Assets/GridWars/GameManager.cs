@@ -54,9 +54,9 @@ public class GameManager : MonoBehaviour {
 				//print("adding tower " + towerNum + " for player " + players [playerNum].playerNumber);
 				tower.player = players[playerNum];
 
-				if ((playerNum == 0 && towerNum == 0) || (playerNum == 1 && towerNum == 2)) {
+				//if ((playerNum == 0 && towerNum == 0) || (playerNum == 1 && towerNum == 2)) {
 					tower.ReleaseUnit ();
-				}
+				//}
 
 			}
 		}

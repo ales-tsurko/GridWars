@@ -39,7 +39,7 @@ public class Tower : GameUnit {
 
 	public void ReleaseUnit() {
 		var unitObject = Instantiate(prefabUnit);
-		unitObject.transform.position = transform.position + new Vector3(0, 1, 0);
+		unitObject.transform.position = transform.position + new Vector3(0, 0.1f, 0);
 		unitObject.transform.rotation = transform.rotation;
 
 		var gameUnit = unitObject.GetComponent<GameUnit>();
