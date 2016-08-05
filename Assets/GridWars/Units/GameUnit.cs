@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
+	public float rotationSpeed;
 
 	void Start () {
 		thrust = 0.0f;
+		rotationSpeed = 100.0f;
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -32,7 +34,7 @@ public class GameUnit : MonoBehaviour {
 		var results = new List<GameObject>();
 
 		foreach (GameObject obj in objs) {
-			if (!obj.tag.Equals(this.tag)) {
+			if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
 				results.Add(obj);
 			}
 		}
@@ -54,6 +56,13 @@ public class GameUnit : MonoBehaviour {
 			}
 		}
 		return closest;
+	}
+
+	public virtual void aimTowardsNearestEnemy() {
+		var obj = closestEnemyObject ();
+		if (obj != null) {
+			rotateTowardObject (obj);
+		}
 	}
 
 	// -----------------------
@@ -123,11 +132,41 @@ public class GameUnit : MonoBehaviour {
 	// -----------------------
 
 	public virtual void FixedUpdate () {
-		rigidBody().AddForce(-transform.up * thrust);
+		rigidBody().AddForce(-upVector() * thrust);
+
 	}
 
+	// -------------------
+
 	public virtual void rotateTowardObject(GameObject obj) {
-		
+		print (tag + " target " + obj.tag);
+		rotateTowardsPos (obj.transform.position);
+	}
+
+	public static float AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)
+	{
+		return Mathf.Atan2(
+			Vector3.Dot(n, Vector3.Cross(v1, v2)),
+			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
+	}
+
+	public virtual Vector3 forwardVector() {
+		return transform.forward;
+	}
+
+	public virtual Vector3 upVector() {
+		return transform.up;
+	}
+
+	public virtual void rotateTowardsPos(Vector3 targetPos)
+	{
+		Vector3 targetDir = (targetPos - transform.position).normalized;
+		float angle = AngleSigned(upVector(), targetDir, forwardVector());
+
+		//print ("angle " + Mathf.Floor(angle));
+
+		rigidBody().AddTorque(- forwardVector() * angle * 0.1f, ForceMode.Force);
+
 	}
 
 }

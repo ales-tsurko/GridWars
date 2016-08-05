@@ -7,8 +7,17 @@ public class LightTank : GameUnit {
 		thrust = 18;
 	}
 
+	public override Vector3 forwardVector() {
+		return transform.forward;
+	}
+
+	public override Vector3 upVector() {
+		return transform.up;
+	}
+
 	public override void FixedUpdate () {
 		base.FixedUpdate();
+		aimTowardsNearestEnemy ();
 	}
 
 }
