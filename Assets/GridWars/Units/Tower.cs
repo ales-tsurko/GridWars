@@ -42,7 +42,7 @@ public class Tower : GameUnit {
 		}
 	}
 
-	void ReleaseUnit() {
+	public void ReleaseUnit() {
 		CreateUnit();
 	}
 
