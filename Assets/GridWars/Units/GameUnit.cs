@@ -10,11 +10,8 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	[HideInInspector]
 	public Transform _t;
-<<<<<<< HEAD
-=======
 	public bool canAim = true;
 	public Vector3 lastUpTorque;
->>>>>>> 8c0d8c9432640f90e30997ad32046d79e4747f8f
 
 	void Awake () {
 		_t = transform;
