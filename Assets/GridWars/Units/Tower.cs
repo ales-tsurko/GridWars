@@ -5,6 +5,11 @@ using System.Collections.Generic;
 public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
+	public override void Start () {
+		base.Start();
+		canAim = false;
+	}
+
 	public void OnMouseDown() {
 		if (canReleaseUnit) {
 			ReleaseUnit();
@@ -32,7 +37,7 @@ public class Tower : GameUnit {
 		}
 	}
 
-	void ReleaseUnit() {
+	public void ReleaseUnit() {
 		var unitObject = Instantiate(prefabUnit);
 		unitObject.transform.position = transform.position + new Vector3(0, 1, 0);
 		unitObject.transform.rotation = transform.rotation;
