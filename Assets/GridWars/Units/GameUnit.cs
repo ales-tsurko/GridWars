@@ -7,10 +7,11 @@ public class GameUnit : MonoBehaviour {
 	public float rotationThrust;
 	public  Player player;
 	public float powerCost = 4f;
+	public bool canAim = true;
 	[HideInInspector]
 	public Transform _t;
-	public bool canAim = true;
-	public Vector3 lastUpTorque;
+	public GameObject target = null;
+	public float angleToTarget = 0;
 
 	void Awake () {
 		_t = transform;
@@ -40,8 +41,6 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual bool isEnemyOf(GameUnit otherUnit) {
-		//GameUnit otherUnit = otherGameObject.GetComponent<GameUnit> ();
-		//return otherUnit.tag.Contains("Player") && !otherUnit.tag.Equals(this.tag
 		if (player == null) {
 			print ("null player " + this);
 		}
@@ -64,6 +63,10 @@ public class GameUnit : MonoBehaviour {
 		return results;
 	}
 
+	public virtual void pickTarget() {
+		target = closestEnemyObject ();
+	}
+
 	public virtual GameObject closestEnemyObject() {
 		var objs = enemyObjects();
 		GameObject closest = null;
@@ -80,7 +83,7 @@ public class GameUnit : MonoBehaviour {
 		return closest;
 	}
 
-	// -----------------------
+	// -- set x, y, z -----------------------
 
 	public virtual void setX(float x) {
 		_t.position = new Vector3 (x, _t.position.y, _t.position.z);
@@ -94,7 +97,7 @@ public class GameUnit : MonoBehaviour {
 		_t.position = new Vector3 (_t.position.x, _t.position.y, z);
 	}
 
-	// -----------------------
+	// --- get x, y, z -----------------------
 
 	public virtual float x() {
 		return _t.position.x;
@@ -108,7 +111,7 @@ public class GameUnit : MonoBehaviour {
 		return _t.position.z;
 	}
 
-	// -----------------------
+	// --- get/set rotations -----------------------
 
 	public virtual float rotX() {
 		return _t.eulerAngles.x;
@@ -155,7 +158,7 @@ public class GameUnit : MonoBehaviour {
 	}
 		
 	public virtual void FixedUpdate () {
-		rigidBody().AddForce(forwardVector() * thrust);
+		rigidBody().AddForce(_t.forward * thrust);
 
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
@@ -164,27 +167,18 @@ public class GameUnit : MonoBehaviour {
 
 	// -------------------
 
-	/// Determine the signed angle between two vectors, with normal 'n'
-	/// as the rotation axis.
-	/// 
+
 	public static float AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)
 	{
+		// Determine the signed angle between two vectors, 
+		// with normal 'n' as the rotation axis.
+
 		return Mathf.Atan2(
 			Vector3.Dot(n, Vector3.Cross(v1, v2)),
 			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
 	}
 
-	public virtual Vector3 forwardVector() {
-		return _t.forward;
-	}
-
-	public virtual Vector3 upVector() {
-		return _t.up;
-	}
-
-	public virtual Vector3 rightVector() {
-		return _t.right;
-	}
+	// --- aiming --------------------
 
 	public virtual void aimTowardsNearestEnemy() {
 		var obj = closestEnemyObject ();
@@ -194,19 +188,19 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual void rotateTowardObject(GameObject obj) {
-		//print (tag + " target " + obj.tag);
 		var targetPos = obj.transform.position;
 
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleSigned(_t.forward, targetDir, _t.up);
+		angleToTarget = angle;
 
-		Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-		Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
-		Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+		if (true) {
+			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+			Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+			Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+		}
 
-
-		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
-
+		rigidBody().AddTorque( _t.up * angle *rotationThrust, ForceMode.Force);
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -231,7 +225,6 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	void OnDrawGizmos() {
-
 		/*
 		if (Application.isPlaying && canAim) {
 			//	Gizmos.DrawSphere(_t.position, 1);
@@ -242,7 +235,6 @@ public class GameUnit : MonoBehaviour {
 				Gizmos.DrawLine (_t.position, obj.transform.position);
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawRay(_t.position,  lastUpTorque * 20.0f);
-
 			}
 		}
 		*/

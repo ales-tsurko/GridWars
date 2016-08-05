@@ -30,12 +30,12 @@ public class Chopper : GameUnit {
 		float diff = cruiseHeight - y ();
 
 		if (y () < cruiseHeight) {
-			rigidBody ().AddForce (upVector() * 6 * Mathf.Sqrt(diff));
+			rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
 		} 
 		aimTowardsNearestEnemy();
 
 		if (y () > 4) {
-			rigidBody().AddForce(forwardVector() * thrust);
+			rigidBody().AddForce(_t.forward * thrust);
 		}
 
 		/*

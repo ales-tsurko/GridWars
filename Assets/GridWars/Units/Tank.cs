@@ -14,10 +14,20 @@ public class Tank : GameUnit {
 
 
 	public override void FixedUpdate () {
-		base.FixedUpdate();
 
 		Object_rotDY (turret (), 0.1f);
-		aimTowardsNearestEnemy ();
+
+		pickTarget ();
+
+		if (target) {
+			
+			if (Mathf.Abs (angleToTarget) < 45) {
+				base.FixedUpdate ();
+
+			}
+
+			aimTowardsNearestEnemy ();
+		}
 	}
 
 }

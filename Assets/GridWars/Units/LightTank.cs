@@ -8,7 +8,6 @@ public class LightTank : GameUnit {
 		thrust = 200;
 		rotationThrust = 5;
 	}
-		
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();
