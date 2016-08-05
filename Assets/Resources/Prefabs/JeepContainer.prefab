@@ -22,9 +22,6 @@ GameObject:
   - 33: {fileID: 33000012926239368}
   - 23: {fileID: 23000011587742774}
   - 111: {fileID: 111000010384035198}
-  - 54: {fileID: 54000013231046902}
-  - 65: {fileID: 65000012059691926}
-  - 114: {fileID: 114000013657681510}
   m_Layer: 0
   m_Name: JeepPrefab
   m_TagString: Player2
@@ -40,6 +37,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010100016730}
+  - 54: {fileID: 54000012496148262}
+  - 65: {fileID: 65000011624112016}
+  - 114: {fileID: 114000010789209710}
   m_Layer: 0
   m_Name: JeepContainer
   m_TagString: Untagged
@@ -110,33 +110,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010180305908}
   m_Mesh: {fileID: 4300000, guid: f60cde5206d4017448cdbac53e31ed0f, type: 3}
---- !u!54 &54000013231046902
+--- !u!54 &54000012496148262
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010180305908}
+  m_GameObject: {fileID: 1000013294147110}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 1
-  m_AngularDrag: 0.5
+  m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65000012059691926
+--- !u!65 &65000011624112016
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010180305908}
+  m_GameObject: {fileID: 1000013294147110}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6, y: 11, z: 6}
-  m_Center: {x: 0, y: 0, z: 3.2}
+  m_Size: {x: 1, y: 1, z: 2}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!111 &111000010384035198
 Animation:
   m_ObjectHideFlags: 1
@@ -151,15 +151,16 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &114000013657681510
+--- !u!114 &114000010789209710
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010180305908}
+  m_GameObject: {fileID: 1000013294147110}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 542fa960772fc4887a7330f78934ae81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   thrust: 0
+  rotationThrust: 0
