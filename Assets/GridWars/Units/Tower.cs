@@ -5,10 +5,7 @@ using System.Collections.Generic;
 public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
-	void Start () {
 
-
-	}
 
 	public void constructUnit () {
 		GameObject unitGameObject = Instantiate(prefabUnit); 
@@ -21,7 +18,7 @@ public class Tower : GameUnit {
 	}
 
 	public void OnMouseDown() {
-			constructUnit();
+		constructUnit();
 	}
 
 	public override void FixedUpdate () {

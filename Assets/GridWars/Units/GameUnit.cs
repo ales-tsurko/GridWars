@@ -71,13 +71,6 @@ public class GameUnit : MonoBehaviour {
 		return closest;
 	}
 
-	public virtual void aimTowardsNearestEnemy() {
-		var obj = closestEnemyObject ();
-		if (obj != null) {
-			rotateTowardObject (obj);
-		}
-	}
-
 	// -----------------------
 
 	public virtual void setX(float x) {
@@ -162,11 +155,9 @@ public class GameUnit : MonoBehaviour {
 
 	// -------------------
 
-	public virtual void rotateTowardObject(GameObject obj) {
-		//print (tag + " target " + obj.tag);
-		rotateTowardsPos (obj.transform.position);
-	}
-
+	/// Determine the signed angle between two vectors, with normal 'n'
+	/// as the rotation axis.
+	/// 
 	public static float AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)
 	{
 		return Mathf.Atan2(
@@ -186,17 +177,29 @@ public class GameUnit : MonoBehaviour {
 		return transform.right;
 	}
 
+	public virtual void aimTowardsNearestEnemy() {
+		var obj = closestEnemyObject ();
+		if (obj != null) {
+			rotateTowardObject (obj);
+		}
+	}
+
+	public virtual void rotateTowardObject(GameObject obj) {
+		//print (tag + " target " + obj.tag);
+		rotateTowardsPos (obj.transform.position);
+	}
+
 	public virtual void rotateTowardsPos(Vector3 targetPos)
 	{
-		Vector3 f = upVector ();
 		Vector3 targetDir = (targetPos - transform.position).normalized;
-		float angle = AngleSigned(upVector(), targetDir, f);
+		float angle = AngleSigned(transform.forward, targetDir, transform.up);
 
 		//print ("angle " + Mathf.Floor(angle));
 
-		float v = angle > 0 ? Mathf.Sqrt(angle) : - Mathf.Sqrt(angle);
-		rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
-
+		//float v = angle > 0 ? Mathf.Sqrt(Mathf.Abs(angle)) : - Mathf.Sqrt(Mathf.Abs(angle));
+		//rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( transform.up * angle * rotationThrust, ForceMode.Force);
+		print ("aiming");
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -213,6 +216,16 @@ public class GameUnit : MonoBehaviour {
 		if (collision.relativeVelocity.magnitude > 2) {
 			//audio.Play ();
 			//print("collision");
+		}
+	}
+
+	void OnDrawGizmos() {
+		Gizmos.color = Color.yellow;
+//		Gizmos.DrawSphere(transform.position, 1);
+
+		var obj = closestEnemyObject ();
+		if (obj != null) {
+			Gizmos.DrawLine(transform.position, obj.transform.position);
 		}
 	}
 }
