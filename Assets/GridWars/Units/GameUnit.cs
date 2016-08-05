@@ -6,6 +6,7 @@ public class GameUnit : MonoBehaviour {
 	public float thrust;
 	public float rotationThrust;
 	public  Player player;
+	public float powerCost = 4f;
 	[HideInInspector]
 	public Transform _t;
 	void Awake () {

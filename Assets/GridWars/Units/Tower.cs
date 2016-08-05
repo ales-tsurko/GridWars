@@ -5,25 +5,40 @@ using System.Collections.Generic;
 public class Tower : GameUnit {
 	public GameObject prefabUnit;
 
-
-
-	public void constructUnit () {
-		GameObject unitGameObject = Instantiate(prefabUnit); 
-		GameUnit unit = unitGameObject.GetComponent<GameUnit> ();
-		unit.setX(transform.position.x);
-		unit.setZ(transform.position.z);
-		unit.setY(unit.y() + 1.0f);
-		unit.player = player;
-		unit.setRotY (rotY());
-	}
-
 	public void OnMouseDown() {
-		constructUnit();
+		if (canReleaseUnit) {
+			ReleaseUnit();
+		}
 	}
 
 	public override void FixedUpdate () {
+		GetComponent<MeshRenderer>().material = readyMaterial;
+	}
 
+	Material readyMaterial {
+		get {
+			if (canReleaseUnit) {
+				return player.enabledMaterial;
+			}
+			else {
+				return player.disabledMaterial;
+			}
+		}
+	}
 
+	bool canReleaseUnit {
+		get {
+			return player.powerSource.power >= prefabUnit.GetComponent<GameUnit>().powerCost;
+		}
+	}
+
+	void ReleaseUnit() {
+		var unitObject = Instantiate(prefabUnit);
+		unitObject.transform.position = transform.position + new Vector3(0, 1, 0);
+		unitObject.transform.rotation = transform.rotation;
+
+		var gameUnit = unitObject.GetComponent<GameUnit>();
+		gameUnit.player = player;
 	}
 
 }
