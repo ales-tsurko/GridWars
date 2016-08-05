@@ -6,13 +6,13 @@ public class Player {
 
 	public Material enabledMaterial {
 		get {
-			return Resources.Load("Players/" + playerNumber + "/Enabled") as Material;
+			return Resources.Load<Material>(ResourcePath("Enabled"));
 		}
 	}
 
 	public Material disabledMaterial {
 		get {
-			return Resources.Load("Players/" + playerNumber + "/Enabled") as Material;
+			return Resources.Load<Material>(ResourcePath("Disabled"));
 		}
 	}
 
@@ -28,17 +28,28 @@ public class Player {
 		}
 	}
 
-	public float baseEdgeX = 50f;
+	public float baseEdgeZ = 50f;
 
 	public PowerSource powerSource;
 
 	public void Start() {
 		powerSource = PowerSource.Instantiate();
 		//powerSource.gameObject.transform.position = Vector3.zero;
-		powerSource.gameObject.transform.position = new Vector3((baseEdgeX - powerSource.trackWidth/2)*xDirection, 0.1f, 0f);
+		powerSource.gameObject.transform.position = new Vector3(0f, 0.1f, (baseEdgeZ - powerSource.trackWidth/2)*xDirection);
+		powerSource.player = this;
 	}
 
 	public void FixedUpdate() {
 		
+	}
+
+	string resourcesPath {
+		get {
+			return "Players/" + playerNumber + "/";
+		}
+	}
+
+	string ResourcePath(string resourceName) {
+		return resourcesPath + resourceName;
 	}
 }

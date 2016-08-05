@@ -12,6 +12,8 @@ public class PowerSource : MonoBehaviour {
 	public float trackLength = 100f;
 	public float trackSpacing = 1.0f;
 
+	public bool trackAlongZ = false;
+
 	public GameObject segmentPrefab;
 	public float baseSegmentWidth = 10f;
 	public float baseSegmentLength = 10f;
@@ -27,18 +29,27 @@ public class PowerSource : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = new Player();
-		player.playerNumber = 1;
-
 		var segmentLength = (trackLength - trackSpacing*(segmentCount - 1))/segmentCount;
 
 		segments = new List<GameObject>();
 		for (var i = 0; i < segmentCount; i ++) {
 			var segment = Instantiate<GameObject>(segmentPrefab);
 			segment.transform.parent = transform;
-			segment.transform.localPosition = new Vector3(0f, 0f, i*(segmentLength + trackSpacing) - trackLength/2 + segmentLength/2);
 			segment.transform.localRotation = Quaternion.identity;
-			segment.transform.localScale = new Vector3(trackWidth/baseSegmentWidth, segment.transform.localScale.y, segmentLength/baseSegmentLength);
+
+			var offset = i*(segmentLength + trackSpacing) - trackLength/2 + segmentLength/2;
+			var segmentWidthScale = trackWidth/baseSegmentWidth;
+			var segmentLengthScale = segmentLength/baseSegmentLength;
+
+			if (trackAlongZ) {
+				segment.transform.localPosition = new Vector3(0, 0, offset);
+				segment.transform.localScale = new Vector3(segmentWidthScale, segment.transform.localScale.y, segmentLengthScale);
+			}
+			else {
+				segment.transform.localPosition = new Vector3(offset, 0, 0);
+				segment.transform.localScale = new Vector3(segmentLengthScale, segment.transform.localScale.y, segmentWidthScale);
+			}
+
 			segment.GetComponent<MeshRenderer>().material = player.enabledMaterial;
 			segment.SetActive(false);
 			segments.Add(segment);
