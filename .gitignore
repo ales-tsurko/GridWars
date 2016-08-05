@@ -43,3 +43,5 @@ Thumbs.db
 
 /ignore/
 *.app
+Assets/DeveloperWorkspace.meta
+Assets/DeveloperWorkspace/*

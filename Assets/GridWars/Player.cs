@@ -4,6 +4,18 @@ using System.Collections;
 public class Player {
 	public int playerNumber;
 
+	public Material enabledMaterial {
+		get {
+			return Resources.Load("Players/" + playerNumber + "/Enabled") as Material;
+		}
+	}
+
+	public Material disabledMaterial {
+		get {
+			return Resources.Load("Players/" + playerNumber + "/Enabled") as Material;
+		}
+	}
+
 	PowerBar powerBar;
 	float power;
 
