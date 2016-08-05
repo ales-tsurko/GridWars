@@ -8,6 +8,9 @@ public class Tower : GameUnit {
 	public override void Start () {
 		base.Start();
 		canAim = false;
+		iconUnit = CreateUnit();
+		iconUnit.GetComponent<GameUnit>().enabled = false;
+		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
 	}
 
 	public void OnMouseDown() {
@@ -17,12 +20,6 @@ public class Tower : GameUnit {
 	}
 
 	GameUnit iconUnit;
-
-	void Start() {
-		iconUnit = CreateUnit();
-		iconUnit.GetComponent<GameUnit>().enabled = false;
-		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
-	}
 
 	void FixedUpdate () {
 		GetComponent<MeshRenderer>().material = readyMaterial;
