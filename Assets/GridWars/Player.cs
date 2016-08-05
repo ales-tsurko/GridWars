@@ -16,28 +16,29 @@ public class Player {
 		}
 	}
 
-	PowerBar powerBar;
-	float power;
-
-	// Use this for initialization
-	public void Start() {
-		//Debug.Log(playerNumber);
-		powerBar = PowerBar.New();
-		powerBar.SetPosition(playerNumber == 1 ? PowerBarPlacement.Left : PowerBarPlacement.Right);
-		powerBar.SetColor(playerNumber == 1 ? Color.red : Color.blue);
-		powerBar.SetPower(0);
-		//powerBar.minPower = 0f;
-		//powerBar.maxPower = 600f;
-		//powerBar.power = 0f;
-		power = 0f;
+	public Color color {
+		get {
+			return playerNumber == 1 ? Color.red : Color.blue;
+		}
 	}
-	
-	// Update is called once per frame
-	public void FixedUpdate () {
-		power ++;
 
-		float maxPower = 10f/Time.fixedDeltaTime;
+	public int xDirection {
+		get {
+			return playerNumber == 1 ? -1 : 1;
+		}
+	}
 
-		powerBar.SetPower((int)(100f*Mathf.Min(power, maxPower) / maxPower));
+	public float baseEdgeX = 50f;
+
+	public PowerSource powerSource;
+
+	public void Start() {
+		powerSource = PowerSource.Instantiate();
+		//powerSource.gameObject.transform.position = Vector3.zero;
+		powerSource.gameObject.transform.position = new Vector3((baseEdgeX - powerSource.trackWidth/2)*xDirection, 0.1f, 0f);
+	}
+
+	public void FixedUpdate() {
+		
 	}
 }

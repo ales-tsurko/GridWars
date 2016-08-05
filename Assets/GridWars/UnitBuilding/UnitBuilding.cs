@@ -5,36 +5,41 @@ public class UnitBuilding : MonoBehaviour {
 	public GameObject unitPrefab;
 	public Player player;
 
-	public void Disable() {
-		GetComponent<MeshRenderer>().material = player.disabledMaterial;
-	}
-
-	public void Enable() {
+	void ShowReadyToRelease() {
 		GetComponent<MeshRenderer>().material = player.enabledMaterial;
 	}
 
-	public void SpawnUnit() {
-		var unit = Instantiate(unitPrefab);
-		unit.transform.position = transform.position;
-		unit.transform.rotation = transform.rotation;
+	void ShowNotReadyToRelease() {
+		GetComponent<MeshRenderer>().material = player.disabledMaterial;
+	}
+
+	void ReleaseUnit() {
+		var unitObject = Instantiate(unitPrefab);
+		unitObject.transform.position = transform.position;
+		unitObject.transform.rotation = transform.rotation;
+
+		var gameUnit = unitObject.GetComponent<GameUnit>();
+		gameUnit.player = player;
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		player = new Player();
 		player.playerNumber = 1;
-
-		Disable();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (Input.GetKey(KeyCode.E)) {
-			Enable();
+	void Update() {
+		if (Input.GetKey(KeyCode.S)) {
+			ShowReadyToRelease();
 		}
 
-		if (Input.GetKey(KeyCode.S)) {
-			SpawnUnit();
+		if (Input.GetKeyDown(KeyCode.R)) {
+			ReleaseUnit();
 		}
+	}
+
+	public void OnMouseDown() {
+		ReleaseUnit();
 	}
 }
