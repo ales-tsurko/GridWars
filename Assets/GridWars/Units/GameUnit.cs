@@ -209,6 +209,10 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.name == "BattlefieldPlane") {
+			return;
+		}
+
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 
 		if (isEnemyOf (otherUnit)) {
