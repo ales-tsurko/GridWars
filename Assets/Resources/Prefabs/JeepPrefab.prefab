@@ -26,7 +26,7 @@ GameObject:
   - 65: {fileID: 65000010544238238}
   - 114: {fileID: 114000011756049164}
   m_Layer: 0
-  m_Name: Jeep
+  m_Name: JeepPrefab
   m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

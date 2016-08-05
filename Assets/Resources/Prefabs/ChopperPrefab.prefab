@@ -141,7 +141,7 @@ GameObject:
   - 65: {fileID: 65000011572227212}
   - 114: {fileID: 114000010045215140}
   m_Layer: 0
-  m_Name: Chopper
+  m_Name: ChopperPrefab
   m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -41,7 +41,7 @@ GameObject:
   - 65: {fileID: 65000010290668914}
   - 114: {fileID: 114000010979423438}
   m_Layer: 0
-  m_Name: Tank
+  m_Name: TankPrefab
   m_TagString: Player1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
