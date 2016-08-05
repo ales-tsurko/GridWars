@@ -11,18 +11,9 @@ public class Tank : GameUnit {
 		return transform.Find("headdus1").gameObject;
 	}
 
-	public override Vector3 forwardVector() {
-		return transform.forward;
-	}
-
-	public override Vector3 upVector() {
-		return transform.up;
-	}
-
 
 	public override void FixedUpdate () {
-		//base.FixedUpdate();
-		rigidBody().AddForce(forwardVector() * thrust);
+		base.FixedUpdate();
 
 		Object_rotDY (turret (), 0.1f);
 		aimTowardsNearestEnemy ();

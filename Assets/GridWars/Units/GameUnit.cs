@@ -4,12 +4,10 @@ using System.Collections.Generic;
 
 public class GameUnit : MonoBehaviour {
 	public float thrust;
-	public float rotationSpeed;
 	public  Player player;
 
 	void Start () {
 		thrust = 0.0f;
-		rotationSpeed = 100.0f;
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -153,7 +151,7 @@ public class GameUnit : MonoBehaviour {
 	}
 		
 	public virtual void FixedUpdate () {
-		rigidBody().AddForce(-upVector() * thrust);
+		rigidBody().AddForce(forwardVector() * thrust);
 
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
@@ -182,18 +180,24 @@ public class GameUnit : MonoBehaviour {
 		return transform.up;
 	}
 
+	public virtual Vector3 rightVector() {
+		return transform.right;
+	}
+
 	public virtual void rotateTowardsPos(Vector3 targetPos)
 	{
+		Vector3 f = upVector ();
 		Vector3 targetDir = (targetPos - transform.position).normalized;
-		float angle = AngleSigned(upVector(), targetDir, forwardVector());
+		float angle = AngleSigned(upVector(), targetDir, f);
 
 		//print ("angle " + Mathf.Floor(angle));
 
-		rigidBody().AddTorque(- forwardVector() * angle * 0.1f, ForceMode.Force);
+		rigidBody().AddTorque(- f * angle * 0.1f, ForceMode.Force);
 
 	}
 
 	void OnCollisionEnter(Collision collision) {
+		/*
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 
 		if (isEnemyOf (otherUnit)) {
@@ -208,5 +212,6 @@ public class GameUnit : MonoBehaviour {
 			//audio.Play ();
 			//print("collision");
 		}
+		*/
 	}
 }
