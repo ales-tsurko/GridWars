@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using System.Collections.Generic;
 public class TireTracks: MonoBehaviour {
 	private static TireTracks _instance;
 	public static TireTracks instance {
@@ -50,9 +50,10 @@ public class TireTracks: MonoBehaviour {
 
 	bool updated;
 	bool haveSetBounds;
-
+	GameObject terrain;
 
 	void Start() {
+		terrain = GameObject.Find ("BattlefieldPlane");
 		skidmarks = new MarkSection[MAX_MARKS];
 		for (int i = 0; i < MAX_MARKS; i++) {
 			skidmarks[i] = new MarkSection();
@@ -102,7 +103,9 @@ public class TireTracks: MonoBehaviour {
 		}
 		mf.sharedMesh = marksMesh;
 	}
-		
+
+	public List<float> timeToDestroy = new List<float>();
+
 	public int AddSkidMark(Vector3 pos, Vector3 normal, float intensity, int lastIndex) {
 		if (intensity > 1) intensity = 1.0f;
 		else if (intensity < 0) return -1; if (lastIndex > 0) {
@@ -112,6 +115,7 @@ public class TireTracks: MonoBehaviour {
 		if (skidmarks == null) {
 			return -1;
 		}
+		pos = new Vector3 (pos.x, terrain.transform.position.y, pos.z);
 		MarkSection curSection = skidmarks[markIndex];
 
 		curSection.Pos = pos + normal * GROUND_OFFSET;
@@ -138,7 +142,13 @@ public class TireTracks: MonoBehaviour {
 		UpdateSkidmarksMesh();
 
 		int curIndex = markIndex;
-
+		/*timeToDestroy.Add (Time.time + 5);
+		for (int i = 0; i < timeToDestroy.Count; i++) {
+			if (Time.time >= timeToDestroy [i]) {
+				timeToDestroy [i] = 1000000;
+				skidmarks [i] = null;
+			}
+		}*/
 		markIndex = ++markIndex % MAX_MARKS;
 
 		return curIndex;
