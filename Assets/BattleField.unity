@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692534, g: 0.49678725, b: 0.57508564, a: 1}
+  m_IndirectSpecularColor: {r: 0.38653412, g: 0.41996714, b: 0.4857347, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -288,9 +288,9 @@ MonoBehaviour:
   prefabChopper: {fileID: 1000010887795516, guid: 2361a78a6e54143c1b37d6e56ff8af9b,
     type: 2}
   prefabTank: {fileID: 1000010358598928, guid: 40bface92690240d38e155b4ac17bbae, type: 2}
-  prefabLightTank: {fileID: 1000010257695360, guid: fc6669fae86304a36b8c13ec1c075b81,
+  prefabLightTank: {fileID: 1000012628731020, guid: d7ee13bcdc66342d7813babdd94868ab,
     type: 2}
-  prefabJeep: {fileID: 1000013919661548, guid: 0e1d053a0d3154ce88dac171c41debc2, type: 2}
+  prefabJeep: {fileID: 1000013294147110, guid: cba716f2467264f1bba117f3c2fcdf6e, type: 2}
 --- !u!4 &1080231884
 Transform:
   m_ObjectHideFlags: 0
