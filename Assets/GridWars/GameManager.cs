@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour {
 		for (int playerNum = 0; playerNum < 2; playerNum ++) {
 			float z = 35*(playerNum == 0 ? -1 : 1);
 
-			int maxTowers = 4;
+			int maxTowers = prefabs.Count;
 			for (int towerNum = 0; towerNum < maxTowers; towerNum ++) {
 				GameObject towerGameObject = Instantiate(prefabTower); 
 				Tower tower = towerGameObject.GetComponent<Tower> ();
@@ -43,11 +43,14 @@ public class GameManager : MonoBehaviour {
 				}
 
 				float x = 50*((((float)towerNum) / (float)maxTowers) - 0.5f);
+
 				tower.setX (x);
 				tower.setY (0.0f);
 				tower.setZ (z);
+
 				tower.setRotY (180*playerNum);
-				tower.playerNumber = playerNum + 1;
+				print("adding tower for player " + players [playerNum].playerNumber);
+				tower.player = players[playerNum];
 				tower.constructUnit ();
 			}
 		}
