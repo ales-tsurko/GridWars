@@ -19,9 +19,11 @@ public class Tower : GameUnit {
 		string tagString = "Player" + playerNumber;
 		unit.tag = tagString;
 		unit.setRotY (rotY());
-
 	}
 
+	public void OnMouseDown() {
+			constructUnit();
+	}
 
 	public override void FixedUpdate () {
 
