@@ -6,6 +6,11 @@ public class GameUnit : MonoBehaviour {
 	public float thrust;
 	public float rotationThrust;
 	public  Player player;
+	[HideInInspector]
+	public Transform _t;
+	void Awake () {
+		_t = transform;
+	}
 
 	public virtual void Start () {
 		thrust = 0.0f;
@@ -59,7 +64,7 @@ public class GameUnit : MonoBehaviour {
 		var objs = enemyObjects();
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
-		Vector3 position = transform.position;
+		Vector3 position = _t.position;
 		foreach (GameObject obj in objs) {
 			Vector3 diff = obj.transform.position - position;
 			float curDistance = diff.sqrMagnitude;
@@ -74,40 +79,40 @@ public class GameUnit : MonoBehaviour {
 	// -----------------------
 
 	public virtual void setX(float x) {
-		transform.position = new Vector3 (x, transform.position.y, transform.position.z);
+		_t.position = new Vector3 (x, _t.position.y, _t.position.z);
 	}
 		
 	public virtual void setY(float y) {
-		transform.position = new Vector3 (transform.position.x, y, transform.position.z);
+		_t.position = new Vector3 (_t.position.x, y, _t.position.z);
 	}
 
 	public virtual void setZ(float z) {
-		transform.position = new Vector3 (transform.position.x, transform.position.y, z);
+		_t.position = new Vector3 (_t.position.x, _t.position.y, z);
 	}
 
 	// -----------------------
 
 	public virtual float x() {
-		return transform.position.x;
+		return _t.position.x;
 	}
 
 	public virtual float y() {
-		return transform.position.y;
+		return _t.position.y;
 	}
 		
 	public virtual float z() {
-		return transform.position.z;
+		return _t.position.z;
 	}
 
 	// -----------------------
 
 	public virtual float rotX() {
-		return transform.eulerAngles.x;
+		return _t.eulerAngles.x;
 	}
 
 	public virtual void setRotX(float v) {
-		var e = transform.eulerAngles;
-		transform.eulerAngles = new Vector3(v, e.y, e.z);
+		var e = _t.eulerAngles;
+		_t.eulerAngles = new Vector3(v, e.y, e.z);
 	}
 
 
@@ -118,21 +123,21 @@ public class GameUnit : MonoBehaviour {
 
 
 	public virtual float rotY() {
-		return transform.eulerAngles.y;
+		return _t.eulerAngles.y;
 	}
 
 	public virtual void setRotY(float v) {
-		var e = transform.eulerAngles;
-		transform.eulerAngles = new Vector3(e.x, v, e.z);
+		var e = _t.eulerAngles;
+		_t.eulerAngles = new Vector3(e.x, v, e.z);
 	}
 
 	public virtual float rotZ() {
-		return transform.eulerAngles.z;
+		return _t.eulerAngles.z;
 	}
 
 	public virtual void setRotZ(float v) {
-		var e = transform.eulerAngles;
-		transform.eulerAngles = new Vector3(e.x, e.y, v);
+		var e = _t.eulerAngles;
+		_t.eulerAngles = new Vector3(e.x, e.y, v);
 	}
 
 	// -----------------------
@@ -166,15 +171,15 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual Vector3 forwardVector() {
-		return transform.forward;
+		return _t.forward;
 	}
 
 	public virtual Vector3 upVector() {
-		return transform.up;
+		return _t.up;
 	}
 
 	public virtual Vector3 rightVector() {
-		return transform.right;
+		return _t.right;
 	}
 
 	public virtual void aimTowardsNearestEnemy() {
@@ -191,14 +196,14 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void rotateTowardsPos(Vector3 targetPos)
 	{
-		Vector3 targetDir = (targetPos - transform.position).normalized;
-		float angle = AngleSigned(transform.forward, targetDir, transform.up);
+		Vector3 targetDir = (targetPos - _t.position).normalized;
+		float angle = AngleSigned(_t.forward, targetDir, _t.up);
 
 		//print ("angle " + Mathf.Floor(angle));
 
 		//float v = angle > 0 ? Mathf.Sqrt(Mathf.Abs(angle)) : - Mathf.Sqrt(Mathf.Abs(angle));
 		//rigidBody().AddTorque(- f * v * rotationThrust, ForceMode.Force);
-		rigidBody().AddTorque( transform.up * angle * rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
 		print ("aiming");
 	}
 
@@ -221,11 +226,11 @@ public class GameUnit : MonoBehaviour {
 
 	void OnDrawGizmos() {
 		Gizmos.color = Color.yellow;
-//		Gizmos.DrawSphere(transform.position, 1);
+//		Gizmos.DrawSphere(_t.position, 1);
 
 		var obj = closestEnemyObject ();
 		if (obj != null) {
-			Gizmos.DrawLine(transform.position, obj.transform.position);
+			Gizmos.DrawLine(_t.position, obj.transform.position);
 		}
 	}
 }

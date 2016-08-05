@@ -9,7 +9,7 @@ public class Tank : GameUnit {
 	}
 
 	GameObject turret() {
-		return transform.Find("headdus1").gameObject;
+		return _t.Find("headdus1").gameObject;
 	}
 
 
