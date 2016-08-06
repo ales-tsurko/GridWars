@@ -204,7 +204,7 @@ public class GameUnit : MonoBehaviour {
 
 	// --- aiming --------------------
 
-	public virtual void aimTowardsNearestEnemy() {
+	public virtual void steerTowardsNearestEnemy() {
 		var obj = closestEnemyObject ();
 		if (obj != null) {
 			rotateTowardObject (obj);
@@ -218,7 +218,7 @@ public class GameUnit : MonoBehaviour {
 		float angle = AngleSigned(_t.forward, targetDir, _t.up);
 		angleToTarget = angle;
 
-		if (true) {
+		if (false) {
 			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
 			Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
 			Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
@@ -233,6 +233,8 @@ public class GameUnit : MonoBehaviour {
 		}
 
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
+
+		print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
 
 		if (isEnemyOf (otherUnit)) {
 			print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);

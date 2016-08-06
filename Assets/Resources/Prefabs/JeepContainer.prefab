@@ -120,7 +120,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 2.5
   m_Drag: 1
-  m_AngularDrag: 0.2
+  m_AngularDrag: 20
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -166,8 +166,10 @@ MonoBehaviour:
   thrust: 0
   rotationThrust: 0
   powerCost: 4
-  _t: {fileID: 0}
   canAim: 1
+  _t: {fileID: 0}
+  target: {fileID: 0}
+  angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
 --- !u!114 &114000011336741972

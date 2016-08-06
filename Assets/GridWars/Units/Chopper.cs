@@ -32,7 +32,7 @@ public class Chopper : GameUnit {
 		if (y () < cruiseHeight) {
 			rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
 		} 
-		aimTowardsNearestEnemy();
+		steerTowardsNearestEnemy();
 
 		if (y () > 4) {
 			rigidBody().AddForce(_t.forward * thrust);
@@ -43,7 +43,7 @@ public class Chopper : GameUnit {
 			setRotZ ( diff * 2);
 		}
 		*/
-		//aimTowardsNearestEnemy ();
+		//steerTowardsNearestEnemy ();
 
 	}
 		
