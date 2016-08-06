@@ -15,7 +15,6 @@ public class GameUnit : MonoBehaviour {
 	public GameObject target = null;
 	public float angleToTarget = 0;
 
-	public bool canAim = true;
 	public Vector3 lastUpTorque;
 	public bool isStaticUnit = false;
 
