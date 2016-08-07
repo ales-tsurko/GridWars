@@ -166,8 +166,10 @@ MonoBehaviour:
   thrust: 0
   rotationThrust: 0
   powerCost: 4
-  _t: {fileID: 0}
   canAim: 1
+  _t: {fileID: 0}
+  target: {fileID: 0}
+  angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
 --- !u!114 &114000012686117562
@@ -176,7 +178,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012628731020}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
   m_Name: 
