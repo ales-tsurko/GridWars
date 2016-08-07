@@ -2,17 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Missile : MonoBehaviour {
 
-	public  void Start () {
-		//base.Start();
+
+public class Missile : Projectile {
+	public float thrust = 10;
+
+	public override void Start () {
+		base.Start();
 
 	}
 
+	public override void FixedUpdate () {
 
-
-	public  void FixedUpdate () {
-
+		rigidBody().AddForce (transform.forward * thrust);
 
 	}
 

@@ -21,6 +21,7 @@ GameObject:
   - 4: {fileID: 4000012331907038}
   - 33: {fileID: 33000011651257676}
   - 23: {fileID: 23000010439491648}
+  - 114: {fileID: 114000010764368804}
   m_Layer: 0
   m_Name: headdus1
   m_TagString: Untagged
@@ -346,6 +347,25 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114000010764368804
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010270239858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+    type: 2}
+  isActive: 1
+  isFixed: 1
+  ammoCount: -1
+  reloadTimeInSeconds: 2
+  isReloadedAfterTime: 0
 --- !u!114 &114000010979423438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -362,6 +382,7 @@ MonoBehaviour:
   powerCost: 4
   canAim: 1
   _t: {fileID: 0}
+  isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}

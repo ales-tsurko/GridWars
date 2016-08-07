@@ -3,25 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Weapon : MonoBehaviour {
+	public Player player;
 	public GameObject target;
+	public GameObject prefabProjectile;
 
 	public bool isActive = true;
 	public bool isFixed = true;
 	public int ammoCount = -1;
-	public float reloadTimeInSeconds = 2.0f;
-	public float isReloadedAfterTime = 0;
+	public float reloadTimeInSeconds = 3.0f;
+	public float isReloadedAfterTime = 2;
 
 	public void Start () {
 		//base.Start();
 	}
 
 	public void FixedUpdate () {
-
 		if (isActive) {
 			FireIfAppropriate ();
 			AimIfAble ();
 		}
-
 	}
 
 	// --- aiming ------------------
@@ -43,6 +43,8 @@ public class Weapon : MonoBehaviour {
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
+
+			//print("Weapon AngleToTarget");
 
 			if (true) {
 				Debug.DrawLine (t.position, t.position + t.forward * 10.0f, Color.blue); // forward blue
@@ -89,10 +91,30 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		return AngleToTarget () < 0.0;
-	}
 		
-	public void Fire() {
+		return AngleToTarget () < 1.0;
+	}
+
+	public void Reload() {
 		isReloadedAfterTime = Time.time + reloadTimeInSeconds;
+	}
+
+	public void Fire() {
+		CreateProjectile();
+		ammoCount --;
+		Reload();
+	}
+
+	Projectile CreateProjectile() {
+		float barrelLength = 4; // hack - should look at weapon size
+
+		var obj = Instantiate(prefabProjectile);
+		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
+		obj.transform.rotation = transform.rotation;
+
+		var unit = obj.GetComponent<Projectile>();
+		unit.player = player;
+
+		return unit;
 	}
 }

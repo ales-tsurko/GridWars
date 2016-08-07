@@ -208,6 +208,13 @@ public class GameUnit : MonoBehaviour {
 
 	// --- aiming --------------------
 
+	public virtual void steerTowardsTarget() {
+		pickTarget ();
+		if (target != null) {
+			rotateTowardObject (target);
+		}
+	}
+
 	public virtual void steerTowardsNearestEnemy() {
 		var obj = closestEnemyObject ();
 		if (obj != null) {
@@ -240,10 +247,10 @@ public class GameUnit : MonoBehaviour {
 
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 
-		print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
+		//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
 
 		if (isEnemyOf (otherUnit)) {
-			print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
+			//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
 			Destroy (gameObject);
 		}
 

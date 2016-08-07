@@ -70,6 +70,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012562478642}
+  - 114: {fileID: 114000010641341426}
   m_Layer: 0
   m_Name: MissileLauncherLeft
   m_TagString: Untagged
@@ -171,6 +172,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011369243156}
+  - 114: {fileID: 114000012962005004}
   m_Layer: 0
   m_Name: MissileLauncherRight
   m_TagString: Untagged
@@ -1842,6 +1844,29 @@ MonoBehaviour:
   lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   cruiseHeight: 15
+  missileLauncherLeft: {fileID: 0}
+  missileLauncherRight: {fileID: 0}
+  mainRotor: {fileID: 0}
+  tailRotor: {fileID: 0}
+--- !u!114 &114000010641341426
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010332594750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+    type: 2}
+  isActive: 1
+  isFixed: 1
+  ammoCount: -1
+  reloadTimeInSeconds: 2
+  isReloadedAfterTime: 0
 --- !u!114 &114000011248485380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1853,3 +1878,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000012962005004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010941729614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+    type: 2}
+  isActive: 1
+  isFixed: 1
+  ammoCount: -1
+  reloadTimeInSeconds: 2
+  isReloadedAfterTime: 0
