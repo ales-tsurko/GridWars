@@ -15,6 +15,7 @@ public class Weapon : MonoBehaviour {
 
 	public void Start () {
 		//base.Start();
+		Reload();
 	}
 
 	public void FixedUpdate () {
@@ -96,12 +97,16 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Reload() {
-		isReloadedAfterTime = Time.time + reloadTimeInSeconds;
+		if (hasAmmo()) {
+			if (ammoCount > 0) {
+				ammoCount--;
+			}
+			isReloadedAfterTime = Time.time + reloadTimeInSeconds;
+		}
 	}
 
 	public void Fire() {
 		CreateProjectile();
-		ammoCount --;
 		Reload();
 	}
 

@@ -61,10 +61,16 @@ public class Chopper : GameUnit {
 				//audio.Play ();
 				//print("collision.relativeVelocity.magnitude " + collision.relativeVelocity.magnitude);
 				//Destroy (gameObject);
-				isRunning = false;
+				Disable();
 			}
 		}
 
+	}
+
+	public void Disable() {
+		isRunning = false;
+		missileLauncherLeft.isActive = false;
+		missileLauncherRight.isActive = false;
 	}
 
 }

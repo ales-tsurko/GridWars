@@ -23,6 +23,7 @@ public class Tank : GroundVehicle {
 
 
 	public override void FixedUpdate () {
+		base.FixedUpdate();
 		pickTarget ();
 		steerTowardsNearestEnemy ();
 	}
