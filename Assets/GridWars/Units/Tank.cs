@@ -47,7 +47,6 @@ public class Tank : GameUnit {
 			float newAngle = -angle;
 			float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.01f;
 
-
 			var e = t.eulerAngles;
 			float oldAngle = e.y;
 			t.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
