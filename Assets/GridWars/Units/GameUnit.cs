@@ -11,6 +11,7 @@ public class GameUnit : MonoBehaviour {
 	public bool canAim = true;
 	[HideInInspector]
 	public Transform _t;
+	public bool isRunning = true;
 
 	public GameObject target = null;
 	public float angleToTarget = 0;
@@ -181,18 +182,21 @@ public class GameUnit : MonoBehaviour {
 		);
 	}
 		
-	public virtual void FixedUpdate () {
-		rigidBody().AddForce(_t.forward * thrust);
-
+	public virtual void RemoveIfOutOfBounds () {
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
 		}
 	}
 
+	public virtual void FixedUpdate () {
+
+		RemoveIfOutOfBounds ();
+	}
+
 	// -------------------
 
 
-	public static float AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)
+	public static float AngleBetweenOnAxis(Vector3 v1, Vector3 v2, Vector3 n)
 	{
 		// Determine the signed angle between two vectors, 
 		// with normal 'n' as the rotation axis.
@@ -215,14 +219,16 @@ public class GameUnit : MonoBehaviour {
 		var targetPos = obj.transform.position;
 
 		Vector3 targetDir = (targetPos - _t.position).normalized;
-		float angle = AngleSigned(_t.forward, targetDir, _t.up);
+		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		angleToTarget = angle;
 
+		/*
 		if (false) {
 			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
 			Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
 			Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
 		}
+		*/
 
 		rigidBody().AddTorque( _t.up * angle *rotationThrust, ForceMode.Force);
 	}
@@ -244,11 +250,16 @@ public class GameUnit : MonoBehaviour {
 		foreach (ContactPoint contact in collision.contacts) {
 			Debug.DrawRay (contact.point, contact.normal, Color.white);
 		}
+
+		/*
 		if (collision.relativeVelocity.magnitude > 2) {
 			//audio.Play ();
 			//print("collision");
+			Destroy (gameObject);
 		}
+		*/
 	}
+
 
 	void OnDrawGizmos() {
 		/*

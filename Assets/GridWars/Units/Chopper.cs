@@ -3,11 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Chopper : GameUnit {
+	public float cruiseHeight = 15f;
 
 	public override void Start () {
 		base.Start();
 		thrust = 10;
 		rotationThrust = 0.01f;
+		isRunning = true;
 	}
 		
 	GameObject mainRotor() {
@@ -22,20 +24,23 @@ public class Chopper : GameUnit {
 	public override void FixedUpdate () {
 		//base.FixedUpdate();
 
-		Object_rotDY (mainRotor (), 20);
-		Object_rotDY (tailRotor (), 20);
+		RemoveIfOutOfBounds ();
 
-		//setY(6);
-		float cruiseHeight = 15f;
-		float diff = cruiseHeight - y ();
+		if (isRunning) {
+			Object_rotDY (mainRotor (), 20);
+			Object_rotDY (tailRotor (), 20);
 
-		if (y () < cruiseHeight) {
-			rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
-		} 
-		steerTowardsNearestEnemy();
+			float diff = cruiseHeight - y ();
 
-		if (y () > 4) {
-			rigidBody().AddForce(_t.forward * thrust);
+			if (y () < cruiseHeight) {
+				rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
+			} 
+			steerTowardsNearestEnemy();
+
+			if (y () > 4) {
+				rigidBody().AddForce(_t.forward * thrust);
+		}
+
 		}
 
 		/*
@@ -46,6 +51,17 @@ public class Chopper : GameUnit {
 		//steerTowardsNearestEnemy ();
 
 	}
-		
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.collider.name == "BattlefieldPlane") {
+			if (collision.relativeVelocity.magnitude > 2) {
+				//audio.Play ();
+				print("collision.relativeVelocity.magnitude " + collision.relativeVelocity.magnitude);
+				//Destroy (gameObject);
+				isRunning = false;
+			}
+		}
+
+	}
 
 }

@@ -2,14 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Tank : GroundVehicle {
-
-
+public class Turret : GameUnit {
 
 	public override void Start () {
 		base.Start();
-		thrust = 850;
-		rotationThrust = 60;
 	}
 
 	GameObject turret() {
@@ -23,7 +19,7 @@ public class Tank : GroundVehicle {
 		pickTarget ();
 
 		if (target) {
-			
+
 			if (Mathf.Abs (angleToTarget) < 45) {
 				base.FixedUpdate ();
 
@@ -51,7 +47,6 @@ public class Tank : GroundVehicle {
 		}
 
 		return 0;
-
 	}
 
 	public void aimTurret() {

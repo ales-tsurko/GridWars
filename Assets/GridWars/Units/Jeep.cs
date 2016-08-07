@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Jeep : GameUnit {
+public class Jeep : GroundVehicle {
 	public override void Start () {
 		base.Start();
-		thrust = 35;
+		thrust = 45;
 		rotationThrust = 4.0f;
 	}
 
