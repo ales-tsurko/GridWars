@@ -13,6 +13,7 @@ public class Tank : GroundVehicle {
 		rotationThrust = 60;
 		GameObject turret = _t.Find("headdus1").gameObject;
 		turretWeapon = turret.GetComponent<Weapon>();
+		turretWeapon.enabled = true;
 	}
 
 

@@ -19,7 +19,9 @@ public class Chopper : GameUnit {
 		tailRotor = _t.Find("Group006").gameObject;
 			
 		missileLauncherLeft = _t.Find("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
+		missileLauncherLeft.enabled = true;
 		missileLauncherRight = _t.Find("MissileLauncherRight").gameObject.GetComponent<Weapon>();
+		missileLauncherRight.enabled = true;
 	}
 
 	public override void pickTarget () {

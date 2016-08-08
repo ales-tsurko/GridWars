@@ -11,11 +11,9 @@ public class Tower : GameUnit {
 		base.Start();
 		canAim = false;
 
-		/*
 		iconUnit = CreateUnit();
 		iconUnit.GetComponent<GameUnit>().enabled = false;
 		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
-		*/
 	}
 
 	public void OnMouseDown() {
