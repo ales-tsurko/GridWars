@@ -152,7 +152,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011943926334}
-  - 111: {fileID: 111000012664209662}
   - 54: {fileID: 54000013022454656}
   - 65: {fileID: 65000011572227212}
   - 114: {fileID: 114000010045215140}
@@ -1808,20 +1807,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 4}
   m_Center: {x: 0, y: 0.4, z: 0}
---- !u!111 &111000012664209662
-Animation:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010887795516}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &114000010045215140
 MonoBehaviour:
   m_ObjectHideFlags: 1
