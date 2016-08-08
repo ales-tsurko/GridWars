@@ -110,7 +110,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010180305908}
-  m_Mesh: {fileID: 4300000, guid: f60cde5206d4017448cdbac53e31ed0f, type: 3}
+  m_Mesh: {fileID: 4300000, guid: cf299b1d8d165469996eafe3168f41a0, type: 2}
 --- !u!54 &54000012496148262
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -168,6 +168,7 @@ MonoBehaviour:
   powerCost: 4
   canAim: 1
   _t: {fileID: 0}
+  isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}
