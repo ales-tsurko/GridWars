@@ -18,7 +18,7 @@ public class Player {
 
 	public Color color {
 		get {
-			return playerNumber == 1 ? Color.red : Color.blue;
+			return playerNumber == 1 ? Color.blue : Color.red;
 		}
 	}
 
