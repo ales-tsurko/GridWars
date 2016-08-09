@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using UnityEditor;
+
 public class GameUnitIcon : MonoBehaviour {
 
 	// Use this for initialization
@@ -14,6 +16,8 @@ public class GameUnitIcon : MonoBehaviour {
 		GetComponent<Collider>().enabled = false;
 		GetComponent<Rigidbody>().useGravity = false;
 		this.EachMaterial(m => {
+			m.shader = Shader.Find("Hidden/VacuumShaders/The Amazing Wireframe/Physically Based/Transparent/Simple/Diffuse");
+
 			m.SetColor("_V_WIRE_Color", Color.white);
 			m.SetColor("_Color", new Color(0, 0, 0, 0));
 		});

@@ -28,13 +28,11 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public static GameObject Load(System.Type type) {
-		Debug.Log("GameUnit/" + type.Name + "/" + type.Name);
-		//Debug.Log(Resources.Load("GameUnit/" + type.Name + "/" + type.Name, type));
 		return (GameObject) Resources.Load("GameUnit/" + type.Name + "/Prefabs/" + type.Name);
 	}
 
 	public static T Instantiate<T>() where T: GameUnit {
-		return (T)Instantiate(typeof(T));
+		return (T) GameUnit.Instantiate(typeof(T));
 	}
 
 	public static GameUnit Instantiate(System.Type type) {
@@ -51,6 +49,7 @@ public class GameUnit : MonoBehaviour {
 			GetComponent<Collider>().enabled = true;
 			GetComponent<Rigidbody>().useGravity = true;
 			this.EachMaterial(m => {
+				m.shader = Shader.Find("VacuumShaders/The Amazing Wireframe/Physically Based");
 				m.SetColor("_V_WIRE_Color", new Color(0, 0, 0, 0));
 				if (player == null) {
 					m.SetColor("_Color", Color.white);
