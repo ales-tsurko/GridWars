@@ -8,11 +8,16 @@ public class Weapon : MonoBehaviour {
 	public GameObject target;
 	public GameObject prefabProjectile;
 
-	public bool isActive = true;
+	public bool isActive = false;
 	public bool isFixed = true;
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
-	public float isReloadedAfterTime = 2;
+	public Quaternion rotOffset;
+
+	[HideInInspector]
+	float isReloadedAfterTime = 2;
+
+	//public Vector3 angularSpread; // accuracy in euler angles
 
 	public void Start () {
 		//base.Start();
@@ -117,6 +122,14 @@ public class Weapon : MonoBehaviour {
 		var obj = Instantiate(prefabProjectile);
 		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
 		obj.transform.rotation = transform.rotation;
+
+		//if (rotOffset != null) {
+			print("obj.transform.rotation: " + obj.transform.rotation);
+			obj.transform.rotation *= rotOffset;
+			print("rotOffset: " + rotOffset);
+			print("obj.transform.rotation after: " + obj.transform.rotation);
+
+		//}
 
 
 		var unit = obj.GetComponent<Projectile>();
