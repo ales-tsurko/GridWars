@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SharedWireframe
+  m_Name: Unit
   m_Shader: {fileID: 4800000, guid: 3262e2bafe8eac24bba214db87060273, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -99,7 +99,7 @@ Material:
       second: 1
     - first:
         name: _Glossiness
-      second: 0.5
+      second: 0
     - first:
         name: _GlossyReflections
       second: 1
@@ -199,13 +199,13 @@ Material:
     m_Colors:
     - first:
         name: _Color
-      second: {r: 0, g: 0, b: 0, a: 0.49803922}
+      second: {r: 0, g: 0, b: 0, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
     - first:
         name: _V_WIRE_Color
-      second: {r: 1, g: 1, b: 1, a: 1}
+      second: {r: 1, g: 1, b: 1, a: 0}
     - first:
         name: _V_WIRE_MainTex_Scroll
       second: {r: 0, g: 0, b: 0, a: 0}

@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: e631cdd44108e4a82941a930a527460d, type: 2}
+  - {fileID: 2100000, guid: f4a1da490c3ea4c7eb73e7e1b0805957, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -103,4 +103,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrust: 0
-  rotationSpeed: 0
+  rotationThrust: 0
+  powerCost: 4
+  canAim: 1
+  _t: {fileID: 0}
+  isRunning: 1
+  target: {fileID: 0}
+  angleToTarget: 0
+  lastUpTorque: {x: 0, y: 0, z: 0}
+  isStaticUnit: 0
+  unitPrefab: {fileID: 0}

@@ -50,7 +50,8 @@ public class PowerSource : MonoBehaviour {
 				segment.transform.localScale = new Vector3(segmentLengthScale, segment.transform.localScale.y, segmentWidthScale);
 			}
 
-			segment.GetComponent<MeshRenderer>().material = player.enabledMaterial;
+			player.Paint(segment.gameObject);
+
 			segment.SetActive(false);
 			segments.Add(segment);
 		}

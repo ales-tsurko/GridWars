@@ -61,13 +61,6 @@ public class GameManager : MonoBehaviour {
 
 		//print ("created tower " + tower);
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate() {
-		foreach (var p in players) {
-			p.FixedUpdate();
-		}
-	}
 
 	void AddPlayer() {
 		var p = new Player();

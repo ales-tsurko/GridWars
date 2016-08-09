@@ -22,20 +22,18 @@ public class Tower : GameUnit {
 		}
 	}
 
-	GameUnit iconUnit;
-
-	public override void FixedUpdate () {
-		GetComponent<MeshRenderer>().material = readyMaterial;
+	public void ReleaseUnit() {
+		CreateUnit();
 	}
 
-	Material readyMaterial {
-		get {
-			if (canReleaseUnit) {
-				return player.enabledMaterial;
-			}
-			else {
-				return player.disabledMaterial;
-			}
+	GameUnit iconUnit;
+
+	void Update () {
+		if (canReleaseUnit) {
+			player.Paint(gameObject);
+		}
+		else {
+			player.PaintAsDisabled(gameObject);
 		}
 	}
 
@@ -43,10 +41,6 @@ public class Tower : GameUnit {
 		get {
 			return player.powerSource.power >= unitPrefab.GetComponent<GameUnit>().powerCost;
 		}
-	}
-
-	public void ReleaseUnit() {
-		CreateUnit();
 	}
 
 	GameUnit CreateUnit() {

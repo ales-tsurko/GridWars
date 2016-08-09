@@ -42,23 +42,10 @@ public class GameUnit : MonoBehaviour {
 	public virtual void Start () {
 		thrust = 0.0f;
 
-		if (!isStaticUnit) {
-			this.EachRenderer(r => {
-				r.material = new Material(r.material);
-			});
-			GetComponent<Collider>().enabled = true;
-			GetComponent<Rigidbody>().useGravity = true;
-			this.EachMaterial(m => {
-				m.shader = Shader.Find("VacuumShaders/The Amazing Wireframe/Physically Based");
-				m.SetColor("_V_WIRE_Color", new Color(0, 0, 0, 0));
-				if (player == null) {
-					m.SetColor("_Color", Color.white);
-				}
-				else {
-					m.SetColor("_Color", player.color);
-				}
+		gameObject.CloneMaterials();
 
-			});
+		if (player != null) {
+			player.Paint(gameObject);
 		}
 
 		rotationThrust = 1.0f;

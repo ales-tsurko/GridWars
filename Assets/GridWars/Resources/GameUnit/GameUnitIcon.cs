@@ -7,15 +7,9 @@ public class GameUnitIcon : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		/*
-		var player = new Player();
-		player.playerNumber = 1;
-		GetComponent<GameUnit>().player = player;
-		*/
-
 		GetComponent<Collider>().enabled = false;
 		GetComponent<Rigidbody>().useGravity = false;
-		this.EachMaterial(m => {
+		gameObject.EachMaterial(m => {
 			m.shader = Shader.Find("Hidden/VacuumShaders/The Amazing Wireframe/Physically Based/Transparent/Simple/Diffuse");
 
 			m.SetColor("_V_WIRE_Color", Color.white);
