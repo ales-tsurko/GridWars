@@ -19,13 +19,17 @@ public class Chopper : GameUnit {
 		tailRotor = _t.Find("Group006").gameObject;
 			
 		missileLauncherLeft = _t.Find("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
+		missileLauncherLeft.owner = gameObject;
 		missileLauncherLeft.enabled = true;
+
 		missileLauncherRight = _t.Find("MissileLauncherRight").gameObject.GetComponent<Weapon>();
+		missileLauncherRight.owner = gameObject;
 		missileLauncherRight.enabled = true;
 	}
 
 	public override void pickTarget () {
 		base.pickTarget();
+		// we may want to have independent targets for multiple weapons...
 		missileLauncherLeft.target = target;
 		missileLauncherRight.target = target;
 	}
@@ -66,7 +70,6 @@ public class Chopper : GameUnit {
 				Disable();
 			}
 		}
-
 	}
 
 	public void Disable() {
