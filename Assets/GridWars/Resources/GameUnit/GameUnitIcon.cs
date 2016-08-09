@@ -7,8 +7,8 @@ public class GameUnitIcon : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GetComponent<Collider>().enabled = false;
-		GetComponent<Rigidbody>().useGravity = false;
+		Destroy(GetComponent<Collider>());
+		Destroy(GetComponent<Rigidbody>());
 		gameObject.EachMaterial(m => {
 			m.shader = Shader.Find("Hidden/VacuumShaders/The Amazing Wireframe/Physically Based/Transparent/Simple/Diffuse");
 
