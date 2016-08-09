@@ -5,14 +5,16 @@ using System.Collections.Generic;
 public class Tank : GroundVehicle {
 
 	//public GameObject turret;
-	public Weapon turretWeapon;
+	public Weapon turretWeapon {
+		get {
+			return _t.Find("headdus1").GetComponent<Weapon>();
+		}
+	}
 
 	public override void Start () {
 		base.Start();
 		thrust = 850;
 		rotationThrust = 60;
-		GameObject turret = _t.Find("headdus1").gameObject;
-		turretWeapon = turret.GetComponent<Weapon>();
 		turretWeapon.enabled = true;
 		turretWeapon.owner = gameObject;
 	}
@@ -28,5 +30,9 @@ public class Tank : GroundVehicle {
 		base.FixedUpdate();
 		pickTarget ();
 		steerTowardsNearestEnemy ();
+	}
+
+	void OnDisable() {
+		turretWeapon.enabled = false;
 	}
 }

@@ -1839,7 +1839,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010332594750}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
   m_Name: 
@@ -1852,7 +1852,7 @@ MonoBehaviour:
   isFixed: 1
   ammoCount: -1
   reloadTimeInSeconds: 2
-  isReloadedAfterTime: 0
+  rotOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114000011248485380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1870,7 +1870,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010941729614}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
   m_Name: 
@@ -1883,4 +1883,4 @@ MonoBehaviour:
   isFixed: 1
   ammoCount: -1
   reloadTimeInSeconds: 2
-  isReloadedAfterTime: 0
+  rotOffset: {x: 0, y: 0, z: 0, w: 0}

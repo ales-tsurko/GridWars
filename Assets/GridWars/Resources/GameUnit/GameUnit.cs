@@ -271,6 +271,8 @@ public class GameUnit : MonoBehaviour {
 		*/
 	}
 
+	// --- icons --------------------
+
 
 	void OnDrawGizmos() {
 		/*

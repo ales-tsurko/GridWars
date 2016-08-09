@@ -4,10 +4,20 @@ using System.Collections.Generic;
 
 public class Chopper : GameUnit {
 	public float cruiseHeight = 15f;
-	public Weapon missileLauncherLeft;
-	public Weapon missileLauncherRight;
 	public GameObject mainRotor;
 	public GameObject tailRotor;
+
+	public Weapon missileLauncherLeft {
+		get {
+			return _t.Find("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
+		}
+	}
+
+	public Weapon missileLauncherRight {
+		get {
+			return _t.Find("MissileLauncherRight").gameObject.GetComponent<Weapon>();
+		}
+	}
 
 	public override void Start () {
 		base.Start();
@@ -18,13 +28,8 @@ public class Chopper : GameUnit {
 		mainRotor = _t.Find("Group003").gameObject;
 		tailRotor = _t.Find("Group006").gameObject;
 			
-		missileLauncherLeft = _t.Find("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
 		missileLauncherLeft.owner = gameObject;
-		missileLauncherLeft.enabled = true;
-
-		missileLauncherRight = _t.Find("MissileLauncherRight").gameObject.GetComponent<Weapon>();
 		missileLauncherRight.owner = gameObject;
-		missileLauncherRight.enabled = true;
 	}
 
 	public override void pickTarget () {
@@ -76,6 +81,11 @@ public class Chopper : GameUnit {
 		isRunning = false;
 		missileLauncherLeft.isActive = false;
 		missileLauncherRight.isActive = false;
+	}
+
+	void OnDisable() {
+		missileLauncherLeft.enabled = false;
+		missileLauncherRight.enabled = false;
 	}
 
 }
