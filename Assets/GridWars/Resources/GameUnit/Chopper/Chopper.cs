@@ -9,13 +9,13 @@ public class Chopper : GameUnit {
 
 	public Weapon missileLauncherLeft {
 		get {
-			return _t.Find("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
+			return _t.FindDeepChild("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
 		}
 	}
 
 	public Weapon missileLauncherRight {
 		get {
-			return _t.Find("MissileLauncherRight").gameObject.GetComponent<Weapon>();
+			return _t.FindDeepChild("MissileLauncherRight").gameObject.GetComponent<Weapon>();
 		}
 	}
 
@@ -25,8 +25,8 @@ public class Chopper : GameUnit {
 		rotationThrust = 0.01f;
 		isRunning = true;
 
-		mainRotor = _t.Find("Group003").gameObject;
-		tailRotor = _t.Find("Group006").gameObject;
+		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
+		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 			
 		missileLauncherLeft.owner = gameObject;
 		missileLauncherRight.owner = gameObject;

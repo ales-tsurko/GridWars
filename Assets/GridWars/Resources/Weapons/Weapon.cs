@@ -117,17 +117,21 @@ public class Weapon : MonoBehaviour {
 	}
 
 	Projectile CreateProjectile() {
+
+		//Bounds bounds = owner.renderer.bounds;
+		//float barrelLength = bounds.max.z * 1.1f; // put it outside
+
 		float barrelLength = 4; // hack - should look at weapon size
 
 		var obj = Instantiate(prefabProjectile);
-		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
+		obj.transform.position = transform.position + (transform.forward * barrelLength);
 		obj.transform.rotation = transform.rotation;
 
 		//if (rotOffset != null) {
-			print("obj.transform.rotation: " + obj.transform.rotation);
-			obj.transform.rotation *= rotOffset;
-			print("rotOffset: " + rotOffset);
-			print("obj.transform.rotation after: " + obj.transform.rotation);
+			print("obj.transform.rotation: " + obj.transform.eulerAngles);
+			obj.transform.rotation = rotOffset;
+			print("rotOffset: " + rotOffset.eulerAngles);
+			print("obj.transform.rotation after: " + obj.transform.rotation.eulerAngles);
 
 		//}
 
