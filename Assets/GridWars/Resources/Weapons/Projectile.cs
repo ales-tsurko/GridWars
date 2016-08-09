@@ -35,6 +35,7 @@ public class Projectile : MonoBehaviour {
 		}
 	}
 
+	/*
 	#if UNITY_EDITOR
 
 	void OnDrawGizmos()
@@ -51,4 +52,5 @@ public class Projectile : MonoBehaviour {
 	}
 
 	#endif
+	*/
 }

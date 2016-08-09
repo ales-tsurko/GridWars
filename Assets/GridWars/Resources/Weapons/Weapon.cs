@@ -115,7 +115,7 @@ public class Weapon : MonoBehaviour {
 		float barrelLength = 4; // hack - should look at weapon size
 
 		var obj = Instantiate(prefabProjectile);
-		obj.transform.position = transform.position + new Vector3(0, 0, -barrelLength);
+		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
 		obj.transform.rotation = transform.rotation;
 
 

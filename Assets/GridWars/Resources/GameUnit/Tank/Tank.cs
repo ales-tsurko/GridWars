@@ -14,6 +14,7 @@ public class Tank : GroundVehicle {
 		GameObject turret = _t.Find("headdus1").gameObject;
 		turretWeapon = turret.GetComponent<Weapon>();
 		turretWeapon.enabled = true;
+		turretWeapon.owner = gameObject;
 	}
 
 
