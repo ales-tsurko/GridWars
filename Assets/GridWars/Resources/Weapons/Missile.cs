@@ -13,7 +13,6 @@ public class Missile : Projectile {
 	}
 
 	public override void FixedUpdate () {
-
 		rigidBody().AddForce (transform.forward * thrust);
 
 	}

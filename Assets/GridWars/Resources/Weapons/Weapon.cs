@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Weapon : MonoBehaviour {
 	public Player player;
+	public GameObject owner;
 	public GameObject target;
 	public GameObject prefabProjectile;
 
@@ -92,8 +93,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		
-		return AngleToTarget () < 1.0;
+		return true;
+		//return AngleToTarget () < 1.0;
 	}
 
 	public void Reload() {
@@ -114,10 +115,12 @@ public class Weapon : MonoBehaviour {
 		float barrelLength = 4; // hack - should look at weapon size
 
 		var obj = Instantiate(prefabProjectile);
-		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
+		obj.transform.position = transform.position + new Vector3(0, 0, -barrelLength);
 		obj.transform.rotation = transform.rotation;
 
+
 		var unit = obj.GetComponent<Projectile>();
+		unit.copyVelocityFrom(owner);
 		unit.player = player;
 
 		return unit;

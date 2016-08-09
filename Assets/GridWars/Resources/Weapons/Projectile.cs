@@ -12,6 +12,9 @@ public class Projectile : MonoBehaviour {
 		return GetComponent<Rigidbody> ();
 	}
 
+	public void copyVelocityFrom(GameObject obj) {
+		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
+	}
 
 	public virtual void Start () {
 		//base.Start();
@@ -22,4 +25,30 @@ public class Projectile : MonoBehaviour {
 		
 
 	}
+
+	void OnCollisionEnter(Collision collision) {
+		// destroy on ground collision
+		if (collision.collider.name == "BattlefieldPlane") {
+			if (collision.relativeVelocity.magnitude > 2) {
+				Destroy (gameObject);
+			}
+		}
+	}
+
+	#if UNITY_EDITOR
+
+	void OnDrawGizmos()
+	{
+		Gizmos.color = Color.yellow;
+
+		BoxCollider col = GetComponent<BoxCollider>();
+
+		if ( col )
+		{
+			Gizmos.matrix = transform.localToWorldMatrix;
+			Gizmos.DrawWireCube( Vector3.zero + col.center, col.size );
+		}
+	}
+
+	#endif
 }
