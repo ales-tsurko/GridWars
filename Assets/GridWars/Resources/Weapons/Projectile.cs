@@ -29,9 +29,9 @@ public class Projectile : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		// destroy on ground collision
 		if (collision.collider.name == "BattlefieldPlane") {
-			if (collision.relativeVelocity.magnitude > 2) {
+			//if (collision.relativeVelocity.magnitude > 2) {
 				Destroy (gameObject);
-			}
+			//}
 		}
 	}
 

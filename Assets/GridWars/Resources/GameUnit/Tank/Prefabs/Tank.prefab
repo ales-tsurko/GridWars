@@ -13,7 +13,7 @@ Prefab:
   m_IsPrefabParent: 1
 --- !u!1 &1000010270239858
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -21,7 +21,6 @@ GameObject:
   - 4: {fileID: 4000012331907038}
   - 33: {fileID: 33000011651257676}
   - 23: {fileID: 23000010439491648}
-  - 114: {fileID: 114000010764368804}
   m_Layer: 0
   m_Name: headdus1
   m_TagString: Untagged
@@ -60,6 +59,22 @@ GameObject:
   - 23: {fileID: 23000010870509228}
   m_Layer: 0
   m_Name: Plane001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000012207733930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000010674717266}
+  - 114: {fileID: 114000012507918130}
+  m_Layer: 0
+  m_Name: turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,6 +129,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4000010674717266
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012207733930}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 4000012331907038}
+  m_Father: {fileID: 4000011782213564}
+  m_RootOrder: 0
 --- !u!4 &4000010738899952
 Transform:
   m_ObjectHideFlags: 1
@@ -138,7 +167,7 @@ Transform:
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 4000012331907038}
+  - {fileID: 4000010674717266}
   - {fileID: 4000013556446440}
   - {fileID: 4000010738899952}
   - {fileID: 4000012715756848}
@@ -151,12 +180,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010270239858}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.0055863187, y: 1.7105633, z: 0.022145327}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.005586319, y: -0.48943675, z: 0.022145327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000011782213564}
+  m_Father: {fileID: 4000010674717266}
   m_RootOrder: 0
 --- !u!4 &4000012715756848
 Transform:
@@ -332,26 +361,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4, y: 2.5, z: 7}
   m_Center: {x: 0, y: 1.2, z: -0.2}
---- !u!114 &114000010764368804
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010270239858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  owner: {fileID: 0}
-  target: {fileID: 0}
-  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
-    type: 2}
-  isActive: 1
-  isFixed: 1
-  ammoCount: -1
-  reloadTimeInSeconds: 3
-  rotOffset: {x: -90, y: 0, z: 0, w: 0}
 --- !u!114 &114000010979423438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -384,6 +393,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eeee8a9bbe95440ca1e556eb7ececf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000012507918130
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012207733930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  target: {fileID: 0}
+  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+    type: 2}
+  isActive: 1
+  isFixed: 1
+  ammoCount: -1
+  reloadTimeInSeconds: 3
+  rotOffset: {x: -90, y: 0, z: 0, w: 0}
 --- !u!114 &114000013198533988
 MonoBehaviour:
   m_ObjectHideFlags: 1

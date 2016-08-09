@@ -7,7 +7,7 @@ public class Tank : GroundVehicle {
 	//public GameObject turret;
 	public Weapon turretWeapon {
 		get {
-			return _t.Find("headdus1").GetComponent<Weapon>();
+			return _t.Find("turret").GetComponent<Weapon>();
 		}
 	}
 
@@ -17,6 +17,7 @@ public class Tank : GroundVehicle {
 		rotationThrust = 60;
 		turretWeapon.enabled = true;
 		turretWeapon.owner = gameObject;
+		turretWeapon.isFixed = false;
 	}
 
 
