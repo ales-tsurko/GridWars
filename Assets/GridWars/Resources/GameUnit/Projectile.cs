@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 
 
-public class Projectile : MonoBehaviour {
+public class Projectile : GameUnit {
 	public GameObject explosionPrefab;
+	public float damage = 10;
 
-	public Player player;
-
+	public AudioClip damageClip;
 
 	public virtual Rigidbody rigidBody() {
 		return GetComponent<Rigidbody> ();
@@ -20,18 +20,25 @@ public class Projectile : MonoBehaviour {
 
 	public virtual void Start () {
 		//base.Start();
-
+		PlayBirthSound();
 	}
 		
 	public virtual void FixedUpdate () {
 	}
 
 	void OnCollisionEnter(Collision collision) {
-		// destroy on ground collision
-		if (collision.collider.name == "BattlefieldPlane") {
-			//if (collision.relativeVelocity.magnitude > 2) {
+
 				Explode();
-			//}
+		ApplyDamageTo(collision.gameObject);
+
+	}
+
+	void ApplyDamageTo(GameObject otherGameObject) {
+		var otherUnit = otherGameObject.GetComponent<GameUnit>();
+
+		print("Explode otherUnit = " + otherUnit);
+		if (otherUnit != null) {
+			otherUnit.ApplyDamage(damage);
 		}
 	}
 
@@ -40,14 +47,18 @@ public class Projectile : MonoBehaviour {
 		obj.transform.position = transform.position;
 		obj.transform.rotation = transform.rotation;
 
+		if (damageClip != null) {
+			obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
+			//audioSource.PlayOneShot(damageClip);
+		}
+
 		//Transform t = obj.transform;
 		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
-
 		//print("explode!");
 
 		Destroy (gameObject);
 	}
-
+		
 	/*
 	#if UNITY_EDITOR
 

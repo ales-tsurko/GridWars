@@ -15,6 +15,9 @@ public class Weapon : MonoBehaviour {
 	public Quaternion rotOffset;
 	public float range = -1;
 	public float aimedAngle = 5.0f;
+	public float chanceOfFire = 0.02f; // as fraction of 1
+
+	public AudioClip fireClip;
 
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
@@ -24,6 +27,10 @@ public class Weapon : MonoBehaviour {
 	public void Start () {
 		//base.Start();
 		Reload();
+
+		if (fireClip != null) {
+			gameObject.AddComponent<AudioSource>();
+		}
 	}
 
 	public void FixedUpdate () {
@@ -53,11 +60,12 @@ public class Weapon : MonoBehaviour {
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
-			print("Weapon AngleToTarget");
 
 			if (true) {
-				Debug.DrawLine (t.position, t.position + t.forward * 10.0f, Color.blue); // forward blue
-				Debug.DrawLine (t.position, t.position + targetDir * 10.0f, Color.yellow); // targetDir yellow
+				var r = range == -1 ? 10 : range;
+
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
 			}
 
 			return angle;
@@ -67,10 +75,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool AimIfAble() { 
-		print("AimIfAble1");
+		//print("AimIfAble1");
 
 		if (target && !isFixed) {
-			print("AimIfAble2");
+			//print("AimIfAble2");
 
 			// assumes we can only rotate weapon about Y axis
 
@@ -87,8 +95,12 @@ public class Weapon : MonoBehaviour {
 
 	// --- firing ------------------
 
+	public bool chooseToFire() {
+		return Random.value > chanceOfFire; 
+	}
+
 	public bool FireIfAppropriate() {
-		if (hasAmmo() && isLoaded () && isAimed () && targetInRange()) {
+		if (hasAmmo() && isLoaded () && isAimed () && targetInRange() && chooseToFire()) {
 			Fire ();
 			return true;
 		}
@@ -97,7 +109,6 @@ public class Weapon : MonoBehaviour {
 
 	public float targetDistance() {
 		return Vector3.Distance(owner.transform.position, target.transform.position);
-		//return owner.transform.position.Distance(target.transform.position);
 	}
 	
 	public bool targetInRange() {
@@ -128,6 +139,9 @@ public class Weapon : MonoBehaviour {
 
 	public void Fire() {
 		CreateProjectile();
+		if (fireClip != null) {
+			GetComponent<AudioSource>().PlayOneShot(fireClip);
+		}
 		Reload();
 	}
 
@@ -139,7 +153,7 @@ public class Weapon : MonoBehaviour {
 
 	Projectile CreateProjectile() {
 
-		print("CreateProjectile");
+		//print("CreateProjectile");
 
 		var obj = Instantiate(prefabProjectile);
 		obj.transform.position = transform.position + (transform.forward * barrelLength());

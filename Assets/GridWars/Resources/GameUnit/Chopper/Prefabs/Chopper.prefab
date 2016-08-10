@@ -1820,14 +1820,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrust: 0
   rotationThrust: 0
-  powerCost: 4
+  player: {fileID: 0}
   canAim: 1
+  hitPoints: 1
   _t: {fileID: 0}
   isRunning: 0
   target: {fileID: 0}
   angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
+  powerCost: 4
+  cooldownSeconds: 1
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
+    type: 2}
   cruiseHeight: 15
   mainRotor: {fileID: 0}
   tailRotor: {fileID: 0}
@@ -1842,6 +1848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   owner: {fileID: 0}
   target: {fileID: 0}
   prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
@@ -1851,6 +1858,10 @@ MonoBehaviour:
   ammoCount: -1
   reloadTimeInSeconds: 2
   rotOffset: {x: 0, y: 0, z: 0, w: 0}
+  range: -1
+  aimedAngle: 5
+  chanceOfFire: 0.02
+  fireClip: {fileID: 0}
 --- !u!114 &114000011248485380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1873,6 +1884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   owner: {fileID: 0}
   target: {fileID: 0}
   prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
@@ -1882,3 +1894,7 @@ MonoBehaviour:
   ammoCount: -1
   reloadTimeInSeconds: 2
   rotOffset: {x: 0, y: 0, z: 0, w: 0}
+  range: -1
+  aimedAngle: 5
+  chanceOfFire: 0.02
+  fireClip: {fileID: 0}

@@ -8,6 +8,11 @@ public class GameUnit : MonoBehaviour {
 	public float rotationThrust;
 	public  Player player;
 	public bool canAim = true;
+
+	// Damagable
+	public float hitPoints = 1;
+	//public float maxHitPoints = 1;
+
 	[HideInInspector]
 	public Transform _t;
 	public bool isRunning = true;
@@ -21,6 +26,25 @@ public class GameUnit : MonoBehaviour {
 	//tower
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
+	public float standOffDistance = 20f;
+
+	AudioSource _audioSource;
+	protected AudioSource audioSource {
+		get {
+			if (_audioSource == null) {
+				_audioSource = gameObject.AddComponent<AudioSource>();
+			}
+			return _audioSource;
+		}
+	}
+
+	public AudioClip birthSound {
+		get {
+			return Resources.Load<AudioClip>("GameUnit/" + GetType().Name + "/Sounds/birth");
+		}
+	}
+
+	public GameObject deathExplosionPrefab;
 
 	void Awake () {
 		_t = transform;
@@ -52,6 +76,14 @@ public class GameUnit : MonoBehaviour {
 		}
 
 		rotationThrust = 1.0f;
+
+		PlayBirthSound();
+	}
+
+	protected void PlayBirthSound() {
+		if (birthSound != null) {
+			audioSource.PlayOneShot(birthSound);
+		}
 	}
 
 	public virtual Rigidbody rigidBody() {
@@ -74,8 +106,20 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual bool isEnemyOf(GameUnit otherUnit) {
 		if (player == null) {
-			print ("null player " + this);
+			//print ("null player " + this);
+			return false;
 		}
+
+		if (otherUnit == null) {
+			//print ("null otherUnit " + otherUnit);
+			return false;
+		}
+
+		if (otherUnit.player == null) {
+			//print ("null otherUnit.player " + otherUnit.player);
+			return false;
+		}
+
 		return (player.playerNumber != otherUnit.player.playerNumber);
 		//return (player != null) && (otherUnit.player != null) && (player != otherUnit.player);
 	}
@@ -197,6 +241,10 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void FixedUpdate () {
 
+		if (player == null) {
+			print ("FixedUpdate null player on " + this);
+		}
+
 		RemoveIfOutOfBounds ();
 	}
 
@@ -244,7 +292,11 @@ public class GameUnit : MonoBehaviour {
 		}
 		*/
 
-		rigidBody().AddTorque( _t.up * angle *rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
+	}
+
+	public float targetDistance() {
+		return Vector3.Distance(transform.position, target.transform.position);
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -258,7 +310,7 @@ public class GameUnit : MonoBehaviour {
 
 		if (isEnemyOf (otherUnit)) {
 			//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
-			Destroy (gameObject);
+			//Destroy (gameObject);
 		}
 
 		foreach (ContactPoint contact in collision.contacts) {
@@ -291,5 +343,29 @@ public class GameUnit : MonoBehaviour {
 			}
 		}
 		*/
+	}
+
+	// Damage
+
+	public void ApplyDamage(float damage) {
+		hitPoints -= damage;
+
+		if (hitPoints <= 0) {
+			OnDead();
+		}
+	}
+
+	public void OnDead() {
+		ShowExplosion();
+		Destroy(gameObject);
+	}
+
+	public void ShowExplosion() {
+		var obj = Instantiate(deathExplosionPrefab);
+		obj.transform.position = transform.position;
+		obj.transform.rotation = UnityEngine.Random.rotation;
+		obj.transform.localScale *= 15;
+
+		Destroy(gameObject);
 	}
 }
