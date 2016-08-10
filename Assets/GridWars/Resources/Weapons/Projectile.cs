@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 
 public class Projectile : MonoBehaviour {
+	public GameObject explosionPrefab;
+
 	public Player player;
 
 
@@ -30,9 +32,22 @@ public class Projectile : MonoBehaviour {
 		// destroy on ground collision
 		if (collision.collider.name == "BattlefieldPlane") {
 			//if (collision.relativeVelocity.magnitude > 2) {
-				Destroy (gameObject);
+				Explode();
 			//}
 		}
+	}
+
+	void Explode() {
+		var obj = Instantiate(explosionPrefab);
+		obj.transform.position = transform.position;
+		obj.transform.rotation = transform.rotation;
+
+		//Transform t = obj.transform;
+		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
+
+		print("explode!");
+
+		Destroy (gameObject);
 	}
 
 	/*
