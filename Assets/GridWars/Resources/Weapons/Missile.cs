@@ -8,7 +8,6 @@ public class Missile : Projectile {
 
 	public override void Start () {
 		base.Start();
-
 	}
 
 	public override void FixedUpdate () {

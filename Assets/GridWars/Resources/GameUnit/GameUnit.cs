@@ -26,6 +26,7 @@ public class GameUnit : MonoBehaviour {
 	//tower
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
+	public float standOffDistance = 20f;
 
 	public GameObject explosionPrefab;
 
@@ -267,7 +268,11 @@ public class GameUnit : MonoBehaviour {
 		}
 		*/
 
-		rigidBody().AddTorque( _t.up * angle *rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
+	}
+
+	public float targetDistance() {
+		return Vector3.Distance(transform.position, target.transform.position);
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -281,7 +286,7 @@ public class GameUnit : MonoBehaviour {
 
 		if (isEnemyOf (otherUnit)) {
 			//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
-			Destroy (gameObject);
+			//Destroy (gameObject);
 		}
 
 		foreach (ContactPoint contact in collision.contacts) {
@@ -335,6 +340,7 @@ public class GameUnit : MonoBehaviour {
 		var obj = Instantiate(explosionPrefab);
 		obj.transform.position = transform.position;
 		obj.transform.rotation = transform.rotation;
+		obj.transform.localScale = new Vector3(5, 5, 5);
 
 		Destroy(gameObject);
 	}

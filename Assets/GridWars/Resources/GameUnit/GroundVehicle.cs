@@ -7,11 +7,16 @@ public class GroundVehicle : GameUnit {
 	public override void FixedUpdate () {
 		base.FixedUpdate ();
 
-		if (WheelsAreTouchingGround ()) {
+		if (WheelsAreTouchingGround () && !IsInStandoffRange()) {
 			rigidBody ().AddForce (_t.forward * thrust);
 		}
 
 		RemoveIfOutOfBounds ();
+	}
+
+	public bool IsInStandoffRange() {
+		//return false;
+		return target && (targetDistance() < standOffDistance);
 	}
 
 	public bool WheelsAreTouchingGround() {
