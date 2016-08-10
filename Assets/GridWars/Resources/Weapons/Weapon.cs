@@ -16,6 +16,8 @@ public class Weapon : MonoBehaviour {
 	public float range = -1;
 	public float aimedAngle = 5.0f;
 
+	public AudioClip fireClip;
+
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
@@ -24,6 +26,10 @@ public class Weapon : MonoBehaviour {
 	public void Start () {
 		//base.Start();
 		Reload();
+
+		if (fireClip != null) {
+			gameObject.AddComponent<AudioSource>();
+		}
 	}
 
 	public void FixedUpdate () {
@@ -127,6 +133,9 @@ public class Weapon : MonoBehaviour {
 
 	public void Fire() {
 		CreateProjectile();
+		if (fireClip != null) {
+			GetComponent<AudioSource>().PlayOneShot(fireClip);
+		}
 		Reload();
 	}
 

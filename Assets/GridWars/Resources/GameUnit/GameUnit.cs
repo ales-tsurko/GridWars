@@ -26,6 +26,11 @@ public class GameUnit : MonoBehaviour {
 	//tower
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
+	public AudioClip birthSound {
+		get {
+			return Resources.Load<AudioClip>("GameUnit/" + GetType().Name + "/Sounds/birth");
+		}
+	}
 
 	public GameObject explosionPrefab;
 
@@ -59,6 +64,11 @@ public class GameUnit : MonoBehaviour {
 		}
 
 		rotationThrust = 1.0f;
+
+		if (birthSound != null) {
+			var audioSource = gameObject.AddComponent<AudioSource>();
+			audioSource.PlayOneShot(birthSound);
+		}
 	}
 
 	public virtual Rigidbody rigidBody() {
