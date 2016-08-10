@@ -70,6 +70,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000014205150340}
+  - 114: {fileID: 114000010151119368}
   m_Layer: 0
   m_Name: BloodExplosion
   m_TagString: Untagged
@@ -223,6 +224,18 @@ Transform:
   - {fileID: 4000011454749524}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &114000010151119368
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011344066560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db463b8bce40042b5bc81e491b422ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 10
 --- !u!198 &198000010507442796
 ParticleSystem:
   m_ObjectHideFlags: 1
