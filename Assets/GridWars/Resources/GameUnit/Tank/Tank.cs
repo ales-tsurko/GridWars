@@ -7,7 +7,7 @@ public class Tank : GroundVehicle {
 	//public GameObject turret;
 	public Weapon turretWeapon {
 		get {
-			return _t.Find("turret").GetComponent<Weapon>();
+			return _t.FindDeepChild("turret").GetComponent<Weapon>();
 		}
 	}
 
