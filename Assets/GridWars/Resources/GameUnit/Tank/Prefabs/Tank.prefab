@@ -375,7 +375,6 @@ MonoBehaviour:
   thrust: 0
   rotationThrust: 0
   player: {fileID: 0}
-  powerCost: 4
   canAim: 1
   hitPoints: 15
   _t: {fileID: 0}
@@ -384,6 +383,9 @@ MonoBehaviour:
   angleToTarget: 0
   lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
+  powerCost: 4
+  cooldownSeconds: 3
+  explosionPrefab: {fileID: 0}
 --- !u!114 &114000011704038210
 MonoBehaviour:
   m_ObjectHideFlags: 1
