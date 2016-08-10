@@ -29,7 +29,8 @@ public class Tower : GameUnit {
 	}
 
 	public void ReleaseUnit() {
-		CreateUnit();
+		var unit = CreateUnit();
+		player.powerSource.power -= unit.powerCost;
 	}
 
 	GameUnit iconUnit;
