@@ -1455,6 +1455,7 @@ MonoBehaviour:
   rotationThrust: 0
   player: {fileID: 0}
   canAim: 1
+  hitPoints: 1
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
@@ -1463,6 +1464,9 @@ MonoBehaviour:
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 1000011344066560, guid: af76bd54fa3334ec2bbe2f6593d0977d,
+    type: 2}
   state: 0
   moveSpeed: 1
 --- !u!114 &114000013609815102
