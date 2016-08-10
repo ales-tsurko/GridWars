@@ -1,0 +1,90 @@
+﻿using UnityEngine;
+using System.Collections.Generic;
+
+public class Fortress : MonoBehaviour {
+	public Player player;
+	public PowerSource powerSource;
+	public List<Tower> towers;
+	public float towerSpacing {
+		get {
+			return 1.0f*Tower.bounds.x;
+		}
+	}
+	public float towerToPowerSpacing {
+		get {
+			return 0.25f*Tower.bounds.x;
+		}
+	}
+
+	public Vector3 bounds {
+		get {
+			return new Vector3(unitTypes.Length*(Tower.bounds.x+towerSpacing) - towerSpacing,
+				Tower.bounds.y,
+				powerSource.bounds.z + towerToPowerSpacing + Tower.bounds.z
+			);
+		}
+	}
+
+	static System.Type[] unitTypes = new System.Type[]{ typeof(Jeep), typeof(LightTank), typeof(Chopper), typeof(Tank) };
+
+	// Use this for initialization
+	void Start () {
+		powerSource = PowerSource.Create();
+		powerSource.player = player;
+		powerSource.bounds = new Vector3(bounds.x, powerSource.bounds.y, powerSource.bounds.z);
+		powerSource.transform.parent = transform;
+		powerSource.transform.localPosition = new Vector3(0f, 0f, powerSource.bounds.z/2);
+
+		towers = new List<Tower>();
+		var towerNum = 0;
+		foreach (var unitType in unitTypes) {
+			var tower = GameUnit.Instantiate<Tower>();
+			tower.transform.parent = transform;
+			tower.player = player;
+			tower.unitPrefab = GameUnit.Load(unitType);
+
+
+
+			tower.transform.localRotation = Quaternion.identity;
+			tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.bounds.x/2 + towerNum*(Tower.bounds.x + towerSpacing),
+				0f,
+				powerSource.transform.localPosition.z + powerSource.bounds.z/2 + towerToPowerSpacing + Tower.bounds.z/2
+			);
+
+			towerNum ++;
+		}
+
+		/*
+		int maxTowers = unitTypes.Count;
+		for (int towerNum = 0; towerNum < maxTowers; towerNum ++) {
+			var tower = GameUnit.Instantiate<Tower>();
+
+			if (playerNum == 0) {
+				tower.unitPrefab = GameUnit.Load(unitTypes[towerNum]);
+			} else {
+				tower.unitPrefab = GameUnit.Load(unitTypes[maxTowers - 1 - towerNum]);
+			}
+
+			float x = 50*((((float)towerNum) / (float)maxTowers) - 0.5f);
+
+			tower.setX (x);
+			tower.setY (0.0f);
+			tower.setZ (z);
+
+			tower.setRotY (180*playerNum);
+			//print("adding tower " + towerNum + " for player " + players [playerNum].playerNumber);
+			tower.player = players[playerNum];
+
+			//if ((playerNum == 0 && towerNum == 0) || (playerNum == 1 && towerNum == 2)) {
+			//tower.ReleaseUnit ();
+			//}
+
+		}
+		*/
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
