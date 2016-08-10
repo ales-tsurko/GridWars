@@ -18,9 +18,10 @@ public static class GridWarsUnityExtensions {
 
 	public static T CreateChild<T>(this MonoBehaviour self) where T: MonoBehaviour {
 		var gameObject = new GameObject();
+		gameObject.transform.parent = self.transform;
 		gameObject.transform.localPosition = Vector3.zero;
 		gameObject.transform.localRotation = Quaternion.identity;
-		gameObject.transform.parent = self.transform;
+		gameObject.transform.localScale = Vector3.one;
 		gameObject.name = typeof(T).Name;
 		return gameObject.AddComponent<T>();
 	}
