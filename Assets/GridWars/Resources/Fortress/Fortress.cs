@@ -34,6 +34,7 @@ public class Fortress : MonoBehaviour {
 		powerSource.bounds = new Vector3(bounds.x, powerSource.bounds.y, powerSource.bounds.z);
 		powerSource.transform.parent = transform;
 		powerSource.transform.localPosition = new Vector3(0f, 0f, powerSource.bounds.z/2);
+		powerSource.transform.localRotation = Quaternion.identity;
 
 		towers = new List<Tower>();
 		var towerNum = 0;
