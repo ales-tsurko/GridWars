@@ -43,7 +43,7 @@ public class Fortress : MonoBehaviour {
 			tower.transform.parent = transform;
 			tower.player = player;
 			tower.unitPrefab = GameUnit.Load(unitType);
-
+			tower.tag = "Player" + player.playerNumber;
 
 
 			tower.transform.localRotation = Quaternion.identity;
@@ -92,6 +92,7 @@ public class Fortress : MonoBehaviour {
 			unitObject.transform.rotation = transform.rotation;
 			var gameUnit = unitObject.GetComponent<GameUnit>();
 			gameUnit.player = player;
+			gameUnit.tag = "Player" + player.playerNumber;
 			gameUnit.GetComponent<Engineer> ().SwitchState (Engineer.State.Init);
 		}
 	}
