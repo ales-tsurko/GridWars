@@ -7,7 +7,6 @@ public class GameUnit : MonoBehaviour {
 	public float thrust;
 	public float rotationThrust;
 	public  Player player;
-	public float powerCost = 4f;
 	public bool canAim = true;
 
 	// Damagable
@@ -23,6 +22,10 @@ public class GameUnit : MonoBehaviour {
 
 	public Vector3 lastUpTorque;
 	public bool isStaticUnit = false;
+
+	//tower
+	public float powerCost = 4f;
+	public float cooldownSeconds = 1f;
 
 	void Awake () {
 		_t = transform;

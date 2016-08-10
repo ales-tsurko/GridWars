@@ -29,10 +29,13 @@ public class Tower : GameUnit {
 	}
 
 	public void ReleaseUnit() {
-		CreateUnit();
+		var unit = CreateUnit();
+		player.powerSource.power -= unit.powerCost;
+		lastProductionTime = Time.time;
 	}
 
 	GameUnit iconUnit;
+	float lastProductionTime = 0f;
 
 	void Update () {
 		if (canReleaseUnit) {
@@ -44,6 +47,18 @@ public class Tower : GameUnit {
 	}
 
 	bool canReleaseUnit {
+		get { 
+			return hasCooledDown && hasEnoughPower;
+		}
+	}
+
+	bool hasCooledDown {
+		get {
+			return Time.time >= lastProductionTime + unitPrefab.GetComponent<GameUnit>().cooldownSeconds;
+		}
+	}
+
+	bool hasEnoughPower {
 		get {
 			return player.powerSource.power >= unitPrefab.GetComponent<GameUnit>().powerCost;
 		}
