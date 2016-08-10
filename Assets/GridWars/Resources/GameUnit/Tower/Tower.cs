@@ -71,7 +71,7 @@ public class Tower : GameUnit {
 
 		var gameUnit = unitObject.GetComponent<GameUnit>();
 		gameUnit.player = player;
-
+		gameUnit.tag = "Player" + player.playerNumber;
 		return gameUnit;
 	}
 

@@ -73,6 +73,7 @@ public class GameUnit : MonoBehaviour {
 
 		if (player != null) {
 			player.Paint(gameObject);
+			player.tag = "Player" + player.playerNumber;
 		}
 
 		rotationThrust = 1.0f;
@@ -87,15 +88,17 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual Rigidbody rigidBody() {
-		return GetComponent<Rigidbody> ();
+		if (body == null) {
+			body = GetComponent<Rigidbody> ();
+		}
+		return body;
 	}
-
+	Rigidbody body;
 	// -----------------------
 
 	public virtual List<GameObject> activeGameObjects() {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 		var results = new List<GameObject>();
-
 		foreach (GameObject obj in objs) {
 			if (obj.activeInHierarchy) {
 				results.Add(obj);
@@ -125,9 +128,18 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual List<GameObject> enemyObjects() {
-		var objs = activeGameObjects();
-		var results = new List<GameObject>();
 
+		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
+		var results = new List<GameObject>();
+		foreach (GameUnit gameUnit in gameUnits) {
+			if (gameUnit.CompareTag ("Player" + player.playerNumber)) {
+				continue; //same player, so skip
+			}
+			results.Add (gameUnit.gameObject);
+		}
+		return results;
+
+		/*var objs = activeGameObjects();
 		foreach (GameObject obj in objs) {
 			GameUnit unit = obj.GetComponent<GameUnit> ();
 			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
@@ -136,7 +148,7 @@ public class GameUnit : MonoBehaviour {
 			}
 		}
 
-		return results;
+		return results;*/
 	}
 
 	public virtual void pickTarget() {
