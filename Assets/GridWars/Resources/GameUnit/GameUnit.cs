@@ -26,15 +26,13 @@ public class GameUnit : MonoBehaviour {
 	//tower
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
-<<<<<<< HEAD
 	public float standOffDistance = 20f;
-=======
+
 	public AudioClip birthSound {
 		get {
 			return Resources.Load<AudioClip>("GameUnit/" + GetType().Name + "/Sounds/birth");
 		}
 	}
->>>>>>> 941a4c31ada50ba110630f497daa09da4b0cdc99
 
 	public GameObject explosionPrefab;
 
@@ -352,8 +350,8 @@ public class GameUnit : MonoBehaviour {
 	public void ShowExplosion() {
 		var obj = Instantiate(explosionPrefab);
 		obj.transform.position = transform.position;
-		obj.transform.rotation = transform.rotation;
-		obj.transform.localScale = new Vector3(5, 5, 5);
+		obj.transform.rotation = UnityEngine.Random.rotation;
+		obj.transform.localScale *= 15;
 
 		Destroy(gameObject);
 	}
