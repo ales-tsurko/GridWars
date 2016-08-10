@@ -39,7 +39,7 @@ GameObject:
   - 33: {fileID: 33000011506746022}
   - 23: {fileID: 23000010684521606}
   m_Layer: 0
-  m_Name: Cylinder193
+  m_Name: RocketLeft4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ GameObject:
   - 33: {fileID: 33000012097235454}
   - 23: {fileID: 23000012259920914}
   m_Layer: 0
-  m_Name: Cylinder192
+  m_Name: RocketLeft3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ GameObject:
   - 33: {fileID: 33000013791008334}
   - 23: {fileID: 23000012824214416}
   m_Layer: 0
-  m_Name: TurretX
+  m_Name: TurretYBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -207,7 +207,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012421315058}
   m_Layer: 0
-  m_Name: left_rockets
+  m_Name: RocketsLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,7 +224,7 @@ GameObject:
   - 33: {fileID: 33000012423004068}
   - 23: {fileID: 23000014292327690}
   m_Layer: 0
-  m_Name: Cylinder094
+  m_Name: RocketRight1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,6 +238,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012460184406}
+  - 54: {fileID: 54000012605358878}
+  - 65: {fileID: 65000010901403976}
   m_Layer: 0
   m_Name: MobileSAM
   m_TagString: Untagged
@@ -304,7 +306,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010838459582}
   m_Layer: 0
-  m_Name: right_rockets
+  m_Name: RocketsRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,7 +357,7 @@ GameObject:
   - 33: {fileID: 33000010972865176}
   - 23: {fileID: 23000012127004764}
   m_Layer: 0
-  m_Name: Cylinder095
+  m_Name: RocketRight2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,7 +459,7 @@ GameObject:
   - 33: {fileID: 33000011570020206}
   - 23: {fileID: 23000013500821706}
   m_Layer: 0
-  m_Name: Cylinder191
+  m_Name: RocketLeft2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -474,7 +476,7 @@ GameObject:
   - 33: {fileID: 33000012184046924}
   - 23: {fileID: 23000013143677868}
   m_Layer: 0
-  m_Name: Cylinder096
+  m_Name: RocketRight3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -559,7 +561,7 @@ GameObject:
   - 33: {fileID: 33000010539607492}
   - 23: {fileID: 23000011146539862}
   m_Layer: 0
-  m_Name: Object022
+  m_Name: TurretX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -610,7 +612,7 @@ GameObject:
   - 33: {fileID: 33000012032477774}
   - 23: {fileID: 23000010868065846}
   m_Layer: 0
-  m_Name: Box352
+  m_Name: RocketBoxLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,7 +646,7 @@ GameObject:
   - 33: {fileID: 33000012567869686}
   - 23: {fileID: 23000011041757980}
   m_Layer: 0
-  m_Name: Box174
+  m_Name: RocketBoxRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -712,7 +714,7 @@ GameObject:
   - 33: {fileID: 33000011414749964}
   - 23: {fileID: 23000014276220298}
   m_Layer: 0
-  m_Name: Cylinder097
+  m_Name: RocketRight4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -729,7 +731,7 @@ GameObject:
   - 33: {fileID: 33000012078169146}
   - 23: {fileID: 23000014217619440}
   m_Layer: 0
-  m_Name: Cylinder190
+  m_Name: RocketLeft1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1126,7 +1128,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011668759908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2.862}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -2740,6 +2742,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011096341190}
   m_Mesh: {fileID: 4300020, guid: 5e613f2040b632b4a900489dc166a6bd, type: 3}
+--- !u!54 &54000012605358878
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011668759908}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 10
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &65000010901403976
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011668759908}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1, z: 2}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!95 &95000014095945606
 Animator:
   serializedVersion: 3
