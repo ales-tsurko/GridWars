@@ -361,10 +361,12 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public void ShowExplosion() {
-		var obj = Instantiate(deathExplosionPrefab);
-		obj.transform.position = transform.position;
-		obj.transform.rotation = UnityEngine.Random.rotation;
-		obj.transform.localScale *= 15;
+		if (deathExplosionPrefab != null) {
+			var obj = Instantiate(deathExplosionPrefab);
+			obj.transform.position = transform.position;
+			obj.transform.rotation = UnityEngine.Random.rotation;
+			obj.transform.localScale *= 15;
+		}
 
 		Destroy(gameObject);
 	}
