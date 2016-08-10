@@ -9,6 +9,11 @@ public class GameUnit : MonoBehaviour {
 	public  Player player;
 	public float powerCost = 4f;
 	public bool canAim = true;
+
+	// Damagable
+	public float hitPoints = 1;
+	//public float maxHitPoints = 1;
+
 	[HideInInspector]
 	public Transform _t;
 	public bool isRunning = true;
@@ -72,7 +77,19 @@ public class GameUnit : MonoBehaviour {
 	public virtual bool isEnemyOf(GameUnit otherUnit) {
 		if (player == null) {
 			print ("null player " + this);
+			return false;
 		}
+
+		if (otherUnit == null) {
+			print ("null otherUnit " + otherUnit);
+			return false;
+		}
+
+		if (otherUnit.player == null) {
+			print ("null otherUnit.player " + otherUnit.player);
+			return false;
+		}
+
 		return (player.playerNumber != otherUnit.player.playerNumber);
 		//return (player != null) && (otherUnit.player != null) && (player != otherUnit.player);
 	}
@@ -194,6 +211,10 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual void FixedUpdate () {
 
+		if (player == null) {
+			print ("FixedUpdate null player on " + this);
+		}
+
 		RemoveIfOutOfBounds ();
 	}
 
@@ -288,5 +309,19 @@ public class GameUnit : MonoBehaviour {
 			}
 		}
 		*/
+	}
+
+	// Damage
+
+	public void ApplyDamage(float damage) {
+		hitPoints -= damage;
+
+		if (hitPoints <= 0) {
+			OnDead();
+		}
+	}
+
+	public void OnDead() {
+
 	}
 }

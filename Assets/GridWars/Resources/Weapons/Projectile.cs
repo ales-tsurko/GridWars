@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class Projectile : MonoBehaviour {
 	public GameObject explosionPrefab;
+	public float damage = 10;
 
 	public Player player;
 
@@ -28,11 +29,12 @@ public class Projectile : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		// destroy on ground collision
-		if (collision.collider.name == "BattlefieldPlane") {
+		//if (collision.collider.name == "BattlefieldPlane") {
 			//if (collision.relativeVelocity.magnitude > 2) {
 				Explode();
+				print("Projectile collision");
 			//}
-		}
+		//}
 	}
 
 	void Explode() {
@@ -42,11 +44,16 @@ public class Projectile : MonoBehaviour {
 
 		//Transform t = obj.transform;
 		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
-
 		//print("explode!");
+		var otherUnit = gameObject.GetComponent<GameUnit>();
+		if (otherUnit != null) {
+			otherUnit.ApplyDamage(damage);
+		}
 
 		Destroy (gameObject);
 	}
+
+
 
 	/*
 	#if UNITY_EDITOR

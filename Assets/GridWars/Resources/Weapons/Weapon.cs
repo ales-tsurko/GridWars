@@ -53,7 +53,6 @@ public class Weapon : MonoBehaviour {
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
-			print("Weapon AngleToTarget");
 
 			if (true) {
 				Debug.DrawLine (t.position, t.position + t.forward * 10.0f, Color.blue); // forward blue
@@ -67,10 +66,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool AimIfAble() { 
-		print("AimIfAble1");
+		//print("AimIfAble1");
 
 		if (target && !isFixed) {
-			print("AimIfAble2");
+			//print("AimIfAble2");
 
 			// assumes we can only rotate weapon about Y axis
 
@@ -139,7 +138,7 @@ public class Weapon : MonoBehaviour {
 
 	Projectile CreateProjectile() {
 
-		print("CreateProjectile");
+		//print("CreateProjectile");
 
 		var obj = Instantiate(prefabProjectile);
 		obj.transform.position = transform.position + (transform.forward * barrelLength());

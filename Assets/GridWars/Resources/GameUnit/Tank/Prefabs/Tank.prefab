@@ -377,6 +377,7 @@ MonoBehaviour:
   player: {fileID: 0}
   powerCost: 4
   canAim: 1
+  hitPoints: 15
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
@@ -410,7 +411,7 @@ MonoBehaviour:
   target: {fileID: 0}
   prefabProjectile: {fileID: 1000012630248042, guid: 107c6a7d263854e0aa7df13f2b76503c,
     type: 2}
-  isActive: 0
+  isActive: 1
   isFixed: 0
   ammoCount: -1
   reloadTimeInSeconds: 3
