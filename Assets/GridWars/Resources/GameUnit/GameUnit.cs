@@ -27,6 +27,8 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 
+	public GameObject explosionPrefab;
+
 	void Awake () {
 		_t = transform;
 	}
@@ -325,6 +327,15 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public void OnDead() {
+		ShowExplosion();
+		Destroy(gameObject);
+	}
 
+	public void ShowExplosion() {
+		var obj = Instantiate(explosionPrefab);
+		obj.transform.position = transform.position;
+		obj.transform.rotation = transform.rotation;
+
+		Destroy(gameObject);
 	}
 }
