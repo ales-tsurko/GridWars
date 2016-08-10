@@ -15,5 +15,4 @@ public class Missile : Projectile {
 		rigidBody().AddForce (transform.forward * thrust);
 	}
 
-
 }

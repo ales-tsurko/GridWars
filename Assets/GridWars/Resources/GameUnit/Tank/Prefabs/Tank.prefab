@@ -406,13 +406,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
   target: {fileID: 0}
-  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+  prefabProjectile: {fileID: 1000012630248042, guid: 107c6a7d263854e0aa7df13f2b76503c,
     type: 2}
-  isActive: 1
+  isActive: 0
   isFixed: 1
   ammoCount: -1
   reloadTimeInSeconds: 3
   rotOffset: {x: -90, y: 0, z: 0, w: 0}
+  range: -1
+  aimedAngle: 5
 --- !u!114 &114000013198533988
 MonoBehaviour:
   m_ObjectHideFlags: 1

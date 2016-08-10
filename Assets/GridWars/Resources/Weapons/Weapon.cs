@@ -13,6 +13,8 @@ public class Weapon : MonoBehaviour {
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
 	public Quaternion rotOffset;
+	public float range = -1;
+	public float aimedAngle = 5.0f;
 
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
@@ -51,7 +53,7 @@ public class Weapon : MonoBehaviour {
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
-			//print("Weapon AngleToTarget");
+			print("Weapon AngleToTarget");
 
 			if (true) {
 				Debug.DrawLine (t.position, t.position + t.forward * 10.0f, Color.blue); // forward blue
@@ -65,11 +67,13 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool AimIfAble() { 
+		print("AimIfAble");
+
 		if (target && !isFixed) {
 			// assumes we can only rotate weapon about Y axis
 
 			float angle = AngleToTarget();
-			float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.01f; // hack for now
+			float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
 
 			Transform tt = transform;
 			var e = tt.eulerAngles;
@@ -82,11 +86,20 @@ public class Weapon : MonoBehaviour {
 	// --- firing ------------------
 
 	public bool FireIfAppropriate() {
-		if (hasAmmo() && isLoaded () && isAimed ()) {
+		if (hasAmmo() && isLoaded () && isAimed () && targetInRange()) {
 			Fire ();
 			return true;
 		}
 		return false;
+	}
+
+	public float targetDistance() {
+		return Vector3.Distance(owner.transform.position, target.transform.position);
+		//return owner.transform.position.Distance(target.transform.position);
+	}
+	
+	public bool targetInRange() {
+		return (range == -1) || (targetDistance() < range);
 	}
 
 	public bool hasAmmo() {
@@ -98,8 +111,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		return true;
-		//return AngleToTarget () < 1.0;
+		//return true;
+		return Mathf.Abs(AngleToTarget ()) < aimedAngle;
 	}
 
 	public void Reload() {
@@ -119,7 +132,7 @@ public class Weapon : MonoBehaviour {
 	public float barrelLength() {
 		Collider ownerCollider = owner.GetComponent<Collider>();
 		float maxZ = ownerCollider.bounds.size.z;
-		return maxZ * 0.5f * 1.1f; // put it outside
+		return maxZ * 0.5f * 2.1f; // put it outside
 	}
 
 	Projectile CreateProjectile() {
