@@ -18,6 +18,9 @@ public static class TransformDeepChildExtension
 		return null;
 	}
 
+	public static void Straighten (this Transform _t){
+		_t.localRotation = Quaternion.Euler (new Vector3 (0f, _t.localRotation.eulerAngles.y, 0f));
+	}
 
 	/*
      //Depth-first search
