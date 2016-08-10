@@ -3,14 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Tank : GroundVehicle {
-	public Weapon turretWeapon;
+	Weapon _turretWeapon;
+	public Weapon turretWeapon {
+		get {
+			if (_turretWeapon == null) {
+				_turretWeapon = _t.FindDeepChild("turret").GetComponent<Weapon>();
+			}
+			return _turretWeapon;
+		}
+	}
 
 	public override void Start () {
 		base.Start();
 		thrust = 850;
 		rotationThrust = 60;
 
-		turretWeapon = _t.FindDeepChild("turret").GetComponent<Weapon>();
 		turretWeapon.enabled = true;
 		turretWeapon.owner = gameObject;
 		turretWeapon.isFixed = false;
