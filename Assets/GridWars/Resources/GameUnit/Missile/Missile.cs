@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 
 public class Missile : Projectile {
-	public float thrust = 10;
-
+	
 	public override void Start () {
+		thrust = 10f;
 		base.Start();
 	}
 

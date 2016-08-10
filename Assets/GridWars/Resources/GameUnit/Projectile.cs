@@ -10,9 +10,6 @@ public class Projectile : GameUnit {
 
 	public AudioClip damageClip;
 
-	public virtual Rigidbody rigidBody() {
-		return GetComponent<Rigidbody> ();
-	}
 
 	public void copyVelocityFrom(GameObject obj) {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
@@ -36,7 +33,6 @@ public class Projectile : GameUnit {
 	void ApplyDamageTo(GameObject otherGameObject) {
 		var otherUnit = otherGameObject.GetComponent<GameUnit>();
 
-		print("Explode otherUnit = " + otherUnit);
 		if (otherUnit != null) {
 			otherUnit.ApplyDamage(damage);
 		}
