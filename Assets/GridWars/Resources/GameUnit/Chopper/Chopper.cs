@@ -48,13 +48,13 @@ public class Chopper : GameUnit {
 		missileLauncherRight.target = target;
 	}
 
-	public override void FixedUpdate () {
-		//base.FixedUpdate();
-		missileLauncherLeft.player = player;
-		missileLauncherRight.player = player;
-
+	public void Update () {
 		pickTarget();
 		RemoveIfOutOfBounds ();
+	}
+
+	public override void FixedUpdate () {
+		//base.FixedUpdate();
 
 		if (isRunning) {
 			Object_rotDY (mainRotor, 20);
