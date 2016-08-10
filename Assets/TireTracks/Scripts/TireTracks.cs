@@ -159,9 +159,17 @@ public class TireTracks: MonoBehaviour {
 
 		if (curr.LastIndex == -1) return;
 
+		for (int i = 1; i < 25; i++) {
+			if (markIndex - i < 0) {
+				break;
+			}
+			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
+			print (skidmarks [markIndex - i].Intensity);
+		}
+
 		MarkSection last = skidmarks[curr.LastIndex];
-		vertices[markIndex * 4 + 0] = last.Posl;
-		vertices[markIndex * 4 + 1] = last.Posr;
+		vertices [markIndex * 4 + 0] = last.Posl + new Vector3 (0, -5, 0);
+		vertices [markIndex * 4 + 1] = last.Posr + new Vector3 (0, -5, 0);
 		vertices[markIndex * 4 + 2] = curr.Posl;
 		vertices[markIndex * 4 + 3] = curr.Posr;
 
@@ -192,7 +200,14 @@ public class TireTracks: MonoBehaviour {
 		triangles[markIndex * 6 + 3] = markIndex * 4 + 2;
 		triangles[markIndex * 6 + 5] = markIndex * 4 + 1;
 		triangles[markIndex * 6 + 4] = markIndex * 4 + 3;
+		for (int i = 1; i < 25; i++) {
+			if (markIndex - i < 0) {
+				break;
+			}
+			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
+			print (skidmarks [markIndex - i].Intensity);
 
+		}
 		updated = true;
 	}
 }
