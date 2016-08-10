@@ -51,13 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e0efd923384a4b0ab659e0454407695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bounds: {x: 0, y: 0, z: 0}
+  player: {fileID: 0}
   power: 0
   maxPower: 20
-  generationRate: 1.6
-  trackWidth: 2.5
-  trackLength: 100
+  generationRate: 2
   trackSpacing: 1
-  trackAlongZ: 0
   segmentPrefab: {fileID: 1000010277700956, guid: 2425911cdfd66490dad07b076e12bfbb,
     type: 2}
   baseSegmentWidth: 10

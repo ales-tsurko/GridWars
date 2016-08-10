@@ -12,7 +12,7 @@ public class PowerSource : MonoBehaviour {
 
 	public float power = 0f;
 	public float maxPower = 20f;
-	public float generationRate = 1.6f;
+	public float generationRate = 2f;
 
 	public float trackSpacing = 1.0f;
 
