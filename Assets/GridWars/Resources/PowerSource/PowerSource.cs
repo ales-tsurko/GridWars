@@ -51,7 +51,7 @@ public class PowerSource : MonoBehaviour {
 			segment.transform.parent = transform;
 			segment.transform.localRotation = Quaternion.identity;
 
-			var offset = -trackLength/2 + i*(segmentLength + trackSpacing);
+			var offset = -trackLength/2 + segmentLength/2 + i*(segmentLength + trackSpacing);
 			var segmentWidthScale = trackWidth/baseSegmentWidth;
 			var segmentLengthScale = segmentLength/baseSegmentLength;
 
