@@ -7,20 +7,20 @@ public class Fortress : MonoBehaviour {
 	public List<Tower> towers;
 	public float towerSpacing {
 		get {
-			return 1.0f*Tower.bounds.x;
+			return 1.0f*Tower.size.x;
 		}
 	}
 	public float towerToPowerSpacing {
 		get {
-			return 0.25f*Tower.bounds.x;
+			return 0.25f*Tower.size.x;
 		}
 	}
 
 	public Vector3 bounds {
 		get {
-			return new Vector3(unitTypes.Length*(Tower.bounds.x+towerSpacing) - towerSpacing,
-				Tower.bounds.y,
-				powerSource.bounds.z + towerToPowerSpacing + Tower.bounds.z
+			return new Vector3(unitTypes.Length*(Tower.size.x+towerSpacing) - towerSpacing,
+				Tower.size.y,
+				powerSource.bounds.z + towerToPowerSpacing + Tower.size.z
 			);
 		}
 	}
@@ -47,9 +47,9 @@ public class Fortress : MonoBehaviour {
 
 
 			tower.transform.localRotation = Quaternion.identity;
-			tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.bounds.x/2 + towerNum*(Tower.bounds.x + towerSpacing),
+			tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.size.x/2 + towerNum*(Tower.size.x + towerSpacing),
 				0f,
-				powerSource.transform.localPosition.z + powerSource.bounds.z/2 + towerToPowerSpacing + Tower.bounds.z/2
+				powerSource.transform.localPosition.z + powerSource.bounds.z/2 + towerToPowerSpacing + Tower.size.z/2
 			);
 
 			towerNum ++;
