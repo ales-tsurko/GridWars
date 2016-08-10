@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player {
-	public int playerNumber;
+public class Player : MonoBehaviour {
+	public int playerNumber {
+		get {
+			return battlefield.players.IndexOf(this) + 1;
+		}
+	}
+
+	public Battlefield battlefield;
+	public Fortress fortress;
 
 	public Color color {
 		get {
@@ -10,21 +17,21 @@ public class Player {
 		}
 	}
 
-	public int xDirection {
+	public PowerSource powerSource {
 		get {
-			return playerNumber == 1 ? -1 : 1;
+			return fortress.powerSource;
 		}
 	}
 
-	public float baseEdgeZ = 50f;
+	void Start() {
+		gameObject.transform.parent = battlefield.transform;
+		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
+		gameObject.transform.localPosition = new Vector3(0f, 0f, -0.9f*gameObject.transform.forward.z*battlefield.bounds.z/2);
 
-	public PowerSource powerSource;
-
-	public void Start() {
-		powerSource = PowerSource.Instantiate();
-		//powerSource.gameObject.transform.position = Vector3.zero;
-		powerSource.gameObject.transform.position = new Vector3(0f, 0.1f, (baseEdgeZ - powerSource.trackWidth/2)*xDirection);
-		powerSource.player = this;
+		fortress = this.CreateChild<Fortress>();
+		fortress.player = this;
+		fortress.transform.localPosition = Vector3.zero;
+		fortress.transform.localRotation = Quaternion.identity;
 	}
 
 	public void Paint(GameObject gameObject) {

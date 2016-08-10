@@ -15,4 +15,13 @@ public static class GridWarsUnityExtensions {
 	public static void CloneMaterials(this GameObject self) {
 		self.EachRenderer(r => r.material = new Material(r.material));
 	}
+
+	public static T CreateChild<T>(this MonoBehaviour self) where T: MonoBehaviour {
+		var gameObject = new GameObject();
+		gameObject.transform.localPosition = Vector3.zero;
+		gameObject.transform.localRotation = Quaternion.identity;
+		gameObject.transform.parent = self.transform;
+		gameObject.name = typeof(T).Name;
+		return gameObject.AddComponent<T>();
+	}
 }
