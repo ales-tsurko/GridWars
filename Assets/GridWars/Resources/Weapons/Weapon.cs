@@ -116,21 +116,19 @@ public class Weapon : MonoBehaviour {
 		Reload();
 	}
 
-	Projectile CreateProjectile() {
-		float barrelLength = 4; // hack - should look at weapon size
+	public float barrelLength() {
+		Collider ownerCollider = owner.GetComponent<Collider>();
+		float maxZ = ownerCollider.bounds.size.z;
+		return maxZ * 0.5f * 1.1f; // put it outside
+	}
 
+	Projectile CreateProjectile() {
 		var obj = Instantiate(prefabProjectile);
-		obj.transform.position = transform.position + new Vector3(0, 0, barrelLength);
+		obj.transform.position = transform.position + (transform.forward * barrelLength());
 		obj.transform.rotation = transform.rotation;
 
-		//if (rotOffset != null) {
-			print("obj.transform.rotation: " + obj.transform.rotation);
-			obj.transform.rotation *= rotOffset;
-			print("rotOffset: " + rotOffset);
-			print("obj.transform.rotation after: " + obj.transform.rotation);
-
-		//}
-
+		//Transform t = obj.transform;
+		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
 
 		var unit = obj.GetComponent<Projectile>();
 		unit.copyVelocityFrom(owner);
