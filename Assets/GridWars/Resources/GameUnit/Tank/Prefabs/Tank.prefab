@@ -374,6 +374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrust: 0
   rotationThrust: 0
+  player: {fileID: 0}
   powerCost: 4
   canAim: 1
   _t: {fileID: 0}
@@ -404,12 +405,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   owner: {fileID: 0}
   target: {fileID: 0}
   prefabProjectile: {fileID: 1000012630248042, guid: 107c6a7d263854e0aa7df13f2b76503c,
     type: 2}
   isActive: 0
-  isFixed: 1
+  isFixed: 0
   ammoCount: -1
   reloadTimeInSeconds: 3
   rotOffset: {x: -90, y: 0, z: 0, w: 0}

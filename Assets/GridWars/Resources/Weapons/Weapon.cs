@@ -67,9 +67,11 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool AimIfAble() { 
-		print("AimIfAble");
+		print("AimIfAble1");
 
 		if (target && !isFixed) {
+			print("AimIfAble2");
+
 			// assumes we can only rotate weapon about Y axis
 
 			float angle = AngleToTarget();
@@ -136,6 +138,9 @@ public class Weapon : MonoBehaviour {
 	}
 
 	Projectile CreateProjectile() {
+
+		print("CreateProjectile");
+
 		var obj = Instantiate(prefabProjectile);
 		obj.transform.position = transform.position + (transform.forward * barrelLength());
 		obj.transform.rotation = transform.rotation;
