@@ -420,7 +420,7 @@ MonoBehaviour:
   ammoCount: -1
   reloadTimeInSeconds: 3
   rotOffset: {x: -90, y: 0, z: 0, w: 0}
-  range: -1
+  range: 25
   aimedAngle: 5
   chanceOfFire: 0.02
   fireClip: {fileID: 8300000, guid: 67908b04c6d6c43438a5598e0282c1af, type: 3}
