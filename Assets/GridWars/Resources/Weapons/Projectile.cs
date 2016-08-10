@@ -24,8 +24,6 @@ public class Projectile : MonoBehaviour {
 	}
 		
 	public virtual void FixedUpdate () {
-		
-
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -45,7 +43,7 @@ public class Projectile : MonoBehaviour {
 		//Transform t = obj.transform;
 		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
 
-		print("explode!");
+		//print("explode!");
 
 		Destroy (gameObject);
 	}

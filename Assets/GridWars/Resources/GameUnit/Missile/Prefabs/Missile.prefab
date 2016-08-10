@@ -54,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012630248042}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.780728, y: -1.5085637e-18, z: 6.7939663}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -198,4 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8376d93d3c7b5461386213188505ab8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: -10
+  explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
+    type: 2}
+  player: {fileID: 0}
+  thrust: 10
