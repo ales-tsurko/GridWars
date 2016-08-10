@@ -72,6 +72,7 @@ GameObject:
   - 4: {fileID: 4000011933120664}
   - 198: {fileID: 198000014139386310}
   - 199: {fileID: 199000011615564200}
+  - 114: {fileID: 114000012798313498}
   m_Layer: 0
   m_Name: MissileExplosion
   m_TagString: FxTemporaire
@@ -196,6 +197,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000011933120664}
   m_RootOrder: 0
+--- !u!114 &114000012798313498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013222827244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db463b8bce40042b5bc81e491b422ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 10
 --- !u!198 &198000011260727980
 ParticleSystem:
   m_ObjectHideFlags: 1

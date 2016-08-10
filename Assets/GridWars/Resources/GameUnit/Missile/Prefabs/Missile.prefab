@@ -40,6 +40,7 @@ GameObject:
   - 65: {fileID: 65000013781553116}
   - 54: {fileID: 54000011434133176}
   - 96: {fileID: 96000010994710666}
+  - 114: {fileID: 114000010440759528}
   m_Layer: 0
   m_Name: Missile
   m_TagString: Untagged
@@ -187,6 +188,18 @@ TrailRenderer:
       rgba: 16777215
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
+--- !u!114 &114000010440759528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012630248042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db463b8bce40042b5bc81e491b422ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 10
 --- !u!114 &114000014243057702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -212,11 +225,9 @@ MonoBehaviour:
   powerCost: 4
   cooldownSeconds: 1
   standOffDistance: 20
-  explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
-    type: 2}
+  deathExplosionPrefab: {fileID: 0}
   explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
   damage: 10
-  player: {fileID: 0}
   damageClip: {fileID: 8300000, guid: 5fd23deebd82145dc9fe1b32fd4e3e59, type: 3}
   thrust: 10
