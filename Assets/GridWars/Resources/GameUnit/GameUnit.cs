@@ -28,13 +28,23 @@ public class GameUnit : MonoBehaviour {
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 
+	AudioSource _audioSource;
+	protected AudioSource audioSource {
+		get {
+			if (_audioSource == null) {
+				_audioSource = gameObject.AddComponent<AudioSource>();
+			}
+			return _audioSource;
+		}
+	}
+
 	public AudioClip birthSound {
 		get {
 			return Resources.Load<AudioClip>("GameUnit/" + GetType().Name + "/Sounds/birth");
 		}
 	}
 
-	public GameObject explosionPrefab;
+	public GameObject deathExplosionPrefab;
 
 	void Awake () {
 		_t = transform;
@@ -67,8 +77,11 @@ public class GameUnit : MonoBehaviour {
 
 		rotationThrust = 1.0f;
 
+		PlayBirthSound();
+	}
+
+	protected void PlayBirthSound() {
 		if (birthSound != null) {
-			var audioSource = gameObject.AddComponent<AudioSource>();
 			audioSource.PlayOneShot(birthSound);
 		}
 	}
@@ -93,17 +106,17 @@ public class GameUnit : MonoBehaviour {
 
 	public virtual bool isEnemyOf(GameUnit otherUnit) {
 		if (player == null) {
-			print ("null player " + this);
+			//print ("null player " + this);
 			return false;
 		}
 
 		if (otherUnit == null) {
-			print ("null otherUnit " + otherUnit);
+			//print ("null otherUnit " + otherUnit);
 			return false;
 		}
 
 		if (otherUnit.player == null) {
-			print ("null otherUnit.player " + otherUnit.player);
+			//print ("null otherUnit.player " + otherUnit.player);
 			return false;
 		}
 
@@ -348,7 +361,7 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public void ShowExplosion() {
-		var obj = Instantiate(explosionPrefab);
+		var obj = Instantiate(deathExplosionPrefab);
 		obj.transform.position = transform.position;
 		obj.transform.rotation = UnityEngine.Random.rotation;
 		obj.transform.localScale *= 15;

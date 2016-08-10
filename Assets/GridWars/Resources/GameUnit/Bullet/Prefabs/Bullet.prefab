@@ -198,7 +198,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd1c6b971a0743299ea03f353ffef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thrust: 0
+  rotationThrust: 0
+  player: {fileID: 0}
+  canAim: 1
+  hitPoints: 1
+  _t: {fileID: 0}
+  isRunning: 1
+  target: {fileID: 0}
+  angleToTarget: 0
+  lastUpTorque: {x: 0, y: 0, z: 0}
+  isStaticUnit: 0
+  powerCost: 4
+  cooldownSeconds: 1
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 0}
   explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
+  damage: 10
   player: {fileID: 0}
+  damageClip: {fileID: 8300000, guid: 5fd23deebd82145dc9fe1b32fd4e3e59, type: 3}
   muzzleImpulse: 1000

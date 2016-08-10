@@ -176,6 +176,9 @@ MonoBehaviour:
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 2
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
+    type: 2}
 --- !u!114 &114000012686117562
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -385,7 +385,9 @@ MonoBehaviour:
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 3
-  explosionPrefab: {fileID: 0}
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
+    type: 2}
 --- !u!114 &114000011704038210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -420,6 +422,8 @@ MonoBehaviour:
   rotOffset: {x: -90, y: 0, z: 0, w: 0}
   range: -1
   aimedAngle: 5
+  chanceOfFire: 0.02
+  fireClip: {fileID: 8300000, guid: 67908b04c6d6c43438a5598e0282c1af, type: 3}
 --- !u!114 &114000013198533988
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 
 
-public class Projectile : MonoBehaviour {
+public class Projectile : GameUnit {
 	public GameObject explosionPrefab;
 	public float damage = 10;
 
-	public Player player;
-
+	public AudioClip damageClip;
 
 	public virtual Rigidbody rigidBody() {
 		return GetComponent<Rigidbody> ();
@@ -21,7 +20,7 @@ public class Projectile : MonoBehaviour {
 
 	public virtual void Start () {
 		//base.Start();
-
+		PlayBirthSound();
 	}
 		
 	public virtual void FixedUpdate () {
@@ -47,6 +46,11 @@ public class Projectile : MonoBehaviour {
 		var obj = Instantiate(explosionPrefab);
 		obj.transform.position = transform.position;
 		obj.transform.rotation = transform.rotation;
+
+		if (damageClip != null) {
+			obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
+			//audioSource.PlayOneShot(damageClip);
+		}
 
 		//Transform t = obj.transform;
 		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
