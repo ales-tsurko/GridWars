@@ -21,7 +21,6 @@ GameObject:
   - 4: {fileID: 4000013410705696}
   - 198: {fileID: 198000013625127250}
   - 199: {fileID: 199000012680770160}
-  - 114: {fileID: 114000011976187248}
   m_Layer: 0
   m_Name: BurntGround
   m_TagString: Untagged
@@ -56,7 +55,6 @@ GameObject:
   - 4: {fileID: 4000013083888504}
   - 198: {fileID: 198000011260727980}
   - 199: {fileID: 199000011725658290}
-  - 114: {fileID: 114000010400584914}
   m_Layer: 0
   m_Name: White Lines
   m_TagString: FxTemporaire
@@ -198,30 +196,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000011933120664}
   m_RootOrder: 0
---- !u!114 &114000010400584914
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012720208924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fd2e8874f60266498a388d7229a1bac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnlyDeactivate: 0
---- !u!114 &114000011976187248
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010672059482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fd2e8874f60266498a388d7229a1bac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnlyDeactivate: 0
 --- !u!198 &198000011260727980
 ParticleSystem:
   m_ObjectHideFlags: 1
