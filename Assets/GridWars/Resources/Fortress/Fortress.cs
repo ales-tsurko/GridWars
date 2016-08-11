@@ -101,15 +101,4 @@ public class Fortress : MonoBehaviour {
 			gameUnit.GetComponent<Engineer> ().SwitchState (Engineer.State.Init);
 		}
 	}
-
-	public virtual bool IsDead() {
-		foreach (Tower tower in towers) {
-			if (!tower.gameObject.IsDestroyed()) {
-				return false;
-			}
-		}
-
-		//print("Fortress is dead");
-		return true;
-	}
 }

@@ -18,6 +18,7 @@ public class Battlefield : MonoBehaviour {
 		if (livingPlayers().Count == 1) {
 			print("Game Over Man");
 			Pause();
+			UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
 		}
 	}
 
