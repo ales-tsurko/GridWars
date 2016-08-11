@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
+	public Battlefield battlefield;
+	public Fortress fortress;
+
 	public int playerNumber {
 		get {
 			return battlefield.players.IndexOf(this) + 1;
 		}
 	}
-
-	public Battlefield battlefield;
-	public Fortress fortress;
 
 	public Color color {
 		get {
@@ -20,6 +20,12 @@ public class Player : MonoBehaviour {
 	public PowerSource powerSource {
 		get {
 			return fortress.powerSource;
+		}
+	}
+
+	public List<GameUnit> units {
+		get {
+			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.player == this);
 		}
 	}
 
@@ -69,6 +75,6 @@ public class Player : MonoBehaviour {
 	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
-		return fortress.IsDead();
+		return units.TrueForAll(u => u.gameObject.IsDestroyed());
 	}
 }
