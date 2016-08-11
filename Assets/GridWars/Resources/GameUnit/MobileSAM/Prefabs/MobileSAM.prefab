@@ -240,6 +240,7 @@ GameObject:
   - 4: {fileID: 4000012460184406}
   - 54: {fileID: 54000012605358878}
   - 65: {fileID: 65000010901403976}
+  - 114: {fileID: 114000013981099184}
   m_Layer: 0
   m_Name: MobileSAM
   m_TagString: Untagged
@@ -2749,9 +2750,9 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011668759908}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 12
   m_Drag: 10
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -2786,3 +2787,30 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000013981099184
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011668759908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cf50c7fce574bc58b3798c290106de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrust: 40
+  rotationThrust: 1
+  player: {fileID: 0}
+  canAim: 1
+  hitPoints: 10
+  _t: {fileID: 0}
+  isRunning: 1
+  target: {fileID: 0}
+  angleToTarget: 0
+  lastUpTorque: {x: 0, y: 0, z: 0}
+  isStaticUnit: 0
+  powerCost: 4
+  cooldownSeconds: 1
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
+    type: 2}
