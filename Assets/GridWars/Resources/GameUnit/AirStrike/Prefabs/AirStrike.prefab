@@ -22,6 +22,7 @@ GameObject:
   - 114: {fileID: 114000013156366254}
   - 65: {fileID: 65000011966369982}
   - 54: {fileID: 54000012285097104}
+  - 114: {fileID: 114000010141379294}
   m_Layer: 0
   m_Name: AirStrike
   m_TagString: Untagged
@@ -67,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011770585904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.164208, y: 22.904488, z: -17.784985}
+  m_LocalPosition: {x: -3.125493, y: 12.948009, z: -70.43942}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -151,6 +152,17 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114000010141379294
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011770585904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000013156366254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -182,4 +194,5 @@ MonoBehaviour:
     type: 2}
   airStrikePrefab: {fileID: 1000013640737342, guid: d0473f060ad2b4835af04a8e58cd7f1d,
     type: 2}
+  iconMesh: {fileID: 1000012183448322}
   waitTime: 3

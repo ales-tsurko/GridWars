@@ -18,6 +18,7 @@ public class Tower : GameUnit {
 		canAim = false;
 
 		releaseZones = new List<ReleaseZone>();
+
 		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;

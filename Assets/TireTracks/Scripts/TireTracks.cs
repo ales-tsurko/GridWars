@@ -164,7 +164,7 @@ public class TireTracks: MonoBehaviour {
 				break;
 			}
 			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
-			print (skidmarks [markIndex - i].Intensity);
+			//print (skidmarks [markIndex - i].Intensity);
 		}
 
 		MarkSection last = skidmarks[curr.LastIndex];
@@ -205,7 +205,7 @@ public class TireTracks: MonoBehaviour {
 				break;
 			}
 			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
-			print (skidmarks [markIndex - i].Intensity);
+			//print (skidmarks [markIndex - i].Intensity);
 
 		}
 		updated = true;

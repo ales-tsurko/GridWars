@@ -433,7 +433,7 @@ MonoBehaviour:
   clusterBombPrefab: {fileID: 1000013584608914, guid: 929c83a525b8646389d29a49b7bca26f,
     type: 2}
   bomber: {fileID: 4000010479924682}
-  bomberSpeed: 70
+  bomberSpeed: 50
   target: {fileID: 4000011193922080}
   numBombs: 24
   interval: 0.05
