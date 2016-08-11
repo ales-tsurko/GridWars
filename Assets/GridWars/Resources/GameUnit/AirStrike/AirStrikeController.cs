@@ -29,8 +29,8 @@ public class AirStrikeController : MonoBehaviour {
 	public void Init (Vector3 _target){
 		startLaunching = false;
 		bombsLaunched = 0;
-		target.position = new Vector3 (_target.x, 15, 0) + (transform.forward * -15);
-		bomber.position = new Vector3 (_target.x, 15, 0) + (transform.forward * -75);
+		target.position = new Vector3 (_target.x, 15, _target.z) + (transform.forward * -15);
+		bomber.position = new Vector3 (_target.x, 15, _target.z) + (transform.forward * -75);
 		initd = true;
 
 	}
