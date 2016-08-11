@@ -401,8 +401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91d89a36210843de9574832418aeb47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 0
-  rotationThrust: 0
+  thrust: 850
+  rotationThrust: 60
   player: {fileID: 0}
   canAim: 1
   hitPoints: 15
@@ -410,11 +410,11 @@ MonoBehaviour:
   isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
-  lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 0
   standOffDistance: 20
+  isTargetable: 1
   deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
 --- !u!114 &114000011704038210
@@ -445,14 +445,18 @@ MonoBehaviour:
   prefabProjectile: {fileID: 1000012630248042, guid: 107c6a7d263854e0aa7df13f2b76503c,
     type: 2}
   isActive: 1
-  isFixed: 0
   ammoCount: -1
   reloadTimeInSeconds: 3
-  rotOffset: {x: -90, y: 0, z: 0, w: 0}
-  range: -1
-  aimedAngle: 5
+  range: 25
+  aimedAngle: 2
   chanceOfFire: 0.02
   fireClip: {fileID: 8300000, guid: 67908b04c6d6c43438a5598e0282c1af, type: 3}
+  turretObjX: {fileID: 0}
+  turretMinX: -180
+  turretMaxX: 180
+  turretObjY: {fileID: 1000012207733930}
+  turretMinY: -180
+  turretMaxY: 180
 --- !u!114 &114000013198533988
 MonoBehaviour:
   m_ObjectHideFlags: 1

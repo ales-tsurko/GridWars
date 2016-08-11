@@ -25,14 +25,14 @@ public class ReleaseZone : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider obstruction) {
-		Debug.Log("OnTriggerEnter: " + obstruction.name);
+		//Debug.Log("OnTriggerEnter: " + obstruction.name);
 		if (!obstructions.Contains(obstruction)) {
 			obstructions.Add(obstruction);
 		}
 	}
 
 	void OnTriggerExit(Collider obstruction) {
-		Debug.Log("OnTriggerExit: " + obstruction.name);
+		//Debug.Log("OnTriggerExit: " + obstruction.name);
 		obstructions.Remove(obstruction);
 	}
 }

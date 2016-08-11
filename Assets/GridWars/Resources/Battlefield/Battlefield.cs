@@ -11,11 +11,14 @@ public class Battlefield : MonoBehaviour {
 		AddPlayer();
 		AddPlayer();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void FixedUpdate () {
+		//print("livingPlayers().Count = " + livingPlayers().Count);
+
 		if (livingPlayers().Count == 1) {
 			print("Game Over Man");
+			Pause();
+			UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
 		}
 	}
 
@@ -42,7 +45,7 @@ public class Battlefield : MonoBehaviour {
 		List <GameObject> objs = activeGameObjects();
 
 		foreach (GameObject obj in objs) {
-			obj.active = false;
+			obj.SetActive(false);
 		}
 	}
 

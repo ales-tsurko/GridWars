@@ -16,15 +16,15 @@ public class AirStrikeController : MonoBehaviour {
 	bool initd = false;
 
 	//sound
-	AudioSource audio;
+	AudioSource audioSource;
 	public string flyBySound;
 	AudioClip flyBySoundClip;
 
 	void Awake () {
 		initd = false;
-		audio = GetComponent <AudioSource> ();
+		audioSource = GetComponent <AudioSource> ();
 		flyBySoundClip = Resources.Load<AudioClip> (flyBySound);
-		audio.PlayOneShot (flyBySoundClip);
+		audioSource.PlayOneShot (flyBySoundClip);
 	}
 	public void Init (Vector3 _target){
 		startLaunching = false;

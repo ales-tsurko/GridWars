@@ -41,16 +41,10 @@ public class Chopper : GameUnit {
 		missileLauncherRight.owner = gameObject;
 	}
 
-	public override void pickTarget () {
-		base.pickTarget();
+	public override void UpdatedTarget() {
 		// we may want to have independent targets for multiple weapons...
-		missileLauncherLeft.target = target;
+		missileLauncherLeft.target  = target;
 		missileLauncherRight.target = target;
-	}
-
-	public void Update () {
-		pickTarget();
-		RemoveIfOutOfBounds ();
 	}
 
 	public override void FixedUpdate () {
@@ -91,10 +85,4 @@ public class Chopper : GameUnit {
 		missileLauncherLeft.isActive = false;
 		missileLauncherRight.isActive = false;
 	}
-
-	void OnDisable() {
-		missileLauncherLeft.enabled = false;
-		missileLauncherRight.enabled = false;
-	}
-
 }

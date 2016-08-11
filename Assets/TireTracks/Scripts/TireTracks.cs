@@ -74,10 +74,10 @@ public class TireTracks: MonoBehaviour {
 		uvs = new Vector2[MAX_MARKS * 4];
 		triangles = new int[MAX_MARKS * 6];
 
-		mr.castShadows = false;
+		mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		mr.receiveShadows = false;
 		mr.material = skidmarksMaterial;
-		mr.useLightProbes = false;
+		mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 	}
 	float dieCounter;
 	Color matColor;

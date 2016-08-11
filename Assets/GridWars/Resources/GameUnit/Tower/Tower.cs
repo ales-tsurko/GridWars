@@ -40,8 +40,7 @@ public class Tower : GameUnit {
 		iconUnit.transform.parent = transform;
 		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconUnit.transform.localRotation = Quaternion.identity;
-		iconUnit.GetComponent<GameUnit>().enabled = false;
-		iconUnit.GetComponent<GameUnitIcon>().enabled = true;
+		iconUnit.GetComponent<GameUnitIcon>().Enable();
 	}
 
 	public void OnMouseDown() {
@@ -52,7 +51,7 @@ public class Tower : GameUnit {
 
 	GameUnit iconUnit;
 	float lastProductionTime = 0f;
-	int releaseLocationIndex = 0;
+	//int releaseLocationIndex = 0;
 	int queueSize = 0;
 	List<ReleaseZone> releaseZones;
 

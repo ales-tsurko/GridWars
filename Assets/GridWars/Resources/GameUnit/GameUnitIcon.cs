@@ -4,10 +4,17 @@ using System.Collections;
 //using UnityEditor;
 
 public class GameUnitIcon : MonoBehaviour {
-	// Use this for initialization
-	void Start () {
+	public void Enable() {
+		foreach (var script in gameObject.GetComponentsInChildren<MonoBehaviour>()) {
+			script.enabled = false;
+		}
 		Destroy(GetComponent<Collider>());
 		Destroy(GetComponent<Rigidbody>());
+		enabled = true;
+	}
+
+	// Use this for initialization
+	void Start () {
 		/*
 		 * 1 = opaque
 		 * 2 = cutout

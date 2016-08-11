@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
+	public Battlefield battlefield;
+	public Fortress fortress;
+
 	public int playerNumber {
 		get {
 			return battlefield.players.IndexOf(this) + 1;
 		}
 	}
-
-	public Battlefield battlefield;
-	public Fortress fortress;
 
 	public Color color {
 		get {
@@ -20,6 +20,12 @@ public class Player : MonoBehaviour {
 	public PowerSource powerSource {
 		get {
 			return fortress.powerSource;
+		}
+	}
+
+	public List<GameUnit> units {
+		get {
+			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.player == this);
 		}
 	}
 
@@ -36,17 +42,21 @@ public class Player : MonoBehaviour {
 
 	public void Paint(GameObject gameObject) {
 		gameObject.EachMaterial(m => {
-			m.SetColor("_Color", color);
+			if (m.name.StartsWith("Unit")) {
+				m.SetColor("_Color", color);
+			}
 		});
 	}
 
 	public void PaintAsDisabled(GameObject gameObject) {
 		gameObject.EachMaterial(m => {
-			var c = new Color();
-			c.r = color.r/2;
-			c.g = color.g/2;
-			c.b = color.b/2;
-			m.SetColor("_Color", c);
+			if (m.name.StartsWith("Unit")) {
+				var c = new Color();
+				c.r = color.r/2;
+				c.g = color.g/2;
+				c.b = color.b/2;
+				m.SetColor("_Color", c);
+			}
 		});
 	}
 
@@ -62,9 +72,9 @@ public class Player : MonoBehaviour {
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
-	Color[] colors = new Color[]{ new Color(78f/255, 84f/255, 68f/255), new Color(180f/255, 157f/255, 128f/255) };
+	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
-		return fortress.IsDead();
+		return units.TrueForAll(u => u.gameObject.IsDestroyed());
 	}
 }
