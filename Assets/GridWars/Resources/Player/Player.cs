@@ -36,17 +36,21 @@ public class Player : MonoBehaviour {
 
 	public void Paint(GameObject gameObject) {
 		gameObject.EachMaterial(m => {
-			m.SetColor("_Color", color);
+			if (m.name.StartsWith("Unit")) {
+				m.SetColor("_Color", color);
+			}
 		});
 	}
 
 	public void PaintAsDisabled(GameObject gameObject) {
 		gameObject.EachMaterial(m => {
-			var c = new Color();
-			c.r = color.r/2;
-			c.g = color.g/2;
-			c.b = color.b/2;
-			m.SetColor("_Color", c);
+			if (m.name.StartsWith("Unit")) {
+				var c = new Color();
+				c.r = color.r/2;
+				c.g = color.g/2;
+				c.b = color.b/2;
+				m.SetColor("_Color", c);
+			}
 		});
 	}
 
