@@ -30,6 +30,7 @@ public class GameUnit : MonoBehaviour {
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
+
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -149,7 +150,7 @@ public class GameUnit : MonoBehaviour {
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
-			if (gameUnit.player && (gameUnit.player != player) && gameUnit.isTargetable) {
+			if (gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
 				results.Add (gameUnit.gameObject);
 			}
 		}
@@ -165,6 +166,17 @@ public class GameUnit : MonoBehaviour {
 		}
 
 		return results;*/
+	}
+
+	// --- targeting -------------------
+
+	public virtual bool CanTargetUnit(GameUnit unit) {
+
+		if (unit.isTargetable) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public virtual void pickTarget() {
