@@ -17,6 +17,8 @@ public class TireTrackGenerator : MonoBehaviour {
 	}
 
 	void OnDestroy(){
-		track.FadeOutAndDie ();
+		if (track != null) {
+			track.FadeOutAndDie ();
+		}
 	}
 }
