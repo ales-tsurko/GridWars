@@ -13,12 +13,14 @@ public class GameUnit : MonoBehaviour {
 	public float hitPoints = 1;
 	public float maxHitPoints = 1;
 
+	public bool isTargetable = true;
+
 	[HideInInspector]
 	public Transform _t;
 	public bool isRunning = true;
 
 	public GameObject target = null;
-	public float angleToTarget = 0;
+	//public float angleToTarget = 0;
 
 	public bool isStaticUnit = false;
 
@@ -26,7 +28,6 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
-	public bool isTargetable = true;
 
 	public float hpRatio {
 		get {
@@ -309,7 +310,7 @@ public class GameUnit : MonoBehaviour {
 
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
-		angleToTarget = angle;
+		//angleToTarget = angle;
 
 		if (true) {
 			//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
