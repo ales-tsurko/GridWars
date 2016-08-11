@@ -635,6 +635,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000013446469998
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000013252235310}
+  m_Layer: 0
+  m_Name: MuzzleFlashPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000013496433604
 GameObject:
   m_ObjectHideFlags: 1
@@ -881,7 +896,7 @@ Transform:
   - {fileID: 4000010514156808}
   - {fileID: 4000013901118856}
   m_Father: {fileID: 4000014279397444}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!4 &4000010877802656
 Transform:
   m_ObjectHideFlags: 1
@@ -1154,7 +1169,7 @@ Transform:
   - {fileID: 4000012845015642}
   - {fileID: 4000013898819676}
   m_Father: {fileID: 4000014279397444}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!4 &4000012447125024
 Transform:
   m_ObjectHideFlags: 1
@@ -1209,6 +1224,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000010838459582}
   m_RootOrder: 6
+--- !u!4 &4000013252235310
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013446469998}
+  m_LocalRotation: {x: -0, y: 0.8870109, z: -0, w: -0.46174857}
+  m_LocalPosition: {x: -2.6638048, y: -2.0787358, z: 1.3342744}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000014279397444}
+  m_RootOrder: 0
 --- !u!4 &4000013275078610
 Transform:
   m_ObjectHideFlags: 1
@@ -1394,6 +1422,7 @@ Transform:
   m_LocalScale: {x: 1.0000001, y: 1, z: 1.0000001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 4000013252235310}
   - {fileID: 4000012421315058}
   - {fileID: 4000010838459582}
   m_Father: {fileID: 4000013385546014}
@@ -2856,6 +2885,9 @@ MonoBehaviour:
   target: {fileID: 0}
   prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
     type: 2}
+  muzzleFlash: {fileID: 1000012667077632, guid: cc58c660055064be1b8c50a4ba6d8072,
+    type: 2}
+  muzzleFlashPoint: {fileID: 4000013252235310}
   isActive: 1
   ammoCount: -1
   reloadTimeInSeconds: 3
@@ -2885,14 +2917,14 @@ MonoBehaviour:
   player: {fileID: 0}
   canAim: 1
   hitPoints: 10
+  maxHitPoints: 1
+  isTargetable: 1
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
-  angleToTarget: 0
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1
   standOffDistance: 20
-  isTargetable: 1
   deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
