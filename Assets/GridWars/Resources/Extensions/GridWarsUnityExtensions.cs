@@ -32,6 +32,7 @@ public static class GridWarsUnityExtensions {
 	/// </summary>
 	/// <param name="gameObject">GameObject reference to check for destructedness</param>
 	/// <returns>If the game object has been marked as destroyed by UnityEngine</returns>
+	/// 
 	public static bool IsDestroyed(this GameObject gameObject)
 	{
 		// UnityEngine overloads the == opeator for the GameObject type

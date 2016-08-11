@@ -156,6 +156,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool FireIfAppropriate() {
+		print("FireIfAppropriate");
 		if (hasAmmo() && isLoaded () && isAimed () && targetInRange() && chooseToFire()) {
 			Fire ();
 			return true;
@@ -180,8 +181,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		//return true;
-		return Mathf.Abs(YAngleToTarget ()) < aimedAngle;
+		return true;
+		//return Mathf.Abs(YAngleToTarget ()) < aimedAngle;
 	}
 
 	public void Reload() {
