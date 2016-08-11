@@ -28,6 +28,9 @@ public class Weapon : MonoBehaviour {
 	public float turretMinY = -180;
 	public float turretMaxY = 180;
 
+	public float aimRateX = 0.05f;
+	public float aimRateY = 0.05f;
+
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
@@ -126,7 +129,7 @@ public class Weapon : MonoBehaviour {
 
 	public void AimOnXAxis() {
 		float angle = XAngleToTarget();
-		float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
+		float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
 
 		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
@@ -135,7 +138,7 @@ public class Weapon : MonoBehaviour {
 
 	public void AimOnYAxis() {
 		float angle = YAngleToTarget();
-		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
+		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateY; // hack for now
 
 		Transform tt = turretObjY.transform;
 		var e = tt.eulerAngles;
