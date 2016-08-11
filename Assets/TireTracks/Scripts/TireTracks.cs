@@ -1,23 +1,12 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 public class TireTracks: MonoBehaviour {
-	private static TireTracks _instance;
-	public static TireTracks instance {
-		get {
-			if (_instance == null) {
-				_instance = FindObjectOfType<TireTracks> ();
-			}
-			if (_instance == null) {
-				GameObject go = new GameObject ();
-				go.name = "TireTrackManager";
-				_instance = go.AddComponent<TireTracks> ();
-				_instance.skidmarksMaterial = Resources.Load<Material> ("TireTracks/Tracks");
-			}
-			return _instance;
-		}
-	}
+	
 	[SerializeField]
 	Material skidmarksMaterial;
+
+
 
 	class MarkSection {
 		public Vector3 Pos = Vector3.zero;
@@ -32,7 +21,7 @@ public class TireTracks: MonoBehaviour {
 	const int MAX_MARKS = 1024; // Max number of marks on the map
 	const float MARK_WIDTH = 0.45f; // Width of the skidmarks.
 	const float GROUND_OFFSET = 0.02f;	// Distance above surface
-	const float MIN_DISTANCE = 1.0f; // Distance between points in metres. Bigger = more clunky, straight-line skidmarks
+	const float MIN_DISTANCE = .5f; // Distance between points in metres. Bigger = more clunky, straight-line skidmarks
 	const float MIN_SQR_DISTANCE = MIN_DISTANCE * MIN_DISTANCE;
 
 	int markIndex;
@@ -50,10 +39,16 @@ public class TireTracks: MonoBehaviour {
 
 	bool updated;
 	bool haveSetBounds;
-	GameObject terrain;
+	bool die;
+	public void FadeOutAndDie () {
+		matColor = mr.material.GetColor ("_TintColor");
+		dieCounter = matColor.a;
+		die = true;
+	}
 
 	void Start() {
-		terrain = GameObject.Find ("BattlefieldPlane");
+		die = false;
+		skidmarksMaterial = Resources.Load<Material> ("TireTracks/Tracks");
 		skidmarks = new MarkSection[MAX_MARKS];
 		for (int i = 0; i < MAX_MARKS; i++) {
 			skidmarks[i] = new MarkSection();
@@ -79,13 +74,23 @@ public class TireTracks: MonoBehaviour {
 		uvs = new Vector2[MAX_MARKS * 4];
 		triangles = new int[MAX_MARKS * 6];
 
-		mr.castShadows = false;
+		mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		mr.receiveShadows = false;
 		mr.material = skidmarksMaterial;
-		mr.useLightProbes = false;
+		mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 	}
-
+	float dieCounter;
+	Color matColor;
 	protected void LateUpdate() {
+		if (die) {
+			dieCounter += (Time.deltaTime * 50);
+			float pct = 1f-(float)(dieCounter / 255.0f);
+			mr.material.SetColor ("_TintColor", new Color (matColor.r, matColor.g, matColor.b, pct));
+			if (dieCounter > 255) {
+				Destroy (gameObject);
+			}
+			return;
+		}
 		if (!updated) return;
 		updated = false;
 
@@ -104,8 +109,6 @@ public class TireTracks: MonoBehaviour {
 		mf.sharedMesh = marksMesh;
 	}
 
-	public List<float> timeToDestroy = new List<float>();
-
 	public int AddSkidMark(Vector3 pos, Vector3 normal, float intensity, int lastIndex) {
 		if (intensity > 1) intensity = 1.0f;
 		else if (intensity < 0) return -1; if (lastIndex > 0) {
@@ -115,7 +118,6 @@ public class TireTracks: MonoBehaviour {
 		if (skidmarks == null) {
 			return -1;
 		}
-		pos = new Vector3 (pos.x, terrain.transform.position.y, pos.z);
 		MarkSection curSection = skidmarks[markIndex];
 
 		curSection.Pos = pos + normal * GROUND_OFFSET;
@@ -142,34 +144,20 @@ public class TireTracks: MonoBehaviour {
 		UpdateSkidmarksMesh();
 
 		int curIndex = markIndex;
-		/*timeToDestroy.Add (Time.time + 5);
-		for (int i = 0; i < timeToDestroy.Count; i++) {
-			if (Time.time >= timeToDestroy [i]) {
-				timeToDestroy [i] = 1000000;
-				skidmarks [i] = null;
-			}
-		}*/
+
 		markIndex = ++markIndex % MAX_MARKS;
 
 		return curIndex;
 	}
-		
+
 	void UpdateSkidmarksMesh() {
 		MarkSection curr = skidmarks[markIndex];
 
 		if (curr.LastIndex == -1) return;
 
-		for (int i = 1; i < 25; i++) {
-			if (markIndex - i < 0) {
-				break;
-			}
-			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
-			//print (skidmarks [markIndex - i].Intensity);
-		}
-
 		MarkSection last = skidmarks[curr.LastIndex];
-		vertices [markIndex * 4 + 0] = last.Posl + new Vector3 (0, -5, 0);
-		vertices [markIndex * 4 + 1] = last.Posr + new Vector3 (0, -5, 0);
+		vertices[markIndex * 4 + 0] = last.Posl;
+		vertices[markIndex * 4 + 1] = last.Posr;
 		vertices[markIndex * 4 + 2] = curr.Posl;
 		vertices[markIndex * 4 + 3] = curr.Posr;
 
@@ -200,14 +188,17 @@ public class TireTracks: MonoBehaviour {
 		triangles[markIndex * 6 + 3] = markIndex * 4 + 2;
 		triangles[markIndex * 6 + 5] = markIndex * 4 + 1;
 		triangles[markIndex * 6 + 4] = markIndex * 4 + 3;
-		for (int i = 1; i < 25; i++) {
-			if (markIndex - i < 0) {
+		updated = true;
+
+		for (int i = 60; i < 100; i=i+2) {
+			if (markIndex * 4 - i < 0) {
 				break;
 			}
-			skidmarks [markIndex - i].Intensity = (byte)Mathf.Clamp (255 - (i * 12), 0, 255);
-			//print (skidmarks [markIndex - i].Intensity);
-
+			byte b = Convert.ToByte (Mathf.Clamp (400 - (i * 4), 0, 255));
+			//print ("BYTE " + b + "  "+Time.time);
+			colors[markIndex * 4 - i] = new Color32(0, 0, 0, b);
+			colors[markIndex * 4 - i + 1] = new Color32(0, 0, 0, b);
 		}
-		updated = true;
+
 	}
 }

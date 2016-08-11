@@ -4,11 +4,11 @@ using System.Collections;
 public class ClusterBombExploder : MonoBehaviour {
 	public GameObject explosionEffect;
 	public float damage;
-	AudioClip explosionSound;
-	AudioSource audio;
+	//AudioClip explosionSound;
+	//AudioSource audioSource;
 	void Start () {
-		audio = gameObject.AddComponent<AudioSource> ();
-		explosionSound = Resources.Load<AudioClip> ("BulletPing");
+		//audioSource = gameObject.AddComponent<AudioSource> ();
+		//explosionSound = Resources.Load<AudioClip> ("BulletPing");
 	}
 
 	void Update () {
@@ -20,7 +20,7 @@ public class ClusterBombExploder : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter (Collider o){
-		print (o.name);
+		
 		if (o.name.StartsWith ("Cluster")) {
 			return;
 		}
