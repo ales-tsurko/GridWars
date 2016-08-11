@@ -14,7 +14,9 @@ public class Battlefield : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (livingPlayers().Count == 1) {
+			print("Game Over Man");
+		}
 	}
 
 	void AddPlayer() {
@@ -22,5 +24,36 @@ public class Battlefield : MonoBehaviour {
 		player.battlefield = this;
 		players.Add(player);
 		player.gameObject.name = "Player " + player.playerNumber;
+	}
+
+	List <Player> livingPlayers() {
+		List <Player> results = new List<Player>();
+
+		foreach (Player player in players) {
+			if (!player.IsDead()) {
+				results.Add(player);
+			}
+		}
+
+		return results;
+	}
+
+	void Pause() {
+		List <GameObject> objs = activeGameObjects();
+
+		foreach (GameObject obj in objs) {
+			obj.active = false;
+		}
+	}
+
+	public virtual List<GameObject> activeGameObjects() {
+		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
+		var results = new List<GameObject>();
+		foreach (GameObject obj in objs) {
+			if (obj.activeInHierarchy) {
+				results.Add(obj);
+			}
+		}
+		return results;
 	}
 }

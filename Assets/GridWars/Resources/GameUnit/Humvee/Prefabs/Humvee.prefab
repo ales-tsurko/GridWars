@@ -225,6 +225,7 @@ GameObject:
   - 4: {fileID: 4000010590142102}
   - 54: {fileID: 54000013541237076}
   - 65: {fileID: 65000010237264924}
+  - 114: {fileID: 114000012232524116}
   m_Layer: 0
   m_Name: Humvee
   m_TagString: Untagged
@@ -1083,7 +1084,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013245188150}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1120,3 +1121,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114000012232524116
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013245188150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1c723a2dab44e978c8450e00ff613e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrust: 5
+  rotationThrust: 0
+  player: {fileID: 0}
+  canAim: 1
+  hitPoints: 1
+  _t: {fileID: 0}
+  isRunning: 1
+  target: {fileID: 0}
+  angleToTarget: 0
+  lastUpTorque: {x: 0, y: 0, z: 0}
+  isStaticUnit: 0
+  powerCost: 4
+  cooldownSeconds: 1
+  standOffDistance: 20
+  deathExplosionPrefab: {fileID: 0}

@@ -63,4 +63,8 @@ public class Player : MonoBehaviour {
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
 	Color[] colors = new Color[]{ new Color(78f/255, 84f/255, 68f/255), new Color(180f/255, 157f/255, 128f/255) };
+
+	public virtual bool IsDead() {
+		return fortress.IsDead();
+	}
 }
