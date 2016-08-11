@@ -59,31 +59,9 @@ public class Weapon : MonoBehaviour {
 			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
 	}
 
-	public float YAngleToTarget() {
-		if (target) {
-			Transform t = transform;
-			var targetPos = target.transform.position;
-
-			Vector3 targetDir = (targetPos - t.position).normalized;
-			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
-
-
-			if (true) {
-				var r = range == -1 ? 10 : range;
-
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
-			}
-
-			return angle;
-		}
-
-		return 0;
-	}
-
 	public float XAngleToTarget() {
 		if (target) {
-			Transform t = transform;
+			Transform t = turretObjX.transform;
 			var targetPos = target.transform.position;
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
@@ -103,11 +81,32 @@ public class Weapon : MonoBehaviour {
 		return 0;
 	}
 
+	public float YAngleToTarget() {
+		if (target) {
+			Transform t = turretObjY.transform;
+			var targetPos = target.transform.position;
+
+			Vector3 targetDir = (targetPos - t.position).normalized;
+			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
+
+			if (true) {
+				var r = range == -1 ? 10 : range;
+
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
+			}
+
+			return angle;
+		}
+
+		return 0;
+	}
+
 	public void AimOnXAxis() {
 		float angle = YAngleToTarget();
 		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
 
-		Transform tt = transform;
+		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
 		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
 	}
@@ -116,7 +115,7 @@ public class Weapon : MonoBehaviour {
 		float angle = YAngleToTarget();
 		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
 
-		Transform tt = transform;
+		Transform tt = turretObjY.transform;
 		var e = tt.eulerAngles;
 		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
 	}
