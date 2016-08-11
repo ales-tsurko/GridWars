@@ -60,6 +60,17 @@ public class Weapon : MonoBehaviour {
 			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
 	}
 
+	public float AimDiff() {
+		Transform t = transform;
+		var targetPos = target.transform.position;
+
+		Vector3 targetDir = (targetPos - t.position).normalized;
+		float xAngle = AngleBetweenOnAxis (t.forward, targetDir, t.right);
+		float yAngle = AngleBetweenOnAxis (t.forward, targetDir, t.forward);
+
+		return xAngle + yAngle;
+	}
+
 	public float XAngleToTarget() {
 		if (target) {
 			Transform t = turretObjX.transform;
@@ -188,8 +199,9 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		float diff = 0;
+		float diff = AimDiff();
 
+		/*
 		if (turretObjY) {
 			diff += Mathf.Abs(YAngleToTarget());
 		}
@@ -197,7 +209,7 @@ public class Weapon : MonoBehaviour {
 		if (turretObjX) {
 			diff += Mathf.Abs(XAngleToTarget());
 		}
-
+*/
 		return diff < aimedAngle;
 	}
 
