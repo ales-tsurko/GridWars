@@ -139,7 +139,7 @@ public class GameUnit : MonoBehaviour {
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
-			if (gameUnit.player != player) {
+			if (gameUnit.player != player && gameUnit.isTargetable) {
 				results.Add (gameUnit.gameObject);
 			}
 			/*
