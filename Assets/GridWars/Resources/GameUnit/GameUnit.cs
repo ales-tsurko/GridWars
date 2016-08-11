@@ -11,7 +11,7 @@ public class GameUnit : MonoBehaviour {
 
 	// Damagable
 	public float hitPoints = 1;
-	//public float maxHitPoints = 1;
+	public float maxHitPoints = 1;
 
 	public bool isTargetable = true;
 
@@ -28,6 +28,12 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
+
+	public float hpRatio {
+		get {
+			return hitPoints/maxHitPoints;
+		}
+	}
 
 	AudioSource _audioSource;
 	protected AudioSource audioSource {
@@ -68,6 +74,8 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual void Start () {
+		hitPoints = maxHitPoints;
+
 		SetupWeapons();
 
 		gameObject.CloneMaterials();
