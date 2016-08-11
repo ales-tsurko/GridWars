@@ -11,6 +11,7 @@ public class Weapon : MonoBehaviour {
 	public Transform muzzleFlashPoint;
 
 	public bool isActive = true;
+	public int maxAmmoCount = 0;
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
 	public float range = -1;
@@ -30,8 +31,6 @@ public class Weapon : MonoBehaviour {
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
-	//public Vector3 angularSpread; // accuracy in euler angles
-
 	public void Start () {
 		//base.Start();
 		Reload();
@@ -49,6 +48,16 @@ public class Weapon : MonoBehaviour {
 	}
 
 	// --- aiming ------------------
+
+	public virtual void ApplyAngleLimits() {
+		if (turretObjX) {
+			// todo
+		}
+
+		if (turretObjY) {
+			// todo
+		}
+	}
 
 	public static float AngleBetweenOnAxis(Vector3 v1, Vector3 v2, Vector3 n)
 	{
