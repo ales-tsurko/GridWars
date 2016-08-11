@@ -8,11 +8,9 @@ public class Weapon : MonoBehaviour {
 	public GameObject target;
 	public GameObject prefabProjectile;
 
-	public bool isActive = false;
-	//public bool isFixed = true;
+	public bool isActive = true;
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
-	//public Quaternion rotOffset;
 	public float range = -1;
 	public float aimedAngle = 5.0f;
 	public float chanceOfFire = 0.02f; // as fraction of 1
@@ -130,9 +128,14 @@ public class Weapon : MonoBehaviour {
 		return turretObjY != null;
 	}
 
+	public string ownerType() {
+		return owner.GetType().ToString();
+		//return gameObject.root.GetType().ToString();
+	}
 
 	public bool AimIfAble() { 
-		//print("AimIfAble1");
+
+		print(ownerType() + " AimIfAble ");
 
 		if (target) {
 			
@@ -195,6 +198,9 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Fire() {
+		print("X angle " + XAngleToTarget());
+		print("Y angle " + YAngleToTarget());
+
 		CreateProjectile();
 		if (fireClip != null) {
 			GetComponent<AudioSource>().PlayOneShot(fireClip);
