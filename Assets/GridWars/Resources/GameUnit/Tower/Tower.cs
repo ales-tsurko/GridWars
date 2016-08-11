@@ -81,7 +81,7 @@ public class Tower : GameUnit {
 
 	KeyCode keyCode {
 		get {
-			if (player.playerNumber <= buildKeyCodeForPlayers.Length) {
+			if (player.playerNumber <= gameUnit.buildKeyCodeForPlayers.Length) {
 				return gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
 			}
 			else {
