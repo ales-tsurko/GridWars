@@ -15,13 +15,6 @@ public class Tank : GroundVehicle {
 
 	public override void Start () {
 		base.Start();
-		thrust = 850;
-		rotationThrust = 60;
-
-		turretWeapon.enabled = true;
-		turretWeapon.owner = gameObject;
-		//turretWeapon.isFixedY = false;
-		turretWeapon.aimedAngle = 2.0f;
 	}
 		
 	public override void FixedUpdate () {
@@ -37,4 +30,5 @@ public class Tank : GroundVehicle {
 	void OnDisable() {
 		turretWeapon.enabled = false;
 	}
+
 }

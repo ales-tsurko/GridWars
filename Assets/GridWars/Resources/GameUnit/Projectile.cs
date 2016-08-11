@@ -21,13 +21,12 @@ public class Projectile : GameUnit {
 	}
 		
 	public override void FixedUpdate () {
+		RemoveIfOutOfBounds ();
 	}
 
 	void OnCollisionEnter(Collision collision) {
-
-				Explode();
+		Explode();
 		ApplyDamageTo(collision.gameObject);
-
 	}
 
 	void ApplyDamageTo(GameObject otherGameObject) {

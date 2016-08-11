@@ -20,7 +20,6 @@ public class GameUnit : MonoBehaviour {
 	public GameObject target = null;
 	public float angleToTarget = 0;
 
-	public Vector3 lastUpTorque;
 	public bool isStaticUnit = false;
 
 	//tower
@@ -68,7 +67,7 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual void Start () {
-		thrust = 0.0f;
+		SetupWeapons();
 
 		gameObject.CloneMaterials();
 
@@ -76,8 +75,6 @@ public class GameUnit : MonoBehaviour {
 			player.Paint(gameObject);
 			player.tag = "Player" + player.playerNumber;
 		}
-
-		rotationThrust = 1.0f;
 
 		PlayBirthSound();
 	}
@@ -310,13 +307,11 @@ public class GameUnit : MonoBehaviour {
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		angleToTarget = angle;
 
-		/*
-		if (false) {
-			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-			Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		if (true) {
+			//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+			//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
 			Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
 		}
-		*/
 
 		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
 	}
@@ -356,19 +351,10 @@ public class GameUnit : MonoBehaviour {
 
 
 	void OnDrawGizmos() {
-		/*
-		if (Application.isPlaying && canAim) {
-			//	Gizmos.DrawSphere(_t.position, 1);
-
-			var obj = closestEnemyObject ();
-			if (obj != null) {
-				Gizmos.color = Color.red;
-				Gizmos.DrawLine (_t.position, obj.transform.position);
-				Gizmos.color = Color.yellow;
-				Gizmos.DrawRay(_t.position,  lastUpTorque * 20.0f);
-			}
+		if (target != null) {
+			Gizmos.color = Color.white;
+			Gizmos.DrawLine (_t.position, target.transform.position);
 		}
-		*/
 	}
 
 	// Damage
@@ -396,4 +382,15 @@ public class GameUnit : MonoBehaviour {
 
 		Destroy(gameObject);
 	}
+		
+
+	void SetupWeapons() {
+		Weapon[] weapons = GetComponentsInChildren<Weapon>();
+
+		foreach (Weapon weapon in weapons) {
+			weapon.owner = gameObject;
+			weapon.enabled = true;
+		}
+	}
+
 }

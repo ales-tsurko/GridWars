@@ -2751,7 +2751,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011668759908}
   serializedVersion: 2
-  m_Mass: 12
+  m_Mass: 25
   m_Drag: 10
   m_AngularDrag: 1
   m_UseGravity: 1
@@ -2777,7 +2777,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011668759908}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
   m_Name: 
@@ -2796,7 +2796,8 @@ MonoBehaviour:
   player: {fileID: 0}
   owner: {fileID: 0}
   target: {fileID: 0}
-  prefabProjectile: {fileID: 0}
+  prefabProjectile: {fileID: 1000012630248042, guid: 0270ac5af0e4e430b8d1ef7f2152fa11,
+    type: 2}
   isActive: 0
   ammoCount: -1
   reloadTimeInSeconds: 3
@@ -2804,10 +2805,10 @@ MonoBehaviour:
   aimedAngle: 5
   chanceOfFire: 0.02
   fireClip: {fileID: 0}
-  turretObjX: {fileID: 0}
+  turretObjX: {fileID: 1000013088153410}
   turretMinX: -180
   turretMaxX: 180
-  turretObjY: {fileID: 1000010846942518}
+  turretObjY: {fileID: 1000012080833168}
   turretMinY: -180
   turretMaxY: 180
 --- !u!114 &114000013981099184
@@ -2821,8 +2822,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cf50c7fce574bc58b3798c290106de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 40
-  rotationThrust: 1
+  thrust: 500
+  rotationThrust: 60
   player: {fileID: 0}
   canAim: 1
   hitPoints: 10
@@ -2830,7 +2831,6 @@ MonoBehaviour:
   isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
-  lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1

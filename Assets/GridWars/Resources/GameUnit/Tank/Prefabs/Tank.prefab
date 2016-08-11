@@ -401,8 +401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91d89a36210843de9574832418aeb47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 0
-  rotationThrust: 0
+  thrust: 850
+  rotationThrust: 60
   player: {fileID: 0}
   canAim: 1
   hitPoints: 15
@@ -410,7 +410,6 @@ MonoBehaviour:
   isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
-  lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 0
@@ -449,7 +448,7 @@ MonoBehaviour:
   ammoCount: -1
   reloadTimeInSeconds: 3
   range: 25
-  aimedAngle: 5
+  aimedAngle: 2
   chanceOfFire: 0.02
   fireClip: {fileID: 8300000, guid: 67908b04c6d6c43438a5598e0282c1af, type: 3}
   turretObjX: {fileID: 0}
