@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-
 public class Projectile : GameUnit {
 	public GameObject explosionPrefab;
 	public float damage = 10;
@@ -15,12 +14,13 @@ public class Projectile : GameUnit {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
 	}
 
-	public virtual void Start () {
+	public override void Start () {
 		//base.Start();
 		PlayBirthSound();
+		isTargetable = false;
 	}
 		
-	public virtual void FixedUpdate () {
+	public override void FixedUpdate () {
 	}
 
 	void OnCollisionEnter(Collision collision) {

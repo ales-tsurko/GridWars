@@ -9,15 +9,22 @@ public class Weapon : MonoBehaviour {
 	public GameObject prefabProjectile;
 
 	public bool isActive = false;
-	public bool isFixed = true;
+	//public bool isFixed = true;
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
-	public Quaternion rotOffset;
+	//public Quaternion rotOffset;
 	public float range = -1;
 	public float aimedAngle = 5.0f;
 	public float chanceOfFire = 0.02f; // as fraction of 1
 
 	public AudioClip fireClip;
+
+	public GameObject turretObjX = null; // need to set this to the obj that X axis will rotate on to aim
+	public float turretMinX = -180;
+	public float turretMaxX = 180;
+
+	public GameObject turretObjY = null; // need to set this to the obj that Y axis will rotate on to aim
+	public float turretRangeY = 180;
 
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
@@ -52,7 +59,7 @@ public class Weapon : MonoBehaviour {
 			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
 	}
 
-	public float AngleToTarget() {
+	public float YAngleToTarget() {
 		if (target) {
 			Transform t = transform;
 			var targetPos = target.transform.position;
@@ -74,20 +81,68 @@ public class Weapon : MonoBehaviour {
 		return 0;
 	}
 
+	public float XAngleToTarget() {
+		if (target) {
+			Transform t = transform;
+			var targetPos = target.transform.position;
+
+			Vector3 targetDir = (targetPos - t.position).normalized;
+			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.right);
+
+
+			if (true) {
+				var r = range == -1 ? 10 : range;
+
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
+			}
+
+			return angle;
+		}
+
+		return 0;
+	}
+
+	public void AimOnXAxis() {
+		float angle = YAngleToTarget();
+		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
+
+		Transform tt = transform;
+		var e = tt.eulerAngles;
+		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
+	}
+
+	public void AimOnYAxis() {
+		float angle = YAngleToTarget();
+		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
+
+		Transform tt = transform;
+		var e = tt.eulerAngles;
+		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
+	}
+
+	public bool canRotateX() {
+		return turretObjX != null;
+	}
+
+	public bool canRotateY() {
+		return turretObjY != null;
+	}
+
+
 	public bool AimIfAble() { 
 		//print("AimIfAble1");
 
-		if (target && !isFixed) {
-			//print("AimIfAble2");
+		if (target) {
+			
+			if (canRotateX()) {
+				AimOnXAxis();
+			}
 
-			// assumes we can only rotate weapon about Y axis
+			if (canRotateY()) {
+				AimOnYAxis();
+			}
 
-			float angle = AngleToTarget();
-			float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
-
-			Transform tt = transform;
-			var e = tt.eulerAngles;
-			tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
 			return true;
 		}
 		return false;
@@ -125,7 +180,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool isAimed() {
 		//return true;
-		return Mathf.Abs(AngleToTarget ()) < aimedAngle;
+		return Mathf.Abs(YAngleToTarget ()) < aimedAngle;
 	}
 
 	public void Reload() {

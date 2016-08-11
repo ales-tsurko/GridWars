@@ -8,7 +8,7 @@ public class AirStrike : GameUnit {
 	public GameObject airStrikePrefab;
 	public GameObject iconMesh;
 
-	void Start (){
+	public override void Start (){
 		Destroy (iconMesh);
 		base.Start ();
 		Arm ();

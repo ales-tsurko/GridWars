@@ -27,6 +27,7 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
+	public bool isTargetable = true;
 
 	AudioSource _audioSource;
 	protected AudioSource audioSource {
@@ -132,10 +133,15 @@ public class GameUnit : MonoBehaviour {
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
+			if (gameUnit.player != player) {
+				results.Add (gameUnit.gameObject);
+			}
+			/*
 			if (gameUnit.CompareTag ("Player" + player.playerNumber)) {
 				continue; //same player, so skip
 			}
 			results.Add (gameUnit.gameObject);
+			*/
 		}
 		return results;
 
@@ -152,7 +158,15 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual void pickTarget() {
-		target = closestEnemyObject ();
+		GameObject newTarget = closestEnemyObject ();
+		if (target != newTarget) {
+			target = newTarget;
+			UpdatedTarget();
+		}
+	}
+
+	public virtual void UpdatedTarget() {
+		// subclasses override to update weapon targets
 	}
 
 	public virtual GameObject closestEnemyObject() {

@@ -103,16 +103,13 @@ public class Fortress : MonoBehaviour {
 	}
 
 	public virtual bool IsDead() {
-		return false;
-		/*
 		foreach (Tower tower in towers) {
-			if (!tower.gameObect.IsDestroyed()) {
+			if (!tower.gameObject.IsDestroyed()) {
 				return false;
 			}
 		}
 
-
+		print("Fortress is dead");
 		return true;
-		*/
 	}
 }

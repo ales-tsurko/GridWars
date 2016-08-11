@@ -52,7 +52,7 @@ public class Tower : GameUnit {
 
 	GameUnit iconUnit;
 	float lastProductionTime = 0f;
-	int releaseLocationIndex = 0;
+	//int releaseLocationIndex = 0;
 	int queueSize = 0;
 	List<ReleaseZone> releaseZones;
 
