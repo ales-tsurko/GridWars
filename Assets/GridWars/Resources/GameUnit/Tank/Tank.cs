@@ -33,8 +33,4 @@ public class Tank : GroundVehicle {
 	public override void UpdatedTarget() {
 		turretWeapon.target = target;
 	}
-
-	void OnDisable() {
-		turretWeapon.enabled = false;
-	}
 }

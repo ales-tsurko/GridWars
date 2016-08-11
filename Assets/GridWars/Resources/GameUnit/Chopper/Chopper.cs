@@ -85,10 +85,4 @@ public class Chopper : GameUnit {
 		missileLauncherLeft.isActive = false;
 		missileLauncherRight.isActive = false;
 	}
-
-	void OnDisable() {
-		missileLauncherLeft.enabled = false;
-		missileLauncherRight.enabled = false;
-	}
-
 }
