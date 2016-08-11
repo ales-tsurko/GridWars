@@ -82,9 +82,11 @@ public class Tower : GameUnit {
 	void Update () {
 		if (canQueueUnit) {
 			player.Paint(gameObject);
+			player.Paint(iconUnit.gameObject);
 		}
 		else {
 			player.PaintAsDisabled(gameObject);
+			player.PaintAsDisabled(iconUnit.gameObject);
 		}
 			
 		if (queueSize > 0) {

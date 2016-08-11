@@ -4,17 +4,18 @@ using System.Collections;
 //using UnityEditor;
 
 public class GameUnitIcon : MonoBehaviour {
-
 	// Use this for initialization
 	void Start () {
 		Destroy(GetComponent<Collider>());
 		Destroy(GetComponent<Rigidbody>());
+		/*
+		 * 1 = opaque
+		 * 2 = cutout
+		 * 3 = transparent
 		gameObject.EachMaterial(m => {
-			m.shader = Shader.Find("Hidden/VacuumShaders/The Amazing Wireframe/Physically Based/Transparent/Simple/Diffuse");
-
-			m.SetColor("_V_WIRE_Color", Color.white);
-			m.SetColor("_Color", new Color(0, 0, 0, 0));
+			m.SetFloat("_Mode", 2);
 		});
+		*/
 	}
 	
 	// Update is called once per frame
