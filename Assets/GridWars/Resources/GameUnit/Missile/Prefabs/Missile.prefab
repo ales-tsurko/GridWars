@@ -216,15 +216,15 @@ MonoBehaviour:
   player: {fileID: 0}
   canAim: 1
   hitPoints: 1
+  maxHitPoints: 1
+  isTargetable: 0
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
-  angleToTarget: 0
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1
   standOffDistance: 20
-  isTargetable: 1
   deathExplosionPrefab: {fileID: 0}
   explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}

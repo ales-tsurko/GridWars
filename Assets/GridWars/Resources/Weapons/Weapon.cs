@@ -136,7 +136,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool AimIfAble() { 
 
-		print(ownerType() + " AimIfAble ");
+		//print(ownerType() + " AimIfAble ");
 
 		if (target) {
 			
@@ -160,7 +160,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool FireIfAppropriate() {
-		print("FireIfAppropriate");
+		//print("FireIfAppropriate");
 		if (hasAmmo() && isLoaded () && isAimed () && targetInRange() && chooseToFire()) {
 			Fire ();
 			return true;
@@ -199,8 +199,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Fire() {
-		print("X angle " + XAngleToTarget());
-		print("Y angle " + YAngleToTarget());
+		//print("X angle " + XAngleToTarget());
+		//print("Y angle " + YAngleToTarget());
 
 		CreateProjectile();
 		if (fireClip != null) {

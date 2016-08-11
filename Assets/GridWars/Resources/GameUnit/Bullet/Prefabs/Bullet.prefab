@@ -216,11 +216,11 @@ MonoBehaviour:
   player: {fileID: 0}
   canAim: 1
   hitPoints: 1
+  maxHitPoints: 1
+  isTargetable: 0
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
-  angleToTarget: 0
-  lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1
