@@ -13,17 +13,15 @@ public class Tank : GroundVehicle {
 		}
 	}
 
+	/*
 	public override void Start () {
 		base.Start();
 	}
+	*/
 		
 	public override void FixedUpdate () {
 		base.FixedUpdate();
 		pickTarget ();
 		steerTowardsNearestEnemy ();
-	}
-
-	public override void UpdatedTarget() {
-		turretWeapon.target = target;
 	}
 }

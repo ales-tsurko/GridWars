@@ -55,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012630248042}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.780728, y: -1.5085637e-18, z: 6.7939663}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -220,14 +220,13 @@ MonoBehaviour:
   isRunning: 1
   target: {fileID: 0}
   angleToTarget: 0
-  lastUpTorque: {x: 0, y: 0, z: 0}
   isStaticUnit: 0
   powerCost: 4
   cooldownSeconds: 1
   standOffDistance: 20
+  isTargetable: 1
   deathExplosionPrefab: {fileID: 0}
   explosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
   damage: 10
   damageClip: {fileID: 8300000, guid: 5fd23deebd82145dc9fe1b32fd4e3e59, type: 3}
-  thrust: 10
