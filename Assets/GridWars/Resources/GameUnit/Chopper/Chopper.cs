@@ -30,8 +30,8 @@ public class Chopper : GameUnit {
 
 	public override void Start () {
 		base.Start();
-		thrust = 10;
-		rotationThrust = 0.01f;
+		//thrust = 10;
+		//rotationThrust = 0.01f;
 		isRunning = true;
 
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
@@ -41,16 +41,18 @@ public class Chopper : GameUnit {
 		missileLauncherRight.owner = gameObject;
 	}
 
+	/*
 	public override void UpdatedTarget() {
 		// we may want to have independent targets for multiple weapons...
 		missileLauncherLeft.target  = target;
 		missileLauncherRight.target = target;
 	}
+	*/
 
 	public override void FixedUpdate () {
-		//base.FixedUpdate();
-
 		if (isRunning) {
+			//base.FixedUpdate();
+
 			Object_rotDY (mainRotor, 20);
 			Object_rotDY (tailRotor, 20);
 
@@ -62,7 +64,7 @@ public class Chopper : GameUnit {
 
 			steerTowardsTarget();
 
-			if (y () > 4) {
+			if (y () > 4 && !IsInStandoffRange()) {
 				rigidBody().AddForce(_t.forward * thrust);
 			}
 		}

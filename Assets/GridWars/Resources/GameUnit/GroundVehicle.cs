@@ -13,12 +13,7 @@ public class GroundVehicle : GameUnit {
 
 		RemoveIfOutOfBounds ();
 	}
-
-	public bool IsInStandoffRange() {
-		//return false;
-		return target && (targetDistance() < standOffDistance);
-	}
-
+		
 	public bool WheelsAreTouchingGround() {
 		return true;
 		/*
