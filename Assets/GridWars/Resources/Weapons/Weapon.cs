@@ -8,6 +8,7 @@ public class Weapon : MonoBehaviour {
 	public GameObject target;
 	public GameObject prefabProjectile;
 	public GameObject muzzleFlash;
+	public Transform muzzleFlashPoint;
 
 	public bool isActive = true;
 	public int ammoCount = -1;
@@ -224,7 +225,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	void CreateMuzzleFlash(){
-		Instantiate (muzzleFlash, transform.position + (transform.forward * barrelLength ()), transform.rotation);
+		if (muzzleFlashPoint == null || muzzleFlash == null) {
+			return;
+		}
+		Instantiate (muzzleFlash, muzzleFlashPoint.position, muzzleFlashPoint.rotation);
 	}
 
 	Projectile CreateProjectile() {
