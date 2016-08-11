@@ -79,10 +79,24 @@ public class Tower : GameUnit {
 		}
 	}
 
+	KeyCode keyCode {
+		get {
+			if (player.playerNumber <= buildKeyCodeForPlayers.Length) {
+				return gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
+			}
+			else {
+				KeyCode.None;
+			}
+		}
+	}
+
 	void Update () {
 		if (canQueueUnit) {
 			player.Paint(gameObject);
 			player.Paint(iconUnit.gameObject);
+			if (Input.GetKeyDown(keyCode)) {
+				QueueUnit();
+			}
 		}
 		else {
 			player.PaintAsDisabled(gameObject);
