@@ -6,10 +6,10 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Unit
+  m_Name: Spiders_1
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION
-  m_LightmapFlags: 1
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
@@ -69,18 +69,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - first:
-        name: _V_WIRE_NormalMap
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - first:
-        name: _V_WIRE_TransparentTex
-      second:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
     - first:
         name: _BumpScale
@@ -99,7 +87,7 @@ Material:
       second: 1
     - first:
         name: _Glossiness
-      second: 0
+      second: 0.5
     - first:
         name: _GlossyReflections
       second: 1
@@ -128,87 +116,12 @@ Material:
         name: _UVSec
       second: 0
     - first:
-        name: _V_WIRE_BumpEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_DynamicMaskEffectsBaseTexEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_DynamicMaskEffectsBaseTexInvert
-      second: 0
-    - first:
-        name: _V_WIRE_DynamicMaskEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_DynamicMaskInvert
-      second: 0
-    - first:
-        name: _V_WIRE_FresnelBias
-      second: 0
-    - first:
-        name: _V_WIRE_FresnelEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_FresnelInvert
-      second: 0
-    - first:
-        name: _V_WIRE_FresnelPow
-      second: 1
-    - first:
-        name: _V_WIRE_ImprovedBlendEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_IncludeLightEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_RenderingOptions_PBREnumID
-      second: 0
-    - first:
-        name: _V_WIRE_Size
-      second: 0.05
-    - first:
-        name: _V_WIRE_Tag
-      second: 0
-    - first:
-        name: _V_WIRE_Title_M_Options
-      second: 0
-    - first:
-        name: _V_WIRE_Title_V_Options
-      second: 0
-    - first:
-        name: _V_WIRE_Title_W_Options
-      second: 0
-    - first:
-        name: _V_WIRE_TransparencyEnumID
-      second: 0
-    - first:
-        name: _V_WIRE_TransparentTex_Alpha_Offset
-      second: 0
-    - first:
-        name: _V_WIRE_TransparentTex_Invert
-      second: 0
-    - first:
-        name: _V_WIRE_TransparentTex_UVSet
-      second: 0
-    - first:
-        name: _V_WIRE_VertexColorEnumID
-      second: 0
-    - first:
         name: _ZWrite
       second: 1
     m_Colors:
     - first:
         name: _Color
-      second: {r: 0, g: 0, b: 0, a: 1}
+      second: {r: 1, g: 1, b: 1, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
-    - first:
-        name: _V_WIRE_Color
-      second: {r: 1, g: 1, b: 1, a: 0}
-    - first:
-        name: _V_WIRE_MainTex_Scroll
-      second: {r: 0, g: 0, b: 0, a: 0}
-    - first:
-        name: _V_WIRE_TransparentTex_Scroll
-      second: {r: 0, g: 0, b: 0, a: 0}

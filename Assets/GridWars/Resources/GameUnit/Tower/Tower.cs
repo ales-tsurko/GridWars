@@ -18,6 +18,7 @@ public class Tower : GameUnit {
 		canAim = false;
 
 		releaseZones = new List<ReleaseZone>();
+
 		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;
@@ -82,9 +83,11 @@ public class Tower : GameUnit {
 	void Update () {
 		if (canQueueUnit) {
 			player.Paint(gameObject);
+			player.Paint(iconUnit.gameObject);
 		}
 		else {
 			player.PaintAsDisabled(gameObject);
+			player.PaintAsDisabled(iconUnit.gameObject);
 		}
 			
 		if (queueSize > 0) {

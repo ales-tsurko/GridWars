@@ -25,7 +25,12 @@ public class Fortress : MonoBehaviour {
 		}
 	}
 
-	static System.Type[] unitTypes = new System.Type[]{ typeof(MobileSAM), typeof(LightTank), typeof(Chopper), typeof(Tank) };
+	static System.Type[] unitTypes = new System.Type[] {
+		typeof(MobileSAM),
+		typeof(AirStrike),
+		typeof(Chopper),
+		typeof(Tank)
+	};
 
 	// Use this for initialization
 	void Start () {
