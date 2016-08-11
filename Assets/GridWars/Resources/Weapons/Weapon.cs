@@ -69,10 +69,10 @@ public class Weapon : MonoBehaviour {
 
 
 			if (true) {
-				var r = range == -1 ? 10 : range;
+				var r = range == -1 ? 1000 : range;
 
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.blue); // targetDir 
 			}
 
 			return angle;
@@ -89,12 +89,15 @@ public class Weapon : MonoBehaviour {
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
+			/*
 			if (true) {
 				var r = range == -1 ? 10 : range;
 
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward blue
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir yellow
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir 
 			}
+			*/
+
 
 			return angle;
 		}
@@ -103,12 +106,12 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void AimOnXAxis() {
-		float angle = YAngleToTarget();
-		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
+		float angle = XAngleToTarget();
+		float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * 0.05f; // hack for now
 
 		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
-		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
+		tt.eulerAngles = new Vector3(e.x +dx, e.y, e.z);
 	}
 
 	public void AimOnYAxis() {
@@ -184,8 +187,17 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool isAimed() {
-		return true;
-		//return Mathf.Abs(YAngleToTarget ()) < aimedAngle;
+		float diff = 0;
+
+		if (turretObjY) {
+			diff += Mathf.Abs(YAngleToTarget());
+		}
+
+		if (turretObjX) {
+			diff += Mathf.Abs(XAngleToTarget());
+		}
+
+		return diff < aimedAngle;
 	}
 
 	public void Reload() {
@@ -198,9 +210,6 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Fire() {
-		//print("X angle " + XAngleToTarget());
-		//print("Y angle " + YAngleToTarget());
-
 		CreateProjectile();
 		if (fireClip != null) {
 			GetComponent<AudioSource>().PlayOneShot(fireClip);

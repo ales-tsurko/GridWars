@@ -77,7 +77,7 @@ public class GameUnit : MonoBehaviour {
 		hitPoints = maxHitPoints;
 
 		SetupWeapons();
-
+		SetupSmokeDamage ();
 		gameObject.CloneMaterials();
 
 		if (player != null) {
@@ -139,7 +139,7 @@ public class GameUnit : MonoBehaviour {
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
-			if (gameUnit.player && gameUnit.player != player && gameUnit.isTargetable) {
+			if (gameUnit.player && (gameUnit.player != player) && gameUnit.isTargetable) {
 				results.Add (gameUnit.gameObject);
 			}
 		}
@@ -306,11 +306,11 @@ public class GameUnit : MonoBehaviour {
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		//angleToTarget = angle;
 
-		if (true) {
-			//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-			//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
-			Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
-		}
+
+		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		//Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+
 
 		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
 	}
@@ -360,7 +360,9 @@ public class GameUnit : MonoBehaviour {
 
 	public void ApplyDamage(float damage) {
 		hitPoints -= damage;
-
+		if (smokeDamage !=null) {
+			smokeDamage.maxParticles = Mathf.Clamp (1000 - (int)((hitPoints / maxHitPoints) * 1000), 250, 1000);
+		}
 		if (hitPoints <= 0) {
 			OnDead();
 		}
@@ -381,7 +383,16 @@ public class GameUnit : MonoBehaviour {
 
 		Destroy(gameObject);
 	}
-		
+
+	//Particles for displaying damage amount to units
+	ParticleSystem smokeDamage;
+	void SetupSmokeDamage () {
+		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
+		if (smokeDamageT != null) {
+			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
+			smokeDamage.maxParticles = 0;
+		}
+	}
 
 	void SetupWeapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
