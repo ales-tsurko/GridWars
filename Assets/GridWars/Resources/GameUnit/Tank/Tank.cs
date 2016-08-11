@@ -20,7 +20,7 @@ public class Tank : GroundVehicle {
 
 		turretWeapon.enabled = true;
 		turretWeapon.owner = gameObject;
-		turretWeapon.isFixed = false;
+		//turretWeapon.isFixedY = false;
 		turretWeapon.aimedAngle = 2.0f;
 	}
 		
@@ -30,8 +30,7 @@ public class Tank : GroundVehicle {
 		steerTowardsNearestEnemy ();
 	}
 
-	public override void pickTarget () {
-		base.pickTarget();
+	public override void UpdatedTarget() {
 		turretWeapon.target = target;
 	}
 
