@@ -162,10 +162,6 @@ public class GameUnit : MonoBehaviour {
 		}
 	}
 
-	public virtual void UpdatedTarget() {
-		// subclasses override to update weapon targets
-	}
-
 	public virtual GameObject closestEnemyObject() {
 		var objs = enemyObjects();
 		GameObject closest = null;
@@ -390,6 +386,17 @@ public class GameUnit : MonoBehaviour {
 		foreach (Weapon weapon in weapons) {
 			weapon.owner = gameObject;
 			weapon.enabled = true;
+		}
+	}
+
+	public virtual void UpdatedTarget() {
+		// by default we set all weapons to have this target, 
+		// override this method if you want them to choose different targets
+
+		Weapon[] weapons = GetComponentsInChildren<Weapon>();
+
+		foreach (Weapon weapon in weapons) {
+			weapon.target = target;
 		}
 	}
 
