@@ -28,7 +28,7 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
-	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
+	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[]{};
 
 	public float hpRatio {
 		get {
