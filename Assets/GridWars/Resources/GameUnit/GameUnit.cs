@@ -13,6 +13,8 @@ public class GameUnit : MonoBehaviour {
 	public float hitPoints = 1;
 	//public float maxHitPoints = 1;
 
+	public bool isTargetable = true;
+
 	[HideInInspector]
 	public Transform _t;
 	public bool isRunning = true;
@@ -26,7 +28,6 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
-	public bool isTargetable = true;
 
 	AudioSource _audioSource;
 	protected AudioSource audioSource {
