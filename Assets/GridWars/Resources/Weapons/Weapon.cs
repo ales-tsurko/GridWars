@@ -133,7 +133,7 @@ public class Weapon : MonoBehaviour {
 
 		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
-		tt.eulerAngles = new Vector3(e.x +dx, e.y, e.z);
+		tt.eulerAngles = new Vector3(e.x + dx, e.y, e.z);
 	}
 
 	public void AimOnYAxis() {

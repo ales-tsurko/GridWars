@@ -28,7 +28,7 @@ public class GameUnit : MonoBehaviour {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
-	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[]{};
+	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
 
 	public float hpRatio {
@@ -63,8 +63,34 @@ public class GameUnit : MonoBehaviour {
 		return Load(typeof(T));
 	}
 
+	public static string ResourcePathForUnitType(System.Type type) {
+		List <string> pathComponents = new List<string>();
+
+		while (type != typeof(GameUnit)) {
+			pathComponents.Add(type.Name);
+			type = type.BaseType;
+		}
+
+		pathComponents.Add(type.Name); // add GameUnit
+
+		pathComponents.Reverse();
+
+		return string.Join("/", pathComponents.ToArray());
+	}
+
 	public static GameObject Load(System.Type type) {
-		return (GameObject) Resources.Load("GameUnit/" + type.Name + "/Prefabs/" + type.Name);
+
+		string path = ResourcePathForUnitType(type);
+		string prefabPath = path + "/Prefabs/" + type.Name;
+		//print("prefabPath = '" + prefabPath + "'");
+
+		//return (GameObject) Resources.Load(prefabPath);
+		GameObject obj = (GameObject) Resources.Load("GameUnit/" + type.Name + "/Prefabs/" + type.Name);
+
+		if (obj == null) {
+			throw new System.Exception("missing prefabPath " + prefabPath);
+		}
+		return obj;
 	}
 
 	public static T Instantiate<T>() where T: GameUnit {
@@ -342,6 +368,7 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision collision) {
+		/*
 		if (collision.collider.name == "BattlefieldPlane") {
 			return;
 		}
@@ -358,6 +385,7 @@ public class GameUnit : MonoBehaviour {
 		foreach (ContactPoint contact in collision.contacts) {
 			Debug.DrawRay (contact.point, contact.normal, Color.white);
 		}
+		*/
 
 		/*
 		if (collision.relativeVelocity.magnitude > 2) {
