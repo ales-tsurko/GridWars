@@ -109,7 +109,7 @@ public class Fortress : MonoBehaviour {
 			}
 		}
 
-		print("Fortress is dead");
+		//print("Fortress is dead");
 		return true;
 	}
 }
