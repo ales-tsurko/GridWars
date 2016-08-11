@@ -135,7 +135,7 @@ MonoBehaviour:
   rotationThrust: 0
   player: {fileID: 0}
   canAim: 1
-  hitPoints: 1
+  hitPoints: 100
   _t: {fileID: 0}
   isRunning: 1
   target: {fileID: 0}
