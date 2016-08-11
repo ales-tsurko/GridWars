@@ -102,8 +102,17 @@ public class GameUnit : MonoBehaviour {
 		return body;
 	}
 	Rigidbody body;
+
 	// -----------------------
 
+	public bool IsInStandoffRange() {
+		if (standOffDistance == -1) {
+			return true;
+		}
+
+		return target && (targetDistance() < standOffDistance);
+	}
+		
 	public virtual List<GameObject> activeGameObjects() {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 		var results = new List<GameObject>();
