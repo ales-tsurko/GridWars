@@ -199,8 +199,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Fire() {
-		print("X angle " + XAngleToTarget());
-		print("Y angle " + YAngleToTarget());
+		//print("X angle " + XAngleToTarget());
+		//print("Y angle " + YAngleToTarget());
 
 		CreateProjectile();
 		if (fireClip != null) {
