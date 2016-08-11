@@ -77,7 +77,7 @@ public class GameUnit : MonoBehaviour {
 		hitPoints = maxHitPoints;
 
 		SetupWeapons();
-
+		SetupSmokeDamage ();
 		gameObject.CloneMaterials();
 
 		if (player != null) {
@@ -366,7 +366,9 @@ public class GameUnit : MonoBehaviour {
 
 	public void ApplyDamage(float damage) {
 		hitPoints -= damage;
-
+		if (smokeDamage !=null) {
+			smokeDamage.maxParticles = Mathf.Clamp (1000 - (int)((hitPoints / maxHitPoints) * 1000), 250, 1000);
+		}
 		if (hitPoints <= 0) {
 			OnDead();
 		}
@@ -387,7 +389,16 @@ public class GameUnit : MonoBehaviour {
 
 		Destroy(gameObject);
 	}
-		
+
+	//Particles for displaying damage amount to units
+	ParticleSystem smokeDamage;
+	void SetupSmokeDamage () {
+		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
+		if (smokeDamageT != null) {
+			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
+			smokeDamage.maxParticles = 0;
+		}
+	}
 
 	void SetupWeapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
