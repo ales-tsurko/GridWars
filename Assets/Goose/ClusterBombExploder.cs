@@ -20,7 +20,7 @@ public class ClusterBombExploder : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter (Collider o){
-		print (o.name);
+		
 		if (o.name.StartsWith ("Cluster")) {
 			return;
 		}
