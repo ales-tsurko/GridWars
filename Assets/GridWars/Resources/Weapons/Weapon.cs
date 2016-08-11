@@ -24,7 +24,8 @@ public class Weapon : MonoBehaviour {
 	public float turretMaxX = 180;
 
 	public GameObject turretObjY = null; // need to set this to the obj that Y axis will rotate on to aim
-	public float turretRangeY = 180;
+	public float turretMinY = -180;
+	public float turretMaxY = 180;
 
 	[HideInInspector]
 	float isReloadedAfterTime = 2;

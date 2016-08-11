@@ -206,6 +206,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012421315058}
+  - 114: {fileID: 114000013653371454}
   m_Layer: 0
   m_Name: RocketsLeft
   m_TagString: Untagged
@@ -274,7 +275,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000014036148704}
-  - 95: {fileID: 95000014095945606}
   m_Layer: 0
   m_Name: rocket_tank
   m_TagString: Untagged
@@ -1130,7 +1130,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011668759908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9904817, y: -1.1813053e-19, z: 0.5320125}
+  m_LocalPosition: {x: 0.11054411, y: -4.407512e-19, z: 1.9849669}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -2771,23 +2771,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1, z: 2}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!95 &95000014095945606
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011762927522}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 5e613f2040b632b4a900489dc166a6bd, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114000010763498684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2799,6 +2782,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5124760ecc9446aa6df62fb2b24391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000013653371454
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011501823554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8f52e01105242b4b34ebb6cde46d88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  owner: {fileID: 0}
+  target: {fileID: 0}
+  prefabProjectile: {fileID: 0}
+  isActive: 0
+  ammoCount: -1
+  reloadTimeInSeconds: 3
+  range: -1
+  aimedAngle: 5
+  chanceOfFire: 0.02
+  fireClip: {fileID: 0}
+  turretObjX: {fileID: 0}
+  turretMinX: -180
+  turretMaxX: 180
+  turretObjY: {fileID: 1000010846942518}
+  turretMinY: -180
+  turretMaxY: 180
 --- !u!114 &114000013981099184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2824,5 +2835,6 @@ MonoBehaviour:
   powerCost: 4
   cooldownSeconds: 1
   standOffDistance: 20
+  isTargetable: 1
   deathExplosionPrefab: {fileID: 1000013222827244, guid: 37544196e5e2a4ab6b0b5accee0d93a4,
     type: 2}
