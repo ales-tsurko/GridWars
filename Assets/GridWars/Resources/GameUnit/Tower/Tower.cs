@@ -85,7 +85,7 @@ public class Tower : GameUnit {
 				return gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
 			}
 			else {
-				KeyCode.None;
+				return KeyCode.None;
 			}
 		}
 	}
