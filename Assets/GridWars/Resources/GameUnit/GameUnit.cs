@@ -49,7 +49,10 @@ public class GameUnit : MonoBehaviour {
 
 	public AudioClip birthSound {
 		get {
-			return Resources.Load<AudioClip>("GameUnit/" + GetType().Name + "/Sounds/birth");
+			string path = ResourcePathForUnitType(GetType());
+			string soundPath = path + "/Sounds/birth";
+
+			return Resources.Load<AudioClip>(soundPath);
 		}
 	}
 
