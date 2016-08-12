@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Chopper : GameUnit {
+public class Chopper : AirVehicle {
 	public float cruiseHeight = 15f;
 
 	public GameObject mainRotor;
