@@ -82,17 +82,16 @@ public class GameUnit : MonoBehaviour {
 
 		string path = ResourcePathForUnitType(type);
 		string prefabPath = path + "/Prefabs/" + type.Name;
-		//print("prefabPath = '" + prefabPath + "'");
 
-		GameObject obj =  (GameObject) Resources.Load(prefabPath);
-		//GameObject obj = (GameObject) Resources.Load("GameUnit/" + type.Name + "/Prefabs/" + type.Name);
+		GameObject obj = (GameObject) Resources.Load(prefabPath);
 
 		if (obj == null) {
-			throw new System.Exception("missing prefabPath " + prefabPath);
 			print("missing prefabPath " + prefabPath);
+			throw new System.Exception("missing prefabPath " + prefabPath);
 		} else {
-			print("found prefabPath " + prefabPath);
+			//print("found prefabPath " + prefabPath);
 		}
+
 		return obj;
 	}
 

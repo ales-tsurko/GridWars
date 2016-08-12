@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Tower : GameUnit {
+public class Tower : GroundBuilding {
 	public static Vector3 size {
 		get {
 			return GameUnit.Load<Tower>().GetComponent<BoxCollider>().size;
