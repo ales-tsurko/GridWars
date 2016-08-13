@@ -41,13 +41,15 @@ public class Projectile : GameUnit {
 	}
 
 	protected virtual void Explode() {
-		var obj = Instantiate(explosionPrefab);
-		obj.transform.position = transform.position;
-		obj.transform.rotation = transform.rotation;
+		if (explosionPrefab != null) {
+			var obj = Instantiate(explosionPrefab);
+			obj.transform.position = transform.position;
+			obj.transform.rotation = transform.rotation;
 
-		if (damageClip != null) {
-			obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
-			//audioSource.PlayOneShot(damageClip);
+			if (damageClip != null) {
+				obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
+				//audioSource.PlayOneShot(damageClip);
+			}
 		}
 
 		//Transform t = obj.transform;
