@@ -13,6 +13,13 @@ public class Bullet : Projectile {
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
 	}
 
+	protected virtual void Explode() {
+		if (lastCollision.gameObject.GetComponent<GameUnit>() == null) {
+			explosionPrefab = null;
+		}
+		base.Explode();
+	}
+
 	/*
 	public override void FixedUpdate () {
 		MakeShot();

@@ -24,7 +24,10 @@ public class Projectile : GameUnit {
 		RemoveIfOutOfBounds ();
 	}
 
+	protected Collision lastCollision;
+
 	void OnCollisionEnter(Collision collision) {
+		lastCollision = collision;
 		Explode();
 		ApplyDamageTo(collision.gameObject);
 	}
@@ -37,7 +40,7 @@ public class Projectile : GameUnit {
 		}
 	}
 
-	void Explode() {
+	protected virtual void Explode() {
 		var obj = Instantiate(explosionPrefab);
 		obj.transform.position = transform.position;
 		obj.transform.rotation = transform.rotation;
