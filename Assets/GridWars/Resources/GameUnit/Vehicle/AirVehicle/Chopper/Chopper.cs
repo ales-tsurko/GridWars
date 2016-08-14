@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Chopper : AirVehicle {
 	public float cruiseHeight = 15f;
+	public float thrustHeight = 4f;
 
 	public GameObject mainRotor;
 	public GameObject tailRotor;
@@ -49,24 +50,32 @@ public class Chopper : AirVehicle {
 	}
 	*/
 
+	public virtual void SpinRotors () {
+		Object_rotDY (mainRotor, 20);
+		Object_rotDY (tailRotor, 20);
+	}
+
+	public void ApplyCruisingAltitudeForce() {
+		float diff = cruiseHeight - y ();
+
+		if (y () < cruiseHeight) {
+			rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
+		} 
+	}
+
+	public void ApplyThrustIfAppropriate() {
+		if (y () > thrustHeight && !IsInStandoffRange()) {
+			rigidBody().AddForce(_t.forward * thrust);
+		}
+	}
+
 	public override void FixedUpdate () {
 		if (isRunning) {
 			//base.FixedUpdate();
-
-			Object_rotDY (mainRotor, 20);
-			Object_rotDY (tailRotor, 20);
-
-			float diff = cruiseHeight - y ();
-
-			if (y () < cruiseHeight) {
-				rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
-			} 
-
-			steerTowardsTarget();
-
-			if (y () > 4 && !IsInStandoffRange()) {
-				rigidBody().AddForce(_t.forward * thrust);
-			}
+			SpinRotors();		
+			SteerTowardsTarget(); // picks target
+			ApplyCruisingAltitudeForce();
+			ApplyThrustIfAppropriate();
 		}
 	}
 

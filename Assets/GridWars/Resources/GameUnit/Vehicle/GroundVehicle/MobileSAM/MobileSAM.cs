@@ -5,7 +5,7 @@ public class MobileSAM : GroundVehicle {
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();
-		pickTarget ();
+		PickTarget ();
 		steerTowardsNearestEnemy ();
 	}
 

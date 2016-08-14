@@ -31,6 +31,7 @@ public class GameUnit : MonoBehaviour {
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
 
+
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -176,7 +177,12 @@ public class GameUnit : MonoBehaviour {
 		//return (player != null) && (otherUnit.player != null) && (player != otherUnit.player);
 	}
 
-	public virtual List<GameObject> enemyObjects() {
+	public float DistanceToObj(GameObject obj) {
+		// please do not change this to sqrMagnitude
+		return Vector3.Distance(obj.transform.position, transform.position);
+	}
+
+	public virtual List<GameObject> EnemyObjects() {
 
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
@@ -210,16 +216,37 @@ public class GameUnit : MonoBehaviour {
 		return false;
 	}
 
-	public virtual void pickTarget() {
-		GameObject newTarget = closestEnemyObject ();
-		if (target != newTarget) {
-			target = newTarget;
-			UpdatedTarget();
+	public virtual Weapon HighestPriorityWeaponWithTarget() {
+		Weapon[] weapons = Weapons();
+
+		Weapon result = null;
+		int highestPriority = -1;
+		foreach (Weapon weapon in weapons) {
+			if (weapon.target && highestPriority < weapon.priority) {
+				result = weapon;
+				highestPriority = weapon.priority;
+			}
+		}
+
+		return result;
+	}
+
+	public virtual void PickTarget() {
+		Weapon targetingWeapon = HighestPriorityWeaponWithTarget ();
+
+		if (targetingWeapon) {
+			GameObject newTarget = targetingWeapon.target;
+			//GameObject newTarget = ClosestEnemyObject ();
+
+			if (target != newTarget) {
+				target = newTarget;
+				UpdatedTarget();
+			}
 		}
 	}
 
-	public virtual GameObject closestEnemyObject() {
-		var objs = enemyObjects();
+	public virtual GameObject ClosestEnemyObject() {
+		var objs = EnemyObjects();
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
 		Vector3 position = _t.position;
@@ -338,32 +365,30 @@ public class GameUnit : MonoBehaviour {
 
 	// --- aiming --------------------
 
-	public virtual void steerTowardsTarget() {
-		pickTarget ();
+	public virtual void SteerTowardsTarget() {
+		PickTarget ();
 		if (target != null) {
-			rotateTowardObject (target);
+			RotateTowardObject (target);
 		}
 	}
 
 	public virtual void steerTowardsNearestEnemy() {
-		var obj = closestEnemyObject ();
+		var obj = ClosestEnemyObject ();
 		if (obj != null) {
-			rotateTowardObject (obj);
+			RotateTowardObject(obj);
 		}
 	}
 
-	public virtual void rotateTowardObject(GameObject obj) {
+	public virtual void RotateTowardObject(GameObject obj) {
 		var targetPos = obj.transform.position;
 
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		//angleToTarget = angle;
 
-
 		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
 		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
 		//Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
-
 
 		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
 	}
@@ -449,8 +474,13 @@ public class GameUnit : MonoBehaviour {
 		}
 	}
 
-	void SetupWeapons() {
+	Weapon[] Weapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
+		return weapons;
+	}
+
+	void SetupWeapons() {
+		Weapon[] weapons = Weapons();
 
 		foreach (Weapon weapon in weapons) {
 			weapon.owner = gameObject;

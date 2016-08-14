@@ -34,9 +34,17 @@ public class Weapon : MonoBehaviour {
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
+	// targeting
+
+	public int priority = 0; // vehicle's uses target chosen by highest priority weapon
+	public List<System.Type> targetableTypes;
+
+
 	public void Start () {
 		//base.Start();
 		Reload();
+
+		targetableTypes = new List<System.Type>(){ typeof(GroundVehicle), typeof(GroundBuilding), typeof(AirVehicle) };
 
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
@@ -45,9 +53,82 @@ public class Weapon : MonoBehaviour {
 
 	public void FixedUpdate () {
 		if (isActive) {
-			FireIfAppropriate ();
-			AimIfAble ();
+			PickTarget();
+			FireIfAppropriate();
+			AimIfAble();
+		} else {
+			target = null;
 		}
+	}
+
+	// --- target selection -------------------
+
+	public virtual bool CanTargetClassOfUnit(GameUnit unit) {
+		System.Type unitType = unit.GetType();
+
+		foreach (System.Type targetableClass in targetableTypes) {
+			if ((unitType == targetableClass) || unitType.IsSubclassOf(targetableClass)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public virtual bool CanTargetObj(GameObject obj) {
+		if (obj == null) {
+			return false;
+		}
+
+		GameUnit aUnit = obj.GetComponent<GameUnit>();
+
+		if (aUnit.isTargetable && CanTargetClassOfUnit(aUnit)) {
+			/*
+			 can't do this since we need to be able to move towards target...
+			if (DistanceToObj(obj) <= range) {
+				return true;
+			}
+			*/
+			return true;
+		}
+
+		return false;
+	}
+
+	public virtual void PickTarget() {
+		if (!CanTargetObj(target)|| !TargetInRange()) {
+			GameObject newTarget = ClosestTargetableEnemyObject();
+			if (target != newTarget) {
+				target = newTarget;
+				UpdatedTarget();
+			}
+		}
+	}
+
+	public virtual void UpdatedTarget() {
+
+	}
+
+	public float DistanceToObj(GameObject obj) {
+		// please do not change this to sqrMagnitude
+		return Vector3.Distance(transform.position, obj.transform.position);
+	}
+
+	public virtual GameObject ClosestTargetableEnemyObject() {
+		var ownerUnit = owner.GetComponent<GameUnit>();
+		var enemyObjs = ownerUnit.EnemyObjects();
+		GameObject closest = null;
+		float distance = Mathf.Infinity;
+		foreach (GameObject obj in enemyObjs) {
+			if (CanTargetObj(obj)) {
+				float curDistance = DistanceToObj(obj);
+				if (curDistance < distance) {
+					closest = obj;
+					distance = curDistance;
+				}
+			}
+		}
+		return closest;
 	}
 
 	// --- aiming ------------------
@@ -185,9 +266,19 @@ public class Weapon : MonoBehaviour {
 
 	public bool FireIfAppropriate() {
 		//print("FireIfAppropriate");
-		if (hasAmmo() && isLoaded () && isAimed () && targetInRange() && chooseToFire()) {
-			Fire ();
-			return true;
+		if (target) {
+			if (hasAmmo()) {
+				if (isLoaded()) {
+					if (isAimed()) {
+						if (TargetInRange()) {
+							if (chooseToFire()) {
+								Fire();
+								return true;
+							}
+						}
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -196,7 +287,7 @@ public class Weapon : MonoBehaviour {
 		return Vector3.Distance(owner.transform.position, target.transform.position);
 	}
 	
-	public bool targetInRange() {
+	public bool TargetInRange() {
 		return (range == -1) || (targetDistance() < range);
 	}
 
@@ -234,6 +325,7 @@ public class Weapon : MonoBehaviour {
 
 	public void Fire() {
 		CreateProjectile();
+		Debug.Log(fireClip);
 		if (fireClip != null) {
 			GetComponent<AudioSource>().PlayOneShot(fireClip);
 		}

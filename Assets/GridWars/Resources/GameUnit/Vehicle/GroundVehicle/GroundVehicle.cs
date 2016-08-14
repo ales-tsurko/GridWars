@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GroundVehicle : GameUnit {
+public class GroundVehicle : Vehicle {
 
 	public override void FixedUpdate () {
 		base.FixedUpdate ();
