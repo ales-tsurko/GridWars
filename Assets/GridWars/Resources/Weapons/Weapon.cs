@@ -234,7 +234,6 @@ public class Weapon : MonoBehaviour {
 
 	public void Fire() {
 		CreateProjectile();
-		Debug.Log(fireClip);
 		if (fireClip != null) {
 			GetComponent<AudioSource>().PlayOneShot(fireClip);
 		}
