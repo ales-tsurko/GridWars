@@ -31,8 +31,13 @@ public class Weapon : MonoBehaviour {
 	public float aimRateX = 0.05f;
 	public float aimRateY = 0.05f;
 
+	public bool canTargetGround = true;
+	public bool canTargetAir = true;
+
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
+
+
 
 	// targeting
 
@@ -44,7 +49,18 @@ public class Weapon : MonoBehaviour {
 		//base.Start();
 		Reload();
 
-		targetableTypes = new List<System.Type>(){ typeof(GroundVehicle), typeof(GroundBuilding), typeof(AirVehicle) };
+		targetableTypes = new List<System.Type>();
+
+		if (canTargetGround) {
+			targetableTypes.Add(typeof(GroundVehicle));
+			targetableTypes.Add(typeof(GroundBuilding));
+		}
+
+		if (canTargetAir) {
+			targetableTypes.Add(typeof(AirVehicle));
+		}
+
+		//targetableTypes = new List<System.Type>(){ typeof(GroundVehicle), typeof(GroundBuilding), typeof(AirVehicle) };
 
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
