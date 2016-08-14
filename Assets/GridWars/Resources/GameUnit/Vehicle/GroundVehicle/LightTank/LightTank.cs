@@ -12,7 +12,7 @@ public class LightTank : GroundVehicle {
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();
-		steerTowardsNearestEnemy ();
+		SteerTowardsTarget ();
 	}
 
 }

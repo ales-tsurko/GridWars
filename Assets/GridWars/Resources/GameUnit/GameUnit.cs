@@ -234,13 +234,17 @@ public class GameUnit : MonoBehaviour {
 	public virtual void PickTarget() {
 		Weapon targetingWeapon = HighestPriorityWeaponWithTarget ();
 
+		if (target && target.IsDestroyed()) {
+			target = null;
+		}
+
 		if (targetingWeapon) {
 			GameObject newTarget = targetingWeapon.target;
 			//GameObject newTarget = ClosestEnemyObject ();
 
 			if (target != newTarget) {
 				target = newTarget;
-				UpdatedTarget();
+				//UpdatedTarget();
 			}
 		}
 	}
@@ -366,18 +370,19 @@ public class GameUnit : MonoBehaviour {
 	// --- aiming --------------------
 
 	public virtual void SteerTowardsTarget() {
-		PickTarget ();
 		if (target != null) {
 			RotateTowardObject (target);
 		}
 	}
 
+	/*
 	public virtual void steerTowardsNearestEnemy() {
 		var obj = ClosestEnemyObject ();
 		if (obj != null) {
 			RotateTowardObject(obj);
 		}
 	}
+	*/
 
 	public virtual void RotateTowardObject(GameObject obj) {
 		var targetPos = obj.transform.position;
@@ -488,6 +493,7 @@ public class GameUnit : MonoBehaviour {
 		}
 	}
 
+	/*
 	public virtual void UpdatedTarget() {
 		// by default we set all weapons to have this target, 
 		// override this method if you want them to choose different targets
@@ -498,5 +504,6 @@ public class GameUnit : MonoBehaviour {
 			weapon.target = target;
 		}
 	}
+	*/
 
 }

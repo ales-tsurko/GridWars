@@ -12,7 +12,7 @@ public class Jeep : GroundVehicle {
 
 	public override void FixedUpdate () {
 		base.FixedUpdate();
-		steerTowardsNearestEnemy ();
+		SteerTowardsTarget ();
 
 	}
 

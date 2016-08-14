@@ -28,8 +28,8 @@ public class Weapon : MonoBehaviour {
 	public float turretMinY = -180;
 	public float turretMaxY = 180;
 
-	public float aimRateX = 0.05f;
-	public float aimRateY = 0.05f;
+	public float aimRateX;
+	public float aimRateY;
 
 	public bool canTargetGround = true;
 	public bool canTargetAir = true;
@@ -112,6 +112,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
+		if (target && target.IsDestroyed()) {
+			target = null;
+		}
+
 		if (!CanTargetObj(target)|| !TargetInRange()) {
 			GameObject newTarget = ClosestTargetableEnemyObject();
 			if (target != newTarget) {

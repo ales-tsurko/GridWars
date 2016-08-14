@@ -31,24 +31,11 @@ public class Chopper : AirVehicle {
 
 	public override void Start () {
 		base.Start();
-		//thrust = 10;
-		//rotationThrust = 0.01f;
 		isRunning = true;
 
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
-			
-		missileLauncherLeft.owner = gameObject;
-		missileLauncherRight.owner = gameObject;
 	}
-
-	/*
-	public override void UpdatedTarget() {
-		// we may want to have independent targets for multiple weapons...
-		missileLauncherLeft.target  = target;
-		missileLauncherRight.target = target;
-	}
-	*/
 
 	public virtual void SpinRotors () {
 		Object_rotDY (mainRotor, 20);
@@ -64,7 +51,7 @@ public class Chopper : AirVehicle {
 	}
 
 	public void ApplyThrustIfAppropriate() {
-		if (y () > thrustHeight && !IsInStandoffRange()) {
+		if (target && y () > thrustHeight && !IsInStandoffRange()) {
 			rigidBody().AddForce(_t.forward * thrust);
 		}
 	}
@@ -73,6 +60,7 @@ public class Chopper : AirVehicle {
 		if (isRunning) {
 			//base.FixedUpdate();
 			SpinRotors();		
+			PickTarget();
 			SteerTowardsTarget(); // picks target
 			ApplyCruisingAltitudeForce();
 			ApplyThrustIfAppropriate();
