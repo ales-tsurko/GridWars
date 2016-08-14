@@ -5,11 +5,20 @@ using System.Collections;
 
 public class GameUnitIcon : MonoBehaviour {
 	public void Enable() {
+
+		// make sure other units don't target the icon!
+		GameUnit unit = gameObject.GetComponent<GameUnit>();
+		unit.isTargetable = false;
+
+		// disable any unit actions
 		foreach (var script in gameObject.GetComponentsInChildren<MonoBehaviour>()) {
 			script.enabled = false;
 		}
+
+		// remove physics
 		Destroy(GetComponent<Collider>());
 		Destroy(GetComponent<Rigidbody>());
+
 		enabled = true;
 	}
 
