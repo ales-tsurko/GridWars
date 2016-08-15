@@ -10,8 +10,8 @@ public class GameUnit : MonoBehaviour {
 	public bool canAim = true;
 
 	// Damagable
-	public float hitPoints = 1;
-	public float maxHitPoints = 1;
+	public float hitPoints;
+	public float maxHitPoints;
 
 	public bool isTargetable = true;
 
