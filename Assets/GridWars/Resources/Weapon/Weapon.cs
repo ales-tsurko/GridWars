@@ -34,6 +34,8 @@ public class Weapon : MonoBehaviour {
 	public bool canTargetGround = true;
 	public bool canTargetAir = true;
 
+	//public bool usesRayCastAimCheck = false;
+
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
@@ -284,16 +286,19 @@ public class Weapon : MonoBehaviour {
 		return Random.value > chanceOfFire; 
 	}
 
-	public bool FireIfAppropriate() {
-		//print("FireIfAppropriate");
+
+	public bool ShouldFire() {
+		// easier to debug with separate ifs
 		if (target) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
 					if (isAimed()) {
 						if (TargetInRange()) {
 							if (chooseToFire()) {
-								Fire();
-								return true;
+								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
+								if (!RayCastHitsNonEnemy()) {
+									return true;
+								}
 							}
 						}
 					}
@@ -301,6 +306,12 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+
+	public void FireIfAppropriate() {
+		if (ShouldFire()) {
+			Fire();
+		}
 	}
 
 	public float targetDistance() {
@@ -383,5 +394,29 @@ public class Weapon : MonoBehaviour {
 		unit.player = player;
 
 		return unit;
+	}
+
+	// --- ray cast ---
+
+	public virtual bool RayCastHitsEnemy() {
+		GameObject obj = RayCastHitObject();
+		return obj && owner.GetComponent<GameUnit>().isEnemyOf(obj.GetComponent<GameUnit>());
+	}
+
+	public virtual bool RayCastHitsNonEnemy() {
+		GameObject obj = RayCastHitObject();
+		return obj && !owner.GetComponent<GameUnit>().isEnemyOf(obj.GetComponent<GameUnit>());
+	}
+		
+
+	public virtual GameObject RayCastHitObject() {
+		RaycastHit hit;
+
+		if (Physics.Raycast(transform.position, transform.forward, out hit, range)) {
+			//print("Found an object - distance: " + hit.distance);
+			return hit.collider.gameObject;
+		}
+		
+		return null;
 	}
 }

@@ -158,6 +158,10 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public virtual bool isEnemyOf(GameUnit otherUnit) {
+		if (otherUnit == null) {
+			return false;
+		}
+
 		if (player == null) {
 			//print ("null player " + this);
 			return false;
