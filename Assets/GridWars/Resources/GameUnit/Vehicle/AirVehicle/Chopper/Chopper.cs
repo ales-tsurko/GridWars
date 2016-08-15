@@ -75,6 +75,7 @@ public class Chopper : AirVehicle {
 				//print("collision.relativeVelocity.magnitude " + collision.relativeVelocity.magnitude);
 				//Destroy (gameObject);
 				Disable();
+
 			}
 		}
 	}
@@ -83,5 +84,6 @@ public class Chopper : AirVehicle {
 		isRunning = false;
 		missileLauncherLeft.isActive = false;
 		missileLauncherRight.isActive = false;
+		//Destroy(this, 3.0f);
 	}
 }
