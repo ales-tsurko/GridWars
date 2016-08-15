@@ -198,8 +198,8 @@ public class Weapon : MonoBehaviour {
 			if (true) {
 				var r = range == -1 ? 1000 : range;
 
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.blue); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.blue); // targetDir 
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red); // targetDir 
 			}
 
 			return angle;
@@ -296,9 +296,9 @@ public class Weapon : MonoBehaviour {
 						if (TargetInRange()) {
 							if (chooseToFire()) {
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
-								if (!RayCastHitsNonEnemy()) {
+								//if (!RayCastHitsNonEnemy()) {
 									return true;
-								}
+								//}
 							}
 						}
 					}
