@@ -41,16 +41,9 @@ public class Projectile : GameUnit {
 		}
 	}
 
-	protected virtual void Explode() {
+	protected void Explode() {
 		if (explosionPrefab != null) {
-			var obj = Instantiate(explosionPrefab);
-			obj.transform.position = transform.position;
-			obj.transform.rotation = transform.rotation;
-
-			if (damageClip != null) {
-				obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
-				//audioSource.PlayOneShot(damageClip);
-			}
+			CreateExplosion();
 		}
 
 		//Transform t = obj.transform;
@@ -58,6 +51,18 @@ public class Projectile : GameUnit {
 		//print("explode!");
 
 		Destroy (gameObject);
+	}
+
+	protected virtual GameObject CreateExplosion() {
+		var obj = Instantiate(explosionPrefab);
+		obj.transform.position = transform.position;
+		obj.transform.rotation = transform.rotation;
+
+		if (damageClip != null) {
+			obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
+			//audioSource.PlayOneShot(damageClip);
+		}
+		return obj;
 	}
 		
 	/*

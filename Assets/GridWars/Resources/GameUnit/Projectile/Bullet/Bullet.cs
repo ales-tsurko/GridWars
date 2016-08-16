@@ -12,12 +12,13 @@ public class Bullet : Projectile {
 
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
 	}
-
-	protected override void Explode() {
-		if (lastCollision.gameObject.GetComponent<GameUnit>() == null) {
-			explosionPrefab = null;
-		}
-		base.Explode();
+		
+	protected override GameObject CreateExplosion() {
+		var explosion = base.CreateExplosion();
+		var missedUnit = lastCollision.gameObject.GetComponent<GameUnit>() == null;
+		explosion.transform.FindDeepChild("Dirt").gameObject.SetActive(missedUnit);
+		explosion.transform.FindDeepChild("Sparks").gameObject.SetActive(!missedUnit);
+		return explosion;
 	}
 
 	/*
