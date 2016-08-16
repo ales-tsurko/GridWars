@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Chopper : AirVehicle {
-	public float cruiseHeight = 15f;
+	public float cruiseHeight = 12f;
 	public float thrustHeight = 4f;
 
 	public GameObject mainRotor;
 	public GameObject tailRotor;
 
+	[HideInInspector]
+	public float defaultCruiseHeight = 15f;
 	/*
 	Weapon _missileLauncherLeft;
 	public Weapon missileLauncherLeft {
@@ -37,6 +39,8 @@ public class Chopper : AirVehicle {
 
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
+
+		cruiseHeight = defaultCruiseHeight + Mathf.Floor(Random.Range(-4.0f, 0.0f)) * 1.0f;
 	}
 
 	public virtual void SpinRotors () {
@@ -76,8 +80,8 @@ public class Chopper : AirVehicle {
 				//audio.Play ();
 				//print("collision.relativeVelocity.magnitude " + collision.relativeVelocity.magnitude);
 				//Destroy (gameObject);
-				DeactivateWeapons();
-
+				//DeactivateWeapons();
+				OnDead();
 			}
 		}
 	}

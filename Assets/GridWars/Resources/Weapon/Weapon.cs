@@ -381,7 +381,7 @@ public class Weapon : MonoBehaviour {
 	public float barrelLength() {
 		Collider ownerCollider = owner.GetComponent<Collider>();
 		float maxZ = ownerCollider.bounds.size.z;
-		return maxZ * 0.5f * 2.1f; // put it outside
+		return maxZ * 1f; // put it outside
 	}
 
 	void CreateMuzzleFlash(){
