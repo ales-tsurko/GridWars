@@ -441,7 +441,7 @@ public class GameUnit : MonoBehaviour {
 	void OnDrawGizmos() {
 		if (target != null) {
 			Gizmos.color = Color.green;
-			Gizmos.DrawLine (_t.position, target.transform.position);
+			//Gizmos.DrawLine (_t.position, target.transform.position);
 		}
 	}
 
