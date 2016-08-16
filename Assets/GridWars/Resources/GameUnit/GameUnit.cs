@@ -116,7 +116,9 @@ public class GameUnit : MonoBehaviour {
 
 		if (player != null) {
 			player.Paint(gameObject);
-			player.tag = "Player" + player.playerNumber;
+		}
+		else {
+			gameObject.Paint(Color.white, "Unit");
 		}
 
 		PlayBirthSound();

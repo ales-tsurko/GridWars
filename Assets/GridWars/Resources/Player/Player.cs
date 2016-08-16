@@ -34,6 +34,8 @@ public class Player : MonoBehaviour {
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -0.9f*gameObject.transform.forward.z*battlefield.bounds.z/2);
 
+		gameObject.tag = "Player" + playerNumber;
+
 		fortress = this.CreateChild<Fortress>();
 		fortress.player = this;
 		fortress.transform.localPosition = Vector3.zero;
@@ -41,23 +43,15 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Paint(GameObject gameObject) {
-		gameObject.EachMaterial(m => {
-			if (m.name.StartsWith("Unit")) {
-				m.SetColor("_Color", color);
-			}
-		});
+		gameObject.Paint(color, "Unit");
 	}
 
 	public void PaintAsDisabled(GameObject gameObject) {
-		gameObject.EachMaterial(m => {
-			if (m.name.StartsWith("Unit")) {
-				var c = new Color();
-				c.r = color.r/2;
-				c.g = color.g/2;
-				c.b = color.b/2;
-				m.SetColor("_Color", c);
-			}
-		});
+		var c = new Color();
+		c.r = color.r/2;
+		c.g = color.g/2;
+		c.b = color.b/2;
+		gameObject.Paint(c, "Unit");
 	}
 
 	string resourcesPath {

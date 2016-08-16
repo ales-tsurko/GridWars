@@ -18,6 +18,7 @@ public class Projectile : GameUnit {
 		//base.Start();
 		PlayBirthSound();
 		isTargetable = false;
+		gameObject.Paint(Color.white, "Unit");
 	}
 		
 	public override void FixedUpdate () {

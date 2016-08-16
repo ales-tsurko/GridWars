@@ -16,6 +16,14 @@ public static class GridWarsUnityExtensions {
 		self.EachRenderer(r => r.material = new Material(r.material));
 	}
 
+	public static void Paint(this GameObject self, Color color, string materialName = null) {
+		self.EachMaterial(m => {
+			if (materialName == null || m.name.StartsWith(materialName)) {
+				m.SetColor("_Color", color);
+			}
+		});
+	}
+
 	public static T CreateChild<T>(this MonoBehaviour self) where T: MonoBehaviour {
 		var gameObject = new GameObject();
 		gameObject.transform.parent = self.transform;
