@@ -9,6 +9,7 @@ public class Chopper : AirVehicle {
 	public GameObject mainRotor;
 	public GameObject tailRotor;
 
+	/*
 	Weapon _missileLauncherLeft;
 	public Weapon missileLauncherLeft {
 		get {
@@ -28,6 +29,7 @@ public class Chopper : AirVehicle {
 			return _missileLauncherRight;
 		}
 	}
+	*/
 
 	public override void Start () {
 		base.Start();
@@ -74,16 +76,9 @@ public class Chopper : AirVehicle {
 				//audio.Play ();
 				//print("collision.relativeVelocity.magnitude " + collision.relativeVelocity.magnitude);
 				//Destroy (gameObject);
-				Disable();
+				DeactivateWeapons();
 
 			}
 		}
-	}
-
-	public void Disable() {
-		isRunning = false;
-		missileLauncherLeft.isActive = false;
-		missileLauncherRight.isActive = false;
-		//Destroy(this, 3.0f);
 	}
 }

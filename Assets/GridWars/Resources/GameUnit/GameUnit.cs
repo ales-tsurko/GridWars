@@ -488,6 +488,15 @@ public class GameUnit : MonoBehaviour {
 		return weapons;
 	}
 
+	void DeactivateWeapons() {
+		Weapon[] weapons = Weapons();
+
+		foreach (Weapon weapon in weapons) {
+			weapon.active = false;
+			weapon.enabled = false;
+		}
+	}
+
 	void SetupWeapons() {
 		Weapon[] weapons = Weapons();
 
