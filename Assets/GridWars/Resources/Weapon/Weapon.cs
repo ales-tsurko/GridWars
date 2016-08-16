@@ -176,14 +176,22 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float AimDiff() {
+		float diff = 0;
 		Transform t = transform;
 		var targetPos = target.transform.position;
 
 		Vector3 targetDir = (targetPos - t.position).normalized;
-		float xAngle = AngleBetweenOnAxis (t.forward, targetDir, t.right);
-		float yAngle = AngleBetweenOnAxis (t.forward, targetDir, t.forward);
+		if (turretObjX) {
+			float angleX = AngleBetweenOnAxis(t.forward, targetDir, t.right);
+			diff += angleX;
+		}
 
-		return xAngle + yAngle;
+		if (turretObjY) {
+			float angleY = AngleBetweenOnAxis(t.forward, targetDir, t.forward);
+			diff += angleY;
+		}
+
+		return diff;
 	}
 
 	public float XAngleToTarget() {
@@ -198,8 +206,8 @@ public class Weapon : MonoBehaviour {
 			if (true) {
 				var r = range == -1 ? 1000 : range;
 
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red); // targetDir 
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
 			}
 
 			return angle;
@@ -210,7 +218,8 @@ public class Weapon : MonoBehaviour {
 
 	public float YAngleToTarget() {
 		if (target) {
-			Transform t = turretObjY.transform;
+//			/Transform t = turretObjY.transform;
+			Transform t = transform;
 			var targetPos = target.transform.position;
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
@@ -220,7 +229,9 @@ public class Weapon : MonoBehaviour {
 				var r = range == -1 ? 10 : range;
 
 				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir 
+				/*
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
+				*/
 			}
 
 
@@ -282,8 +293,9 @@ public class Weapon : MonoBehaviour {
 
 	// --- firing ------------------
 
-	public bool chooseToFire() {
-		return Random.value > chanceOfFire; 
+	public bool ChooseToFire() {
+		float r = Random.value;
+		return r < chanceOfFire; 
 	}
 
 
@@ -294,7 +306,7 @@ public class Weapon : MonoBehaviour {
 				if (isLoaded()) {
 					if (isAimed()) {
 						if (TargetInRange()) {
-							if (chooseToFire()) {
+							if (ChooseToFire()) {
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
 								//if (!RayCastHitsNonEnemy()) {
 									return true;
@@ -342,7 +354,10 @@ public class Weapon : MonoBehaviour {
 			diff += Mathf.Abs(XAngleToTarget());
 		}
 */
-		return diff < aimedAngle;
+		bool isHit = RayCastHitsEnemy();
+		bool angleDiffOk = diff < aimedAngle;
+
+		return angleDiffOk || isHit;
 	}
 
 	public void Reload() {
@@ -400,7 +415,15 @@ public class Weapon : MonoBehaviour {
 
 	public virtual bool RayCastHitsEnemy() {
 		GameObject obj = RayCastHitObject();
-		return obj && owner.GetComponent<GameUnit>().isEnemyOf(obj.GetComponent<GameUnit>());
+
+		if (obj) {
+			GameUnit ownerUnit = owner.GetComponent<GameUnit>();
+			GameUnit objUnit = obj.GetComponent<GameUnit>();
+			bool isEnemy = ownerUnit.isEnemyOf(objUnit);
+			return isEnemy;
+		}
+
+		return false;
 	}
 
 	public virtual bool RayCastHitsNonEnemy() {
@@ -414,7 +437,10 @@ public class Weapon : MonoBehaviour {
 
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range)) {
 			//print("Found an object - distance: " + hit.distance);
+			Debug.DrawLine(transform.position, transform.position + transform.forward * range, Color.black, 0, true); // forward 
 			return hit.collider.gameObject;
+		} else {
+			Debug.DrawLine (transform.position, transform.position + transform.forward * range, Color.red, 0, true); // forward 
 		}
 		
 		return null;
