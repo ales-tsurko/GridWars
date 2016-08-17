@@ -468,6 +468,11 @@ public class GameUnit : MonoBehaviour {
 	}
 
 	public void OnDead() {
+		Camera cam = _t.GetComponentInChildren<Camera> ();
+		if (cam) {
+			cam.transform.parent = null;
+			FindObjectOfType<CameraController> ().SendMessage ("ResetCamera", SendMessageOptions.DontRequireReceiver);
+		}
 		ShowExplosion();
 		Destroy(gameObject);
 	}

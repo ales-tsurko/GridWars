@@ -12,9 +12,12 @@ public class CameraController : MonoBehaviour {
 	Quaternion targetRot;
 	float startTime;
 	public Transform cam;
+	MouseLook mouseLook;
+	bool actionMode;
 	// Use this for initialization
 	void Start () {
 		pos = -1;
+		mouseLook = cam.GetComponent<MouseLook> ();
 		NextPosition ();
 	}
 	
@@ -23,21 +26,50 @@ public class CameraController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
 		}
+		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
+			RaycastHit hit;
+			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast (vRay, out hit, 3000)) {
+				if (hit.transform.GetComponent<GameUnit> ()) {
+					MoveToActionPosition (hit.transform);	
+				}
+			}
+		}
 		if (!moving) {
 			return;
 		}
-		if (Vector3.Distance (cam.position, targetPos) < .05f) {
+		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
+			if (actionMode) {
+				mouseLook.enabled = true;
+			}
 			moving = false;
 		}
-		print ("Moving " + Time.time);
+		//print ("Moving " + Time.time);
 		float timeSinceStarted = Time.time - startTime;
 		float percentageComplete = timeSinceStarted / moveSpeed;
-		cam.position = Vector3.Lerp (startPos, targetPos, percentageComplete);
-		cam.rotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
+		cam.localPosition = Vector3.Lerp (startPos, targetPos, percentageComplete);
+		cam.localRotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
 
 	}
+
+	void MoveToActionPosition (Transform _target) {
+		if (!actionMode) {
+			pos--;
+		}
+		actionMode = true;
+		cam.parent = _target.transform;
+		targetPos = Vector3.zero + new Vector3 (0, 2, 0);
+		targetRot = Quaternion.Euler (Vector3.zero);
+		startPos = cam.localPosition;
+		startRot = cam.localRotation;
+		startTime = Time.time;
+		moving = true;
+	}
+
 	void NextPosition () {
-		print ("Next Called");
+		//print ("Next Called");
+		actionMode = mouseLook.enabled = false;
+		cam.parent = null;
 		pos++;
 		Transform newTarget = positions [pos % positions.Count];
 		targetPos = newTarget.position;
@@ -47,6 +79,10 @@ public class CameraController : MonoBehaviour {
 		startTime = Time.time;
 		moving = true;
 
+	}
+
+	public void ResetCamera () {
+		NextPosition ();
 	}
 
 }
