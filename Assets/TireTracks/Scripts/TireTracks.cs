@@ -21,7 +21,7 @@ public class TireTracks: MonoBehaviour {
 	const int MAX_MARKS = 1024; // Max number of marks on the map
 	const float MARK_WIDTH = 0.45f; // Width of the skidmarks.
 	const float GROUND_OFFSET = 0.02f;	// Distance above surface
-	const float MIN_DISTANCE = .5f; // Distance between points in metres. Bigger = more clunky, straight-line skidmarks
+	const float MIN_DISTANCE = .25f; // Distance between points in metres. Bigger = more clunky, straight-line skidmarks
 	const float MIN_SQR_DISTANCE = MIN_DISTANCE * MIN_DISTANCE;
 
 	int markIndex;

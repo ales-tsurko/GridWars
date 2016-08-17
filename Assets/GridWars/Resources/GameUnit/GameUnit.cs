@@ -490,6 +490,7 @@ public class GameUnit : MonoBehaviour {
 		if (smokeDamageT != null) {
 			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
 			smokeDamage.maxParticles = 0;
+			smokeDamage.simulationSpace = ParticleSystemSimulationSpace.World;
 		}
 	}
 
