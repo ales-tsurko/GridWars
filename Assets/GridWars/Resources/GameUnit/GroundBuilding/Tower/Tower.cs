@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 
 public class Tower : GroundBuilding {
+
+	public string activationKey;
+
 	public static Vector3 size {
 		get {
 			return GameUnit.Load<Tower>().GetComponent<BoxCollider>().size;

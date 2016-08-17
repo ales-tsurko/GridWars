@@ -39,6 +39,7 @@ public class Weapon : MonoBehaviour {
 	[HideInInspector]
 	float isReloadedAfterTime = 2;
 
+	public float targetLeadTime;
 
 
 	// targeting
@@ -67,6 +68,8 @@ public class Weapon : MonoBehaviour {
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
 		}
+
+		targetLeadTime = 1.0f;
 	}
 
 	public void FixedUpdate () {
@@ -178,7 +181,7 @@ public class Weapon : MonoBehaviour {
 	public float AimDiff() {
 		float diff = 0;
 		Transform t = transform;
-		var targetPos = target.transform.position;
+		var targetPos = TargetLeadPosition();
 
 		Vector3 targetDir = (targetPos - t.position).normalized;
 		if (turretObjX) {
@@ -194,10 +197,20 @@ public class Weapon : MonoBehaviour {
 		return diff;
 	}
 
+	public Vector3 TargetLeadPosition() {
+		Rigidbody rb = target.GetComponent<Rigidbody>();
+
+		if (rb) {
+			return target.transform.position + rb.velocity * targetLeadTime;
+		}
+
+		return target.transform.position;
+	}
+
 	public float XAngleToTarget() {
 		if (target) {
 			Transform t = turretObjX.transform;
-			var targetPos = target.transform.position;
+			var targetPos = TargetLeadPosition();
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.right);
@@ -220,7 +233,7 @@ public class Weapon : MonoBehaviour {
 		if (target) {
 //			/Transform t = turretObjY.transform;
 			Transform t = transform;
-			var targetPos = target.transform.position;
+			var targetPos = TargetLeadPosition();
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
@@ -327,7 +340,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float targetDistance() {
-		return Vector3.Distance(owner.transform.position, target.transform.position);
+		return Vector3.Distance(owner.transform.position, TargetLeadPosition());
 	}
 	
 	public bool TargetInRange() {
