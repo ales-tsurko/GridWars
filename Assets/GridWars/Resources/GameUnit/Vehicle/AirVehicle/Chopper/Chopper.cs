@@ -17,6 +17,8 @@ public class Chopper : AirVehicle {
 
 	[HideInInspector]
 	public float defaultCruiseHeight = 15f;
+	public float damageRotation;
+
 	/*
 	Weapon _missileLauncherLeft;
 	public Weapon missileLauncherLeft {
@@ -49,6 +51,8 @@ public class Chopper : AirVehicle {
 		cruiseHeight = defaultCruiseHeight + Mathf.Floor(Random.Range(-4.0f, 0.0f)) * 1.0f;
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
+
+		damageRotation = (Random.value - 0.5f)*10f;
 	}
 
 	/*
@@ -79,12 +83,7 @@ public class Chopper : AirVehicle {
 
 	public float UpDesire() { // 0.0 to 1.0
 		float diff = cruiseHeight - y ();
-
-		//if (y () < cruiseHeight) {
-			return Mathf.Clamp(Smooth(diff)/2, 0f, 1f);
-		//}
-
-		return 0f;
+		return Mathf.Clamp(Smooth(diff)/2, 0f, 1f);
 	}
 
 	public float ForwardDesire() { // 0.0 to 1.0 
@@ -116,11 +115,21 @@ public class Chopper : AirVehicle {
 		return Mathf.Sign(v)*Mathf.Sqrt(Mathf.Abs(v));
 	}
 
+	public bool IsHeavilyDamaged() {
+		return ((hitPoints / maxHitPoints) < .5);
+	}
+		
+
 	public void  ApplyRotorThrust() {
 		// points around top rotor to apply force
 		// a difference between the force applied to these causes chopper to tilt and then move forward or back
 
 		float upThrust = 16f * UpDesire();
+
+		if (IsHeavilyDamaged()) {
+			upThrust *= Random.value;
+			rigidBody().AddTorque( _t.up * damageRotation, ForceMode.Force);
+		}
 
 		float offset = 1.0f;
 		Vector3 mainRotorThrustPointBack  = mainRotorTransform.position + mainRotorTransform.forward * offset;
