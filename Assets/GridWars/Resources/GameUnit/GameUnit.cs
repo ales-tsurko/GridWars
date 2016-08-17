@@ -390,6 +390,14 @@ public class GameUnit : MonoBehaviour {
 	}
 	*/
 
+	public float AngleToTarget() {
+		var targetPos = target.transform.position;
+
+		Vector3 targetDir = (targetPos - _t.position).normalized;
+		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
+		return angle;
+	}
+
 	public virtual void RotateTowardObject(GameObject obj) {
 		var targetPos = obj.transform.position;
 

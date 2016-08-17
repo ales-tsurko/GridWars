@@ -32,7 +32,7 @@ public class Tower : GroundBuilding {
 			collider.size = unitSize;
 			collider.center = new Vector3(0f, collider.size.y/2, 0f);
 			collider.isTrigger = true;
-			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, size.z/2 + unitLength/2 + unitSpacing);
+			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
 			releaseZones.Add(releaseZone);
 		}
 
