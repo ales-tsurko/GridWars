@@ -271,7 +271,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void ApplyAngleLimits() {
-		
+
+		/*
 		if (turretObjX) {
 			Vector3 e = turretObjX.transform.localEulerAngles;
 			float newX = ClampAngle(e.x, turretMinX, turretMaxX);
@@ -283,6 +284,7 @@ public class Weapon : MonoBehaviour {
 			float newY = ClampAngle(e.y, turretMinY, turretMaxY);
 			turretObjY.transform.localEulerAngles = new Vector3(e.x, newY, e.z);
 		}
+		*/
 	}
 
 	public void AimOnXAxis() {
@@ -527,16 +529,15 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void ShowDebugAimLine() {
-		/*
 		RaycastHit hit;
-		if (Physics.Raycast(transform.position, transform.forward, out hit, range)) {
+		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
+			
 			Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
 		} else {
-			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		}
-		*/
 
-		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+//		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
 	}
 		
 	public void ShowDebugTargetLine() {
