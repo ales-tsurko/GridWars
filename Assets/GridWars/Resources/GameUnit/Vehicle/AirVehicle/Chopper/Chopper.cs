@@ -157,11 +157,10 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForceAtPosition(frontForce, mainRotorThrustPointFront);
 		rigidBody().AddForceAtPosition(backForce,  mainRotorThrustPointBack);
 
+		/*
 		Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
 		Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
-
-
-		//rigidBody().AddForceAtPosition(mainRotorTransform.up * thrustLevel,  mainRotorTransform.position);
+		*/
 
 		Object_rotDY (mainRotor, 40f);
 		Object_rotDY (tailRotor, 40f);
@@ -177,6 +176,8 @@ public class Chopper : AirVehicle {
 			ApplyRotorThrust();
 			//ApplyForces();
 		}
+
+		RemoveIfOutOfBounds();
 	}
 
 	void OnCollisionEnter(Collision collision) {
