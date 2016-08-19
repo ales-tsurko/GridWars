@@ -519,6 +519,7 @@ public class Weapon : MonoBehaviour {
 		return angle;
 	}
 
+	#if UNITY_EDITOR
 	void OnDrawGizmos() {
 		UnityEditor.Handles.color = Color.white;
 		if (turretObjY) {
@@ -527,6 +528,7 @@ public class Weapon : MonoBehaviour {
 		}
 		//UnityEditor.Handles.Label (transform.position, "ey " + Mathf.Floor(transform.eulerAngles.y));
 	}
+	#endif
 
 	public void ShowDebugAimLine() {
 		RaycastHit hit;
