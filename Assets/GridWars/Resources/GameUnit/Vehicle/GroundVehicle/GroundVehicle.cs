@@ -7,6 +7,9 @@ public class GroundVehicle : Vehicle {
 	public override void FixedUpdate () {
 		base.FixedUpdate ();
 
+		PickTarget ();
+		SteerTowardsTarget ();
+
 		if (WheelsAreTouchingGround () && !IsInStandoffRange()) {
 			rigidBody ().AddForce (_t.forward * thrust);
 		}

@@ -19,6 +19,7 @@ public class Weapon : MonoBehaviour {
 	public float chanceOfFire = 0.02f; // as fraction of 1
 
 	public AudioClip fireClip;
+	public float fireClipVolume;
 
 	public GameObject turretObjX = null; // need to set this to the obj that X axis will rotate on to aim
 	public float turretMinX = -180;
@@ -432,7 +433,7 @@ public class Weapon : MonoBehaviour {
 		CreateProjectile();
 		//Debug.Log(fireClip);
 		if (fireClip != null) {
-			GetComponent<AudioSource>().PlayOneShot(fireClip);
+			GetComponent<AudioSource>().PlayOneShot(fireClip, fireClipVolume);
 		}
 		Reload();
 	}
