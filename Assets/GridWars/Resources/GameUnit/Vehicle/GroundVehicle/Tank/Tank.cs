@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Tank : GroundVehicle {
+	/*
 	Weapon _turretWeapon;
 	public Weapon turretWeapon {
 		get {
@@ -11,11 +12,6 @@ public class Tank : GroundVehicle {
 			}
 			return _turretWeapon;
 		}
-	}
-
-	/*
-	public override void Start () {
-		base.Start();
 	}
 	*/
 		
