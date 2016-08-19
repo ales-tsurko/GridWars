@@ -2,6 +2,12 @@
 using System;
 
 public static class GridWarsUnityExtensions {
+
+	public static GameUnit GameUnit(this GameObject self) {
+		return self.GetComponent<GameUnit>();
+	}
+
+
 	public static void EachRenderer(this GameObject self, Action<MeshRenderer> f) {
 		foreach (var renderer in self.GetComponentsInChildren<MeshRenderer>()) {
 			f(renderer);

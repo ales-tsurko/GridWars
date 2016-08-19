@@ -541,4 +541,9 @@ public class GameUnit : MonoBehaviour {
 	}
 	*/
 
+	public Vector3 ColliderCenter() {
+		Vector3 c = GetComponent<BoxCollider>().center;
+		return transform.TransformPoint(c);
+	}
+
 }

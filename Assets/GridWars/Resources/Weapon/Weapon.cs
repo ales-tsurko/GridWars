@@ -68,8 +68,6 @@ public class Weapon : MonoBehaviour {
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
 		}
-
-		targetLeadTime = 1.0f;
 	}
 
 	public void FixedUpdate () {
@@ -194,12 +192,13 @@ public class Weapon : MonoBehaviour {
 
 	public Vector3 TargetLeadPosition() {
 		Rigidbody rb = target.GetComponent<Rigidbody>();
+		Vector3 targetPos = target.GameUnit().ColliderCenter();
 
 		if (rb) {
-			return target.transform.position + rb.velocity * targetLeadTime;
+			return targetPos + rb.velocity * targetLeadTime;
 		}
 
-		return target.transform.position;
+		return targetPos;
 	}
 
 	public float XAngleToTarget() {
