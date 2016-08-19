@@ -1,20 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Battlefield : MonoBehaviour {
+public class Battlefield : Bolt.GlobalEventListener {
+	public static Battlefield current {
+		get {
+			return GameObject.Find("Battlefield").GetComponent<Battlefield>();
+		}
+	}
+
 	public Vector3 bounds = new Vector3(100f, 10f, 100f);
 	public List<Player> players;
 
-	// Use this for initialization
-	void Start () {
+	public Player PlayerNumbered(int playerNumber) {
+		return players[playerNumber - 1];
+	}
+
+	void Start() {
 		Application.runInBackground = true;
 		Network.shared.enabled = true;
+	}
 
+	public override void BoltStartDone() {
 		players = new List<Player>();
-		if (Network.shared.isMaster) {
-			AddPlayer();
-			AddPlayer();
-		}
+		AddPlayer();
+		AddPlayer();
 	}
 
 	void FixedUpdate () {
