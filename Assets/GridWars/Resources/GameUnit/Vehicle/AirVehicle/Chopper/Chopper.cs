@@ -11,7 +11,6 @@ public class Chopper : AirVehicle {
 
 	Transform mainRotorTransform; // set in start
 
-
 	//public transform mainRotorThrustPointFront;
 	//public transform mainRotorThrustPointBack;
 
@@ -19,27 +18,6 @@ public class Chopper : AirVehicle {
 	public float defaultCruiseHeight = 15f;
 	public float damageRotation;
 
-	/*
-	Weapon _missileLauncherLeft;
-	public Weapon missileLauncherLeft {
-		get {
-			if (_missileLauncherLeft == null) {
-				_missileLauncherLeft = _t.FindDeepChild("MissileLauncherLeft").gameObject.GetComponent<Weapon>();
-			}
-			return _missileLauncherLeft;
-		}
-	}
-
-	Weapon _missileLauncherRight;
-	public Weapon missileLauncherRight {
-		get {
-			if (_missileLauncherRight == null) {
-				_missileLauncherRight = _t.FindDeepChild("MissileLauncherRight").gameObject.GetComponent<Weapon>();
-			}
-			return _missileLauncherRight;
-		}
-	}
-	*/
 
 	public override void Start () {
 		base.Start();
@@ -54,32 +32,6 @@ public class Chopper : AirVehicle {
 
 		damageRotation = (Random.value - 0.5f)*10f;
 	}
-
-	/*
-	public virtual void SpinRotors (float v) {
-		Object_rotDY (mainRotor, v);
-		Object_rotDY (tailRotor, v);
-	}
-
-	public void ApplyForces() {
-		ApplyCruisingAltitudeForce();
-		ApplyThrustIfAppropriate();
-	}
-	
-	public void ApplyCruisingAltitudeForce() {
-		float diff = cruiseHeight - y ();
-
-		if (y () < cruiseHeight) {
-			rigidBody ().AddForce (_t.up * 6 * Mathf.Sqrt(diff));
-		} 
-	}
-
-	public void ApplyThrustIfAppropriate() {
-		if (target && y () > thrustHeight && !IsInStandoffRange()) {
-			rigidBody().AddForce(_t.forward * thrust);
-		}
-	}
-	*/
 
 	public float UpDesire() { // 0.0 to 1.0
 		float diff = cruiseHeight - y ();
@@ -135,14 +87,6 @@ public class Chopper : AirVehicle {
 		Vector3 mainRotorThrustPointBack  = mainRotorTransform.position + mainRotorTransform.forward * offset;
 		Vector3 mainRotorThrustPointFront = mainRotorTransform.position - mainRotorTransform.forward * offset;
 
-		/*
-		float u = UpDesire();
-		float frontThrust = u * (1 + f) * thrustLevel;
-		float rearThrust  = u * (1 + f) * thrustLevel;
-
-		rigidBody().AddForceAtPosition(mainRotor.transform.forward * frontThrust, mainRotorThrustPointFront);
-		rigidBody().AddForceAtPosition(mainRotor.transform.forward * rearThrust,  mainRotorThrustPointBack);
-		*/
 
 		Vector3 rotorUp = mainRotorTransform.up;
 		float speed = ForwardSpeed();
@@ -168,13 +112,9 @@ public class Chopper : AirVehicle {
 
 	public override void FixedUpdate () {
 		if (isRunning) {
-			//base.FixedUpdate();
-			//SpinRotors();		
 			PickTarget();
-			SteerTowardsTarget(); // picks target
-
+			SteerTowardsTarget();
 			ApplyRotorThrust();
-			//ApplyForces();
 		}
 
 		RemoveIfOutOfBounds();
