@@ -7,6 +7,10 @@ public class Bullet : Projectile {
 
 	public float muzzleImpulse; // define in prefab inspector
 
+	public Bullet() : base() {
+		//boltPrefabId = BoltPrefabs.TankShell;
+	}
+
 	public override void Start () {
 		base.Start();
 

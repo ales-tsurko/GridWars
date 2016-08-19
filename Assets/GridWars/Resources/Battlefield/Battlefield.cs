@@ -7,9 +7,14 @@ public class Battlefield : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Application.runInBackground = true;
+		Network.shared.enabled = true;
+
 		players = new List<Player>();
-		AddPlayer();
-		AddPlayer();
+		if (Network.shared.isMaster) {
+			AddPlayer();
+			AddPlayer();
+		}
 	}
 
 	void FixedUpdate () {
