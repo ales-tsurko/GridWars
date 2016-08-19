@@ -85,6 +85,10 @@ public class Weapon : MonoBehaviour {
 	// --- target selection -------------------
 
 	public virtual bool CanTargetClassOfUnit(GameUnit unit) {
+		if (unit == null) {
+			return false;
+		}
+
 		System.Type unitType = unit.GetType();
 
 		foreach (System.Type targetableClass in targetableTypes) {
@@ -158,15 +162,6 @@ public class Weapon : MonoBehaviour {
 
 	// --- aiming ------------------
 
-	public virtual void ApplyAngleLimits() {
-		if (turretObjX) {
-			// todo
-		}
-
-		if (turretObjY) {
-			// todo
-		}
-	}
 
 	public static float AngleBetweenOnAxis(Vector3 v1, Vector3 v2, Vector3 n)
 	{
@@ -184,15 +179,15 @@ public class Weapon : MonoBehaviour {
 		var targetPos = TargetLeadPosition();
 
 		Vector3 targetDir = (targetPos - t.position).normalized;
-		if (turretObjX) {
+		//if (turretObjX) {
 			float angleX = AngleBetweenOnAxis(t.forward, targetDir, t.right);
-			diff += angleX;
-		}
+			diff += Mathf.Abs(angleX);
+		//}
 
-		if (turretObjY) {
+		//if (turretObjY) {
 			float angleY = AngleBetweenOnAxis(t.forward, targetDir, t.forward);
-			diff += angleY;
-		}
+			diff +=  Mathf.Abs(angleY);
+		//}
 
 		return diff;
 	}
@@ -215,13 +210,13 @@ public class Weapon : MonoBehaviour {
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.right);
 
-
+			/*
 			if (true) {
 				var r = range == -1 ? 1000 : range;
-
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
 			}
+			*/
 
 			return angle;
 		}
@@ -241,10 +236,8 @@ public class Weapon : MonoBehaviour {
 			if (true) {
 				var r = range == -1 ? 10 : range;
 
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
-				/*
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
-				*/
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
 			}
 
 
@@ -254,13 +247,54 @@ public class Weapon : MonoBehaviour {
 		return 0;
 	}
 
+	float ClampAngle(float angle, float from, float to) {
+
+		// adjust to -180 to 180
+		if (angle > 180) {
+			angle -= 360;
+		}
+
+		if (angle < from) {
+			angle = from;
+		}
+
+		if (angle > to) {
+			angle = to;
+		}
+
+		// adjust back to 0 to 360
+		if (angle < 0) {
+			angle += 360;
+		}
+
+		return angle;
+	}
+
+	public void ApplyAngleLimits() {
+
+		/*
+		if (turretObjX) {
+			Vector3 e = turretObjX.transform.localEulerAngles;
+			float newX = ClampAngle(e.x, turretMinX, turretMaxX);
+			turretObjX.transform.localEulerAngles = new Vector3(newX, e.y, e.z);
+		}
+
+		if (turretObjY) {
+			Vector3 e = turretObjY.transform.localEulerAngles;
+			float newY = ClampAngle(e.y, turretMinY, turretMaxY);
+			turretObjY.transform.localEulerAngles = new Vector3(e.x, newY, e.z);
+		}
+		*/
+	}
+
 	public void AimOnXAxis() {
 		float angle = XAngleToTarget();
 		float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
 
 		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
-		tt.eulerAngles = new Vector3(e.x + dx, e.y, e.z);
+		float newX = e.x + dx;
+		tt.eulerAngles = new Vector3(newX, e.y, e.z);
 	}
 
 	public void AimOnYAxis() {
@@ -269,7 +303,9 @@ public class Weapon : MonoBehaviour {
 
 		Transform tt = turretObjY.transform;
 		var e = tt.eulerAngles;
-		tt.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
+		float newY = e.y + dy;
+
+		tt.eulerAngles = new Vector3(e.x, newY, e.z);
 	}
 
 	public bool canRotateX() {
@@ -299,6 +335,11 @@ public class Weapon : MonoBehaviour {
 				AimOnYAxis();
 			}
 
+			ApplyAngleLimits();
+
+			ShowDebugAimLine();
+			ShowDebugTargetLine();
+
 			return true;
 		}
 		return false;
@@ -311,15 +352,16 @@ public class Weapon : MonoBehaviour {
 		return r < chanceOfFire; 
 	}
 
-
 	public bool ShouldFire() {
 		// easier to debug with separate ifs
 		if (target) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
-					if (isAimed()) {
+					if (IsAimed()) {
 						if (TargetInRange()) {
 							if (ChooseToFire()) {
+								ShowDebugAimLine();
+								IsAimed();
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
 								//if (!RayCastHitsNonEnemy()) {
 									return true;
@@ -355,22 +397,27 @@ public class Weapon : MonoBehaviour {
 		return Time.time > isReloadedAfterTime;
 	}
 
-	public bool isAimed() {
-		float diff = AimDiff();
+	public bool IsAimed() {
+		// need to deal with both:
+		// chopper missiles aiming at targets (can't ignore X or Y)
+		// tanks aiming at buildings (need to ignore X)
 
 		/*
-		if (turretObjY) {
-			diff += Mathf.Abs(YAngleToTarget());
+		if (turretObjX == null && turretObjY != null) {
+			// having a y turret but no x turrent usually means 
+			// it's a ground vehicle aiming on ground plane
+			// so this test works
+			bool isHit = RayCastHitsEnemy();
+			if (isHit) {
+				return true;
+			}
 		}
+		*/
 
-		if (turretObjX) {
-			diff += Mathf.Abs(XAngleToTarget());
-		}
-*/
-		bool isHit = RayCastHitsEnemy();
+		float diff = AimDiff();
 		bool angleDiffOk = diff < aimedAngle;
 
-		return angleDiffOk || isHit;
+		return angleDiffOk;
 	}
 
 	public void Reload() {
@@ -443,19 +490,59 @@ public class Weapon : MonoBehaviour {
 		GameObject obj = RayCastHitObject();
 		return obj && !owner.GetComponent<GameUnit>().isEnemyOf(obj.GetComponent<GameUnit>());
 	}
-		
 
 	public virtual GameObject RayCastHitObject() {
 		RaycastHit hit;
 
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range)) {
 			//print("Found an object - distance: " + hit.distance);
-			Debug.DrawLine(transform.position, transform.position + transform.forward * range, Color.black, 0, true); // forward 
+			//Debug.DrawLine(transform.position, transform.position + transform.forward * range, Color.black, 0, true); // forward 
 			return hit.collider.gameObject;
 		} else {
-			Debug.DrawLine (transform.position, transform.position + transform.forward * range, Color.red, 0, true); // forward 
+			//Debug.DrawLine (transform.position, transform.position + transform.forward * range, Color.red, 0, true); // forward 
 		}
 		
 		return null;
+	}
+
+	float Convert360to180(float angle) {
+		if (angle > 180) {
+			angle -= 360;
+		}
+		return angle;
+	}
+
+	float Convert180to360(float angle) {
+		if (angle < 0) {
+			angle += 360;
+		}
+		return angle;
+	}
+
+	void OnDrawGizmos() {
+		UnityEditor.Handles.color = Color.white;
+		if (turretObjY) {
+			//UnityEditor.Handles.Label(transform.position, "y" + Mathf.Floor(Convert360to180(turretObjY.transform.localEulerAngles.y)));
+			UnityEditor.Handles.Label(transform.position, "x" + Mathf.Floor(Convert360to180(turretObjY.transform.localEulerAngles.x)));
+		}
+		//UnityEditor.Handles.Label (transform.position, "ey " + Mathf.Floor(transform.eulerAngles.y));
+	}
+
+	public void ShowDebugAimLine() {
+		RaycastHit hit;
+		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
+			
+			Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
+		} else {
+			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+		}
+
+//		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+	}
+		
+	public void ShowDebugTargetLine() {
+		if (target) {
+			Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.black, 0, true); 
+		} 
 	}
 }
