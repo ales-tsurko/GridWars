@@ -57,7 +57,7 @@ public class GameUnit : MonoBehaviour {
 		}
 	}
 
-	public GameObject deathExplosionPrefab;
+	GameObject deathExplosionPrefab;
 
 	void Awake () {
 		_t = transform;
@@ -112,6 +112,8 @@ public class GameUnit : MonoBehaviour {
 
 		SetupWeapons();
 		SetupSmokeDamage ();
+		SetupDeathExplosion ();
+
 		gameObject.CloneMaterials();
 
 		if (player != null) {
@@ -480,9 +482,9 @@ public class GameUnit : MonoBehaviour {
 	public void ShowExplosion() {
 		if (deathExplosionPrefab != null) {
 			var obj = Instantiate(deathExplosionPrefab);
-			obj.transform.position = transform.position;
-			obj.transform.rotation = UnityEngine.Random.rotation;
-			obj.transform.localScale *= 15;
+			obj.transform.position = _t.position;
+			obj.transform.rotation = _t.rotation;//UnityEngine.Random.rotation;
+			//obj.transform.localScale *= 15;
 		}
 
 		Destroy(gameObject);
@@ -497,6 +499,10 @@ public class GameUnit : MonoBehaviour {
 			smokeDamage.maxParticles = 0;
 			smokeDamage.simulationSpace = ParticleSystemSimulationSpace.World;
 		}
+	}
+
+	void SetupDeathExplosion () {
+		deathExplosionPrefab = Resources.Load<GameObject> (ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
 	}
 
 	Weapon[] Weapons() {
