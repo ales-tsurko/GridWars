@@ -1,16 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PowerSource : MonoBehaviour {
-	public static PowerSource Create() {
-		return Instantiate<GameObject>(Resources.Load<GameObject>("PowerSource/PowerSource")).GetComponent<PowerSource>();
-	}
-
+public class PowerSource : Bolt.EntityBehaviour<IPowerSourceState> {
 	public Vector3 bounds;
 
-	public Player player;
+	public Player player {
+		get {
+			return Battlefield.current.PlayerNumbered(state.playerNumber);
+		}
 
-	public float power = 0f;
+		set {
+			state.playerNumber = value.playerNumber;
+		}
+	}
+
+	public float power {
+		get {
+			return state.power;
+		}
+
+		set {
+			state.power = value;
+		}
+	}
+
 	public float maxPower = 20f;
 	public float generationRate = 2f;
 
@@ -22,10 +35,6 @@ public class PowerSource : MonoBehaviour {
 	public int segmentCount = 20;
 
 	public GameObject prefab;
-
-	void Awake() {
-		bounds = new Vector3(0f, 1.0f, 2.5f);
-	}
 
 	float trackLength {
 		get {
@@ -41,8 +50,20 @@ public class PowerSource : MonoBehaviour {
 
 	List<GameObject>segments;
 
-	// Use this for initialization
-	void Start () {
+	void Awake() {
+		bounds = new Vector3(0f, 1.0f, 2.5f);
+	}
+
+	public override void Attached() {
+		base.Attached();
+		if (BoltNetwork.isClient) {
+			Setup();
+		}
+	}
+
+	public void Setup() {
+		bounds = new Vector3(player.fortress.bounds.x, bounds.y, bounds.z);
+
 		var segmentLength = (trackLength - trackSpacing*(segmentCount - 1))/segmentCount;
 
 		segments = new List<GameObject>();
@@ -65,9 +86,12 @@ public class PowerSource : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate() {
+	public override void SimulateOwner() {
+		base.SimulateOwner();
 		power = Mathf.Min(power + Time.fixedDeltaTime*generationRate, maxPower);
+	}
 
+	void Update() {
 		var activeSegmentCount = segmentCount*power/maxPower;
 
 		for (var i = 0; i < segmentCount; i ++) {

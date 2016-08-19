@@ -20,7 +20,7 @@ public class Fortress : MonoBehaviour {
 		get {
 			return new Vector3(unitTypes.Length*(Tower.size.x+towerSpacing) - towerSpacing,
 				Tower.size.y,
-				powerSource.bounds.z + towerToPowerSpacing + Tower.size.z
+				powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
 			);
 		}
 	}
@@ -35,59 +35,44 @@ public class Fortress : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		powerSource = PowerSource.Create();
-		powerSource.player = player;
-		powerSource.bounds = new Vector3(bounds.x, powerSource.bounds.y, powerSource.bounds.z);
-		powerSource.transform.parent = transform;
-		powerSource.transform.localPosition = new Vector3(0f, 0f, powerSource.bounds.z/2);
-		powerSource.transform.localRotation = Quaternion.identity;
+		if (BoltNetwork.isServer) {
+			//Bolt Entities must be root transforms.  Use this object to position things relative to Fortress / the powerSource
+			var powerSourcePlacement = new GameObject();
+			powerSourcePlacement.transform.parent = transform;
+			powerSourcePlacement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
+			powerSourcePlacement.transform.localRotation = Quaternion.identity;
 
-		towers = new List<Tower>();
-		var towerNum = 0;
-		foreach (var unitType in unitTypes) {
-			var tower = GameUnit.Instantiate<Tower>();
-			tower.transform.parent = transform;
-			tower.player = player;
-			tower.unitPrefab = GameUnit.Load(unitType);
-			tower.tag = "Player" + player.playerNumber;
+			powerSource = BoltNetwork.Instantiate(BoltPrefabs.PowerSource, powerSourcePlacement.transform.position, powerSourcePlacement.transform.rotation).GetComponent<PowerSource>();
+			powerSource.player = player;
+			powerSource.Setup();
+
+			towers = new List<Tower>();
+			var towerNum = 0;
+			foreach (var unitType in unitTypes) {
+				var tower = GameUnit.Instantiate<Tower>();
+				tower.transform.parent = transform;
+				tower.player = player;
+				tower.unitPrefab = GameUnit.Load(unitType);
+				tower.tag = "Player" + player.playerNumber;
 
 
-			tower.transform.localRotation = Quaternion.identity;
-			tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.size.x/2 + towerNum*(Tower.size.x + towerSpacing),
-				0f,
-				powerSource.transform.localPosition.z + powerSource.bounds.z/2 + towerToPowerSpacing + Tower.size.z/2
-			);
+				tower.transform.localRotation = Quaternion.identity;
+				tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.size.x/2 + towerNum*(Tower.size.x + towerSpacing),
+					0f,
+					powerSourcePlacement.transform.localPosition.z + powerSourcePrefab.bounds.z/2 + towerToPowerSpacing + Tower.size.z/2
+				);
 
-			towerNum ++;
-		}
-
-		/*
-		int maxTowers = unitTypes.Count;
-		for (int towerNum = 0; towerNum < maxTowers; towerNum ++) {
-			var tower = GameUnit.Instantiate<Tower>();
-
-			if (playerNum == 0) {
-				tower.unitPrefab = GameUnit.Load(unitTypes[towerNum]);
-			} else {
-				tower.unitPrefab = GameUnit.Load(unitTypes[maxTowers - 1 - towerNum]);
+				towerNum ++;
 			}
 
-			float x = 50*((((float)towerNum) / (float)maxTowers) - 0.5f);
-
-			tower.setX (x);
-			tower.setY (0.0f);
-			tower.setZ (z);
-
-			tower.setRotY (180*playerNum);
-			//print("adding tower " + towerNum + " for player " + players [playerNum].playerNumber);
-			tower.player = players[playerNum];
-
-			//if ((playerNum == 0 && towerNum == 0) || (playerNum == 1 && towerNum == 2)) {
-			//tower.ReleaseUnit ();
-			//}
-
+			Destroy(powerSourcePlacement);
 		}
-		*/
+	}
+
+	PowerSource powerSourcePrefab {
+		get {
+			return Resources.Load<GameObject>("PowerSource/PowerSource").GetComponent<PowerSource>();
+		}
 	}
 	
 	// Update is called once per frame

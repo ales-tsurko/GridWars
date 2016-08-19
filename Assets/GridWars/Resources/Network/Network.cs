@@ -18,6 +18,7 @@ public class Network : Bolt.GlobalEventListener {
 		get {
 			//return false;
 			return Application.isEditor;
+			//return !Application.isEditor;
 		}
 	}
 
@@ -27,8 +28,8 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	public string connectEndpoint = "74.80.237.108:27000";
-	//public string connectEndpoint = "127.0.0.1:27000";
+	//public string connectEndpoint = "74.80.237.108:27000";
+	public string connectEndpoint = "127.0.0.1:27000";
 	public string listenEndpoint = "0.0.0.0:27000";
 
 	public override void BoltStartDone() {
