@@ -8,6 +8,7 @@ public class Projectile : GameUnit {
 	public float damage = 10;
 
 	public AudioClip damageClip;
+	public float damageClipVolume;
 
 
 	public void copyVelocityFrom(GameObject obj) {
@@ -59,7 +60,7 @@ public class Projectile : GameUnit {
 		obj.transform.rotation = transform.rotation;
 
 		if (damageClip != null) {
-			obj.AddComponent<AudioSource>().PlayOneShot(damageClip);
+			obj.AddComponent<AudioSource>().PlayOneShot(damageClip, damageClipVolume);
 			//audioSource.PlayOneShot(damageClip);
 		}
 		return obj;
