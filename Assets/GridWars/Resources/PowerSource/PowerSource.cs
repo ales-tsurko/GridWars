@@ -84,6 +84,8 @@ public class PowerSource : Bolt.EntityBehaviour<IPowerSourceState> {
 			segment.SetActive(false);
 			segments.Add(segment);
 		}
+
+		player.fortress.powerSource = this;
 	}
 
 	public override void SimulateOwner() {

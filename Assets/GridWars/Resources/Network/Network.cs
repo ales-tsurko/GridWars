@@ -32,6 +32,10 @@ public class Network : Bolt.GlobalEventListener {
 	public string connectEndpoint = "127.0.0.1:27000";
 	public string listenEndpoint = "0.0.0.0:27000";
 
+	public override void BoltStartBegin() {
+		BoltNetwork.RegisterTokenClass<TowerProtocolToken>();
+	}
+
 	public override void BoltStartDone() {
 		if (BoltNetwork.isClient) {
 			BoltNetwork.Connect(UdpKit.UdpEndPoint.Parse(connectEndpoint));

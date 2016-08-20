@@ -3,14 +3,55 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameUnit : MonoBehaviour {
+public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public float thrust;
 	public float rotationThrust;
-	public  Player player;
+
+	Player _player;
+	public Player player {
+		get {
+			if (hasNetworkEntity) {
+				return Battlefield.current.PlayerNumbered(networkState.playerNumber);
+			}
+			else {
+				return _player;
+			}
+
+		}
+
+		set {
+			if (hasNetworkEntity) {
+				networkState.playerNumber = value.playerNumber;
+			}
+			else {
+				_player = value;
+			}
+		}
+	}
+
 	public bool canAim = true;
 
 	// Damagable
-	public float hitPoints;
+	float _hitPoints;
+	public float hitPoints {
+		get {
+			if (hasNetworkEntity) {
+				return networkState.hitPoints;
+			}
+			else {
+				return _hitPoints;
+			}
+		}
+
+		set {
+			if (hasNetworkEntity) {
+				networkState.hitPoints = value;
+			}
+			else {
+				_hitPoints = value;
+			}
+		}
+	}
 	public float maxHitPoints;
 
 	public bool isTargetable = true;
@@ -82,11 +123,13 @@ public class GameUnit : MonoBehaviour {
 		return string.Join("/", pathComponents.ToArray());
 	}
 
-	public static GameObject Load(System.Type type) {
-
+	public static string PrefabPathForUnitType(System.Type type) {
 		string path = ResourcePathForUnitType(type);
-		string prefabPath = path + "/Prefabs/" + type.Name;
+		return path + "/Prefabs/" + type.Name;
+	}
 
+	public static GameObject Load(System.Type type) {
+		var prefabPath = PrefabPathForUnitType(type);
 		GameObject obj = (GameObject) Resources.Load(prefabPath);
 
 		if (obj == null) {
@@ -540,5 +583,39 @@ public class GameUnit : MonoBehaviour {
 		}
 	}
 	*/
+
+	// Network
+
+	public virtual BoltEntity networkEntity {
+		get {
+			return GetComponent<BoltEntity>();
+		}
+	}
+
+	public virtual IGameUnitState networkState {
+		get {
+			if (hasNetworkEntity) {
+				return networkEntity.GetState<IGameUnitState>();
+			}
+			else {
+				return null;
+			}
+
+		}
+	}
+
+	bool hasNetworkEntity {
+		get {
+			return networkEntity != null;
+		}
+	}
+
+	public virtual void NetworkStart() {
+
+	}
+
+	public virtual void MasterFixedUpdate() {
+
+	}
 
 }

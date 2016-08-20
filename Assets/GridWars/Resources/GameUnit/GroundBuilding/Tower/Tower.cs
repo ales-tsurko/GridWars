@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Tower : GroundBuilding {
+public class Tower : GroundBuilding, NetworkObjectDelegate {
 
 	public string activationKey;
 
@@ -11,39 +11,70 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	string _unitPrefabPath;
+	public string unitPrefabPath {
+		get {
+			if (_unitPrefabPath == null) {
+				return ((TowerProtocolToken)networkEntity.attachToken).unitPrefabPath;
+			}
+			else {
+				return _unitPrefabPath;
+			}
+		}
+
+		set {
+			_unitPrefabPath = value;
+		}
+	}
+
 	public GameObject unitPrefab;
 
+	public override void NetworkStart() {
+		base.NetworkStart();
 
-	public override void Start () {
-		isStaticUnit = true;
-
-		base.Start();
-		canAim = false;
-
-		releaseZones = new List<ReleaseZone>();
-
-		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
-		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
-		var unitWidth = unitSize.x;
-		var unitLength = unitSize.z;
-		var unitSpacing = unitWidth/4;
-		var launchZoneWidth = concurrency*(unitWidth + unitSpacing) - unitSpacing;
-
-		for (var i = 0; i < concurrency; i ++) {
-			var releaseZone = this.CreateChild<ReleaseZone>();
-			var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
-			collider.size = unitSize;
-			collider.center = new Vector3(0f, collider.size.y/2, 0f);
-			collider.isTrigger = true;
-			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
-			releaseZones.Add(releaseZone);
+		if (BoltNetwork.isClient) {
+			Setup();
 		}
+	}
+
+	public void Setup() {
+		unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
 
 		iconUnit = CreateUnit();
 		iconUnit.transform.parent = transform;
 		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconUnit.transform.localRotation = Quaternion.identity;
 		iconUnit.GetComponent<GameUnitIcon>().Enable();
+
+		canAim = false;
+
+		if (BoltNetwork.isServer) {
+			isStaticUnit = true;
+
+			releaseZones = new List<ReleaseZone>();
+			var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
+			var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
+			var unitWidth = unitSize.x;
+			var unitLength = unitSize.z;
+			var unitSpacing = unitWidth/4;
+			var launchZoneWidth = concurrency*(unitWidth + unitSpacing) - unitSpacing;
+
+			for (var i = 0; i < concurrency; i ++) {
+				var releaseZone = this.CreateChild<ReleaseZone>();
+				var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
+				collider.size = unitSize;
+				collider.center = new Vector3(0f, collider.size.y/2, 0f);
+				collider.isTrigger = true;
+				releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
+				releaseZones.Add(releaseZone);
+			}
+
+			tag = "Player" + player.playerNumber;
+		}
+	}
+
+	public override void MasterFixedUpdate() {
+		
 	}
 
 	public void OnMouseDown() {
