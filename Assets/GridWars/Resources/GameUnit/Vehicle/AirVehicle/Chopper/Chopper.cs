@@ -116,7 +116,6 @@ public class Chopper : AirVehicle {
 			SteerTowardsTarget();
 			ApplyRotorThrust();
 		}
-
 		RemoveIfOutOfBounds();
 	}
 

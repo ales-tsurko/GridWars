@@ -14,11 +14,17 @@ public class Weapon : MonoBehaviour {
 	public int maxAmmoCount = 0;
 	public int ammoCount = -1;
 	public float reloadTimeInSeconds = 3.0f;
+
+	public int clipAmmo = 4;
+	public int clipMaxAmmo = 4;
+	public float clipReloadTimeInSeconds = 3.0f;
+
 	public float range = -1;
 	public float aimedAngle = 5.0f;
 	public float chanceOfFire = 0.02f; // as fraction of 1
 
 	public AudioClip fireClip;
+	public float fireClipVolume;
 
 	public GameObject turretObjX = null; // need to set this to the obj that X axis will rotate on to aim
 	public float turretMinX = -180;
@@ -68,8 +74,6 @@ public class Weapon : MonoBehaviour {
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
 		}
-
-		targetLeadTime = 1.0f;
 	}
 
 	public void FixedUpdate () {
@@ -194,12 +198,13 @@ public class Weapon : MonoBehaviour {
 
 	public Vector3 TargetLeadPosition() {
 		Rigidbody rb = target.GetComponent<Rigidbody>();
+		Vector3 targetPos = target.GameUnit().ColliderCenter();
 
 		if (rb) {
-			return target.transform.position + rb.velocity * targetLeadTime;
+			return targetPos + rb.velocity * targetLeadTime;
 		}
 
-		return target.transform.position;
+		return targetPos;
 	}
 
 	public float XAngleToTarget() {
@@ -420,12 +425,22 @@ public class Weapon : MonoBehaviour {
 		return angleDiffOk;
 	}
 
+	public void FillClip() {
+		while ((clipAmmo < clipMaxAmmo) && (ammoCount > 0)) {
+			ammoCount--;
+			clipAmmo++;
+		}
+	}
+
 	public void Reload() {
 		if (hasAmmo()) {
-			if (ammoCount > 0) {
-				ammoCount--;
+			if (clipAmmo == 0) {
+				FillClip();
+				isReloadedAfterTime = Time.time + clipReloadTimeInSeconds;
+			} else {
+				clipAmmo--;
+				isReloadedAfterTime = Time.time + reloadTimeInSeconds;
 			}
-			isReloadedAfterTime = Time.time + reloadTimeInSeconds;
 		}
 	}
 
@@ -433,7 +448,7 @@ public class Weapon : MonoBehaviour {
 		CreateProjectile();
 		//Debug.Log(fireClip);
 		if (fireClip != null) {
-			GetComponent<AudioSource>().PlayOneShot(fireClip);
+			GetComponent<AudioSource>().PlayOneShot(fireClip, fireClipVolume);
 		}
 		Reload();
 	}
