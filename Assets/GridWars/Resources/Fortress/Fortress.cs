@@ -37,35 +37,36 @@ public class Fortress : MonoBehaviour {
 	void Start () {
 		if (BoltNetwork.isServer) {
 			//Bolt Entities must be root transforms.  Use this object to position things relative to Fortress / the powerSource
-			var powerSourcePlacement = new GameObject();
-			powerSourcePlacement.transform.parent = transform;
-			powerSourcePlacement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
-			powerSourcePlacement.transform.localRotation = Quaternion.identity;
+			var placement = new GameObject();
+			placement.transform.parent = transform;
+			placement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
+			placement.transform.localRotation = Quaternion.identity;
 
-			powerSource = BoltNetwork.Instantiate(BoltPrefabs.PowerSource, powerSourcePlacement.transform.position, powerSourcePlacement.transform.rotation).GetComponent<PowerSource>();
+			powerSource = BoltNetwork.Instantiate(BoltPrefabs.PowerSource, placement.transform.position, placement.transform.rotation).GetComponent<PowerSource>();
 			powerSource.player = player;
 			powerSource.Setup();
 
 			towers = new List<Tower>();
 			var towerNum = 0;
+			var z = placement.transform.localPosition.z;
 			foreach (var unitType in unitTypes) {
-				var tower = GameUnit.Instantiate<Tower>();
-				tower.transform.parent = transform;
-				tower.player = player;
-				tower.unitPrefab = GameUnit.Load(unitType);
-				tower.tag = "Player" + player.playerNumber;
-
-
-				tower.transform.localRotation = Quaternion.identity;
-				tower.transform.localPosition = new Vector3(-bounds.x/2 + Tower.size.x/2 + towerNum*(Tower.size.x + towerSpacing),
+				placement.transform.localPosition = new Vector3(-bounds.x/2 + Tower.size.x/2 + towerNum*(Tower.size.x + towerSpacing),
 					0f,
-					powerSourcePlacement.transform.localPosition.z + powerSourcePrefab.bounds.z/2 + towerToPowerSpacing + Tower.size.z/2
+					z + powerSourcePrefab.bounds.z/2 + towerToPowerSpacing + Tower.size.z/2
 				);
+				placement.transform.localRotation = Quaternion.identity;
+
+				var towerToken = new TowerProtocolToken();
+				towerToken.unitPrefabPath = GameUnit.PrefabPathForUnitType(unitType);
+				var tower = BoltNetwork.Instantiate(BoltPrefabs.Tower, towerToken, placement.transform.position, placement.transform.rotation).GetComponent<Tower>();
+				tower.player = player;
+				tower.unitPrefabPath = towerToken.unitPrefabPath;
+				tower.Setup();
 
 				towerNum ++;
 			}
 
-			Destroy(powerSourcePlacement);
+			Destroy(placement);
 		}
 	}
 
