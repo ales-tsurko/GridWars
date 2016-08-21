@@ -119,7 +119,9 @@ public class Chopper : AirVehicle {
 		RemoveIfOutOfBounds();
 	}
 
-	void OnCollisionEnter(Collision collision) {
+	public override void OnCollisionEnter(Collision collision) {
+		base.OnCollisionEnter(collision);
+
 		// destroy on ground collision
 		if (collision.collider.name == "BattlefieldPlane") {
 			if (collision.relativeVelocity.magnitude > 2) {

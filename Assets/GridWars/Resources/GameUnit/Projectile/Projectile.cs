@@ -84,4 +84,9 @@ public class Projectile : GameUnit {
 
 	#endif
 	*/
+
+	public void IgnoreCollisionsWith(GameObject obj) {
+		Physics.IgnoreCollision(GetComponent<Collider>(), obj.GetComponent<Collider>());
+	}
+
 }

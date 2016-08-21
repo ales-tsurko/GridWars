@@ -468,22 +468,21 @@ public class Weapon : MonoBehaviour {
 
 	Projectile CreateProjectile() {
 
-		//print("CreateProjectile");
 		if (muzzleFlash != null) {
 			CreateMuzzleFlash ();
 		}
-		var obj = Instantiate(prefabProjectile);
-		obj.transform.position = transform.position + (transform.forward * barrelLength());
-		obj.transform.rotation = transform.rotation;
+		var projObj = Instantiate(prefabProjectile);
+		var projUnit = projObj.GetComponent<Projectile>();
 
-		//Transform t = obj.transform;
-		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
+		// set position and copy rotation and velocity
+		projObj.transform.position = transform.position + (transform.forward * barrelLength());
+		projObj.transform.rotation = transform.rotation;
+		projUnit.copyVelocityFrom(owner);
 
-		var unit = obj.GetComponent<Projectile>();
-		unit.copyVelocityFrom(owner);
-		unit.player = player;
+		projUnit.player = player;
+		projUnit.IgnoreCollisionsWith(owner);
 
-		return unit;
+		return projUnit;
 	}
 
 	// --- ray cast ---
