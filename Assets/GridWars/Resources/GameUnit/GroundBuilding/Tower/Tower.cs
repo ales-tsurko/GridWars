@@ -71,7 +71,10 @@ public class Tower : GroundBuilding {
 
 			tag = "Player" + player.playerNumber;
 		}
-		CameraController.instance.InitCamera (transform);
+
+		if (CameraController.instance != null) {
+			CameraController.instance.InitCamera (transform);
+		}
 	}
 
 	public void OnMouseDown() {

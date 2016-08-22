@@ -148,7 +148,7 @@ public class CameraController : MonoBehaviour {
 		targetRot = newTarget.rotation;
 		startPos = cam.position;
 		startRot = cam.rotation;
-		print (Time.timeScale);
+		//print (Time.timeScale);
 		startTime = Time.time;
 		moving = true;
 
