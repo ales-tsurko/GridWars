@@ -12,6 +12,13 @@ public class CameraController : MonoBehaviour {
 		}
 	}
 	public List<Transform> positions = new List<Transform>();
+	[System.Serializable]
+	public class OriginalPosition {
+		public Vector3 position;
+		public Quaternion rotation;
+	}
+	public List<OriginalPosition> originalPositions = new List<OriginalPosition>();
+
 	int pos;
 	public bool moving;
 	public float moveSpeed;
@@ -27,18 +34,35 @@ public class CameraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		foreach (Transform pos in positions) {
+			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
+		}
 		mouseLook = cam.GetComponent<MouseLook> ();
 		DontDestroyOnLoad (gameObject);
 	}
-	
+	public void InitCamera () {
+		Tower[] towers = FindObjectsOfType<Tower> ();
+		Tower closest = new Tower ();
+		float closestDist = Mathf.Infinity;
+		foreach (Tower tower in towers) {
+			float thisDist = Vector3.Distance (tower.transform.position, cam.transform.position);
+			if (thisDist < closestDist) {
+				closestDist = thisDist;
+				closest = tower;
+			}
+		}
+		print (closest.GetComponent<Tower> ().unitPrefab.name + closest.GetComponent<Tower>().player);
+		InitCamera (closest.transform);
+	}
+		
 	public void InitCamera (Transform _base){
 		if (_base == null) {
 			Debug.LogError ("Tower is null, can't init camera positions");
 			return;
 		}
 		for (int i = 0; i < positions.Count; i++) {
-			cam.position = positions [i].position;
-			cam.rotation = positions [i].rotation;
+			cam.position = originalPositions [i].position;
+			cam.rotation = originalPositions [i].rotation;
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
 				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f && screenPoint.x < .9f && screenPoint.y > 0 && screenPoint.y < .9f) {
@@ -50,10 +74,31 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 		cam.position = positions [0].position;
+		cam.rotation = positions [0].rotation;
 		pos = -1;
 		NextPosition ();
 	}
+
+	Vector2 lastScreenRes;
+	public static Vector2 GetMainGameViewSize()
+	{
+		System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+		System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+		System.Object Res = GetSizeOfMainGameView.Invoke(null,null);
+		return (Vector2)Res;
+	}
+
 	void Update () {
+		#if UNITY_EDITOR
+		if (Time.frameCount % 10 == 0){
+			Vector2 thisScreenRes = GetMainGameViewSize();
+			if (thisScreenRes != lastScreenRes){
+				lastScreenRes = thisScreenRes;
+				InitCamera();
+				return;
+			}
+		}
+		#endif
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
 		}
