@@ -6,9 +6,8 @@ public class Network : Bolt.GlobalEventListener {
 	public static Network shared {
 		get {
 			if (_shared == null) {
-				var go = new GameObject();
-				go.name = "Network";
-				_shared = go.AddComponent<Network>();
+				_shared = new GameObject().AddComponent<Network>();
+				_shared.gameObject.name = "Network";
 			}
 			return _shared;
 		}
@@ -16,7 +15,7 @@ public class Network : Bolt.GlobalEventListener {
 
 	public bool isMaster {
 		get {
-			//return false;
+			//return false; 
 			return Application.isEditor;
 			//return !Application.isEditor;
 		}
@@ -25,6 +24,17 @@ public class Network : Bolt.GlobalEventListener {
 	public bool isConnected {
 		get {
 			return BoltNetwork.isConnected;
+		}
+	}
+
+	public bool isServerOrDisabled {
+		get {
+			if (enabled) {
+				return BoltNetwork.isServer;
+			}
+			else {
+				return true;
+			}
 		}
 	}
 
@@ -47,8 +57,6 @@ public class Network : Bolt.GlobalEventListener {
 
 	// Use this for initialization
 	void Start () {
-		_shared = this;
-
 		if (isMaster) {
 			BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
 		}
