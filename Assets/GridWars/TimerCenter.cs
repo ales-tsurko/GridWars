@@ -24,7 +24,7 @@ namespace AssemblyCSharp {
 
 		public Timer NewTimer() {
 			Timer timer = new Timer();
-			timer.timerCenter = this;1
+			timer.timerCenter = this;
 
 			return timer;
 		}
