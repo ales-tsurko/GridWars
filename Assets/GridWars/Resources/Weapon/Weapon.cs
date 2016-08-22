@@ -239,7 +239,7 @@ public class Weapon : MonoBehaviour {
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
 			if (true) {
-				var r = range == -1 ? 10 : range;
+				//var r = range == -1 ? 10 : range;
 
 				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
 				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
