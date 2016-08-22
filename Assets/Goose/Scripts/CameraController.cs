@@ -2,9 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 public class CameraController : MonoBehaviour {
+	private static CameraController _instance;
+	public static CameraController instance {
+		get {
+			if (_instance == null) {
+				_instance = GameObject.FindObjectOfType<CameraController> ();
+			}
+			return _instance;
+		}
+	}
 	public List<Transform> positions = new List<Transform>();
+	[System.Serializable]
+	public class OriginalPosition {
+		public Vector3 position;
+		public Quaternion rotation;
+	}
+	public List<OriginalPosition> originalPositions = new List<OriginalPosition>();
+
 	int pos;
-	bool moving;
+	public bool moving;
 	public float moveSpeed;
 	Vector3 startPos;
 	Vector3 targetPos;
@@ -14,15 +30,72 @@ public class CameraController : MonoBehaviour {
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
-	// Use this for initialization
+
 	void Start () {
-		pos = -1;
+		foreach (Transform pos in positions) {
+			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
+		}
 		mouseLook = cam.GetComponent<MouseLook> ();
-		NextPosition ();
+		DontDestroyOnLoad (gameObject);
 	}
-	
-	// Update is called once per frame
+	public void InitCamera () {
+		Tower[] towers = FindObjectsOfType<Tower> ();
+		Tower closest = new Tower ();
+		float closestDist = Mathf.Infinity;
+		foreach (Tower tower in towers) {
+			float thisDist = Vector3.Distance (tower.transform.position, cam.transform.position);
+			if (thisDist < closestDist) {
+				closestDist = thisDist;
+				closest = tower;
+			}
+		}
+		InitCamera (closest.transform);
+	}
+		
+	public void InitCamera (Transform _base){
+		if (_base == null) {
+			Debug.LogError ("Tower is null, can't init camera positions");
+			return;
+		}
+		for (int i = 0; i < positions.Count; i++) {
+			cam.position = originalPositions [i].position;
+			cam.rotation = originalPositions [i].rotation;
+			while (true) {
+				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
+				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f && screenPoint.x < .9f && screenPoint.y > 0 && screenPoint.y < .9f) {
+					positions [i].position = cam.position;
+					break;
+				} else {
+					cam.transform.position -= cam.transform.forward;
+				}
+			}
+		}
+		cam.position = positions [0].position;
+		cam.rotation = positions [0].rotation;
+		pos = 0;
+
+	}
+
+	Vector2 lastScreenRes;
+	public static Vector2 GetMainGameViewSize()
+	{
+		System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+		System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+		System.Object Res = GetSizeOfMainGameView.Invoke(null,null);
+		return (Vector2)Res;
+	}
+
 	void Update () {
+		#if UNITY_EDITOR
+		if (Time.frameCount % 10 == 0){
+			Vector2 thisScreenRes = GetMainGameViewSize();
+			if (thisScreenRes != lastScreenRes){
+				lastScreenRes = thisScreenRes;
+				InitCamera();
+				return;
+			}
+		}
+		#endif
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
 		}
@@ -35,9 +108,7 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
-		if (!moving) {
-			return;
-		}
+
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 			if (actionMode) {
 				mouseLook.enabled = true;

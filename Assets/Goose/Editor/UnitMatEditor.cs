@@ -15,8 +15,8 @@ public class UnitMatEditor : EditorWindow {
 
 	void OnGUI () {
 		GUILayout.Label ("Apply Material to all children", EditorStyles.boldLabel);
-		mat = (Material)EditorGUILayout.ObjectField(mat, typeof(Material));
-		go = (GameObject)EditorGUILayout.ObjectField (go, typeof(GameObject));
+		mat = (Material)EditorGUILayout.ObjectField(mat, typeof(Material), true);
+		go = (GameObject)EditorGUILayout.ObjectField (go, typeof(GameObject), true);
 		if (GUILayout.Button ("Apply")) {
 			Apply ();
 		}

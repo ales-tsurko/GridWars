@@ -1,26 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PowerSource : Bolt.EntityBehaviour<IPowerSourceState> {
+public class PowerSource : GroundBuilding {
 	public Vector3 bounds;
-
-	public Player player {
-		get {
-			return Battlefield.current.PlayerNumbered(state.playerNumber);
-		}
-
-		set {
-			state.playerNumber = value.playerNumber;
-		}
-	}
 
 	public float power {
 		get {
-			return state.power;
+			return powerSourceState.power;
 		}
 
 		set {
-			state.power = value;
+			powerSourceState.power = value;
 		}
 	}
 
@@ -36,6 +26,12 @@ public class PowerSource : Bolt.EntityBehaviour<IPowerSourceState> {
 
 	public GameObject prefab;
 
+	IPowerSourceState powerSourceState {
+		get {
+			return entity.GetState<IPowerSourceState>();
+		}
+	}
+
 	float trackLength {
 		get {
 			return bounds.x;
@@ -50,7 +46,8 @@ public class PowerSource : Bolt.EntityBehaviour<IPowerSourceState> {
 
 	List<GameObject>segments;
 
-	void Awake() {
+	protected override void Awake () {
+		base.Awake();
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 	}
 
