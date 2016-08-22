@@ -30,9 +30,7 @@ public class CameraController : MonoBehaviour {
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
-	public GameObject base1;
 
-	// Use this for initialization
 	void Start () {
 		foreach (Transform pos in positions) {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
@@ -51,7 +49,6 @@ public class CameraController : MonoBehaviour {
 				closest = tower;
 			}
 		}
-		print (closest.GetComponent<Tower> ().unitPrefab.name + closest.GetComponent<Tower>().player);
 		InitCamera (closest.transform);
 	}
 		
@@ -111,12 +108,7 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
-		if (!moving) {
-			if (base1 != null) {
-				
-			}
-			return;
-		}
+
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
