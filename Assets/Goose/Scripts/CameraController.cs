@@ -72,8 +72,8 @@ public class CameraController : MonoBehaviour {
 		}
 		cam.position = positions [0].position;
 		cam.rotation = positions [0].rotation;
-		pos = 0;
-
+		pos = -1;
+		NextPosition ();
 	}
 
 	Vector2 lastScreenRes;
@@ -118,6 +118,7 @@ public class CameraController : MonoBehaviour {
 		//print ("Moving " + Time.time);
 		float timeSinceStarted = Time.time - startTime;
 		float percentageComplete = timeSinceStarted / moveSpeed;
+
 		cam.localPosition = Vector3.Lerp (startPos, targetPos, percentageComplete);
 		cam.localRotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
 
@@ -147,6 +148,7 @@ public class CameraController : MonoBehaviour {
 		targetRot = newTarget.rotation;
 		startPos = cam.position;
 		startRot = cam.rotation;
+		//print (Time.timeScale);
 		startTime = Time.time;
 		moving = true;
 

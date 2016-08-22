@@ -17,10 +17,20 @@ public class Battlefield : Bolt.GlobalEventListener {
 
 	void Start() {
 		Application.runInBackground = true;
-		Network.shared.enabled = true;
+
+		//Network.shared.enabled = false;
+		CameraController.instance.enabled = false;
+
+		if (!Network.shared.enabled) {
+			StartGame();
+		}
 	}
 
 	public override void BoltStartDone() {
+		StartGame();
+	}
+
+	void StartGame() {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();

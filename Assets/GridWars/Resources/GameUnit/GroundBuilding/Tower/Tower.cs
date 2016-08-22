@@ -48,7 +48,7 @@ public class Tower : GroundBuilding {
 
 		canAim = false;
 
-		if (BoltNetwork.isServer) {
+		if (Network.shared.isServerOrDisabled) {
 			isStaticUnit = true;
 
 			releaseZones = new List<ReleaseZone>();
@@ -71,7 +71,10 @@ public class Tower : GroundBuilding {
 
 			tag = "Player" + player.playerNumber;
 		}
-		CameraController.instance.InitCamera (transform);
+
+		if (CameraController.instance != null) {
+			CameraController.instance.InitCamera (transform);
+		}
 	}
 
 	public void OnMouseDown() {
