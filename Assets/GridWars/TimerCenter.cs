@@ -7,14 +7,17 @@ using System.Collections.Generic;
  * Global Timer system which uses a single GameObject with FixedUpdate
  * to trigger a queue of timers. Timer queue is kept sorted in timeout order so
  * each step we only need to walk the front of the queue until we find a
- * timer that isn't ready to fire.
+ * timer that isn't ready to fire. Timer insertion is linear for now, so move to binary
+ * insertion method if/when we have larger timer queues.
  * 
  * example use:
  *   App.shared.timerCenter.NewTimer().SetTimeout(2.0f).SetTarget(this).SetMethod("timeout").Start();
  *   
  */ 
 
+
 namespace AssemblyCSharp {
+
 	public class TimerCenter {
 		List <Timer> timers;
 
@@ -49,8 +52,36 @@ namespace AssemblyCSharp {
 					timer.Send();
 					timers.RemoveAt(0);
 				} else {
+					// this timer isn't ready and since queue is sorted we
+					// know the one's after it aren't ready either
 					return;
 				}
+			}
+		}
+
+		// untested version of AddTimer which 
+		// uses BinarySearch to find queue insertion point
+
+		public void AddTimer_new(Timer newTimer) {
+			int index = timers.BinarySearch(newTimer);
+
+			if (index > 0) {
+				if (timers[index] == newTimer) {
+					// already have this timer
+					return;
+				}
+
+				timers.Insert(index, newTimer);
+
+			} else {
+				index = ~index; // index of first element that is larger
+
+				if (index < timers.Count) {
+					timers.Insert(index, newTimer);
+				} else {
+					timers.Add(newTimer);
+				}
+
 			}
 		}
 	}

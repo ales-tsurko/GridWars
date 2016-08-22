@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace AssemblyCSharp {
-	public class Timer {
+	public class Timer : IComparable<Timer> {
 		public TimerCenter timerCenter;
 		public object target;
 		public string method;
@@ -50,7 +51,18 @@ namespace AssemblyCSharp {
 		public void Start() {
 			timerCenter.AddTimer(this);
 		}
-				
+
+
+		public int CompareTo(Timer otherTimer) {
+			float f1 = fireTime;
+			float f2 = otherTimer.fireTime;
+
+			if (Mathf.Approximately(f1, f2)) {
+				return 0;
+			}
+
+			return f1 > f2 ? 1 : -1;
+		}
 	}
 }
 
