@@ -4,10 +4,14 @@ using System.Collections.Generic;
 
 
 /*
+ * Global Timer system which uses a single GameObject with FixedUpdate
+ * to trigger a queue of timers. Timer queue is kept sorted in timeout order so
+ * each step we only need to walk the front of the queue until we find a
+ * timer that isn't ready to fire.
+ * 
  * example use:
  *   App.shared.timerCenter.NewTimer().SetTimeout(2.0f).SetTarget(this).SetMethod("timeout").Start();
- * 
- * 
+ *   
  */ 
 
 namespace AssemblyCSharp {
@@ -20,7 +24,7 @@ namespace AssemblyCSharp {
 
 		public Timer NewTimer() {
 			Timer timer = new Timer();
-			timer.timerCenter = this;
+			timer.timerCenter = this;1
 
 			return timer;
 		}

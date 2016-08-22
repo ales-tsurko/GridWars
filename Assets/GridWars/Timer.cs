@@ -7,7 +7,11 @@ namespace AssemblyCSharp {
 		public TimerCenter timerCenter;
 		public object target;
 		public string method;
-		public float fireTime; 
+		public float fireTime;
+
+		// optional ivars for attaching info to the timer 
+		public string label; 
+		public object info;
 
 		public Timer() {
 		}
