@@ -199,7 +199,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 		var results = new List<GameObject>();
 		foreach (GameObject obj in objs) {
-			if (obj.activeInHierarchy) {
+			if (obj.activeInHierarchy && !obj.IsDestroyed()) {
 				results.Add(obj);
 			}
 		}
@@ -240,8 +240,10 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
-			if (gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
-				results.Add (gameUnit.gameObject);
+			if (gameUnit.gameObject.IsDestroyed() == false) {
+				if (gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
+					results.Add(gameUnit.gameObject);
+				}
 			}
 		}
 		return results;
