@@ -11,15 +11,29 @@ public class GameUnitIcon : MonoBehaviour {
 		unit.isTargetable = false;
 
 		// disable any unit actions
-		foreach (var script in gameObject.GetComponentsInChildren<MonoBehaviour>()) {
-			script.enabled = false;
-		}
+		DisableScripts(transform);
 
 		// remove physics
 		Destroy(GetComponent<Collider>());
 		Destroy(GetComponent<Rigidbody>());
 
 		enabled = true;
+	}
+
+	void DisableScripts (Transform other){
+		foreach (var script in other.GetComponentsInChildren<MonoBehaviour>()) {
+			if (script.GetComponent<GameUnit> ()) {
+				script.enabled = false;
+				continue;
+			}
+			if (script.GetType () == this.GetType ()) {
+				continue;
+			}
+			Destroy (script);
+		}
+		foreach (Transform o in other) {
+			DisableScripts (o);
+		}
 	}
 
 	// Use this for initialization
