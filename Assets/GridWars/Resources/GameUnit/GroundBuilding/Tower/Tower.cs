@@ -71,6 +71,7 @@ public class Tower : GroundBuilding, NetworkObjectDelegate {
 
 			tag = "Player" + player.playerNumber;
 		}
+		CameraController.instance.InitCamera (transform);
 	}
 
 	public override void MasterFixedUpdate() {

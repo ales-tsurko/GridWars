@@ -2,9 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 public class CameraController : MonoBehaviour {
+	private static CameraController _instance;
+	public static CameraController instance {
+		get {
+			if (_instance == null) {
+				_instance = GameObject.FindObjectOfType<CameraController> ();
+			}
+			return _instance;
+		}
+	}
 	public List<Transform> positions = new List<Transform>();
 	int pos;
-	bool moving;
+	public bool moving;
 	public float moveSpeed;
 	Vector3 startPos;
 	Vector3 targetPos;
@@ -14,14 +23,36 @@ public class CameraController : MonoBehaviour {
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
+	public GameObject base1;
+
 	// Use this for initialization
 	void Start () {
-		pos = -1;
 		mouseLook = cam.GetComponent<MouseLook> ();
-		NextPosition ();
+		DontDestroyOnLoad (gameObject);
 	}
 	
-	// Update is called once per frame
+	public void InitCamera (Transform _base){
+		if (_base == null) {
+			Debug.LogError ("Tower is null, can't init camera positions");
+			return;
+		}
+		for (int i = 0; i < positions.Count; i++) {
+			cam.position = positions [i].position;
+			cam.rotation = positions [i].rotation;
+			while (true) {
+				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
+				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f && screenPoint.x < .9f && screenPoint.y > 0 && screenPoint.y < .9f) {
+					positions [i].position = cam.position;
+					break;
+				} else {
+					cam.transform.position -= cam.transform.forward;
+				}
+			}
+		}
+		cam.position = positions [0].position;
+		pos = -1;
+		NextPosition ();
+	}
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
@@ -36,6 +67,9 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 		if (!moving) {
+			if (base1 != null) {
+				
+			}
 			return;
 		}
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
