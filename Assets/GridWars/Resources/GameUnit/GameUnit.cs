@@ -610,7 +610,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	bool hasNetworkEntity {
 		get {
-			return networkEntity != null;
+			return (networkEntity != null) && networkEntity.isAttached;
 		}
 	}
 
