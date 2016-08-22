@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
+public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	public float thrust;
 	public float rotationThrust;
 
 	Player _player;
 	public Player player {
 		get {
-			if (hasNetworkEntity) {
-				return Battlefield.current.PlayerNumbered(networkState.playerNumber);
+			if (isNetworked) {
+				return Battlefield.current.PlayerNumbered(state.playerNumber);
 			}
 			else {
 				return _player;
@@ -20,8 +20,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
-			if (hasNetworkEntity) {
-				networkState.playerNumber = value.playerNumber;
+			if (isNetworked) {
+				state.playerNumber = value.playerNumber;
 			}
 			else {
 				_player = value;
@@ -35,8 +35,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	float _hitPoints;
 	public float hitPoints {
 		get {
-			if (hasNetworkEntity) {
-				return networkState.hitPoints;
+			if (isNetworked) {
+				return state.hitPoints;
 			}
 			else {
 				return _hitPoints;
@@ -44,8 +44,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
-			if (hasNetworkEntity) {
-				networkState.hitPoints = value;
+			if (isNetworked) {
+				state.hitPoints = value;
 			}
 			else {
 				_hitPoints = value;
@@ -100,7 +100,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	GameObject deathExplosionPrefab;
 
-	void Awake () {
+	protected virtual void Awake () {
 		_t = transform;
 	}
 
@@ -399,9 +399,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			Destroy (gameObject);
 		}
 	}
-
+		
 	public virtual void FixedUpdate () {
-
 		if (player == null) {
 			print ("FixedUpdate null player on " + this);
 		}
@@ -590,35 +589,10 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// Network
 
-	public virtual BoltEntity networkEntity {
+	bool isNetworked {
 		get {
-			return GetComponent<BoltEntity>();
+			return BoltNetwork.isRunning && (GetComponent<BoltEntity>() != null) && entity.isAttached;
 		}
-	}
-
-	public virtual IGameUnitState networkState {
-		get {
-			if (hasNetworkEntity) {
-				return networkEntity.GetState<IGameUnitState>();
-			}
-			else {
-				return null;
-			}
-
-		}
-	}
-
-	bool hasNetworkEntity {
-		get {
-			return (networkEntity != null) && networkEntity.isAttached;
-		}
-	}
-
-	public virtual void NetworkStart() {
-
-	}
-
-	public virtual void MasterFixedUpdate() {
 	}
 
 	public Vector3 ColliderCenter() {

@@ -47,6 +47,8 @@ public class Network : Bolt.GlobalEventListener {
 
 	// Use this for initialization
 	void Start () {
+		_shared = this;
+
 		if (isMaster) {
 			BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
 		}

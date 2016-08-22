@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Tower : GroundBuilding, NetworkObjectDelegate {
+public class Tower : GroundBuilding {
 
 	public string activationKey;
 
@@ -15,7 +15,7 @@ public class Tower : GroundBuilding, NetworkObjectDelegate {
 	public string unitPrefabPath {
 		get {
 			if (_unitPrefabPath == null) {
-				return ((TowerProtocolToken)networkEntity.attachToken).unitPrefabPath;
+				return ((TowerProtocolToken)entity.attachToken).unitPrefabPath;
 			}
 			else {
 				return _unitPrefabPath;
@@ -29,8 +29,8 @@ public class Tower : GroundBuilding, NetworkObjectDelegate {
 
 	public GameObject unitPrefab;
 
-	public override void NetworkStart() {
-		base.NetworkStart();
+	public override void Attached() {
+		base.Attached();
 
 		if (BoltNetwork.isClient) {
 			Setup();
@@ -41,7 +41,7 @@ public class Tower : GroundBuilding, NetworkObjectDelegate {
 		unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
 
 		iconUnit = CreateUnit();
-		iconUnit.transform.parent = transform;
+		iconUnit.transform.SetParent(transform);
 		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconUnit.transform.localRotation = Quaternion.identity;
 		iconUnit.GetComponent<GameUnitIcon>().Enable();
@@ -72,10 +72,6 @@ public class Tower : GroundBuilding, NetworkObjectDelegate {
 			tag = "Player" + player.playerNumber;
 		}
 		CameraController.instance.InitCamera (transform);
-	}
-
-	public override void MasterFixedUpdate() {
-		
 	}
 
 	public void OnMouseDown() {
