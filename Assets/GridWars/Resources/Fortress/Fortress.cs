@@ -35,14 +35,14 @@ public class Fortress : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (BoltNetwork.isServer) {
+		if (Network.shared.isServerOrDisabled) {
 			//Bolt Entities must be root transforms.  Use this object to position things relative to Fortress / the powerSource
 			var placement = new GameObject();
 			placement.transform.parent = transform;
 			placement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
 			placement.transform.localRotation = Quaternion.identity;
 
-			powerSource = BoltNetwork.Instantiate(BoltPrefabs.PowerSource, placement.transform.position, placement.transform.rotation).GetComponent<PowerSource>();
+			powerSource = GameUnit.Instantiate<PowerSource>(placement.transform.position, placement.transform.rotation);
 			powerSource.player = player;
 			powerSource.Setup();
 
@@ -58,7 +58,7 @@ public class Fortress : MonoBehaviour {
 
 				var towerToken = new TowerProtocolToken();
 				towerToken.unitPrefabPath = GameUnit.PrefabPathForUnitType(unitType);
-				var tower = BoltNetwork.Instantiate(BoltPrefabs.Tower, towerToken, placement.transform.position, placement.transform.rotation).GetComponent<Tower>();
+				var tower = GameUnit.Instantiate<Tower>(placement.transform.position, placement.transform.rotation, towerToken);
 				tower.player = player;
 				tower.unitPrefabPath = towerToken.unitPrefabPath;
 				tower.Setup();

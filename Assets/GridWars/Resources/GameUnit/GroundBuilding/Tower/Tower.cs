@@ -48,7 +48,7 @@ public class Tower : GroundBuilding {
 
 		canAim = false;
 
-		if (BoltNetwork.isServer) {
+		if (Network.shared.isServerOrDisabled) {
 			isStaticUnit = true;
 
 			releaseZones = new List<ReleaseZone>();

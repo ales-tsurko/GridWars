@@ -71,7 +71,12 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
-
+	//bolt
+	protected Bolt.PrefabId boltPrefabId {
+		get {
+			return entity.ModifySettings().prefabId;
+		}
+	}
 
 	public float hpRatio {
 		get {
@@ -150,6 +155,25 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		return (GameUnit) Instantiate<GameObject>(Load(type)).GetComponent(type);
 	}
 
+	public static T Instantiate<T>(Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) where T: GameUnit {
+		return (T) GameUnit.Instantiate(typeof(T), position, rotation, token);
+	}
+
+	public static GameUnit Instantiate(System.Type type, Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) {
+		var prefab = Load(type);
+		var prefabGameUnit = (GameUnit) prefab.GetComponent(type);
+
+		if (prefabGameUnit.canNetwork) {
+			return (GameUnit) BoltNetwork.Instantiate(prefabGameUnit.boltPrefabId, token, position, rotation).GetComponent(type);
+		}
+		else {
+			var gameUnit = GameUnit.Instantiate(type);
+			gameUnit.transform.position = position;
+			gameUnit.transform.rotation = rotation;
+			return gameUnit;
+		}
+	}
+
 	// -----------------------
 
 	public virtual void Start () {
@@ -169,6 +193,10 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		PlayBirthSound();
+
+		if (!isNetworked) {
+			Attached();
+		}
 	}
 
 	protected void PlayBirthSound() {
@@ -406,6 +434,10 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		RemoveIfOutOfBounds ();
+
+		if (!isNetworked) {
+			SimulateOwner();
+		}
 	}
 
 	// -------------------
@@ -589,9 +621,15 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 	// Network
 
-	bool isNetworked {
+	protected bool canNetwork {
 		get {
-			return BoltNetwork.isRunning && (GetComponent<BoltEntity>() != null) && entity.isAttached;
+			return BoltNetwork.isRunning && (GetComponent<BoltEntity>() != null);
+		}
+	}
+
+	protected bool isNetworked {
+		get {
+			return canNetwork && entity.isAttached;
 		}
 	}
 

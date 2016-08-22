@@ -4,13 +4,24 @@ using System.Collections.Generic;
 public class PowerSource : GroundBuilding {
 	public Vector3 bounds;
 
+	float _power;
 	public float power {
 		get {
-			return powerSourceState.power;
+			if (isNetworked) {
+				return powerSourceState.power;
+			}
+			else {
+				return _power;
+			}
 		}
 
 		set {
-			powerSourceState.power = value;
+			if (isNetworked) {
+				powerSourceState.power = value;
+			}
+			else {
+				_power = power;
+			}
 		}
 	}
 
