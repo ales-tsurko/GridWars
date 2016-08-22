@@ -445,12 +445,13 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void Fire() {
-		CreateProjectile();
-		//Debug.Log(fireClip);
-		if (fireClip != null) {
-			GetComponent<AudioSource>().PlayOneShot(fireClip, fireClipVolume);
+		Projectile proj =  CreateProjectile();
+		if (proj != null) {
+			if (fireClip != null) {
+				GetComponent<AudioSource>().PlayOneShot(fireClip, fireClipVolume);
+			}
+			Reload();
 		}
-		Reload();
 	}
 
 	public float barrelLength() {
@@ -467,6 +468,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	Projectile CreateProjectile() {
+
+		if (owner.GetComponent<Rigidbody>() == null) {
+			return null;
+		}
 
 		if (muzzleFlash != null) {
 			CreateMuzzleFlash ();

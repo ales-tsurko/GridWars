@@ -150,6 +150,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		return (GameUnit) Instantiate<GameObject>(Load(type)).GetComponent(type);
 	}
 
+	// -----------------------
+
 	public virtual void Start () {
 		hitPoints = maxHitPoints;
 
@@ -620,6 +622,27 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public Vector3 ColliderCenter() {
 		Vector3 c = GetComponent<BoxCollider>().center;
 		return transform.TransformPoint(c);
+	}
+
+	// helpers
+
+	public BoxCollider BoxCollider() {
+		return gameObject.GetComponent<BoxCollider>();
+	}
+
+	public bool IsOfType(Type aType) {
+
+		Type myType = GetType();
+
+		if (myType == aType) { 
+			return true; 
+		}
+
+		if (myType.IsSubclassOf(aType)) { 
+			return true; 
+		}
+
+		return false;
 	}
 
 }

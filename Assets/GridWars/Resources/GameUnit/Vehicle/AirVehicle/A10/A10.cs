@@ -8,5 +8,6 @@ public class A10 : AirVehicle {
 	}
 
 	public override void FixedUpdate () {
+		
 	}
 }

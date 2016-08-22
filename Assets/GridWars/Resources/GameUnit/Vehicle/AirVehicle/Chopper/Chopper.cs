@@ -63,6 +63,11 @@ public class Chopper : AirVehicle {
 		return localVelocity.z;
 	}
 
+	public float RightSpeed() {
+		var localVelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
+		return localVelocity.x;
+	}
+
 	public float Smooth(float v) {
 		return Mathf.Sign(v)*Mathf.Sqrt(Mathf.Abs(v));
 	}
@@ -70,23 +75,54 @@ public class Chopper : AirVehicle {
 	public bool IsHeavilyDamaged() {
 		return ((hitPoints / maxHitPoints) < .5);
 	}
-		
+
+	public float TiltDesire() { // -1.0 to 1.0
+		// find tilt angle in world coordinates
+		return Mathf.Clamp(transform.rotation.eulerAngles.z/10.0f, -1.0f, 1.0f);
+	}
+
+	public void  ApplyRotorLRThrust() {
+		// z tilt control ------------------------------------------------------
+		float upThrust = TotalUpThrust()/1f;
+
+		float offset = 1.0f;
+		Vector3 thrustPointLeft  = mainRotorTransform.position - mainRotorTransform.right * offset;
+		Vector3 thrustPointRight = mainRotorTransform.position + mainRotorTransform.right * offset;
+
+		float f = TiltDesire();
+
+		Vector3 rotorUp = mainRotorTransform.up;
+		Vector3 leftForce = rotorUp * ((upThrust * f) / 2);
+		Vector3 rightForce  = rotorUp * ((upThrust * f) / 2);
+
+		rigidBody().AddForceAtPosition(leftForce, thrustPointLeft);
+		rigidBody().AddForceAtPosition(rightForce,  thrustPointRight);
+
+	}
+				
+	public float TotalUpThrust() {
+		float upThrust = 16f * UpDesire();
+
+		if (IsHeavilyDamaged()) {
+			upThrust *= Random.value;
+		}
+
+		return upThrust;
+	}
 
 	public void  ApplyRotorThrust() {
 		// points around top rotor to apply force
 		// a difference between the force applied to these causes chopper to tilt and then move forward or back
 
-		float upThrust = 16f * UpDesire();
+		float upThrust = TotalUpThrust();
 
-		if (IsHeavilyDamaged()) {
-			upThrust *= Random.value;
-			rigidBody().AddTorque( _t.up * damageRotation, ForceMode.Force);
-		}
+		//ApplyRotorLRThrust();
+
+		// forward/backward control ---------------------------------------------------
 
 		float offset = 1.0f;
 		Vector3 mainRotorThrustPointBack  = mainRotorTransform.position + mainRotorTransform.forward * offset;
 		Vector3 mainRotorThrustPointFront = mainRotorTransform.position - mainRotorTransform.forward * offset;
-
 
 		Vector3 rotorUp = mainRotorTransform.up;
 		float speed = ForwardSpeed();
@@ -101,12 +137,13 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForceAtPosition(frontForce, mainRotorThrustPointFront);
 		rigidBody().AddForceAtPosition(backForce,  mainRotorThrustPointBack);
 
+	
 		/*
 		Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
 		Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
 		*/
 
-		Object_rotDY (mainRotor, 40f);
+		Object_rotDY(mainRotor, 40f); //Mathf.Abs(upThrust*5.0f) + 20f);
 		Object_rotDY (tailRotor, 40f);
 	}
 

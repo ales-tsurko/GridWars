@@ -5,10 +5,97 @@ using System;
 
 public class Vehicle : GameUnit  {
 
+	[HideInInspector]
+	public bool hasVehicleCollisionsOn;
+
+	// some code to avoid vehicle collisions on launch from tower
+	// on start, we disable collisions with all extant same player vehicles
+	// each frame we test for vehicle box collision,
+	// when it fails we enable vehicle collisions
+
+	public override void Start() {
+		base.Start();
+
+		//DisableVehicleCollisions();
+	}
+
+	public List<GameUnit> AllVehicles() {
+		List <GameObject> objs = activeGameObjects();
+		var results = new List<GameUnit>();
+
+		foreach (GameObject obj in objs) {
+			GameUnit unit = obj.GameUnit();
+
+			if (unit && unit.IsOfType(typeof(Vehicle))) {
+				results.Add(unit);
+			}
+		}
+
+		return results;
+	}
+		
 	/*
-void OnDrawGizmos() {
-		UnityEditor.Handles.color = Color.white;
-		UnityEditor.Handles.Label (transform.position, "Left");
+	public List<Vehicle> OwnVehilces() {
+		var results = new List<Vehicle>();
+
+		foreach (Vehicle vehicle in AllVehicles()) {
+			if (vehicle.player == player) {
+				results.Add(vehicle);
+			}
+		}
+
+		return results;
 	}
 	*/
+		
+	public void IgnoreCollisionsWithUnits(List <GameUnit> units, bool ignore) {
+		foreach (var unit in units) {
+			if (unit != this) {
+				Physics.IgnoreCollision(unit.BoxCollider(), BoxCollider(), ignore);
+			}
+		}
+	}
+
+	public void DisableVehicleCollisions() {
+		if (hasVehicleCollisionsOn) {
+			hasVehicleCollisionsOn = false;
+			IgnoreCollisionsWithUnits(AllVehicles(), hasVehicleCollisionsOn);
+		}
+	}
+		
+	public void EnableVehicleCollisions() {
+		if (!hasVehicleCollisionsOn) {
+			hasVehicleCollisionsOn = true;
+			IgnoreCollisionsWithUnits(AllVehicles(), hasVehicleCollisionsOn);
+		}
+	}
+
+
+	public void EnableVehicleCollisionsIfClear() {
+		if (hasVehicleCollisionsOn == false) {
+			if (IsIntersectingWithVehicle() == false) {
+				EnableVehicleCollisions();
+			}
+		}
+	}
+
+	public bool IsIntersectingWithVehicle() {
+		if (!hasVehicleCollisionsOn) {
+			BoxCollider myCollider = BoxCollider();
+
+			foreach (var vehicle in AllVehicles()) {
+				BoxCollider otherCollider = vehicle.BoxCollider();
+
+				if (myCollider.bounds.Intersects(otherCollider.bounds)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public override void FixedUpdate() {
+		base.FixedUpdate();
+		//EnableVehicleCollisionsIfClear();
+	}
 }
