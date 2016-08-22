@@ -78,7 +78,7 @@ public class Fortress : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.E)) {
+		/*if (Input.GetKeyDown (KeyCode.E)) {
 			var unitObject = Instantiate (Resources.Load<GameObject> ("GameUnit/Engineer/Engineer"));
 			unitObject.transform.position = transform.position + new Vector3(0, 0.1f, 0);
 			unitObject.transform.rotation = transform.rotation;
@@ -86,6 +86,6 @@ public class Fortress : MonoBehaviour {
 			gameUnit.player = player;
 			gameUnit.tag = "Player" + player.playerNumber;
 			gameUnit.GetComponent<Engineer> ().SwitchState (Engineer.State.Init);
-		}
+		}*/
 	}
 }
