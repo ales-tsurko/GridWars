@@ -18,7 +18,7 @@ public class Battlefield : Bolt.GlobalEventListener {
 	void Start() {
 		Application.runInBackground = true;
 
-		//Network.shared.enabled = false;
+		Network.shared.enabled = false;
 		CameraController.instance.enabled = false;
 
 		if (!Network.shared.enabled) {

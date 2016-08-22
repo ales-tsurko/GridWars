@@ -20,7 +20,7 @@ public class PowerSource : GroundBuilding {
 				powerSourceState.power = value;
 			}
 			else {
-				_power = power;
+				_power = value;
 			}
 		}
 	}
