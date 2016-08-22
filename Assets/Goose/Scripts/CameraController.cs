@@ -75,8 +75,8 @@ public class CameraController : MonoBehaviour {
 		}
 		cam.position = positions [0].position;
 		cam.rotation = positions [0].rotation;
-		pos = -1;
-		NextPosition ();
+		pos = 0;
+
 	}
 
 	Vector2 lastScreenRes;
