@@ -72,7 +72,7 @@ public class Fortress : MonoBehaviour {
 
 	PowerSource powerSourcePrefab {
 		get {
-			return Resources.Load<GameObject>("PowerSource/PowerSource").GetComponent<PowerSource>();
+			return GameUnit.Load<PowerSource>().GetComponent<PowerSource>();
 		}
 	}
 	

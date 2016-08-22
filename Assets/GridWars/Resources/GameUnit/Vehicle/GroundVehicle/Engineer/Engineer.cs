@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Engineer : GroundVehicle {
 	public enum State {Start, Init, Move, Build, Done}
-	public State state;
+	public State engineerState;
 	Transform moveTarget;
 	float buildProgress;
 	Rigidbody body;
@@ -21,7 +21,7 @@ public class Engineer : GroundVehicle {
 	
 	public override void FixedUpdate () {
 		base.FixedUpdate();
-		switch (state) {
+		switch (engineerState) {
 		case State.Move:
 			if (Vector3.Distance (_t.position, moveTarget.position) < 1) {
 				SwitchState (State.Build);
@@ -60,7 +60,7 @@ public class Engineer : GroundVehicle {
 			break;
 		case State.Move:
 			anim.Play("soldierWalk");
-			state = State.Move;
+			engineerState = State.Move;
 			break;
 		case State.Build:
 			tower = (GameObject)Instantiate (towerToBuild);
@@ -68,7 +68,7 @@ public class Engineer : GroundVehicle {
 			tower.transform.rotation = _t.rotation;
 			anim.Play("soldierCrouch");
 			buildProgress = 0;
-			state = State.Build;
+			engineerState = State.Build;
 			break;
 		case State.Done:
 			//Init tower
@@ -77,7 +77,7 @@ public class Engineer : GroundVehicle {
 			//play effect
 			tower.transform.position = new Vector3(tower.transform.position.x, 0, tower.transform.position.z);
 			anim.Play("soldierIdleRelaxed");
-			state = State.Done;
+			engineerState = State.Done;
 			break;
 		}
 	}
