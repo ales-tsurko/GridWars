@@ -15,7 +15,7 @@ public class Chopper : AirVehicle {
 	//public transform mainRotorThrustPointBack;
 
 	[HideInInspector]
-	public float defaultCruiseHeight = 15f;
+	//public float defaultCruiseHeight = 5f;
 	public float damageRotation;
 
 
@@ -26,7 +26,8 @@ public class Chopper : AirVehicle {
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 
-		cruiseHeight = defaultCruiseHeight + Mathf.Floor(Random.Range(-4.0f, 0.0f)) * 1.0f;
+		//cruiseHeight = defaultCruiseHeight; // + Mathf.Floor(Random.Range(-2.0f, 0.0f)) * 1.0f;
+		cruiseHeight = 10f;
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
 
@@ -101,7 +102,7 @@ public class Chopper : AirVehicle {
 	}
 				
 	public float TotalUpThrust() {
-		float upThrust = 16f * UpDesire() * 2;
+		float upThrust = 16f * UpDesire(); // * 1.5f;
 
 		if (IsHeavilyDamaged()) {
 			upThrust *= Random.value;
@@ -116,7 +117,7 @@ public class Chopper : AirVehicle {
 
 		float upThrust = TotalUpThrust();
 
-		//ApplyRotorLRThrust();
+		ApplyRotorLRThrust();
 
 		// forward/backward control ---------------------------------------------------
 
