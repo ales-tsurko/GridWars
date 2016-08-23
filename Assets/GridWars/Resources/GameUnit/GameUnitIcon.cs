@@ -5,13 +5,12 @@ using System.Collections;
 
 public class GameUnitIcon : MonoBehaviour {
 	public void Enable() {
-
 		// make sure other units don't target the icon!
 		GameUnit unit = gameObject.GetComponent<GameUnit>();
 		unit.isTargetable = false;
 
 		// disable any unit actions
-		DisableScripts(transform);
+		DisableScripts();
 
 		// remove physics
 		Destroy(GetComponent<Collider>());
@@ -20,39 +19,15 @@ public class GameUnitIcon : MonoBehaviour {
 		enabled = true;
 	}
 
-	void DisableScripts (Transform other){
-		foreach (var script in other.GetComponentsInChildren<MonoBehaviour>()) {
-			if (script.GetComponent<GameUnit> ()) {
+	void DisableScripts (){
+		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
+			if (script.inheritsFrom(typeof(GameUnit))) {
 				script.enabled = false;
-				continue;
 			}
-			if (script.GetType () == this.GetType ()) {
-				continue;
+			else if (!script.inheritsFrom(typeof(GameUnitIcon))) {
+				script.enabled = false;
+				Destroy(script);
 			}
-			Destroy (script);
-		}
-		foreach (Transform o in other) {
-			DisableScripts (o);
-		}
-	}
-
-	// Use this for initialization
-	void Start () {
-		/*
-		 * 1 = opaque
-		 * 2 = cutout
-		 * 3 = transparent
-		gameObject.EachMaterial(m => {
-			m.SetFloat("_Mode", 2);
-		});
-		*/
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.S)) {
-			this.enabled = false;
-			GetComponent<GameUnit>().enabled = true;
 		}
 	}
 }

@@ -40,7 +40,20 @@ public class Tower : GroundBuilding {
 	public void Setup() {
 		unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
 
-		iconUnit = CreateUnit();
+		var boltEntity = unitPrefab.GetComponent<BoltEntity>();
+		if (boltEntity != null) {
+			boltEntity.enabled = false;
+		}
+
+		try {
+			iconUnit = CreateUnit();
+		}
+		finally {
+			if (boltEntity != null) {
+				boltEntity.enabled = true;
+			}
+		}
+
 		iconUnit.transform.SetParent(transform);
 		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconUnit.transform.localRotation = Quaternion.identity;
@@ -170,11 +183,8 @@ public class Tower : GroundBuilding {
 	}
 
 	GameUnit CreateUnit() {
-		var unitObject = Instantiate(unitPrefab);
-		unitObject.transform.position = transform.position + new Vector3(0, 0.1f, 0);
-		unitObject.transform.rotation = transform.rotation;
+		var gameUnit = unitPrefab.GetComponent<GameUnit>().Instantiate(transform.position + new Vector3(0, 0.1f, 0), transform.rotation);
 
-		var gameUnit = unitObject.GetComponent<GameUnit>();
 		gameUnit.player = player;
 		gameUnit.tag = "Player" + player.playerNumber;
 		return gameUnit;

@@ -164,14 +164,42 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		var prefab = Load(type);
 		var prefabGameUnit = (GameUnit) prefab.GetComponent(type);
 
-		if (prefabGameUnit.canNetwork) {
-			return (GameUnit) BoltNetwork.Instantiate(prefabGameUnit.boltPrefabId, token, position, rotation).GetComponent(type);
+		return prefabGameUnit.Instantiate(position, rotation, token);
+	}
+
+	public GameUnit Instantiate(Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) {
+		if (canNetwork) {
+			return (GameUnit) BoltNetwork.Instantiate(boltPrefabId, token, position, rotation).GetComponent(GetType());
 		}
 		else {
-			var gameUnit = GameUnit.Instantiate(type);
+			var gameUnit = GameUnit.Instantiate(GetType());
 			gameUnit.transform.position = position;
 			gameUnit.transform.rotation = rotation;
 			return gameUnit;
+		}
+	}
+
+	//Networking
+	public override void Attached() {
+		base.Attached();
+		state.SetTransforms(state.transform, transform);
+
+		if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
+			var s = entity.GetState<ITurretedUnitState>();
+			//TODO: this won't work for more than 1 weapon
+			foreach (var weapon in Weapons()) {
+				state.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
+				state.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+			}
+		}
+	}
+
+	public override void SimulateOwner() {
+		base.SimulateOwner();
+		foreach (var weapon in Weapons()) {
+			if (weapon.isActiveAndEnabled) {
+				weapon.SimulateOwner();
+			}
 		}
 	}
 
@@ -194,10 +222,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		PlayBirthSound();
-
-		if (!isNetworked) {
-			Attached();
-		}
 	}
 
 	protected void PlayBirthSound() {
@@ -435,10 +459,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		RemoveIfOutOfBounds ();
-
-		if (!isNetworked) {
-			SimulateOwner();
-		}
 	}
 
 	// -------------------
@@ -595,7 +615,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		deathExplosionPrefab = Resources.Load<GameObject> (ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
 	}
 
-	Weapon[] Weapons() {
+	protected Weapon[] Weapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
 		return weapons;
 	}
@@ -635,7 +655,8 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 	protected bool canNetwork {
 		get {
-			return BoltNetwork.isRunning && (GetComponent<BoltEntity>() != null);
+			var entity = GetComponent<BoltEntity>();
+			return BoltNetwork.isRunning && entity != null && entity.enabled == true;
 		}
 	}
 

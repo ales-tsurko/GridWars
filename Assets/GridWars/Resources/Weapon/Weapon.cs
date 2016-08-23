@@ -54,6 +54,21 @@ public class Weapon : MonoBehaviour {
 	public List<System.Type> targetableTypes;
 
 
+	//Networking
+
+	public void SimulateOwner() {
+		if (isActive) {
+			PickTarget();
+			FireIfAppropriate();
+			AimIfAble();
+		} else {
+			target = null;
+		}
+	}
+
+	//MonoBehaviour
+
+	//TODO: move code that isn't needed on client to Attached and check for isServer
 	public void Start () {
 		//base.Start();
 		Reload();
@@ -73,16 +88,6 @@ public class Weapon : MonoBehaviour {
 
 		if (fireClip != null) {
 			gameObject.AddComponent<AudioSource>();
-		}
-	}
-
-	public void FixedUpdate () {
-		if (isActive) {
-			PickTarget();
-			FireIfAppropriate();
-			AimIfAble();
-		} else {
-			target = null;
 		}
 	}
 

@@ -56,4 +56,8 @@ public static class GridWarsUnityExtensions {
 		return gameObject == null && !ReferenceEquals(gameObject, null);
 	}
 
+	public static bool inheritsFrom(this System.Object self, System.Type type) {
+		return type.IsAssignableFrom(self.GetType());
+	}
+
 }
