@@ -147,7 +147,8 @@ public class Chopper : AirVehicle {
 		Object_rotDY (tailRotor, 40f);
 	}
 
-	public override void FixedUpdate () {
+	public override void SimulateOwner () {
+		base.SimulateOwner();
 		if (isRunning) {
 			PickTarget();
 			SteerTowardsTarget();

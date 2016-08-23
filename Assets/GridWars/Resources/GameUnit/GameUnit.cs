@@ -27,6 +27,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 			else {
 				_player = value;
 			}
+			PlayerWasSet();
 		}
 	}
 
@@ -182,31 +183,23 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	//Networking
 	public override void Attached() {
 		base.Attached();
-		state.SetTransforms(state.transform, transform);
 
-		if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
-			var s = entity.GetState<ITurretedUnitState>();
-			//TODO: this won't work for more than 1 weapon
-			foreach (var weapon in Weapons()) {
-				state.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
-				state.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+		if (isNetworked) {
+			state.SetTransforms(state.transform, transform);
+
+			if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
+				var s = entity.GetState<ITurretedUnitState>();
+				//TODO: this won't work for more than 1 weapon
+				foreach (var weapon in Weapons()) {
+					state.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
+					state.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+				}
+			}
+
+			if (BoltNetwork.isServer) {
+				hitPoints = maxHitPoints;
 			}
 		}
-	}
-
-	public override void SimulateOwner() {
-		base.SimulateOwner();
-		foreach (var weapon in Weapons()) {
-			if (weapon.isActiveAndEnabled) {
-				weapon.SimulateOwner();
-			}
-		}
-	}
-
-	// -----------------------
-
-	public virtual void Start () {
-		hitPoints = maxHitPoints;
 
 		SetupWeapons();
 		SetupSmokeDamage ();
@@ -214,14 +207,37 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 		gameObject.CloneMaterials();
 
-		if (player != null) {
-			player.Paint(gameObject);
-		}
-		else {
-			gameObject.Paint(Color.white, "Unit");
-		}
+		gameObject.Paint(Color.white, "Unit");
 
 		PlayBirthSound();
+	}
+
+	protected void PlayerWasSet() {
+		player.Paint(gameObject);
+	}
+
+	public override void SimulateOwner() {
+		base.SimulateOwner();
+
+		if (player == null) {
+			print ("SimulateOwner null player on " + this);
+		}
+
+		foreach (var weapon in Weapons()) {
+			if (weapon.isActiveAndEnabled) {
+				weapon.SimulateOwner();
+			}
+		}
+
+		RemoveIfOutOfBounds ();
+	}
+
+	// -----------------------
+
+	public virtual void Start() {
+		if (!isNetworked) {
+			Attached();
+		}
 	}
 
 	protected void PlayBirthSound() {
@@ -454,11 +470,9 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	}
 		
 	public virtual void FixedUpdate () {
-		if (player == null) {
-			print ("FixedUpdate null player on " + this);
+		if (!isNetworked) {
+			SimulateOwner();
 		}
-
-		RemoveIfOutOfBounds ();
 	}
 
 	// -------------------
