@@ -195,10 +195,10 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 					state.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
 				}
 			}
+		}
 
-			if (BoltNetwork.isServer) {
-				hitPoints = maxHitPoints;
-			}
+		if (BoltNetwork.isServer) {
+			hitPoints = maxHitPoints;
 		}
 
 		SetupWeapons();
