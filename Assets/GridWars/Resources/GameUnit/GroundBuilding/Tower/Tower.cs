@@ -44,7 +44,7 @@ public class Tower : GroundBuilding {
 		iconUnit.transform.SetParent(transform);
 		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconUnit.transform.localRotation = Quaternion.identity;
-		iconUnit.GetComponent<GameUnitIcon>().Enable();
+		iconUnit.gameObject.AddComponent<GameUnitIcon>().Enable();
 
 		canAim = false;
 
