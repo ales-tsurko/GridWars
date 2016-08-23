@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Battlefield : Bolt.GlobalEventListener {
+public class Battlefield : MonoBehaviour {
 	public static Battlefield current {
 		get {
 			return GameObject.Find("Battlefield").GetComponent<Battlefield>();
@@ -18,7 +18,9 @@ public class Battlefield : Bolt.GlobalEventListener {
 	void Start() {
 		Application.runInBackground = true;
 
-		Network.shared.enabled = false;
+		Network.shared.singlePlayer = true;
+		//Network.shared.singlePlayer = false;
+
 		CameraController.instance.enabled = false;
 
 		if (!Network.shared.enabled) {
@@ -26,11 +28,7 @@ public class Battlefield : Bolt.GlobalEventListener {
 		}
 	}
 
-	public override void BoltStartDone() {
-		StartGame();
-	}
-
-	void StartGame() {
+	public void StartGame() {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();

@@ -35,7 +35,7 @@ public class Fortress : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (Network.shared.isServerOrDisabled) {
+		if (BoltNetwork.isServer) {
 			//Bolt Entities must be root transforms.  Use this object to position things relative to Fortress / the powerSource
 			var placement = new GameObject();
 			placement.transform.parent = transform;

@@ -1,5 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+
+public class ServerToken : Bolt.IProtocolToken {
+	public string serverVersion = "0.1";
+	public string gameName = "0.1";
+
+	public void Write(UdpKit.UdpPacket packet) {
+		packet.WriteString(serverVersion);
+		packet.WriteString(gameName);
+	}
+
+	public void Read(UdpKit.UdpPacket packet) {
+		serverVersion = packet.ReadString();
+		gameName = packet.ReadString();
+	}
+}
 
 public class Network : Bolt.GlobalEventListener {
 	static Network _shared;
@@ -13,7 +28,9 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	public bool isMaster {
+	public bool singlePlayer = true;
+
+	public bool isServer {
 		get {
 			//return false; 
 			return Application.isEditor;
@@ -27,46 +44,112 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	public bool isServerOrDisabled {
-		get {
-			if (enabled) {
-				return BoltNetwork.isServer;
-			}
-			else {
-				return true;
-			}
-		}
-	}
-
 	//public string connectEndpoint = "74.80.237.108:27000";
 	public string connectEndpoint = "127.0.0.1:27000";
 	public string listenEndpoint = "0.0.0.0:27000";
+	public string zeusEndpoint = "159.8.0.207:24000";
 
 	public override void BoltStartBegin() {
 		BoltNetwork.RegisterTokenClass<TowerProtocolToken>();
+		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 
 	public override void BoltStartDone() {
-		if (BoltNetwork.isClient) {
-			BoltNetwork.Connect(UdpKit.UdpEndPoint.Parse(connectEndpoint));
+		isStarting = false;
+		if (BoltNetwork.IsSinglePlayer) {
+			Battlefield.current.StartGame();
+		}
+		else {
+			if (BoltNetwork.isServer) {
+				var st = new ServerToken();
+				st.gameName = System.DateTime.UtcNow.ToString();
+				BoltNetwork.SetHostInfo("GridWars", st);
+			}
+			Bolt.Zeus.Connect(UdpKit.UdpEndPoint.Parse(zeusEndpoint));
 		}
 	}
 
 	public override void Connected(BoltConnection connection) {
+		isConnecting = false;
+		connectedClients.Add(connection);
+		Battlefield.current.StartGame();
 	}
+
+	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
+		//if (BoltNetwork.isClient) {
+			Bolt.Zeus.RequestSessionList();
+		//}
+	}
+
+	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
+		base.SessionListUpdated(sessionList);
+		foreach (var session in sessionList) {
+			Debug.Log(session.Value.HostName);
+		}
+	}
+
+	List<BoltConnection> connectedClients;
+
+	bool isGameFull {
+		get {
+			return connectedClients.Count > 0;
+		}
+	}
+
+	bool isConnecting = false;
+	bool isStarting = false;
 
 	// Use this for initialization
 	void Start () {
-		if (isMaster) {
-			BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
-		}
-		else {
-			BoltLauncher.StartClient();
+		if (singlePlayer) {
+			BoltLauncher.StartSinglePlayer();
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void OnGUI() {
+		if (!singlePlayer) {
+			if (BoltNetwork.isRunning) {
+				if (BoltNetwork.isServer) {
+					if (!isGameFull) {
+						GUILayout.Label("Waiting for players ...");
+					}
+				}
+				else {
+					if (!isConnected) {
+						if (isConnecting) {
+							GUILayout.Label("Joining ...");
+						}
+						else {
+							foreach (var session in BoltNetwork.SessionList) {
+								if (GUILayout.Button(((ServerToken)session.Value.GetProtocolToken()).gameName)) {
+									BoltNetwork.Connect(session.Value);
+								}
+							}
+						}
+					}
+				}
+			}
+			else {
+				if (isStarting) {
+					GUILayout.Label("Initializing Network ...");
+				}
+				else {
+					if (GUILayout.Button("Host")) {
+						isStarting = true;
+						connectedClients = new List<BoltConnection>();
+						BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
+					}
+					else if(GUILayout.Button("Join")) {
+						isStarting = true;
+						BoltLauncher.StartClient();
+					}
+				}
+			}
+		}
 	}
 }
