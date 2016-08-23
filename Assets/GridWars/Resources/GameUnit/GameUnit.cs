@@ -6,6 +6,7 @@ using System;
 public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	public float thrust;
 	public float rotationThrust;
+	bool isAlive = true;
 
 	Player _player;
 	public Player player {
@@ -538,6 +539,14 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	// Damage
 
 	public void ApplyDamage(float damage) {
+		if (!isAlive) {
+			return;
+		}
+
+		if (gameObject.IsDestroyed()) {
+			return;
+		}
+
 		hitPoints -= damage;
 		if (smokeDamage !=null) {
 			smokeDamage.maxParticles = Mathf.Clamp (1000 - (int)((hitPoints / maxHitPoints) * 1000), 250, 1000);
@@ -547,14 +556,17 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 	}
 
-	public void OnDead() {
-		Camera cam = _t.GetComponentInChildren<Camera> ();
-		if (cam) {
-			cam.transform.parent = null;
-			FindObjectOfType<CameraController> ().SendMessage ("ResetCamera", SendMessageOptions.DontRequireReceiver);
+	public virtual void OnDead() {
+		if (isAlive) {
+			isAlive = false;
+			Camera cam = _t.GetComponentInChildren<Camera>();
+			if (cam) {
+				cam.transform.parent = null;
+				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
+			}
+			ShowExplosion();
+			Destroy(gameObject);
 		}
-		ShowExplosion();
-		Destroy(gameObject);
 	}
 
 	public void ShowExplosion() {
