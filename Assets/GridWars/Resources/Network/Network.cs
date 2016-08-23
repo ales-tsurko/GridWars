@@ -71,7 +71,9 @@ public class Network : Bolt.GlobalEventListener {
 
 	public override void Connected(BoltConnection connection) {
 		isConnecting = false;
-		connectedClients.Add(connection);
+		if (BoltNetwork.isServer) {
+			connectedClients.Add(connection);
+		}
 		Battlefield.current.StartGame();
 	}
 
@@ -83,9 +85,6 @@ public class Network : Bolt.GlobalEventListener {
 
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
 		base.SessionListUpdated(sessionList);
-		foreach (var session in sessionList) {
-			Debug.Log(session.Value.HostName);
-		}
 	}
 
 	List<BoltConnection> connectedClients;
@@ -126,8 +125,10 @@ public class Network : Bolt.GlobalEventListener {
 						}
 						else {
 							foreach (var session in BoltNetwork.SessionList) {
-								if (GUILayout.Button(((ServerToken)session.Value.GetProtocolToken()).gameName)) {
-									BoltNetwork.Connect(session.Value);
+								if (session.Value.HostName == "GridWars") {
+									if (GUILayout.Button((session.Value.GetProtocolToken() as ServerToken).gameName)) {
+										BoltNetwork.Connect(session.Value);
+									}
 								}
 							}
 						}
