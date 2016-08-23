@@ -65,6 +65,10 @@ public class Network : Bolt.GlobalEventListener {
 				st.gameName = System.DateTime.UtcNow.ToString();
 				BoltNetwork.SetHostInfo("GridWars", st);
 			}
+			else {
+				isRetrievingGameList = true;
+			}
+			Debug.Log("Conencting to Zeus");
 			Bolt.Zeus.Connect(UdpKit.UdpEndPoint.Parse(zeusEndpoint));
 		}
 	}
@@ -78,12 +82,15 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
-		//if (BoltNetwork.isClient) {
+		Debug.Log("Connected to Zeus");
+		if (BoltNetwork.isClient) {
+			isRetrievingGameList = true;
 			Bolt.Zeus.RequestSessionList();
-		//}
+		}
 	}
 
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
+		isRetrievingGameList = false;
 		base.SessionListUpdated(sessionList);
 	}
 
@@ -97,6 +104,7 @@ public class Network : Bolt.GlobalEventListener {
 
 	bool isConnecting = false;
 	bool isStarting = false;
+	bool isRetrievingGameList = false;
 
 	// Use this for initialization
 	void Start () {
@@ -119,9 +127,12 @@ public class Network : Bolt.GlobalEventListener {
 					}
 				}
 				else {
-					if (!isConnected) {
+					if (!BoltNetwork.isConnected) {
 						if (isConnecting) {
-							GUILayout.Label("Joining ...");
+							GUILayout.Label("Joining Game ...");
+						}
+						else if (isRetrievingGameList) {
+							GUILayout.Label("Retrieving Game List ...");
 						}
 						else {
 							foreach (var session in BoltNetwork.SessionList) {
