@@ -101,7 +101,7 @@ public class Chopper : AirVehicle {
 	}
 				
 	public float TotalUpThrust() {
-		float upThrust = 16f * UpDesire();
+		float upThrust = 16f * UpDesire() * 2;
 
 		if (IsHeavilyDamaged()) {
 			upThrust *= Random.value;
