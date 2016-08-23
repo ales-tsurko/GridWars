@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 public class UnitMatEditor : EditorWindow {
 
@@ -23,13 +23,19 @@ public class UnitMatEditor : EditorWindow {
 	}
 
 	void Apply () {
-		Renderer[] rends = go.GetComponentsInChildren<Renderer> ();
-		foreach (Renderer rend in rends) {
-			if (rend.GetComponent<ParticleSystem> ()) {
-				continue;
+		go.EachRenderer(r => {
+			//Debug.Log(r.gameObject.name);
+			var properties = r.GetComponent<GameObjectProperties>();
+			if (properties == null || !properties.skipMaterialApplicator) {
+				r.material = mat;
+				/*
+				for (var i = 0; i < r.sharedMaterials.Length; i ++) {
+					r.sharedMaterials[i] = mat;
+				}
+				*/
 			}
-			rend.material = mat;
-		}
+		});
+
 		this.Close ();
 	}
 
