@@ -207,13 +207,18 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 		gameObject.CloneMaterials();
 
-		gameObject.Paint(Color.white, "Unit");
+
 
 		PlayBirthSound();
 	}
 
 	protected void PlayerWasSet() {
-		player.Paint(gameObject);
+		if (player == null) {
+			gameObject.Paint(Color.white, "Unit");
+		}
+		else {
+			player.Paint(gameObject);
+		}
 	}
 
 	public override void SimulateOwner() {
