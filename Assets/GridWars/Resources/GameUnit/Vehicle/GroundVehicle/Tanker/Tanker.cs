@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Tanker : GroundVehicle {
-	float power = 10000f;
+	float power = 100000f;
 	float blastRadius = 30f;
 
 
@@ -34,7 +34,7 @@ public class Tanker : GroundVehicle {
 
 				// apply damage to unit
 				float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
-				float maxDamage = 4000f;
+				float maxDamage = 1000f;
 				float damage = maxDamage / (1f + dist);
 				unit.ApplyDamage(damage);
 			}
