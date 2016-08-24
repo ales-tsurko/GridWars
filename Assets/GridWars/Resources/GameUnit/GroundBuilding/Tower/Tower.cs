@@ -63,7 +63,7 @@ public class Tower : GroundBuilding {
 	}
 		
 	public override void ApplyInitialState() {
-		unitPrefabPath = GameUnit.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
+		unitPrefabPath = App.shared.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
 		base.ApplyInitialState(); //do this second as it resets initialState
 	}
 
