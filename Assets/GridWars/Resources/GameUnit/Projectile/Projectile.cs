@@ -15,15 +15,11 @@ public class Projectile : GameUnit {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
 	}
 
-	public override void Start () {
-		//base.Start();
+	public override void Attached () {
+		base.Attached();
 		PlayBirthSound();
 		isTargetable = false;
 		gameObject.Paint(Color.white, "Unit");
-	}
-		
-	public override void FixedUpdate () {
-		RemoveIfOutOfBounds ();
 	}
 
 	protected Collision lastCollision;

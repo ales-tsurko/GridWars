@@ -10,20 +10,10 @@ public class Tower : GroundBuilding {
 			return GameUnit.Load<Tower>().GetComponent<BoxCollider>().size;
 		}
 	}
-
-	string _unitPrefabPath;
+		
 	public string unitPrefabPath {
 		get {
-			if (_unitPrefabPath == null) {
-				return ((TowerProtocolToken)entity.attachToken).unitPrefabPath;
-			}
-			else {
-				return _unitPrefabPath;
-			}
-		}
-
-		set {
-			_unitPrefabPath = value;
+			return ((TowerProtocolToken)entity.attachToken).unitPrefabPath;
 		}
 	}
 
@@ -32,9 +22,7 @@ public class Tower : GroundBuilding {
 	public override void Attached() {
 		base.Attached();
 
-		if (BoltNetwork.isClient) {
-			Setup();
-		}
+		Setup();
 	}
 
 	public void Setup() {
@@ -163,9 +151,8 @@ public class Tower : GroundBuilding {
 
 	void ReleaseUnits() {
 		while (queueSize > 0 && unobstructedReleaseZone != null) {
-			var unit = CreateUnit();
 			var releaseZone = unobstructedReleaseZone;
-			unit.transform.position = releaseZone.transform.position;
+			var unit = CreateUnit(releaseZone.transform.position);
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
 			queueSize --;
 		}
@@ -182,12 +169,22 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	GameUnit CreateUnit() {
-		var gameUnit = unitPrefab.GetComponent<GameUnit>().Instantiate(transform.position + new Vector3(0, 0.1f, 0), transform.rotation);
+	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
+		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate<GameUnit>(prototype => {
+			if (position == default(Vector3)) {
+				prototype.transform.position = transform.position + new Vector3(0, 0.1f, 0);
+			}
+			else {
+				prototype.transform.position = position;
+			}
 
-		gameUnit.player = player;
-		gameUnit.tag = "Player" + player.playerNumber;
-		return gameUnit;
+			prototype.transform.rotation = transform.rotation;
+			prototype.player = player;
+		});
+
+		unit.tag = "Player" + player.playerNumber;
+
+		return unit;
 	}
 
 }
