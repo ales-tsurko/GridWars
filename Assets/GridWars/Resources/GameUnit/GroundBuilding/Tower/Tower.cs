@@ -61,7 +61,7 @@ public class Tower : GroundBuilding {
 
 		tag = "Player" + player.playerNumber;
 	}
-
+		
 	public override void ApplyInitialState() {
 		unitPrefabPath = GameUnit.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
 		base.ApplyInitialState(); //do this second as it resets initialState
