@@ -57,7 +57,7 @@ public class Fortress : MonoBehaviour {
 				placement.transform.localRotation = Quaternion.identity;
 
 				var towerToken = new TowerProtocolToken();
-				towerToken.unitPrefabPath = GameUnit.PrefabPathForUnitType(unitType);
+				towerToken.unitPrefabPath = App.shared.PrefabPathForUnitType(unitType);
 				var tower = GameUnit.Instantiate<Tower>(placement.transform.position, placement.transform.rotation, towerToken);
 				tower.player = player;
 				tower.unitPrefabPath = towerToken.unitPrefabPath;

@@ -59,5 +59,5 @@ public static class GridWarsUnityExtensions {
 	public static bool inheritsFrom(this System.Object self, System.Type type) {
 		return type.IsAssignableFrom(self.GetType());
 	}
-
+		
 }

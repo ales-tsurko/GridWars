@@ -98,10 +98,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 	public AudioClip birthSound {
 		get {
-			string path = ResourcePathForUnitType(GetType());
-			string soundPath = path + "/Sounds/birth";
-
-			return Resources.Load<AudioClip>(soundPath);
+			return SoundNamed("birth");
 		}
 	}
 
@@ -115,6 +112,35 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		return Load(typeof(T));
 	}
 
+	// --- Finding Resources --------------------------------------
+
+	public string ResourcePath() {
+		System.Type type = GetType();
+		List <string> pathComponents = new List<string>();
+
+		while (type != typeof(GameUnit)) {
+			pathComponents.Add(type.Name);
+			type = type.BaseType;
+		}
+		pathComponents.Add("GameUnit");
+		pathComponents.Reverse();
+		return string.Join("/", pathComponents.ToArray());
+	}
+
+	public string PrefabPath() {
+		string path = ResourcePath();
+		return path + "/Prefabs/" + GetType().Name;
+	}
+
+	public AudioClip SoundNamed(string name) {
+		string path = ResourcePath();
+		string soundPath = path + "/Sounds/" + name;
+		return Resources.Load<AudioClip>(soundPath);
+	}
+
+	// ------------------------------------------------------------
+
+	/*
 	public static string ResourcePathForUnitType(System.Type type) {
 		List <string> pathComponents = new List<string>();
 
@@ -124,9 +150,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		pathComponents.Add(type.Name); // add GameUnit
-
 		pathComponents.Reverse();
-
 		return string.Join("/", pathComponents.ToArray());
 	}
 
@@ -134,9 +158,10 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		string path = ResourcePathForUnitType(type);
 		return path + "/Prefabs/" + type.Name;
 	}
+	*/
 
 	public static GameObject Load(System.Type type) {
-		var prefabPath = PrefabPathForUnitType(type);
+		var prefabPath = App.shared.PrefabPathForUnitType(type);
 		GameObject obj = (GameObject) Resources.Load(prefabPath);
 
 		if (obj == null) {
@@ -631,7 +656,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	}
 
 	void SetupDeathExplosion () {
-		deathExplosionPrefab = Resources.Load<GameObject> (ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
+		deathExplosionPrefab = Resources.Load<GameObject> (App.shared.ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
 	}
 
 	protected Weapon[] Weapons() {
@@ -710,5 +735,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 		return false;
 	}
+
 
 }
