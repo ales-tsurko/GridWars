@@ -62,9 +62,9 @@ public class Tower : GroundBuilding {
 		tag = "Player" + player.playerNumber;
 	}
 
-	protected override void ApplyInitialState() {
-		base.ApplyInitialState();
+	public override void ApplyInitialState() {
 		unitPrefabPath = GameUnit.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
+		base.ApplyInitialState(); //do this second as it resets initialState
 	}
 
 	public override void SlaveStart() {
@@ -201,18 +201,17 @@ public class Tower : GroundBuilding {
 	}
 
 	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
-		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate<GameUnit, InitialGameUnitState>(initialState => {
-			if (position == default(Vector3)) {
-				initialState.position = transform.position + new Vector3(0, 0.1f, 0);
-			}
-			else {
-				initialState.position = position;
-			}
+		var initialState = new InitialGameUnitState();
+		if (position == default(Vector3)) {
+			initialState.position = transform.position + new Vector3(0, 0.1f, 0);
+		}
+		else {
+			initialState.position = position;
+		}
+		initialState.rotation = transform.rotation;
+		initialState.player = player;
 
-			initialState.rotation = transform.rotation;
-			initialState.player = player;
-		});
-
+		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate(initialState);
 		unit.tag = "Player" + player.playerNumber;
 
 		return unit;

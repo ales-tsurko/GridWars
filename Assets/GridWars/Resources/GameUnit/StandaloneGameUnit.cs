@@ -27,23 +27,21 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 		}
 	}
 
-	public T Instantiate<T>() where T: GameUnit { 
-		return Instantiate(gameObject).GetComponent<T>();
+	public GameUnit Instantiate() { 
+		var gameUnit = (GameUnit)Instantiate(gameObject).GetComponent(typeof(GameUnit));
+		gameUnit.ApplyInitialState();
+		return gameUnit;
 	}
 
 	//Mock NetworkObjectDelegate methods
 
 	void Start() {
-		if (BoltNetwork.isServer) {
-			gameUnit.MasterStart();
-		}
+		gameUnit.MasterStart();
 		gameUnit.SlaveStart();
 	}
 
 	void FixedUpdate() {
-		if (BoltNetwork.isServer) {
-			gameUnit.MasterFixedUpdate();
-		}
+		gameUnit.MasterFixedUpdate();
 		gameUnit.SlaveFixedUpdate();
 	}
 

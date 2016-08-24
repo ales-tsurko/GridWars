@@ -488,15 +488,15 @@ public class Weapon : MonoBehaviour {
 		if (muzzleFlash != null) {
 			CreateMuzzleFlash ();
 		}
-		var projObj = Instantiate(prefabProjectile);
-		var projUnit = projObj.GetComponent<Projectile>();
+			
+		var initialState = new InitialGameUnitState();
+		initialState.position = transform.position + (transform.forward * barrelLength());
+		initialState.rotation = transform.rotation;
+		initialState.player = player;
 
-		// set position and copy rotation and velocity
-		projObj.transform.position = transform.position + (transform.forward * barrelLength());
-		projObj.transform.rotation = transform.rotation;
+		var projUnit = (Projectile) prefabProjectile.GetComponent<Projectile>().Instantiate(initialState);
 		projUnit.copyVelocityFrom(owner);
 
-		projUnit.player = player;
 		projUnit.IgnoreCollisionsWith(owner);
 
 		return projUnit;

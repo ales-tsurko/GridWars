@@ -7,12 +7,8 @@ public class Bullet : Projectile {
 
 	public float muzzleImpulse; // define in prefab inspector
 
-	public Bullet() : base() {
-		//boltPrefabId = BoltPrefabs.TankShell;
-	}
-
-	public override void Start () {
-		base.Start();
+	public override void MasterStart () {
+		base.MasterStart();
 
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
 	}

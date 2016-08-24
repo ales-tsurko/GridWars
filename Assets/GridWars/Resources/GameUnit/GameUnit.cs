@@ -6,7 +6,7 @@ using System;
 public interface GameUnitDelegate {
 	Player player { get; set; }
 	float hitPoints { get; set; }
-	T Instantiate<T>() where T: GameUnit;
+	GameUnit Instantiate();
 }
 
 public class InitialGameUnitState {
@@ -168,7 +168,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	//TODO: Remove after all subclasses implement NetworkObjectDelegate
 	public virtual void Start() {
-		
 	}
 
 	//TODO: Remove after all subclasses implement NetworkObjectDelegate
@@ -189,11 +188,12 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		hitPoints = maxHitPoints;
 	}
 
-	protected virtual void ApplyInitialState() {
-		transform.rotation = initialState.rotation;
+	public virtual void ApplyInitialState() {
 		transform.position = initialState.position;
+		transform.rotation = initialState.rotation;
 		transform.localScale = initialState.localScale;
 		player = initialState.player;
+		initialState = null;
 	}
 
 	public virtual void SlaveStart() {
@@ -214,9 +214,11 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual void MasterFixedUpdate(){
+		/*
 		if (player == null) {
 			print ("SimulateOwner null player on " + this);
 		}
+		*/
 
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
@@ -652,47 +654,22 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// Network
 
-	static InitialGameUnitState __initialState;
+	public static InitialGameUnitState initialState;
 
-
-	InitialGameUnitState _initialState;
-	public InitialGameUnitState initialState {
-		get {
-			if (_initialState != null) {
-				return _initialState;
-			}
-			else {
-				return __initialState;
-			}
-		}
-	}
-
-	public T Instantiate<T, U>(Action<U> fn) where T: GameUnit where U: InitialGameUnitState, new() {
+	public GameUnit Instantiate(InitialGameUnitState initialState = null) {
 		Awake();
 
-		GameUnit.__initialState = null;
-		if (fn != null) {
-			var initialState = new U();
-			fn(initialState);
-			GameUnit.__initialState = initialState;
+		if (initialState == null) {
+			initialState = new InitialGameUnitState();
 		}
 			
-		var unit = (T) gameUnitDelegate.Instantiate<T>();
-		unit._initialState = __initialState;
-
+		GameUnit.initialState = initialState;
+		var unit = gameUnitDelegate.Instantiate();
 		return unit;
 	}
 
-	public T Instantiate<T>() where T: GameUnit {
-		return Instantiate<T, InitialGameUnitState>(null);
-	}
-
-	public static T LoadAndInstantiate<T, U>(Action<U> fn) where T: GameUnit where U: InitialGameUnitState, new() {
-		return Load<T>().Instantiate<T, U>(fn);
-	}
-
-	public static T LoadAndInstantiate<T>() where T: GameUnit {
-		return LoadAndInstantiate<T, InitialGameUnitState>(null);
+	public static T LoadAndInstantiate<T>(InitialGameUnitState initialState = null) where T: GameUnit {
+		return (T) Load<T>().Instantiate(initialState);
 	}
 
 	// helpers

@@ -24,8 +24,8 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		}
 	}
 
-	public T Instantiate<T>() where T: GameUnit {
-		return BoltNetwork.Instantiate(entity.ModifySettings().prefabId).GetComponent<T>();
+	public GameUnit Instantiate() {
+		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId).GetComponent(typeof(GameUnit));
 	}
 
 
