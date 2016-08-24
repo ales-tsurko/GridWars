@@ -21,10 +21,7 @@ public class GameUnitIcon : MonoBehaviour {
 
 	void DisableScripts (){
 		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
-			if (script.inheritsFrom(typeof(GameUnit))) {
-				script.enabled = false;
-			}
-			else if (!script.inheritsFrom(typeof(GameUnitIcon))) {
+			if (!script.inheritsFrom(typeof(GameUnitIcon))) {
 				script.enabled = false;
 				Destroy(script);
 			}

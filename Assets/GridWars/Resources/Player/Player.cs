@@ -25,7 +25,7 @@ public class Player : MonoBehaviour {
 
 	public List<GameUnit> units {
 		get {
-			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.player == this);
+			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.enabled && gameUnit.player == this);
 		}
 	}
 

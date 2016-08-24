@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class GroundVehicle : Vehicle {
 
-	public override void SimulateOwner () {
-		base.SimulateOwner ();
+	public override void MasterFixedUpdate () {
+		base.MasterFixedUpdate ();
 
 		PickTarget ();
 		SteerTowardsTarget ();

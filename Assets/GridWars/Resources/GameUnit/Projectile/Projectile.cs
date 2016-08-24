@@ -15,10 +15,14 @@ public class Projectile : GameUnit {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
 	}
 
-	public override void Attached () {
-		base.Attached();
-		PlayBirthSound();
+	public override void MasterStart () {
+		base.MasterStart();
 		isTargetable = false;
+	}
+
+	public override void SlaveStart() {
+		base.SlaveStart();
+		PlayBirthSound();
 		gameObject.Paint(Color.white, "Unit");
 	}
 
