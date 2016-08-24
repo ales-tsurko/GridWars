@@ -69,7 +69,6 @@ public class Network : Bolt.GlobalEventListener {
 			else {
 				isRetrievingGameList = true;
 			}
-			Debug.Log("Conencting to Zeus");
 			Bolt.Zeus.Connect(UdpKit.UdpEndPoint.Parse(zeusEndpoint));
 		}
 	}
@@ -83,7 +82,6 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
-		Debug.Log("Connected to Zeus");
 		if (BoltNetwork.isClient) {
 			isRetrievingGameList = true;
 			Bolt.Zeus.RequestSessionList();

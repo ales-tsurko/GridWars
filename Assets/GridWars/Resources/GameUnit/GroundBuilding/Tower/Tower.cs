@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public class InitialTowerState : InitialGameUnitState {
+	public System.Type unitType;
+}
+
 public class Tower : GroundBuilding {
 
 	public string activationKey;
@@ -13,65 +17,74 @@ public class Tower : GroundBuilding {
 		
 	public string unitPrefabPath {
 		get {
-			return ((TowerProtocolToken)entity.attachToken).unitPrefabPath;
+			return towerState.unitPrefabPath;
+		}
+
+		set {
+			towerState.unitPrefabPath = value;
 		}
 	}
 
-	public GameObject unitPrefab;
-
-	public override void Attached() {
-		base.Attached();
-
-		Setup();
+	GameObject _unitPrefab;
+	public GameObject unitPrefab {
+		get {
+			if (_unitPrefab == null) {
+				_unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
+			}
+			return _unitPrefab;
+		}
 	}
 
-	public void Setup() {
-		unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
+	public override void MasterStart() {
+		base.MasterStart();
+
+		isStaticUnit = true;
+		canAim = false;
+
+		releaseZones = new List<ReleaseZone>();
+		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
+		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
+		var unitWidth = unitSize.x;
+		var unitLength = unitSize.z;
+		var unitSpacing = unitWidth/4;
+		var launchZoneWidth = concurrency*(unitWidth + unitSpacing) - unitSpacing;
+
+		for (var i = 0; i < concurrency; i ++) {
+			var releaseZone = this.CreateChild<ReleaseZone>();
+			var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
+			collider.size = unitSize;
+			collider.center = new Vector3(0f, collider.size.y/2, 0f);
+			collider.isTrigger = true;
+			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
+			releaseZones.Add(releaseZone);
+		}
+
+		tag = "Player" + player.playerNumber;
+	}
+
+	protected override void ApplyInitialState() {
+		base.ApplyInitialState();
+		unitPrefabPath = GameUnit.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
+	}
+
+	public override void SlaveStart() {
+		base.SlaveStart();
 
 		var boltEntity = unitPrefab.GetComponent<BoltEntity>();
 		if (boltEntity != null) {
 			boltEntity.enabled = false;
 		}
 
-		try {
-			iconUnit = CreateUnit();
-		}
-		finally {
-			if (boltEntity != null) {
-				boltEntity.enabled = true;
-			}
+		iconObject = CreateUnit().gameObject;
+
+		if (boltEntity != null) {
+			boltEntity.enabled = true;
 		}
 
-		iconUnit.transform.SetParent(transform);
-		iconUnit.transform.localPosition = new Vector3(0f, size.y, 0f);
-		iconUnit.transform.localRotation = Quaternion.identity;
-		iconUnit.gameObject.AddComponent<GameUnitIcon>().Enable();
-
-		canAim = false;
-
-		if (BoltNetwork.isServer) {
-			isStaticUnit = true;
-
-			releaseZones = new List<ReleaseZone>();
-			var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
-			var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
-			var unitWidth = unitSize.x;
-			var unitLength = unitSize.z;
-			var unitSpacing = unitWidth/4;
-			var launchZoneWidth = concurrency*(unitWidth + unitSpacing) - unitSpacing;
-
-			for (var i = 0; i < concurrency; i ++) {
-				var releaseZone = this.CreateChild<ReleaseZone>();
-				var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
-				collider.size = unitSize;
-				collider.center = new Vector3(0f, collider.size.y/2, 0f);
-				collider.isTrigger = true;
-				releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
-				releaseZones.Add(releaseZone);
-			}
-
-			tag = "Player" + player.playerNumber;
-		}
+		iconObject.transform.SetParent(transform);
+		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
+		iconObject.transform.localRotation = Quaternion.identity;
+		iconObject.AddComponent<GameUnitIcon>().Enable();
 
 		if (CameraController.instance != null) {
 			CameraController.instance.InitCamera (transform);
@@ -84,7 +97,7 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	GameUnit iconUnit;
+	GameObject iconObject;
 	float lastProductionTime = 0f;
 	//int releaseLocationIndex = 0;
 	int queueSize = 0;
@@ -125,21 +138,31 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	void Update () {
+
+	//TODO move input logic to slaves
+	public override void MasterFixedUpdate () {
+		base.MasterFixedUpdate();
 		if (canQueueUnit) {
-			player.Paint(gameObject);
-			player.Paint(iconUnit.gameObject);
 			if (Input.GetKeyDown(keyCode)) {
 				QueueUnit();
 			}
 		}
-		else {
-			player.PaintAsDisabled(gameObject);
-			player.PaintAsDisabled(iconUnit.gameObject);
-		}
 			
 		if (queueSize > 0) {
 			ReleaseUnits();
+		}
+	}
+
+	public override void SlaveFixedUpdate() {
+		base.SlaveFixedUpdate();
+
+		if (canQueueUnit) {
+			player.Paint(gameObject);
+			player.Paint(iconObject);
+		}
+		else {
+			player.PaintAsDisabled(gameObject);
+			player.PaintAsDisabled(iconObject);
 		}
 	}
 
@@ -169,17 +192,25 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+
+
+	ITowerState towerState {
+		get {
+			return boltEntity.GetState<ITowerState>();
+		}
+	}
+
 	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
-		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate<GameUnit>(prototype => {
+		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate<GameUnit, InitialGameUnitState>(initialState => {
 			if (position == default(Vector3)) {
-				prototype.transform.position = transform.position + new Vector3(0, 0.1f, 0);
+				initialState.position = transform.position + new Vector3(0, 0.1f, 0);
 			}
 			else {
-				prototype.transform.position = position;
+				initialState.position = position;
 			}
 
-			prototype.transform.rotation = transform.rotation;
-			prototype.player = player;
+			initialState.rotation = transform.rotation;
+			initialState.player = player;
 		});
 
 		unit.tag = "Player" + player.playerNumber;

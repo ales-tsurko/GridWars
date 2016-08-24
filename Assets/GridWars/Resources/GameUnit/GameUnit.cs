@@ -3,29 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
+public interface GameUnitDelegate {
+	Player player { get; set; }
+	float hitPoints { get; set; }
+	T Instantiate<T>() where T: GameUnit;
+}
+
+public class InitialGameUnitState {
+	public Vector3 position;
+	public Quaternion rotation;
+	public Vector3 localScale;
+	public Player player;
+	public float hitPoints;
+
+	public InitialGameUnitState() {
+		position = Vector3.zero;
+		rotation = Quaternion.identity;
+		localScale = Vector3.one;
+	}
+
+	public Transform transform {
+		set {
+			position = value.position;
+			localScale = value.localScale;
+			rotation = value.rotation;
+		}
+	}
+}
+
+public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public float thrust;
 	public float rotationThrust;
 	bool isAlive = true;
 
+	GameUnitDelegate gameUnitDelegate {
+		get {
+			return GetComponent<GameUnitDelegate>();
+		}
+	}
+
 	Player _player;
 	public Player player {
 		get {
-			if (isNetworked) {
-				return Battlefield.current.PlayerNumbered(state.playerNumber);
-			}
-			else {
-				return _player;
-			}
+			return gameUnitDelegate.player;
 		}
 
 		set {
-			if (isNetworked) {
-				state.playerNumber = value.playerNumber;
-			}
-			else {
-				_player = value;
-			}
+			gameUnitDelegate.player = value;
 		}
 	}
 
@@ -35,23 +59,14 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	float _hitPoints;
 	public float hitPoints {
 		get {
-			if (isNetworked) {
-				return state.hitPoints;
-			}
-			else {
-				return _hitPoints;
-			}
+			return gameUnitDelegate.hitPoints;
 		}
 
 		set {
-			if (isNetworked) {
-				state.hitPoints = value;
-			}
-			else {
-				_hitPoints = value;
-			}
+			gameUnitDelegate.hitPoints = value;
 		}
 	}
+
 	public float maxHitPoints;
 
 	public bool isTargetable = true;
@@ -70,13 +85,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
-
-	//bolt
-	protected Bolt.PrefabId boltPrefabId {
-		get {
-			return entity.ModifySettings().prefabId;
-		}
-	}
 
 	public float hpRatio {
 		get {
@@ -104,10 +112,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 	}
 
 	GameObject deathExplosionPrefab;
-
-	protected virtual void Awake () {
-		_t = transform;
-	}
 
 	public static GameUnit Load<T>() where T: GameUnit {
 		return Load(typeof(T));
@@ -147,31 +151,52 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		return (GameUnit) obj.GetComponent(type);
 	}
 
-	//Networking
-	public override void Attached() {
-		base.Attached();
+	//MonoBehaviour
 
-		if (prototype != null) {
-			ApplyPrototype();
-		}
+	protected virtual void Awake() {
+		_t = transform;
 
-		if (isNetworked) {
-			state.SetTransforms(state.transform, transform);
-
-			if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
-				var s = entity.GetState<ITurretedUnitState>();
-				//TODO: this won't work for more than 1 weapon
-				foreach (var weapon in Weapons()) {
-					state.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
-					state.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
-				}
+		if (gameUnitDelegate == null) {
+			if (boltEntity == null) {
+				gameObject.AddComponent<StandaloneGameUnit>();
+			}
+			else {
+				gameObject.AddComponent<NetworkedGameUnit>();
 			}
 		}
+	}
 
-		if (BoltNetwork.isServer) {
-			hitPoints = maxHitPoints;
+	//TODO: Remove after all subclasses implement NetworkObjectDelegate
+	public virtual void Start() {
+		
+	}
+
+	//TODO: Remove after all subclasses implement NetworkObjectDelegate
+	public virtual void FixedUpdate() {}
+
+	//Networking
+
+	public BoltEntity boltEntity {
+		get {
+			return GetComponent<BoltEntity>();
 		}
+	}
 
+	public virtual void MasterStart() {
+		if (initialState != null) {
+			ApplyInitialState();
+		}
+		hitPoints = maxHitPoints;
+	}
+
+	protected virtual void ApplyInitialState() {
+		transform.rotation = initialState.rotation;
+		transform.position = initialState.position;
+		transform.localScale = initialState.localScale;
+		player = initialState.player;
+	}
+
+	public virtual void SlaveStart() {
 		SetupWeapons();
 		SetupSmokeDamage ();
 		SetupDeathExplosion ();
@@ -186,24 +211,9 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 
 		PlayBirthSound();
-
-		if (BoltNetwork.isClient) {
-			//disable physics and collisions on the client
-			Destroy(GetComponent<Collider>());
-			Destroy(GetComponent<Rigidbody>());
-		}
 	}
 
-	protected virtual void ApplyPrototype() {
-		transform.position = prototype.transform.position;
-		transform.rotation = prototype.transform.rotation;
-		player = prototype.player;
-		hitPoints = prototype.hitPoints;
-	}
-
-	public override void SimulateOwner() {
-		base.SimulateOwner();
-
+	public virtual void MasterFixedUpdate(){
 		if (player == null) {
 			print ("SimulateOwner null player on " + this);
 		}
@@ -217,13 +227,9 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		RemoveIfOutOfBounds ();
 	}
 
-	// -----------------------
+	public virtual void SlaveFixedUpdate(){}
 
-	public virtual void Start() {
-		if (!isNetworked) {
-			Attached();
-		}
-	}
+	// -----------------------
 
 	protected void PlayBirthSound() {
 		if (birthSound != null) {
@@ -453,12 +459,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 			Destroy (gameObject);
 		}
 	}
-		
-	public virtual void FixedUpdate () {
-		if (!isNetworked) {
-			SimulateOwner();
-		}
-	}
 
 	// -------------------
 
@@ -614,7 +614,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		deathExplosionPrefab = Resources.Load<GameObject> (ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
 	}
 
-	protected Weapon[] Weapons() {
+	public Weapon[] Weapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
 		return weapons;
 	}
@@ -652,56 +652,47 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 	// Network
 
-	static GameUnit __prototype;
-	GameUnit _prototype;
+	static InitialGameUnitState __initialState;
 
-	public GameUnit prototype {
+
+	InitialGameUnitState _initialState;
+	public InitialGameUnitState initialState {
 		get {
-			if (_prototype) {
-				return _prototype;
+			if (_initialState != null) {
+				return _initialState;
 			}
 			else {
-				return __prototype;
+				return __initialState;
 			}
 		}
 	}
 
-	public Bolt.IProtocolToken token;
+	public T Instantiate<T, U>(Action<U> fn) where T: GameUnit where U: InitialGameUnitState, new() {
+		Awake();
 
-	protected bool canNetwork {
-		get {
-			var entity = GetComponent<BoltEntity>();
-			return BoltNetwork.isRunning && entity != null && entity.enabled == true;
-		}
-	}
-
-	protected bool isNetworked {
-		get {
-			return canNetwork && entity.isAttached;
-		}
-	}
-
-	public T Instantiate<T>(Action<T> fn = null) where T: GameUnit, new() {
-		var prototype = (T)Load(GetType());
-
-			//(T)UnityEngine.Object.Instantiate(this); //(T)this; //UnityEngine.Object.Instantiate<T>(this);
+		GameUnit.__initialState = null;
 		if (fn != null) {
-			fn(prototype);
+			var initialState = new U();
+			fn(initialState);
+			GameUnit.__initialState = initialState;
 		}
+			
+		var unit = (T) gameUnitDelegate.Instantiate<T>();
+		unit._initialState = __initialState;
 
-		if (canNetwork) {
-			__prototype = prototype;
-			return (T) BoltNetwork.Instantiate(boltPrefabId, token).GetComponent(GetType());
-		}
-		else {
-			var unit = Instantiate(gameObject).GetComponent<T>();
-			unit._prototype = prototype;
-			return unit;
-		}
+		return unit;
 	}
 
-	public static T LoadAndInstantiate<T>(Action<T> fn = null) where T: GameUnit, new() {
-		return Load<T>().Instantiate<T>(fn);
+	public T Instantiate<T>() where T: GameUnit {
+		return Instantiate<T, InitialGameUnitState>(null);
+	}
+
+	public static T LoadAndInstantiate<T, U>(Action<U> fn) where T: GameUnit where U: InitialGameUnitState, new() {
+		return Load<T>().Instantiate<T, U>(fn);
+	}
+
+	public static T LoadAndInstantiate<T>() where T: GameUnit {
+		return LoadAndInstantiate<T, InitialGameUnitState>(null);
 	}
 
 	// helpers

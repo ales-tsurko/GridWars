@@ -7,21 +7,11 @@ public class PowerSource : GroundBuilding {
 	float _power;
 	public float power {
 		get {
-			if (isNetworked) {
-				return powerSourceState.power;
-			}
-			else {
-				return _power;
-			}
+			return powerSourceState.power;
 		}
 
 		set {
-			if (isNetworked) {
-				powerSourceState.power = value;
-			}
-			else {
-				_power = value;
-			}
+			powerSourceState.power = value;
 		}
 	}
 
@@ -39,7 +29,7 @@ public class PowerSource : GroundBuilding {
 
 	IPowerSourceState powerSourceState {
 		get {
-			return entity.GetState<IPowerSourceState>();
+			return GetComponent<BoltEntity>().GetState<IPowerSourceState>();
 		}
 	}
 
@@ -62,8 +52,8 @@ public class PowerSource : GroundBuilding {
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 	}
 
-	public override void Attached() {
-		base.Attached();
+	public override void SlaveStart() {
+		base.SlaveStart();
 		Setup();
 	}
 
@@ -94,8 +84,8 @@ public class PowerSource : GroundBuilding {
 		player.fortress.powerSource = this;
 	}
 
-	public override void SimulateOwner() {
-		base.SimulateOwner();
+	public override void MasterFixedUpdate() {
+		base.MasterFixedUpdate();
 		power = Mathf.Min(power + Time.fixedDeltaTime*generationRate, maxPower);
 	}
 
