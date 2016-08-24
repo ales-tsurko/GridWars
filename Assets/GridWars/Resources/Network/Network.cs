@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class ServerToken : Bolt.IProtocolToken {
 	public string serverVersion = "0.1";

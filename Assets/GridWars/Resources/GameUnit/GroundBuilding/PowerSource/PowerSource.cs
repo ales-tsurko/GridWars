@@ -64,9 +64,7 @@ public class PowerSource : GroundBuilding {
 
 	public override void Attached() {
 		base.Attached();
-		if (BoltNetwork.isClient) {
-			Setup();
-		}
+		Setup();
 	}
 
 	public void Setup() {

@@ -17,7 +17,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 			else {
 				return _player;
 			}
-
 		}
 
 		set {
@@ -27,7 +26,6 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 			else {
 				_player = value;
 			}
-			PlayerWasSet();
 		}
 	}
 
@@ -111,7 +109,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		_t = transform;
 	}
 
-	public static GameObject Load<T>() where T: GameUnit {
+	public static GameUnit Load<T>() where T: GameUnit {
 		return Load(typeof(T));
 	}
 
@@ -135,7 +133,7 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		return path + "/Prefabs/" + type.Name;
 	}
 
-	public static GameObject Load(System.Type type) {
+	public static GameUnit Load(System.Type type) {
 		var prefabPath = PrefabPathForUnitType(type);
 		GameObject obj = (GameObject) Resources.Load(prefabPath);
 
@@ -146,43 +144,16 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 			//print("found prefabPath " + prefabPath);
 		}
 
-		return obj;
-	}
-
-	public static T Instantiate<T>() where T: GameUnit {
-		return (T) GameUnit.Instantiate(typeof(T));
-	}
-
-	public static GameUnit Instantiate(System.Type type) {
-		return (GameUnit) Instantiate<GameObject>(Load(type)).GetComponent(type);
-	}
-
-	public static T Instantiate<T>(Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) where T: GameUnit {
-		return (T) GameUnit.Instantiate(typeof(T), position, rotation, token);
-	}
-
-	public static GameUnit Instantiate(System.Type type, Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) {
-		var prefab = Load(type);
-		var prefabGameUnit = (GameUnit) prefab.GetComponent(type);
-
-		return prefabGameUnit.Instantiate(position, rotation, token);
-	}
-
-	public GameUnit Instantiate(Vector3 position, Quaternion rotation, Bolt.IProtocolToken token = null) {
-		if (canNetwork) {
-			return (GameUnit) BoltNetwork.Instantiate(boltPrefabId, token, position, rotation).GetComponent(GetType());
-		}
-		else {
-			var gameUnit = GameUnit.Instantiate(GetType());
-			gameUnit.transform.position = position;
-			gameUnit.transform.rotation = rotation;
-			return gameUnit;
-		}
+		return (GameUnit) obj.GetComponent(type);
 	}
 
 	//Networking
 	public override void Attached() {
 		base.Attached();
+
+		if (prototype != null) {
+			ApplyPrototype();
+		}
 
 		if (isNetworked) {
 			state.SetTransforms(state.transform, transform);
@@ -207,18 +178,27 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 		gameObject.CloneMaterials();
 
-
-
-		PlayBirthSound();
-	}
-
-	protected void PlayerWasSet() {
 		if (player == null) {
 			gameObject.Paint(Color.white, "Unit");
 		}
 		else {
 			player.Paint(gameObject);
 		}
+
+		PlayBirthSound();
+
+		if (BoltNetwork.isClient) {
+			//disable physics and collisions on the client
+			Destroy(GetComponent<Collider>());
+			Destroy(GetComponent<Rigidbody>());
+		}
+	}
+
+	protected virtual void ApplyPrototype() {
+		transform.position = prototype.transform.position;
+		transform.rotation = prototype.transform.rotation;
+		player = prototype.player;
+		hitPoints = prototype.hitPoints;
 	}
 
 	public override void SimulateOwner() {
@@ -672,6 +652,22 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 
 	// Network
 
+	static GameUnit __prototype;
+	GameUnit _prototype;
+
+	public GameUnit prototype {
+		get {
+			if (_prototype) {
+				return _prototype;
+			}
+			else {
+				return __prototype;
+			}
+		}
+	}
+
+	public Bolt.IProtocolToken token;
+
 	protected bool canNetwork {
 		get {
 			var entity = GetComponent<BoltEntity>();
@@ -685,12 +681,35 @@ public class GameUnit : Bolt.EntityBehaviour<IGameUnitState> {
 		}
 	}
 
+	public T Instantiate<T>(Action<T> fn = null) where T: GameUnit, new() {
+		var prototype = (T)Load(GetType());
+
+			//(T)UnityEngine.Object.Instantiate(this); //(T)this; //UnityEngine.Object.Instantiate<T>(this);
+		if (fn != null) {
+			fn(prototype);
+		}
+
+		if (canNetwork) {
+			__prototype = prototype;
+			return (T) BoltNetwork.Instantiate(boltPrefabId, token).GetComponent(GetType());
+		}
+		else {
+			var unit = Instantiate(gameObject).GetComponent<T>();
+			unit._prototype = prototype;
+			return unit;
+		}
+	}
+
+	public static T LoadAndInstantiate<T>(Action<T> fn = null) where T: GameUnit, new() {
+		return Load<T>().Instantiate<T>(fn);
+	}
+
+	// helpers
+
 	public Vector3 ColliderCenter() {
 		Vector3 c = GetComponent<BoxCollider>().center;
 		return transform.TransformPoint(c);
 	}
-
-	// helpers
 
 	public BoxCollider BoxCollider() {
 		return gameObject.GetComponent<BoxCollider>();
