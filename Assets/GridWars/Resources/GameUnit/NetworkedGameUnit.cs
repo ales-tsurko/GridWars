@@ -28,6 +28,15 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId).GetComponent(typeof(GameUnit));
 	}
 
+	public void DestroySelf() {
+		if (BoltNetwork.isServer) {
+			BoltNetwork.Destroy(gameObject);
+		}
+		else {
+			throw new System.Exception("Can't destroy NetworkObject on the Client");
+		}
+	}
+
 
 
 	//NetworkObject overrides

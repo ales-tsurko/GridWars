@@ -33,6 +33,10 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 		return gameUnit;
 	}
 
+	public void DestroySelf() {
+		Destroy(gameObject);
+	}
+
 	//Mock NetworkObjectDelegate methods
 
 	void Start() {

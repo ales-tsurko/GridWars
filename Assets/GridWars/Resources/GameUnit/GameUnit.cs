@@ -7,6 +7,7 @@ public interface GameUnitDelegate {
 	Player player { get; set; }
 	float hitPoints { get; set; }
 	GameUnit Instantiate();
+	void DestroySelf();
 }
 
 public class InitialGameUnitState {
@@ -580,8 +581,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-	public void DestorySelf() {
-		Destroy(gameObject);
+	public void DestroySelf() {
+		gameUnitDelegate.DestroySelf();
 	}
 
 	// Damage
@@ -613,7 +614,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
 			}
 			ShowExplosion();
-			DestorySelf();
+			DestroySelf();
 		}
 	}
 

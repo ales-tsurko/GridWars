@@ -46,6 +46,7 @@ public class Fortress : MonoBehaviour {
 			initialState.player = player;
 			initialState.transform = transform;
 			powerSource = GameUnit.LoadAndInstantiate<PowerSource>(initialState);
+			powerSource.power = powerSource.maxPower; //TODO: Remove
 
 			towers = new List<Tower>();
 			var towerNum = 0;

@@ -23,7 +23,7 @@ public class BigBoom : Explosion {
 	public override void MasterFixedUpdate () {
 		base.MasterFixedUpdate();
 		if (DoneRatio() > 1) {
-			DestorySelf();
+			DestroySelf();
 		} else {
 			ApplyForcesAndDamageStep();
 		}
