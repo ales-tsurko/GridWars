@@ -69,6 +69,6 @@ public class Player : MonoBehaviour {
 	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
-		return units.TrueForAll(u => u.gameObject.IsDestroyed());
+		return units.TrueForAll(u => u.isDestroyed);
 	}
 }
