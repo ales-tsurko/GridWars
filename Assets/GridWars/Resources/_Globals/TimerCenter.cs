@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
 /*
  * Global Timer system which uses a single GameObject with FixedUpdate
  * to trigger a queue of timers. Timer queue is kept sorted in timeout order so
@@ -13,7 +12,6 @@ using System.Collections.Generic;
  *   App.shared.timerCenter.NewTimer().SetTimeout(2.0f).SetTarget(this).SetMethod("timeout").Start();
  *   
  */ 
-
 
 namespace AssemblyCSharp {
 
@@ -52,7 +50,7 @@ namespace AssemblyCSharp {
 					timers.RemoveAt(0);
 				} else {
 					// this timer isn't ready and since queue is sorted we
-					// know the one's after it aren't ready either
+					// know the ones after it aren't ready either
 					return;
 				}
 			}
