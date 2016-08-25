@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 
 /*
  *  This is a singleton. Access like this:
@@ -28,6 +29,8 @@ public class App : MonoBehaviour {
 	// Game Loop -------------------
 
 	public void Start() {
+		BTest.ClassTest();
+
 		timerCenter = new AssemblyCSharp.TimerCenter();
 	}
 
@@ -70,4 +73,14 @@ public class App : MonoBehaviour {
 			return Resources.Load<AudioClip>(soundPath);
 	}
 
+
+}
+
+public class ATest : MonoBehaviour {
+	public static void ClassTest() {
+		print("type = " + MethodBase.GetCurrentMethod().ReflectedType.GetType().Name);
+	}
+}
+
+public class BTest : ATest {
 }

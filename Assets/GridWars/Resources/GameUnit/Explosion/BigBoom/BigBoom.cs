@@ -8,7 +8,7 @@ public class BigBoom : Explosion {
 	float maxBlastRadius = 20f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
-	float blastTime = 2.5f;
+	float blastTime = 1.5f;
 	float startTime;
 
 
@@ -23,7 +23,7 @@ public class BigBoom : Explosion {
 	public override void MasterFixedUpdate () {
 		base.MasterFixedUpdate();
 		if (DoneRatio() > 1) {
-			Destroy(this);
+			DestorySelf();
 		} else {
 			ApplyForcesAndDamageStep();
 		}
@@ -42,6 +42,13 @@ public class BigBoom : Explosion {
 		float r = minBlastRadius + (maxBlastRadius - minBlastRadius) * DoneRatio();
 		transform.localScale = new Vector3(r*2, r*2, r*2);
 		currentBlastRadius = r;
+
+		/*
+		Material m = GetComponent<Material>();
+		Color color = m.color;
+		color.a = 0.1f;
+		m.color = color;
+		*/
 	}
 
 	public void ApplyForcesAndDamageStep() {

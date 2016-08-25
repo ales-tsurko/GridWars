@@ -580,6 +580,10 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+	public void DestorySelf() {
+		Destroy(gameObject);
+	}
+
 	// Damage
 
 	public void ApplyDamage(float damage) {
@@ -609,7 +613,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
 			}
 			ShowExplosion();
-			Destroy(gameObject);
+			DestorySelf();
 		}
 	}
 
@@ -620,8 +624,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			obj.transform.rotation = _t.rotation;//UnityEngine.Random.rotation;
 			//obj.transform.localScale *= 15;
 		}
-
-		Destroy(gameObject);
 	}
 
 	//Particles for displaying damage amount to units
