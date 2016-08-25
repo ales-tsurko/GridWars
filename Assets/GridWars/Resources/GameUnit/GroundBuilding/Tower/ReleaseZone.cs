@@ -25,7 +25,6 @@ public class ReleaseZone : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider obstruction) {
-		//Debug.Log("OnTriggerEnter: " + obstruction.name);
 		if (!obstructions.Contains(obstruction)) {
 			obstructions.Add(obstruction);
 		}

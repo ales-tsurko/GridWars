@@ -20,7 +20,7 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		}
 
 		set {
-			gameUnitState.hitPoints = hitPoints;
+			gameUnitState.hitPoints = value;
 		}
 	}
 
