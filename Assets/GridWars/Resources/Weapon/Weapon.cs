@@ -510,7 +510,7 @@ public class Weapon : MonoBehaviour {
 		if (obj) {
 			GameUnit ownerUnit = owner.GetComponent<GameUnit>();
 			GameUnit objUnit = obj.GetComponent<GameUnit>();
-			bool isEnemy = ownerUnit.isEnemyOf(objUnit);
+			bool isEnemy = ownerUnit.IsEnemyOf(objUnit);
 			return isEnemy;
 		}
 
@@ -519,7 +519,7 @@ public class Weapon : MonoBehaviour {
 
 	public virtual bool RayCastHitsNonEnemy() {
 		GameObject obj = RayCastHitObject();
-		return obj && !owner.GetComponent<GameUnit>().isEnemyOf(obj.GetComponent<GameUnit>());
+		return obj && !owner.GetComponent<GameUnit>().IsEnemyOf(obj.GetComponent<GameUnit>());
 	}
 
 	public virtual GameObject RayCastHitObject() {
@@ -552,12 +552,21 @@ public class Weapon : MonoBehaviour {
 
 	#if UNITY_EDITOR
 	void OnDrawGizmos() {
-		UnityEditor.Handles.color = Color.white;
-		if (turretObjY) {
-			//UnityEditor.Handles.Label(transform.position, "y" + Mathf.Floor(Convert360to180(turretObjY.transform.localEulerAngles.y)));
-			UnityEditor.Handles.Label(transform.position, "x" + Mathf.Floor(Convert360to180(turretObjY.transform.localEulerAngles.x)));
+		/*
+
+		string msg = ""
+
+		if (turretObjX) {
+			msg += "x" + Mathf.Floor(Convert360to180(turretObjX.transform.localEulerAngles.x)) +  " ";
 		}
-		//UnityEditor.Handles.Label (transform.position, "ey " + Mathf.Floor(transform.eulerAngles.y));
+		
+		if (turretObjY) {
+			msg += "y" + Mathf.Floor(Convert360to180(turretObjY.transform.localEulerAngles.y));
+		}
+
+		UnityEditor.Handles.color = Color.white;
+		UnityEditor.Handles.Label(msg);
+		*/
 	}
 	#endif
 

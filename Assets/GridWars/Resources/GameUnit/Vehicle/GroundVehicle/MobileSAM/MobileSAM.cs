@@ -3,8 +3,10 @@ using System.Collections;
 
 public class MobileSAM : GroundVehicle {
 
-	public override void FixedUpdate () {
-		base.FixedUpdate();
+	/*
+	public override void MasterFixedUpdate () {
+		base.MasterFixedUpdate();
 	}
+	*/
 
 }

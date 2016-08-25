@@ -69,7 +69,7 @@ public class BigBoom : Explosion {
 				}
 
 				// apply damage to unit
-				float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
+				//float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
 				//float maxDamage = 1f;
 				//float damage = maxDamage / (1f + dist);
 				unit.ApplyDamage(0.01f);
@@ -77,7 +77,7 @@ public class BigBoom : Explosion {
 		}
 	}
 
-	public void ApplyDamage(float damage) {
+	public override void ApplyDamage(float damage) {
 		// can't be damaged
 	}
 

@@ -9,13 +9,12 @@ public class Tanker : GroundVehicle {
 	public override void Start() {
 		base.Start();
 	}
-
-
-	public override void FixedUpdate() {
-		base.FixedUpdate();
+		
+	public override void MasterFixedUpdate() {
+		base.MasterFixedUpdate();
 
 		if (IsInStandoffRange()) {
-			hitPoints = 0;
+			OnDead();
 		}
 	}
 
@@ -24,8 +23,8 @@ public class Tanker : GroundVehicle {
 		initialState.position = transform.position;
 		initialState.rotation = transform.rotation;
 		initialState.player = player;
-
-		var projUnit = (BigBoom) prefabBombExplosion.GetComponent<BigBoom>().Instantiate(initialState);
+		//var projUnit = (BigBoom) 
+		prefabBombExplosion.GetComponent<BigBoom>().Instantiate(initialState);
 		//projUnit.IgnoreCollisionsWith(this);
 	}
 

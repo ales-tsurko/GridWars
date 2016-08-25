@@ -292,7 +292,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		return results;
 	}
 
-	public virtual bool isEnemyOf(GameUnit otherUnit) {
+	public virtual bool IsEnemyOf(GameUnit otherUnit) {
 		if (otherUnit == null) {
 			return false;
 		}
@@ -338,7 +338,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		foreach (GameObject obj in objs) {
 			GameUnit unit = obj.GetComponent<GameUnit> ();
 			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
-			if ((obj.tag != null) && (unit != null && isEnemyOf(unit))) {
+			if ((obj.tag != null) && (unit != null && IsEnemyOf(unit))) {
 				results.Add(obj);
 			}
 		}
@@ -552,7 +552,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 		//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
 
-		if (isEnemyOf (otherUnit)) {
+		if (IsEnemyOf (otherUnit)) {
 			//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
 			//Destroy (gameObject);
 		}
@@ -587,7 +587,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// Damage
 
-	public void ApplyDamage(float damage) {
+	public virtual void ApplyDamage(float damage) {
 		if (!isAlive) {
 			return;
 		}

@@ -15,8 +15,32 @@ public class Vehicle : GameUnit  {
 
 	public override void Start() {
 		base.Start();
-
 		//DisableVehicleCollisions();
+	}
+
+	/*
+	public virtual void SetThrustForMaxSpeed(float speed) { // world units per second
+		Rigidbody rb = GetComponent<Rigidbody>();
+		thrust = speed / rb.mass; // need to adjust for drag
+	}
+	*/
+
+	public bool IsHeavilyDamaged() {
+		return ((hitPoints / maxHitPoints) < .5);
+	}
+
+	public float SmoothValue(float v) {
+		return Mathf.Sign(v)*Mathf.Sqrt(Mathf.Abs(v));
+	}
+		
+	public float ForwardSpeed() {
+		var localVelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
+		return localVelocity.z;
+	}
+
+	public float RightSpeed() {
+		var localVelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
+		return localVelocity.x;
 	}
 
 	public List<GameUnit> AllVehicles() {
@@ -94,8 +118,10 @@ public class Vehicle : GameUnit  {
 		return false;
 	}
 
-	public override void FixedUpdate() {
-		base.FixedUpdate();
+	/*
+	public override void MasterFixedUpdate() {
+		base.MasterFixedUpdate();
 		//EnableVehicleCollisionsIfClear();
 	}
+	*/
 }

@@ -16,7 +16,7 @@ public class Explosion : GameUnit {
 	}
 	*/
 
-	public void ApplyDamage(float damage) {
+	public override void ApplyDamage(float damage) {
 		// can't be damaged
 	}
 }
