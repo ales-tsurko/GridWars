@@ -628,9 +628,10 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	public void ShowExplosion() {
 		if (deathExplosionPrefab != null) {
-			var obj = Instantiate(deathExplosionPrefab);
-			obj.transform.position = _t.position;
-			obj.transform.rotation = _t.rotation;//UnityEngine.Random.rotation;
+			var initialState = new InitialGameUnitState();
+			initialState.position = _t.position;
+			initialState.rotation = _t.rotation;
+			deathExplosionPrefab.GetComponent<Explosion>().Instantiate(initialState);
 			//obj.transform.localScale *= 15;
 		}
 	}
