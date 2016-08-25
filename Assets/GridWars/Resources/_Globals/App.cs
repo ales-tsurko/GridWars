@@ -37,7 +37,8 @@ public class App : MonoBehaviour {
 
 	// Finding Paths --------------------
 	// should really have the Types themselve know how to find themselves but
-	// class methods 
+	// class methods don't have access to the type on which they were called -
+	// they only know the type in which they are declared
 
 	public string ResourcePathForUnitType(System.Type type) {
 		List <string> pathComponents = new List<string>();

@@ -110,4 +110,8 @@ public class PowerSource : GroundBuilding {
 		Gizmos.DrawCube(transform.position, new Vector3(trackWidth, 1, trackLength));
 		*/
 	}
+
+	public void ApplyDamage(float damage) {
+		// can't be damaged
+	}
 }
