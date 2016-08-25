@@ -23,7 +23,7 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 		}
 
 		set {
-			_hitPoints = hitPoints;
+			_hitPoints = value;
 		}
 	}
 
