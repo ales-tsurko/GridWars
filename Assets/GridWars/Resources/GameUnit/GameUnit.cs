@@ -323,7 +323,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	public virtual List<GameObject> EnemyObjects() {
 
-		GameUnit[] gameUnits = FindObjectsOfType<GameUnit>();
+		List<GameUnit> gameUnits = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(unit => !unit.gameObject.IsDestroyed);
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
 			if (gameUnit.gameObject.IsDestroyed() == false) {
