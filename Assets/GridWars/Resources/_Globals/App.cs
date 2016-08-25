@@ -29,7 +29,7 @@ public class App : MonoBehaviour {
 	// Game Loop -------------------
 
 	public void Start() {
-		BTest.ClassTest();
+		//BTest.ClassTest();
 
 		timerCenter = new AssemblyCSharp.TimerCenter();
 	}
@@ -76,6 +76,8 @@ public class App : MonoBehaviour {
 
 }
 
+
+/*
 public class ATest : MonoBehaviour {
 	public static void ClassTest() {
 		print("type = " + MethodBase.GetCurrentMethod().ReflectedType.GetType().Name);
@@ -84,3 +86,4 @@ public class ATest : MonoBehaviour {
 
 public class BTest : ATest {
 }
+*/
