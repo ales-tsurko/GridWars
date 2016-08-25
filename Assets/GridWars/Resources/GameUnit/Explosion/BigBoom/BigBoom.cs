@@ -5,7 +5,7 @@ public class BigBoom : Explosion {
 
 	float power = 100000f;
 
-	float maxBlastRadius = 20f;
+	float maxBlastRadius = 25f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
 	float blastTime = 1.5f;
@@ -43,12 +43,10 @@ public class BigBoom : Explosion {
 		transform.localScale = new Vector3(r*2, r*2, r*2);
 		currentBlastRadius = r;
 
-		/*
-		Material m = GetComponent<Material>();
+		Material m = GetComponent<Renderer>().material;
 		Color color = m.color;
-		color.a = 0.1f;
+		color.a = (1f - DoneRatio());
 		m.color = color;
-		*/
 	}
 
 	public void ApplyForcesAndDamageStep() {
