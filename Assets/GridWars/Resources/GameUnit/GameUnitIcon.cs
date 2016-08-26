@@ -9,6 +9,8 @@ public class GameUnitIcon : MonoBehaviour {
 		GameUnit unit = gameObject.GetComponent<GameUnit>();
 		unit.isTargetable = false;
 
+		unit.deathExplosionPrefab = null;
+
 		// disable any unit actions
 		DisableScripts();
 

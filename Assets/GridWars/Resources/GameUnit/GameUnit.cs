@@ -88,7 +88,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	// ----------------------------------------------
 
-	GameObject deathExplosionPrefab;
+	public GameObject deathExplosionPrefab;
 
 	public static T Load<T>() where T: GameUnit {
 		return (T) Load(typeof(T));
@@ -508,28 +508,37 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 				cam.transform.parent = null;
 				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
 			}
-			ShowExplosion();
+			ShowUnitExplosion();
 			DestroySelf();
 		}
 	}
 
-	public void ShowExplosion() {
+	void OnDestroy() {
+		ShowFxExplosion();
+	}
+
+	void ShowUnitExplosion() {
 		if (deathExplosionPrefab != null) {
-			var explosion = deathExplosionPrefab.GetComponent<GameUnit>();
-			if (explosion == null) {
-				var obj = Instantiate(deathExplosionPrefab);
-				obj.transform.position = _t.position;
-				obj.transform.rotation = _t.rotation;
-			}
-			else {
+			var unitExplosion = deathExplosionPrefab.GetComponent<GameUnit>();
+			if (unitExplosion != null) {
 				var state = new GameUnitState();
 				state.prefabGameUnit = deathExplosionPrefab.GetComponent<Explosion>();
 				state.transform = _t;
 				state.InstantiateGameUnit();
 			}
-
-			//obj.transform.localScale *= 15;
 		}
+	}
+
+	void ShowFxExplosion() {
+		if (deathExplosionPrefab != null) {
+			var unitExplosion = deathExplosionPrefab.GetComponent<GameUnit>();
+			if (unitExplosion == null) {
+				var obj = Instantiate(deathExplosionPrefab);
+				obj.transform.position = _t.position;
+				obj.transform.rotation = _t.rotation;
+			}
+		}
+		
 	}
 		
 	// --- Weapons ------------------------------------------
