@@ -8,8 +8,9 @@ public class BigBoom : Explosion {
 	float maxBlastRadius = 25f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
-	float blastTime = 1.5f;
+	float blastTime = 0.25f;
 	float startTime;
+	Vector3 initScale;
 
 
 	public override void SlaveStart () {
@@ -18,6 +19,7 @@ public class BigBoom : Explosion {
 		startTime = Time.time;
 		isTargetable = false;
 		//PlaySound();
+		initScale = transform.localScale;
 	}
 
 	public override void MasterFixedUpdate () {
@@ -40,7 +42,8 @@ public class BigBoom : Explosion {
 
 	public void UpdateRadius() {
 		float r = minBlastRadius + (maxBlastRadius - minBlastRadius) * DoneRatio();
-		transform.localScale = new Vector3(r*2, r*2, r*2);
+//		/transform.localScale = new Vector3(initScale.x * r * 2, 0* initScale.y * r * 2, initScale.z * r * 2);
+		transform.localScale = new Vector3(initScale.x * r * 2, 0.1f, initScale.z * r * 2);
 		currentBlastRadius = r;
 
 		Material m = GetComponent<Renderer>().material;
