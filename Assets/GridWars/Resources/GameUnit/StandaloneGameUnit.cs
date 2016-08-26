@@ -5,13 +5,14 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 
 	//GameUnitDelegate implementation
 
-	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) { 
-		var gameUnit = (GameUnit)Instantiate(gameObject).GetComponent(typeof(GameUnit));
-		gameUnit.transform.position = position;
-		gameUnit.transform.rotation = rotation;
-		gameUnit.gameUnitState = initialState;
-		initialState.gameUnit = gameUnit;
-		return gameUnit;
+	//return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, gameUnit.gameUnitState, gameUnit.gameUnitState.position, gameUnit.gameUnitState.rotation).GetComponent(typeof(GameUnit));
+
+	public GameUnit InstantiateGameUnit() { 
+		var newGameUnit = (GameUnit)Instantiate(gameObject).GetComponent(typeof(GameUnit));
+		newGameUnit.transform.position = gameUnit.gameUnitState.position;
+		newGameUnit.transform.rotation = gameUnit.gameUnitState.rotation;
+		newGameUnit.gameUnitState = gameUnit.gameUnitState;
+		return newGameUnit;
 	}
 
 	public void DestroySelf() {

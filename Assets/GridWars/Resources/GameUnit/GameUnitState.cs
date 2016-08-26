@@ -5,6 +5,17 @@ public class GameUnitState : Bolt.IProtocolToken {
 	public GameUnit gameUnit;
 	public bool useBoltState = false;
 
+	//Only used during initialization.  Changes after initialization won't affect anything.
+	public Vector3 position;
+	public Quaternion rotation;
+
+	public Transform transform {
+		set {
+			position = value.position;
+			rotation = value.rotation;
+		}
+	}
+
 	int _playerNumber = 0;
 	public int playerNumber {
 		get {
@@ -53,10 +64,24 @@ public class GameUnitState : Bolt.IProtocolToken {
 		}
 	}
 
-	public GameUnitState() {
+	public GameUnit prefabGameUnit;
+
+	public virtual GameUnit InstantiateGameUnit() {
+		prefabGameUnit.gameUnitState = this;
+		InitState();
+		return prefabGameUnit.Instantiate();
 	}
 
-	public GameUnitState(GameUnit prefabGameUnit) {
+	public virtual GameUnit InstantiateGameUnit(System.Type gameUnitType) {
+		prefabGameUnit = GameUnit.Load(gameUnitType);
+		return InstantiateGameUnit();
+	}
+
+	public T InstantiateGameUnit<T>() where T: GameUnit {
+		return (T) InstantiateGameUnit(typeof(T));
+	}
+
+	public virtual void InitState() {
 		hitPoints = prefabGameUnit.maxHitPoints;
 	}
 

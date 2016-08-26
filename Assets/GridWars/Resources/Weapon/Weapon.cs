@@ -486,16 +486,14 @@ public class Weapon : MonoBehaviour {
 			CreateMuzzleFlash ();
 		}
 			
-		var initialState = new GameUnitState();
-		initialState.player = player;
+		var state = new GameUnitState();
+		state.prefabGameUnit = prefabProjectile.GetComponent<Projectile>();
+		Debug.Log(state.prefabGameUnit);
+		state.player = player;
+		state.transform = transform;
 
-		var projUnit = (Projectile) prefabProjectile.GetComponent<Projectile>().Instantiate(
-			transform.position,
-			transform.rotation,
-			initialState);
-		
+		var projUnit = state.InstantiateGameUnit() as Projectile;
 		projUnit.copyVelocityFrom(owner);
-
 		projUnit.IgnoreCollisionsWith(owner);
 
 		return projUnit;

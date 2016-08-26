@@ -43,10 +43,10 @@ public class Fortress : MonoBehaviour {
 			placement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
 			placement.transform.localRotation = Quaternion.identity;
 
-			PowerSource prefabPowerSource = GameUnit.Load<PowerSource>();
-			var initialState = new PowerSourceState(prefabPowerSource);
-			initialState.player = player;
-			prefabPowerSource.Instantiate(transform.position, transform.rotation, initialState);
+			var powerSourceState = new PowerSourceState();
+			powerSourceState.transform = transform;
+			powerSourceState.player = player;
+			powerSourceState.InstantiateGameUnit<PowerSource>();
 
 			towers = new List<Tower>();
 			var towerNum = 0;
@@ -58,11 +58,11 @@ public class Fortress : MonoBehaviour {
 				);
 				placement.transform.localRotation = Quaternion.identity;
 
-				var prefabTower = GameUnit.Load<Tower>();
-				var initialTowerState = new TowerState(prefabTower);
-				initialTowerState.playerNumber = player.playerNumber;
-				initialTowerState.unitPrefabPath = App.shared.PrefabPathForUnitType(unitType);
-				prefabTower.Instantiate(placement.transform.position, placement.transform.rotation, initialTowerState);
+				var towerState = new TowerState();
+				towerState.player = player;
+				towerState.transform = placement.transform;
+				towerState.unitPrefabPath = App.shared.PrefabPathForUnitType(unitType);
+				towerState.InstantiateGameUnit<Tower>();
 
 				towerNum ++;
 			}

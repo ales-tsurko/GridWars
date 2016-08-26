@@ -23,11 +23,9 @@ public class PowerSourceState : GameUnitState {
 		}
 	}
 
-	public PowerSourceState() : base() {
-	}
-
-	public PowerSourceState(PowerSource p) : base(p) {
-		power = p.maxPower;
+	public override void InitState() {
+		base.InitState();
+		power = (prefabGameUnit as PowerSource).maxPower;
 	}
 
 	public override void Write(UdpKit.UdpPacket packet) {

@@ -38,6 +38,7 @@ public class Tower : GroundBuilding {
 	public GameObject unitPrefab {
 		get {
 			if (_unitPrefab == null) {
+				Debug.Log(unitPrefabPath);
 				_unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
 			}
 			return _unitPrefab;
@@ -189,18 +190,24 @@ public class Tower : GroundBuilding {
 	}
 
 	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
-		var prefabUnit = unitPrefab.GetComponent<GameUnit>();
+		var gameUnitState = new GameUnitState();
+		gameUnitState.prefabGameUnit = unitPrefab.GetComponent<GameUnit>();
+		gameUnitState.player = player;
+		if (position == default(Vector3)) {
+			gameUnitState.position = transform.position + new Vector3(0, 0.1f, 0);
+		}
+		else {
+			gameUnitState.position = position;
+		}
+		gameUnitState.rotation = transform.rotation;
 
-		var initialState = new GameUnitState(prefabUnit);
-		initialState.player = player;
+		var unit = gameUnitState.InstantiateGameUnit();
 
-		var unit = prefabUnit.Instantiate(
-			position == default(Vector3) ? transform.position + new Vector3(0, 0.1f, 0) : position,
-			transform.rotation,
-			initialState);
-		unit.tag = "Player" + player.playerNumber;
+		Debug.Log("CreateUnit unit: " + unit);
 
 		return unit;
+
+		//unit.tag = "Player" + player.playerNumber; TODO is this used?
 	}
 
 }
