@@ -3,35 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public interface GameUnitDelegate {
-	Player player { get; set; }
-	float hitPoints { get; set; }
-	GameUnit Instantiate();
-	void DestroySelf();
-}
-
-public class InitialGameUnitState {
-	public Vector3 position;
-	public Quaternion rotation;
-	public Vector3 localScale;
-	public Player player;
-	public float hitPoints;
-
-	public InitialGameUnitState() {
-		position = Vector3.zero;
-		rotation = Quaternion.identity;
-		localScale = Vector3.one;
-	}
-
-	public Transform transform {
-		set {
-			position = value.position;
-			localScale = value.localScale;
-			rotation = value.rotation;
-		}
-	}
-}
-
 public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public float thrust;
 	public float rotationThrust;
@@ -46,11 +17,11 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	Player _player;
 	public Player player {
 		get {
-			return gameUnitDelegate.player;
+			return gameUnitState.player;
 		}
 
 		set {
-			gameUnitDelegate.player = value;
+			gameUnitState.player = value;
 		}
 	}
 
@@ -60,11 +31,11 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	float _hitPoints;
 	public float hitPoints {
 		get {
-			return gameUnitDelegate.hitPoints;
+			return gameUnitState.hitPoints;
 		}
 
 		set {
-			gameUnitDelegate.hitPoints = value;
+			gameUnitState.hitPoints = value;
 		}
 	}
 
@@ -111,8 +82,8 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	GameObject deathExplosionPrefab;
 
-	public static GameUnit Load<T>() where T: GameUnit {
-		return Load(typeof(T));
+	public static T Load<T>() where T: GameUnit {
+		return (T) Load(typeof(T));
 	}
 
 	// --- Finding Resources --------------------------------------
@@ -201,25 +172,18 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	//Networking
 
+	public GameUnitState gameUnitState;
+
 	public BoltEntity boltEntity {
 		get {
 			return GetComponent<BoltEntity>();
 		}
 	}
 
-	public virtual void MasterStart() {
-		if (initialState != null) {
-			ApplyInitialState();
-		}
-		hitPoints = maxHitPoints;
+	public virtual void MasterSlaveStart() {
 	}
 
-	public virtual void ApplyInitialState() {
-		transform.position = initialState.position;
-		transform.rotation = initialState.rotation;
-		transform.localScale = initialState.localScale;
-		player = initialState.player;
-		initialState = null;
+	public virtual void MasterStart() {
 	}
 
 	public virtual void SlaveStart() {
@@ -628,10 +592,16 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	public void ShowExplosion() {
 		if (deathExplosionPrefab != null) {
-			var initialState = new InitialGameUnitState();
-			initialState.position = _t.position;
-			initialState.rotation = _t.rotation;
-			deathExplosionPrefab.GetComponent<Explosion>().Instantiate(initialState);
+			var explosion = deathExplosionPrefab.GetComponent<GameUnit>();
+			if (explosion == null) {
+				var obj = Instantiate(deathExplosionPrefab);
+				obj.transform.position = _t.position;
+				obj.transform.rotation = _t.rotation;
+			}
+			else {
+				deathExplosionPrefab.GetComponent<Explosion>().Instantiate(_t.position, _t.rotation, new GameUnitState());
+			}
+
 			//obj.transform.localScale *= 15;
 		}
 	}
@@ -689,22 +659,15 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// Network
 
-	public static InitialGameUnitState initialState;
-
-	public GameUnit Instantiate(InitialGameUnitState initialState = null) {
+	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) {
 		Awake();
 
-		if (initialState == null) {
-			initialState = new InitialGameUnitState();
-		}
-			
-		GameUnit.initialState = initialState;
-		var unit = gameUnitDelegate.Instantiate();
+		var unit = gameUnitDelegate.Instantiate(position, rotation, initialState);
 		return unit;
 	}
 
-	public static T LoadAndInstantiate<T>(InitialGameUnitState initialState = null) where T: GameUnit {
-		return (T) Load<T>().Instantiate(initialState);
+	public static T LoadAndInstantiate<T>(Vector3 position, Quaternion rotation, GameUnitState initialState) where T: GameUnit {
+		return (T) Load<T>().Instantiate(position, rotation, initialState);
 	}
 
 	// helpers

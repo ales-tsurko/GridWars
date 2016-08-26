@@ -4,28 +4,8 @@ using System.Collections;
 public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 	//GameUnitDelegate implementation
 
-	public Player player {
-		get {
-			return Battlefield.current.PlayerNumbered(gameUnitState.playerNumber);
-		}
-
-		set {
-			gameUnitState.playerNumber = value.playerNumber;
-		}
-	}
-
-	public float hitPoints {
-		get {
-			return gameUnitState.hitPoints;
-		}
-
-		set {
-			gameUnitState.hitPoints = value;
-		}
-	}
-
-	public GameUnit Instantiate() {
-		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId).GetComponent(typeof(GameUnit));
+	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) {
+		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, initialState, position, rotation).GetComponent(typeof(GameUnit));
 	}
 
 	public void DestroySelf() {
@@ -37,14 +17,25 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		}
 	}
 
-
-
 	//NetworkObject overrides
 
 	public override void MasterStart() {
+		gameUnit.gameUnitState.ApplyToBoltState();
+		boltState.receivedFirstUpdate = true;
 		base.MasterStart();
+	}
 
-		gameUnitState.SetTransforms(gameUnitState.transform, transform);
+	public override void MasterSlaveStart() {
+		gameUnit.gameUnitState = (entity.attachToken as GameUnitState);
+		gameUnit.gameUnitState.gameUnit = gameUnit;
+		base.MasterSlaveStart();
+	}
+
+
+	public override void SlaveStart() {
+		base.SlaveStart();
+
+		boltState.SetTransforms(boltState.transform, transform);
 
 		if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
 			var s = entity.GetState<ITurretedUnitState>();
@@ -54,10 +45,7 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 				s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
 			}
 		}
-	}
 
-	public override void SlaveStart() {
-		base.SlaveStart();
 		if (!BoltNetwork.isServer) {
 			Destroy(GetComponent<Rigidbody>());
 			Destroy(GetComponent<Collider>());
@@ -66,15 +54,23 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 
 	//internal
 
+	void ReceivedFirstUpdate() {
+		if (boltState.receivedFirstUpdate) {
+			gameUnit.gameUnitState.useBoltState = true;
+		}
+	}
+
 	GameUnit gameUnit {
 		get {
 			return GetComponent<GameUnit>();
 		}
 	}
 
-	IGameUnitState gameUnitState {
+	IGameUnitState boltState {
 		get {
 			return entity.GetState<IGameUnitState>();
 		}
 	}
+
+	GameUnitState initialState;
 }

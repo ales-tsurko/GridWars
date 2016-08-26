@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class InitialTowerState : InitialGameUnitState {
-	public System.Type unitType;
-}
-
 public class Tower : GroundBuilding {
 
 	public string activationKey;
@@ -17,11 +13,11 @@ public class Tower : GroundBuilding {
 		
 	public string unitPrefabPath {
 		get {
-			return towerState.unitPrefabPath;
+			return (gameUnitState as TowerState).unitPrefabPath;
 		}
 
 		set {
-			towerState.unitPrefabPath = value;
+			(gameUnitState as TowerState).unitPrefabPath = value;
 		}
 	}
 
@@ -61,30 +57,18 @@ public class Tower : GroundBuilding {
 
 		tag = "Player" + player.playerNumber;
 	}
-		
-	public override void ApplyInitialState() {
-		unitPrefabPath = App.shared.PrefabPathForUnitType((initialState as InitialTowerState).unitType);
-		base.ApplyInitialState(); //do this second as it resets initialState
-	}
 
 	public override void SlaveStart() {
 		base.SlaveStart();
 
-		var boltEntity = unitPrefab.GetComponent<BoltEntity>();
-		if (boltEntity != null) {
-			boltEntity.enabled = false;
-		}
-
+		/*
 		iconObject = CreateUnit().gameObject;
-
-		if (boltEntity != null) {
-			boltEntity.enabled = true;
-		}
 
 		iconObject.transform.SetParent(transform);
 		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
 		iconObject.AddComponent<GameUnitIcon>().Enable();
+		*/
 
 		if (CameraController.instance != null) {
 			CameraController.instance.InitCamera (transform);
@@ -158,11 +142,11 @@ public class Tower : GroundBuilding {
 
 		if (canQueueUnit) {
 			player.Paint(gameObject);
-			player.Paint(iconObject);
+			//player.Paint(iconObject);
 		}
 		else {
 			player.PaintAsDisabled(gameObject);
-			player.PaintAsDisabled(iconObject);
+			//player.PaintAsDisabled(iconObject);
 		}
 	}
 
@@ -192,26 +176,16 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-
-
-	ITowerState towerState {
-		get {
-			return boltEntity.GetState<ITowerState>();
-		}
-	}
-
 	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
-		var initialState = new InitialGameUnitState();
-		if (position == default(Vector3)) {
-			initialState.position = transform.position + new Vector3(0, 0.1f, 0);
-		}
-		else {
-			initialState.position = position;
-		}
-		initialState.rotation = transform.rotation;
+		var prefabUnit = unitPrefab.GetComponent<GameUnit>();
+
+		var initialState = new GameUnitState(prefabUnit);
 		initialState.player = player;
 
-		var unit = unitPrefab.GetComponent<GameUnit>().Instantiate(initialState);
+		var unit = prefabUnit.Instantiate(
+			position == default(Vector3) ? transform.position + new Vector3(0, 0.1f, 0) : position,
+			transform.rotation,
+			initialState);
 		unit.tag = "Player" + player.playerNumber;
 
 		return unit;

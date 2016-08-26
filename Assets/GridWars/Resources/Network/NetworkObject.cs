@@ -1,13 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface NetworkObjectDelegate {
-	void MasterStart();
-	void SlaveStart();
-	void MasterFixedUpdate();
-	void SlaveFixedUpdate();
-}
-
 public class NetworkObject : Bolt.EntityBehaviour {
 	//public interface
 
@@ -15,6 +8,10 @@ public class NetworkObject : Bolt.EntityBehaviour {
 		get {
 			return GetComponent<NetworkObjectDelegate>();
 		}
+	}
+
+	public virtual void MasterSlaveStart() {
+		networkObjectDelegate.MasterSlaveStart();
 	}
 
 	public virtual void MasterStart() {
@@ -38,9 +35,12 @@ public class NetworkObject : Bolt.EntityBehaviour {
 	public override void Attached() {
 		base.Attached();
 
+		MasterSlaveStart();
+
 		if (BoltNetwork.isServer) {
 			MasterStart();
 		}
+
 		SlaveStart();
 	}
 

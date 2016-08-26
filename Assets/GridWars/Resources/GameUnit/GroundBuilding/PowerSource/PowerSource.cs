@@ -7,11 +7,11 @@ public class PowerSource : GroundBuilding {
 	float _power;
 	public float power {
 		get {
-			return powerSourceState.power;
+			return (gameUnitState as PowerSourceState).power;
 		}
 
 		set {
-			powerSourceState.power = value;
+			(gameUnitState as PowerSourceState).power = value;
 		}
 	}
 
@@ -26,12 +26,6 @@ public class PowerSource : GroundBuilding {
 	public int segmentCount = 20;
 
 	public GameObject prefab;
-
-	IPowerSourceState powerSourceState {
-		get {
-			return GetComponent<BoltEntity>().GetState<IPowerSourceState>();
-		}
-	}
 
 	float trackLength {
 		get {
@@ -111,7 +105,7 @@ public class PowerSource : GroundBuilding {
 		*/
 	}
 
-	public void ApplyDamage(float damage) {
+	public override void ApplyDamage(float damage) {
 		// can't be damaged
 	}
 }
