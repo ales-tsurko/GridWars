@@ -135,6 +135,12 @@ public class Weapon : MonoBehaviour {
 			target = null;
 		}
 
+		// unless we can shoot now at our current target,
+		// see if there's one that's closer to target
+
+		// prioritize targets with weapons
+		// prioritize targets with weapons - especially those that can target us
+
 		if (!CanTargetObj(target)|| !TargetInRange()) {
 			//bool isTargetable = owner.GameUnit().isTargetable;
 			//var oldTarget = target;
@@ -147,7 +153,6 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void UpdatedTarget() {
-
 	}
 
 	public float DistanceToObj(GameObject obj) {
@@ -191,6 +196,7 @@ public class Weapon : MonoBehaviour {
 		var targetPos = TargetLeadPosition();
 
 		Vector3 targetDir = (targetPos - t.position).normalized;
+
 		//if (turretObjX) {
 			float angleX = AngleBetweenOnAxis(t.forward, targetDir, t.right);
 			diff += Mathf.Abs(angleX);
@@ -217,7 +223,8 @@ public class Weapon : MonoBehaviour {
 
 	public float XAngleToTarget() {
 		if (target) {
-			Transform t = turretObjX.transform;
+			//Transform t = turretObjX.transform;
+			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
@@ -226,8 +233,8 @@ public class Weapon : MonoBehaviour {
 			/*
 			if (true) {
 				var r = range == -1 ? 1000 : range;
-				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
-				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
 			}
 			*/
 
@@ -239,19 +246,20 @@ public class Weapon : MonoBehaviour {
 
 	public float YAngleToTarget() {
 		if (target) {
-//			/Transform t = turretObjY.transform;
+			//Transform t = turretObjY.transform;
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
 			Vector3 targetDir = (targetPos - t.position).normalized;
 			float angle = AngleBetweenOnAxis (t.forward, targetDir, t.up);
 
+			/*
 			if (true) {
 				//var r = range == -1 ? 10 : range;
-
-				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
-				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
+				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
+				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
 			}
+			*/
 
 
 			return angle;
@@ -284,7 +292,6 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void ApplyAngleLimits() {
-
 		/*
 		if (turretObjX) {
 			Vector3 e = turretObjX.transform.localEulerAngles;
