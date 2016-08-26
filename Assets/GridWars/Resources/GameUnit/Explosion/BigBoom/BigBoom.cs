@@ -5,10 +5,10 @@ public class BigBoom : Explosion {
 
 	float power = 100000f;
 
-	float maxBlastRadius = 25f;
+	float maxBlastRadius = 28f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
-	float blastTime = 0.25f;
+	float blastTime = 1f;
 	float startTime;
 	Vector3 initScale;
 
