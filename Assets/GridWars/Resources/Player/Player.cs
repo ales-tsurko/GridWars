@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
+	public float separation = 0.9f;
 
 	public int playerNumber {
 		get {
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour {
 	void Start() {
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
-		gameObject.transform.localPosition = new Vector3(0f, 0f, -0.9f*gameObject.transform.forward.z*battlefield.bounds.z/2);
+		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation*gameObject.transform.forward.z*battlefield.bounds.z/2);
 
 		gameObject.tag = "Player" + playerNumber;
 

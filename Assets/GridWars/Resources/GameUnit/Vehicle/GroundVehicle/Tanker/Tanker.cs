@@ -19,12 +19,10 @@ public class Tanker : GroundVehicle {
 	}
 
 	public void BlowUp() {
-		var initialState = new InitialGameUnitState();
-		initialState.position = transform.position;
-		initialState.rotation = transform.rotation;
+		var initialState = new GameUnitState();
 		initialState.player = player;
 		//var projUnit = (BigBoom) 
-		prefabBombExplosion.GetComponent<BigBoom>().Instantiate(initialState);
+		prefabBombExplosion.GetComponent<BigBoom>().Instantiate(transform.position, transform.rotation, initialState);
 		//projUnit.IgnoreCollisionsWith(this);
 	}
 

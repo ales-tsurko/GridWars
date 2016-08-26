@@ -5,31 +5,12 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 
 	//GameUnitDelegate implementation
 
-	Player _player;
-	public Player player {
-		get {
-			return _player;
-		}
-
-		set {
-			_player = value;
-		}
-	}
-
-	float _hitPoints;
-	public float hitPoints {
-		get {
-			return _hitPoints;
-		}
-
-		set {
-			_hitPoints = value;
-		}
-	}
-
-	public GameUnit Instantiate() { 
+	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) { 
 		var gameUnit = (GameUnit)Instantiate(gameObject).GetComponent(typeof(GameUnit));
-		gameUnit.ApplyInitialState();
+		gameUnit.transform.position = position;
+		gameUnit.transform.rotation = rotation;
+		gameUnit.gameUnitState = initialState;
+		initialState.gameUnit = gameUnit;
 		return gameUnit;
 	}
 

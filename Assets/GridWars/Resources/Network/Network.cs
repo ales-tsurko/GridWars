@@ -51,7 +51,9 @@ public class Network : Bolt.GlobalEventListener {
 	public string zeusEndpoint = "159.8.0.207:24000";
 
 	public override void BoltStartBegin() {
-		BoltNetwork.RegisterTokenClass<TowerProtocolToken>();
+		BoltNetwork.RegisterTokenClass<GameUnitState>();
+		BoltNetwork.RegisterTokenClass<TowerState>();
+		BoltNetwork.RegisterTokenClass<PowerSourceState>();
 		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 
@@ -78,6 +80,7 @@ public class Network : Bolt.GlobalEventListener {
 		if (BoltNetwork.isServer) {
 			connectedClients.Add(connection);
 		}
+		Debug.Log("START GAME");
 		Battlefield.current.StartGame();
 	}
 

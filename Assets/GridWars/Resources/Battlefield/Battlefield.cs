@@ -12,7 +12,12 @@ public class Battlefield : MonoBehaviour {
 	public List<Player> players;
 
 	public Player PlayerNumbered(int playerNumber) {
-		return players[playerNumber - 1];
+		if (playerNumber < 1 || playerNumber > players.Count) {
+			return null;
+		}
+		else {
+			return players[playerNumber - 1];
+		}
 	}
 
 	void Start() {
@@ -22,10 +27,6 @@ public class Battlefield : MonoBehaviour {
 		//Network.shared.singlePlayer = false;
 
 		CameraController.instance.enabled = false;
-
-		if (!Network.shared.enabled) {
-			StartGame();
-		}
 	}
 
 	public void StartGame() {

@@ -11,7 +11,9 @@ public class BigBoom : Explosion {
 	float blastTime = 1f;
 	float startTime;
 	Vector3 initScale;
-
+	void Start () {
+		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
+	}
 
 	public override void SlaveStart () {
 		base.SlaveStart();
@@ -48,7 +50,8 @@ public class BigBoom : Explosion {
 
 		Material m = GetComponent<Renderer>().material;
 		Color color = m.color;
-		color.a = (1f - DoneRatio());
+		//color.a = (1f - DoneRatio());
+		GetComponent<Renderer>().enabled = false; //GOOSE'S Change - delete and uncomment above to switch back
 		m.color = color;
 	}
 
