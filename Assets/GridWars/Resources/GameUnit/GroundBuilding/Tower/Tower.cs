@@ -61,14 +61,14 @@ public class Tower : GroundBuilding {
 	public override void SlaveStart() {
 		base.SlaveStart();
 
-		/*
+		//*
 		iconObject = CreateUnit().gameObject;
 
 		iconObject.transform.SetParent(transform);
 		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
 		iconObject.AddComponent<GameUnitIcon>().Enable();
-		*/
+		//*/
 
 		if (CameraController.instance != null) {
 			CameraController.instance.InitCamera (transform);
@@ -142,11 +142,11 @@ public class Tower : GroundBuilding {
 
 		if (canQueueUnit) {
 			player.Paint(gameObject);
-			//player.Paint(iconObject);
+			player.Paint(iconObject);
 		}
 		else {
 			player.PaintAsDisabled(gameObject);
-			//player.PaintAsDisabled(iconObject);
+			player.PaintAsDisabled(iconObject);
 		}
 	}
 
