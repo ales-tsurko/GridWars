@@ -459,19 +459,6 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
-	public float barrelLength() {
-		// we put the weapon component at the tip of the barrel 
-		// and turn off collisions between the projectile and the firing object
-		// so this isn't needed anymore
-
-		return 0.0f;
-		/*
-		Collider ownerCollider = owner.GetComponent<Collider>();
-		float maxZ = ownerCollider.bounds.size.z;
-		return maxZ * 1f; // put it outside
-		*/
-	}
-
 	void CreateMuzzleFlash(){
 		if (muzzleFlashPoint == null || muzzleFlash == null) {
 			return;
@@ -490,7 +477,7 @@ public class Weapon : MonoBehaviour {
 		}
 			
 		var initialState = new InitialGameUnitState();
-		initialState.position = transform.position + (transform.forward * barrelLength());
+		initialState.position = transform.position; // + (transform.forward * barrelLength());
 		initialState.rotation = transform.rotation;
 		initialState.player = player;
 

@@ -32,7 +32,7 @@ public class InitialGameUnitState {
 	}
 }
 
-public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
+public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	public float thrust;
 	public float rotationThrust;
 	bool isAlive = true;
@@ -53,9 +53,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			gameUnitDelegate.player = value;
 		}
 	}
-
-	public bool canAim = true;
-
+		
 	// Damagable
 	float _hitPoints;
 	public float hitPoints {
@@ -73,7 +71,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public bool isTargetable = true;
 
 	[HideInInspector]
-	public Transform _t;
 	public bool isRunning = true;
 
 	public GameObject target = null;
@@ -93,6 +90,9 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+
+	// --- Sounds ------------------------------------------
+
 	AudioSource _audioSource;
 	protected AudioSource audioSource {
 		get {
@@ -102,12 +102,20 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			return _audioSource;
 		}
 	}
-
+		
 	public AudioClip birthSound {
 		get {
 			return SoundNamed("birth");
 		}
 	}
+		
+	protected void PlayBirthSound() {
+		if (birthSound != null) {
+			audioSource.PlayOneShot(birthSound);
+		}
+	}
+
+	// ----------------------------------------------
 
 	GameObject deathExplosionPrefab;
 
@@ -143,26 +151,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// ------------------------------------------------------------
 
-	/*
-	public static string ResourcePathForUnitType(System.Type type) {
-		List <string> pathComponents = new List<string>();
-
-		while (type != typeof(GameUnit)) {
-			pathComponents.Add(type.Name);
-			type = type.BaseType;
-		}
-
-		pathComponents.Add(type.Name); // add GameUnit
-		pathComponents.Reverse();
-		return string.Join("/", pathComponents.ToArray());
-	}
-
-	public static string PrefabPathForUnitType(System.Type type) {
-		string path = ResourcePathForUnitType(type);
-		return path + "/Prefabs/" + type.Name;
-	}
-	*/
-
 	public static GameUnit Load(System.Type type) {
 		var prefabPath = App.shared.PrefabPathForUnitType(type);
 		GameObject obj = (GameObject) Resources.Load(prefabPath);
@@ -177,10 +165,10 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		return (GameUnit) obj.GetComponent(type);
 	}
 
-	//MonoBehaviour
+	// --- MonoBehaviour --------------------------------------------
 
-	protected virtual void Awake() {
-		_t = transform;
+	protected override void Awake() {
+		base.Awake();
 
 		if (gameUnitDelegate == null) {
 			if (boltEntity == null) {
@@ -257,11 +245,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void SlaveFixedUpdate(){}
 
-	protected void PlayBirthSound() {
-		if (birthSound != null) {
-			audioSource.PlayOneShot(birthSound);
-		}
-	}
 
 	public virtual Rigidbody rigidBody() {
 		if (body == null) {
@@ -406,69 +389,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		return closest;
 	}
 
-	// -- set x, y, z -----------------------
-
-	public virtual void setX(float x) {
-		_t.position = new Vector3 (x, _t.position.y, _t.position.z);
-	}
-		
-	public virtual void setY(float y) {
-		_t.position = new Vector3 (_t.position.x, y, _t.position.z);
-	}
-
-	public virtual void setZ(float z) {
-		_t.position = new Vector3 (_t.position.x, _t.position.y, z);
-	}
-
-	// --- get x, y, z -----------------------
-
-	public virtual float x() {
-		return _t.position.x;
-	}
-
-	public virtual float y() {
-		return _t.position.y;
-	}
-		
-	public virtual float z() {
-		return _t.position.z;
-	}
-
-	// --- get/set rotations -----------------------
-
-	public virtual float rotX() {
-		return _t.eulerAngles.x;
-	}
-
-	public virtual void setRotX(float v) {
-		var e = _t.eulerAngles;
-		_t.eulerAngles = new Vector3(v, e.y, e.z);
-	}
-
-
-	public virtual void Object_rotDY(GameObject obj, float dy) {
-		var e = obj.transform.eulerAngles;
-		obj.transform.eulerAngles = new Vector3(e.x, e.y + dy, e.z);
-	}
-
-
-	public virtual float rotY() {
-		return _t.eulerAngles.y;
-	}
-
-	public virtual void setRotY(float v) {
-		var e = _t.eulerAngles;
-		_t.eulerAngles = new Vector3(e.x, v, e.z);
-	}
-
-	public virtual float rotZ() {
-		return _t.eulerAngles.z;
-	}
-
-	public virtual void setRotZ(float v) {
-		var e = _t.eulerAngles;
-		_t.eulerAngles = new Vector3(e.x, e.y, v);
-	}
 
 	// -----------------------
 
@@ -479,42 +399,15 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			(z() > 50) || (z() > 50) 
 		);
 	}
-		
+
 	public virtual void RemoveIfOutOfBounds () {
 		if (isOutOfBounds() ) {
 			Destroy (gameObject);
 		}
 	}
 
-	// -------------------
-
-
-	public static float AngleBetweenOnAxis(Vector3 v1, Vector3 v2, Vector3 n)
-	{
-		// Determine the signed angle between two vectors, 
-		// with normal 'n' as the rotation axis.
-
-		return Mathf.Atan2(
-			Vector3.Dot(n, Vector3.Cross(v1, v2)),
-			Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
-	}
 
 	// --- aiming --------------------
-
-	public virtual void SteerTowardsTarget() {
-		if (target != null) {
-			RotateTowardObject (target);
-		}
-	}
-
-	/*
-	public virtual void steerTowardsNearestEnemy() {
-		var obj = ClosestEnemyObject ();
-		if (obj != null) {
-			RotateTowardObject(obj);
-		}
-	}
-	*/
 
 	public float AngleToTarget() {
 		var targetPos = target.transform.position;
@@ -522,20 +415,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		return angle;
-	}
-
-	public virtual void RotateTowardObject(GameObject obj) {
-		var targetPos = obj.transform.position;
-
-		Vector3 targetDir = (targetPos - _t.position).normalized;
-		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
-		//angleToTarget = angle;
-
-		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
-		//Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
-
-		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
 	}
 
 	public float targetDistance() {
@@ -573,7 +452,6 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	// --- icons --------------------
 
-
 	void OnDrawGizmos() {
 		if (target != null) {
 			Gizmos.color = Color.green;
@@ -593,7 +471,7 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		gameUnitDelegate.DestroySelf();
 	}
 
-	// Damage
+	// --- Damage ------------------------------------------
 
 	public virtual void ApplyDamage(float damage) {
 		if (!isAlive) {
@@ -612,6 +490,26 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			OnDead();
 		}
 	}
+
+	// --- Damage Smoke ------------------------------------------
+
+	//Particles for displaying damage amount to units
+	ParticleSystem smokeDamage;
+	void SetupSmokeDamage () {
+		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
+		if (smokeDamageT != null) {
+			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
+			smokeDamage.maxParticles = 0;
+			smokeDamage.simulationSpace = ParticleSystemSimulationSpace.World;
+		}
+	}
+
+	void SetupDeathExplosion () {
+		deathExplosionPrefab = Resources.Load<GameObject> (App.shared.ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
+	}
+
+
+	// --- Death ------------------------------------------
 
 	public virtual void OnDead() {
 		if (isAlive) {
@@ -653,34 +551,12 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 			//obj.transform.localScale *= 15;
 		}
 	}
-
-	//Particles for displaying damage amount to units
-	ParticleSystem smokeDamage;
-	void SetupSmokeDamage () {
-		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
-		if (smokeDamageT != null) {
-			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
-			smokeDamage.maxParticles = 0;
-			smokeDamage.simulationSpace = ParticleSystemSimulationSpace.World;
-		}
-	}
-
-	void SetupDeathExplosion () {
-		deathExplosionPrefab = Resources.Load<GameObject> (App.shared.ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
-	}
+		
+	// --- Weapons ------------------------------------------
 
 	public Weapon[] Weapons() {
 		Weapon[] weapons = GetComponentsInChildren<Weapon>();
 		return weapons;
-	}
-
-	public void DeactivateWeapons() {
-		Weapon[] weapons = Weapons();
-
-		foreach (Weapon weapon in weapons) {
-			weapon.isActive = false;
-			weapon.enabled = false;
-		}
 	}
 
 	public void SetupWeapons() {
@@ -692,20 +568,16 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-	/*
-	public virtual void UpdatedTarget() {
-		// by default we set all weapons to have this target, 
-		// override this method if you want them to choose different targets
-
-		Weapon[] weapons = GetComponentsInChildren<Weapon>();
+	public void DeactivateWeapons() {
+		Weapon[] weapons = Weapons();
 
 		foreach (Weapon weapon in weapons) {
-			weapon.target = target;
+			weapon.isActive = false;
+			weapon.enabled = false;
 		}
 	}
-	*/
 
-	// Network
+	// --- Network ------------------------------------------
 
 	public static InitialGameUnitState initialState;
 
@@ -724,39 +596,5 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 	public static T LoadAndInstantiate<T>(InitialGameUnitState initialState = null) where T: GameUnit {
 		return (T) Load<T>().Instantiate(initialState);
 	}
-
-	// helpers
-
-	public Vector3 ColliderCenter() {
-		Vector3 c = GetComponent<BoxCollider>().center;
-		return transform.TransformPoint(c);
-	}
-
-	public BoxCollider BoxCollider() {
-		return gameObject.GetComponent<BoxCollider>();
-	}
-
-	public bool IsOfType(Type aType) {
-
-		Type myType = GetType();
-
-		if (myType == aType) { 
-			return true; 
-		}
-
-		if (myType.IsSubclassOf(aType)) { 
-			return true; 
-		}
-
-		return false;
-	}
-
-
-	/*
-	public static string typeNameTest() {
-		Type t = MethodBase.GetCurrentMethod().DeclaringType;
-		return t.Name;
-	}
-	*/
-
+		
 }

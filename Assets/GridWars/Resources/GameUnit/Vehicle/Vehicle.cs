@@ -25,6 +25,39 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
+
+	public virtual void SteerTowardsTarget() {
+		if (target != null) {
+			RotateTowardObject (target);
+		}
+	}
+
+
+	/*
+	public virtual void steerTowardsNearestEnemy() {
+		var obj = ClosestEnemyObject ();
+		if (obj != null) {
+			RotateTowardObject(obj);
+		}
+	}
+	*/
+
+	public virtual void RotateTowardObject(GameObject obj) {
+		var targetPos = obj.transform.position;
+
+		Vector3 targetDir = (targetPos - _t.position).normalized;
+		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
+		//angleToTarget = angle;
+
+		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		//Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+
+		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
+	}
+
+	// utility methods -----------------------------------------
+
 	public bool IsHeavilyDamaged() {
 		return ((hitPoints / maxHitPoints) < .5);
 	}

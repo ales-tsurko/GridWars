@@ -7,7 +7,7 @@ public class Fortress : MonoBehaviour {
 	public List<Tower> towers;
 	public float towerSpacing {
 		get {
-			return 1.0f*Tower.size.x;
+			return 0.7f*Tower.size.x;
 		}
 	}
 	public float towerToPowerSpacing {
@@ -29,7 +29,7 @@ public class Fortress : MonoBehaviour {
 		typeof(MobileSAM),
 		typeof(Jeep),
 		typeof(Tanker),
-		typeof(BombTruck),
+		//typeof(BombTruck),
 		typeof(Tank),
 		typeof(Chopper)
 	};

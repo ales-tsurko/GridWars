@@ -8,10 +8,23 @@ public class InitialTowerState : InitialGameUnitState {
 public class Tower : GroundBuilding {
 
 	public string activationKey;
+	public Mesh theMesh;
 
 	public static Vector3 size {
 		get {
-			return GameUnit.Load<Tower>().GetComponent<BoxCollider>().size;
+			/*
+			Mesh mesh = GameUnit.Load<Tower>().gameObject.GetComponent<Mesh>();
+			return mesh.bounds.size;
+			*/
+
+			/*
+			BoxCollider bc = GameUnit.Load<Tower>().BoxCollider();
+			if (bc != null ) {
+				return bc.bounds.size;
+			}
+			*/
+
+			return new Vector3(5f, 2f, 5f);
 		}
 	}
 		
@@ -39,7 +52,6 @@ public class Tower : GroundBuilding {
 		base.MasterStart();
 
 		isStaticUnit = true;
-		canAim = false;
 
 		releaseZones = new List<ReleaseZone>();
 		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
