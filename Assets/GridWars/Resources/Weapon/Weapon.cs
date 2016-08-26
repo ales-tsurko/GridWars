@@ -481,7 +481,6 @@ public class Weapon : MonoBehaviour {
 			
 		var state = new GameUnitState();
 		state.prefabGameUnit = prefabProjectile.GetComponent<Projectile>();
-		Debug.Log(state.prefabGameUnit);
 		state.player = player;
 		state.transform = transform;
 

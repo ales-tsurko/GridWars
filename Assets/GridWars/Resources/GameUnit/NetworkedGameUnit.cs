@@ -22,8 +22,6 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 	public override void MasterSlaveStart() {
 		gameUnit.gameUnitState = (entity.attachToken as GameUnitState);
 
-		Debug.Log(gameUnit + ": playerNumber: " + gameUnit.gameUnitState.playerNumber);
-
 		boltState.SetTransforms(boltState.transform, transform);
 
 		if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
