@@ -130,11 +130,14 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
+
 		if (target && target.IsDestroyed()) {
 			target = null;
 		}
 
 		if (!CanTargetObj(target)|| !TargetInRange()) {
+			//bool isTargetable = owner.GameUnit().isTargetable;
+			//var oldTarget = target;
 			GameObject newTarget = ClosestTargetableEnemyObject();
 			if (target != newTarget) {
 				target = newTarget;
@@ -480,7 +483,7 @@ public class Weapon : MonoBehaviour {
 		initialState.player = player;
 
 		var projUnit = (Projectile) prefabProjectile.GetComponent<Projectile>().Instantiate(
-			transform.position + (transform.forward * barrelLength()),
+			transform.position,
 			transform.rotation,
 			initialState);
 		

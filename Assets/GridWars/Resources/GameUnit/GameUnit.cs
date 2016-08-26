@@ -39,9 +39,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public float maxHitPoints;
 
-	public bool isTargetable = true;
 
 	[HideInInspector]
+	public bool isTargetable;
 	public bool isRunning = true;
 
 	public GameObject target = null;
@@ -140,6 +140,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	protected override void Awake() {
 		base.Awake();
+
+		isTargetable = true;
 
 		if (gameUnitDelegate == null) {
 			if (boltEntity == null) {
