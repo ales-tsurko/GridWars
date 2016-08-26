@@ -32,6 +32,7 @@ public class CameraController : MonoBehaviour {
 	bool actionMode;
 
 	void Start () {
+		
 		foreach (Transform pos in positions) {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
 		}

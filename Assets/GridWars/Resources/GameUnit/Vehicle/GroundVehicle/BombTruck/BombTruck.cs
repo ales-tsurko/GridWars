@@ -1,15 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BombTruck : MonoBehaviour {
+public class BombTruck : GroundVehicle {
+	public GameObject bombPrefab;
+	public Transform bombTransform;
 
-	// Use this for initialization
-	void Start () {
-	
+	[HideInInspector]
+	public GameUnit bomb;
+
+	public override void MasterStart() {
+		base.MasterStart();
+
+		/*
+		var initialState = new InitialGameUnitState();
+		initialState.position = bombTransform.position;
+		initialState.rotation = bombTransform.rotation;
+		initialState.player = player;
+
+		bomb = bombPrefab.GetComponent<GameUnit>().Instantiate(initialState);
+		*/
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+
+
 }
