@@ -628,10 +628,28 @@ public class GameUnit : MonoBehaviour, NetworkObjectDelegate {
 
 	public void ShowExplosion() {
 		if (deathExplosionPrefab != null) {
+			/*
 			var initialState = new InitialGameUnitState();
 			initialState.position = _t.position;
 			initialState.rotation = _t.rotation;
-			deathExplosionPrefab.GetComponent<Explosion>().Instantiate(initialState);
+			Explosion e = deathExplosionPrefab.GetComponent<Explosion>();
+			e.Instantiate(initialState);
+			*/
+
+			bool hasNoUnit = deathExplosionPrefab.GetComponent<GameUnit>() == null;
+			if (hasNoUnit) {
+				// deathExplosionPrefab is a non-interacting component with a particle effect
+				var obj = Instantiate(deathExplosionPrefab);
+				obj.transform.position = _t.position;
+				obj.transform.rotation = _t.rotation;
+			} else {
+				// deathExplosionPrefab is an Explosion gameunit
+				var initialState = new InitialGameUnitState();
+				initialState.position = _t.position;
+				initialState.rotation = _t.rotation;
+				deathExplosionPrefab.GetComponent<Explosion>().Instantiate(initialState);
+			}
+
 			//obj.transform.localScale *= 15;
 		}
 	}
