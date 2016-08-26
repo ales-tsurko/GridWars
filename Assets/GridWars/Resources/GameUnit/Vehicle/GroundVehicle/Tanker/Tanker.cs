@@ -20,10 +20,10 @@ public class Tanker : GroundVehicle {
 
 	public void BlowUp() {
 		var initialState = new GameUnitState();
+		initialState.prefabGameUnit = prefabBombExplosion.GetComponent<BigBoom>();
 		initialState.player = player;
-		//var projUnit = (BigBoom) 
-		prefabBombExplosion.GetComponent<BigBoom>().Instantiate(transform.position, transform.rotation, initialState);
-		//projUnit.IgnoreCollisionsWith(this);
+		initialState.transform = transform;
+		initialState.InstantiateGameUnit();
 	}
 
 	public override void OnDead() {

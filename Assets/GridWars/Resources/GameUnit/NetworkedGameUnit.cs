@@ -4,8 +4,8 @@ using System.Collections;
 public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 	//GameUnitDelegate implementation
 
-	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) {
-		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, initialState, position, rotation).GetComponent(typeof(GameUnit));
+	public GameUnit InstantiateGameUnit() {
+		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, gameUnit.gameUnitState, gameUnit.gameUnitState.position, gameUnit.gameUnitState.rotation).GetComponent(typeof(GameUnit));
 	}
 
 	public void DestroySelf() {
@@ -19,21 +19,10 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 
 	//NetworkObject overrides
 
-	public override void MasterStart() {
-		gameUnit.gameUnitState.ApplyToBoltState();
-		boltState.receivedFirstUpdate = true;
-		base.MasterStart();
-	}
-
 	public override void MasterSlaveStart() {
 		gameUnit.gameUnitState = (entity.attachToken as GameUnitState);
-		gameUnit.gameUnitState.gameUnit = gameUnit;
-		base.MasterSlaveStart();
-	}
 
-
-	public override void SlaveStart() {
-		base.SlaveStart();
+		Debug.Log(gameUnit + ": playerNumber: " + gameUnit.gameUnitState.playerNumber);
 
 		boltState.SetTransforms(boltState.transform, transform);
 
@@ -45,6 +34,19 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 				s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
 			}
 		}
+
+		base.MasterSlaveStart();
+	}
+
+	public override void MasterStart() {
+		gameUnit.gameUnitState.ApplyToBoltState();
+		boltState.receivedFirstUpdate = true;
+		base.MasterStart();
+	}
+
+
+	public override void SlaveStart() {
+		base.SlaveStart();
 
 		if (!BoltNetwork.isServer) {
 			Destroy(GetComponent<Rigidbody>());
@@ -71,6 +73,4 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 			return entity.GetState<IGameUnitState>();
 		}
 	}
-
-	GameUnitState initialState;
 }

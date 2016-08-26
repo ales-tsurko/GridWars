@@ -138,6 +138,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	// --- MonoBehaviour --------------------------------------------
 
+	//Awake might be called multiple times for the same loaded prefab.
+	//Make sure that its idempotent.
 	protected override void Awake() {
 		base.Awake();
 
@@ -162,12 +164,31 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	//Networking
 
-	public GameUnitState gameUnitState;
+	GameUnitState _gameUnitState;
+	public GameUnitState gameUnitState {
+		get {
+			return _gameUnitState;
+		}
+
+		set {
+			if (value != null) {
+				value.gameUnit = this;
+			}
+			_gameUnitState = value;
+		}
+	}
 
 	public BoltEntity boltEntity {
 		get {
 			return GetComponent<BoltEntity>();
 		}
+	}
+
+	public GameUnit Instantiate() {
+		Awake();
+		var unit = gameUnitDelegate.InstantiateGameUnit();
+		gameUnitState = null;
+		return unit;
 	}
 
 	public virtual void MasterSlaveStart() {
@@ -211,6 +232,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void SlaveFixedUpdate(){}
 
+
+	// -----------------------
 
 	public virtual Rigidbody rigidBody() {
 		if (body == null) {
@@ -499,7 +522,10 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 				obj.transform.rotation = _t.rotation;
 			}
 			else {
-				deathExplosionPrefab.GetComponent<Explosion>().Instantiate(_t.position, _t.rotation, new GameUnitState());
+				var state = new GameUnitState();
+				state.prefabGameUnit = deathExplosionPrefab.GetComponent<Explosion>();
+				state.transform = _t;
+				state.InstantiateGameUnit();
 			}
 
 			//obj.transform.localScale *= 15;
@@ -529,19 +555,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			weapon.isActive = false;
 			weapon.enabled = false;
 		}
-	}
-
-	// --- Network ------------------------------------------
-
-	public GameUnit Instantiate(Vector3 position, Quaternion rotation, GameUnitState initialState) {
-		Awake();
-
-		var unit = gameUnitDelegate.Instantiate(position, rotation, initialState);
-		return unit;
-	}
-
-	public static T LoadAndInstantiate<T>(Vector3 position, Quaternion rotation, GameUnitState initialState) where T: GameUnit {
-		return (T) Load<T>().Instantiate(position, rotation, initialState);
 	}
 		
 }

@@ -13,10 +13,4 @@ public class TowerState : GameUnitState {
 		base.Read(packet);
 		unitPrefabPath = packet.ReadString();
 	}
-
-	public TowerState() : base() {
-	}
-
-	public TowerState(Tower t) : base(t) {
-	}
 }
