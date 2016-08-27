@@ -89,7 +89,7 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	public void OnMouseDown() {
+	public void AttemptQueueUnit() {
 		if (canQueueUnit) {
 			QueueUnit();
 		}
@@ -125,7 +125,7 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	KeyCode keyCode {
+	KeyCode attemptQueueUnitKeyCode {
 		get {
 			if (player.playerNumber <= gameUnit.buildKeyCodeForPlayers.Length) {
 				return gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
@@ -137,14 +137,9 @@ public class Tower : GroundBuilding {
 	}
 
 
-	//TODO move input logic to slaves
+	//TODO move input logic to slavesfkey
 	public override void MasterFixedUpdate () {
 		base.MasterFixedUpdate();
-		if (canQueueUnit) {
-			if (Input.GetKeyDown(keyCode)) {
-				QueueUnit();
-			}
-		}
 			
 		if (queueSize > 0) {
 			ReleaseUnits();
@@ -152,7 +147,7 @@ public class Tower : GroundBuilding {
 
 		if (npcModeOn) {
 			if (Random.value < 0.001) {
-				OnMouseDown();
+				AttemptQueueUnit();
 			}
 		}
 	}
@@ -183,6 +178,20 @@ public class Tower : GroundBuilding {
 			paintMode = 2;
 			player.PaintAsDisabled(gameObject);
 			player.PaintAsDisabled(iconObject);
+		}
+	}
+
+	public void OnMouseDown() {
+		if (boltEntity.hasControl) {
+			AttemptQueueUnitEvent.Create(boltEntity).Send();
+		}
+	}
+
+	public override void QueuePlayerCommands() {
+		base.QueuePlayerCommands();
+
+		if (Input.GetKeyDown(attemptQueueUnitKeyCode)) {
+			AttemptQueueUnitEvent.Create(boltEntity).Send();
 		}
 	}
 
