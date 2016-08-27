@@ -21,15 +21,18 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
+			/*
 			if (gameUnitState.player != value) {
 				if (gameUnitState.player) {
 					// if unit is changing player, 
 					//we need to remove it from the other player
 					value.RemoveGameObject(gameObject);
 				}
-				gameUnitState.player = value;
 				value.AddGameObject(gameObject);
 			}
+				*/
+			
+			gameUnitState.player = value;
 		}
 	}
 		

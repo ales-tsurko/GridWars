@@ -27,7 +27,7 @@ public class FPSDisplay : MonoBehaviour
 				string msg = "";
 
 				msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " fps";
-				msg += ", " + GameObjectCount() + " objs";
+				//msg += ", " + GameObjectCount() + " objs";
 
 				TM().text = msg;
 				lastTime = Time.time;

@@ -105,14 +105,16 @@ public class Player : MonoBehaviour {
 	// --- Tracking Objects --------------------------------------
 
 	public void UpdateIsDead() {
-		_isDead = (ownedObjects.Count == 0);
+		_isDead = (ownedObjects.Count == 1); // 1 is the PowerSource
 	}
 
 	public void AddGameObject(GameObject obj) {
-		if (ownedObjects.Contains(obj) == false) {
-			ownedObjects.Add(obj);
+		if (obj) {
+			if (ownedObjects.Contains(obj) == false) {
+				ownedObjects.Add(obj);
+			}
+			UpdateIsDead();
 		}
-		UpdateIsDead();
 	}
 
 	public void RemoveGameObject(GameObject obj) {

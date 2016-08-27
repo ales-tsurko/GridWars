@@ -105,6 +105,18 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 		
+	/*
+	public void IgnoreCollisionsWithUnitsOfType(System.Type unitType, bool ignore) {
+		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(unitType) ;
+		foreach (var obj in objs) {
+			GameUnit unit = obj.GameUnit();
+			if (unit != this) {
+				Physics.IgnoreCollision(unit.BoxCollider(), BoxCollider(), ignore);
+			}
+		}
+	}
+	*/
+
 	public void IgnoreCollisionsWithUnits(List <GameUnit> units, bool ignore) {
 		foreach (var unit in units) {
 			if (unit != this) {
