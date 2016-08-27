@@ -517,8 +517,10 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual void ConsiderTarget(GameObject obj) {
-		foreach(Weapon weapon in Weapons()) {
-			weapon.ConsiderTarget(obj);
+		if (!obj.IsDestroyed()) {
+			foreach (Weapon weapon in Weapons()) {
+				weapon.ConsiderTarget(obj);
+			}
 		}
 	}
 

@@ -447,7 +447,7 @@ public class Weapon : MonoBehaviour {
 	// --- Firing -----------------------------------------
 
 	public void TellTargetItsBeingFiredOn() {
-		if(target) {
+		if(target && !target.IsDestroyed()) {
 			var unit = target.GameUnit();
 			if (unit) {
 				unit.WasFiredOnByWeapon(this);
