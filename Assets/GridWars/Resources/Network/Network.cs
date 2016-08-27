@@ -80,7 +80,7 @@ public class Network : Bolt.GlobalEventListener {
 		if (BoltNetwork.isServer) {
 			connectedClients.Add(connection);
 		}
-		Debug.Log("START GAME");
+
 		Battlefield.current.StartGame();
 	}
 

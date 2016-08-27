@@ -38,7 +38,6 @@ public class Tower : GroundBuilding {
 	public GameObject unitPrefab {
 		get {
 			if (_unitPrefab == null) {
-				Debug.Log(unitPrefabPath);
 				_unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
 			}
 			return _unitPrefab;
@@ -202,8 +201,6 @@ public class Tower : GroundBuilding {
 		gameUnitState.rotation = transform.rotation;
 
 		var unit = gameUnitState.InstantiateGameUnit();
-
-		Debug.Log("CreateUnit unit: " + unit);
 
 		return unit;
 
