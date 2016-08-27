@@ -72,4 +72,21 @@ public class Player : MonoBehaviour {
 	public virtual bool IsDead() {
 		return units.TrueForAll(u => u.isDestroyed);
 	}
+
+	// --- Friend / Enemy ---------------------------------------
+
+	public virtual bool IsFriendOf(Player otherPlayer) {
+		if (otherPlayer == null) {
+			return false;
+		}
+		return playerNumber == otherPlayer.playerNumber;
+	}
+
+
+	public virtual bool IsEnemyOf(Player otherPlayer) {
+		if (otherPlayer == null) {
+			return false;
+		}
+		return playerNumber != otherPlayer.playerNumber;
+	}
 }
