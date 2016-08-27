@@ -513,7 +513,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-	void OnDestroy() {
+	void OnDestroy() { //TODO Unity doesn't like you to make things from OnDestroy
 		ShowFxExplosion();
 	}
 

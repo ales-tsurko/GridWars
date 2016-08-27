@@ -24,7 +24,7 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 
 		boltState.SetTransforms(boltState.transform, transform);
 
-		if (typeof(ITurretedUnitState).IsAssignableFrom(GetType())) {
+		if (typeof(ITurretedUnitState).IsAssignableFrom(boltState.GetType())) {
 			var s = entity.GetState<ITurretedUnitState>();
 			//TODO: this won't work for more than 1 weapon
 			foreach (var weapon in gameUnit.Weapons()) {
