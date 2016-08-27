@@ -71,7 +71,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			return hitPoints/maxHitPoints;
 		}
 	}
-
+		
 
 	// --- Sounds ------------------------------------------
 
@@ -230,12 +230,25 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		PlayBirthSound();
 	}
 
+	public bool IsThinkStep() {
+		return (App.shared.timeCounter % 20 == 0);
+	}
+
+	public virtual void Think() {
+		PickTarget();
+	}
+
 	public virtual void MasterFixedUpdate(){
 		/*
 		if (player == null) {
 			print ("SimulateOwner null player on " + this);
 		}
 		*/
+
+		if (IsThinkStep()) {
+			Think();
+		}
+
 
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
@@ -467,9 +480,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	// --- aiming --------------------
 
-	public float AngleToTarget() {
+	public float YAngleToTarget() {
 		var targetPos = target.transform.position;
-
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		return angle;

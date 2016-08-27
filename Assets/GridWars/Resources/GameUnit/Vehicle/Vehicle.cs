@@ -8,6 +8,8 @@ public class Vehicle : GameUnit  {
 	[HideInInspector]
 	public bool hasVehicleCollisionsOn;
 
+	GameObject nearestVehicle;
+
 	// some code to avoid vehicle collisions on launch from tower
 	// on start, we disable collisions with all extant same player vehicles
 	// each frame we test for vehicle box collision,
@@ -25,35 +27,94 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
+	public override void MasterFixedUpdate() {
+		base.MasterFixedUpdate();
+		//EnableVehicleCollisionsIfClear();
+	}
 
 	public virtual void SteerTowardsTarget() {
 		if (target != null) {
 			RotateTowardObject (target);
 		}
+		RotateAwayFromNearestObsticle();
 	}
 
+	public override void Think() {
+		base.Think();
+		UpdateNearestObsticle();
+	}
 
-	/*
-	public virtual void steerTowardsNearestEnemy() {
-		var obj = ClosestEnemyObject ();
-		if (obj != null) {
-			RotateTowardObject(obj);
+	private GameObject nearestObsticle;
+	private float avoidObsticleDistance = 6f;
+
+	public void UpdateNearestObsticle() {
+		// find nearest object that's 
+		// - a vehicle
+		// - not our target
+		// - not us
+
+
+		nearestObsticle = null;
+
+		List <GameUnit> vehicles = AllVehicles();
+		float distance = Mathf.Infinity;
+		 
+		foreach (GameUnit vehicle in vehicles) {
+			var otherObj = vehicle.gameObject;
+			if (otherObj != gameObject) { 
+				if (otherObj != target) {
+					float d = DistanceToObj(otherObj);
+					if (d < distance && d < avoidObsticleDistance) {
+						nearestObsticle = otherObj;
+						distance = d;
+					}
+				}
+			}
+		}
+
+		/*
+		if (distance > avoidDistance) {
+			nearestObsticle = null;
+		}
+		*/
+	}
+
+	public virtual void RotateAwayFromNearestObsticle() {
+		if (nearestObsticle) {
+			float r = (avoidObsticleDistance - DistanceToObj(nearestObsticle)) / avoidObsticleDistance;
+			float desire =  1f - r*r;
+			//float desire = 1f;
+
+			var otherPos = nearestObsticle.transform.position;
+			Vector3 dir = (otherPos - _t.position).normalized;
+			float angleToTarget = AngleBetweenOnAxis(_t.forward, dir, _t.up);
+
+			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+			Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
+			Debug.DrawLine(_t.position, _t.position + dir*rotationThrust, Color.red); // targetDir red
+
+			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * rotationThrust, ForceMode.Force);
 		}
 	}
-	*/
+
 
 	public virtual void RotateTowardObject(GameObject obj) {
+		/*
 		var targetPos = obj.transform.position;
 
 		Vector3 targetDir = (targetPos - _t.position).normalized;
-		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
-		//angleToTarget = angle;
+		float angleToTarget = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
+		*/
 
-		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
-		//Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+		float ya = YAngleToTarget();
 
-		rigidBody().AddTorque( _t.up * angle * rotationThrust, ForceMode.Force);
+		/*
+		Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+		Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
+		*/
+
+		rigidBody().AddTorque( _t.up * ya * rotationThrust, ForceMode.Force);
 	}
 
 	// utility methods -----------------------------------------
@@ -163,10 +224,4 @@ public class Vehicle : GameUnit  {
 		return false;
 	}
 
-	/*
-	public override void MasterFixedUpdate() {
-		base.MasterFixedUpdate();
-		//EnableVehicleCollisionsIfClear();
-	}
-	*/
 }

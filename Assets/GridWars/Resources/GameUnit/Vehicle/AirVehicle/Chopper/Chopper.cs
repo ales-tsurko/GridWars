@@ -51,7 +51,7 @@ public class Chopper : AirVehicle {
 		*/
 
 		if (!IsInStandoffRange()) {
-			float angleDiff = Mathf.Abs(AngleToTarget());
+			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
 				float diff = targetDistance() - standOffDistance;
 				return Mathf.Clamp(diff, 0f, 1f);

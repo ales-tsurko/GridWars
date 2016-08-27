@@ -57,19 +57,23 @@ public class Weapon : MonoBehaviour {
 	// Networking
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % 130 == 0);
+		return (App.shared.timeCounter % 20 == 0);
 	}
 
 	public void SimulateOwner() {
 		if (isActive) {
 			if (IsThinkStep()) {
-				PickTarget();
+				Think();
 			}
 			FireIfAppropriate();
 			AimIfAble();
 		} else {
 			target = null;
 		}
+	}
+
+	public void Think() {
+		PickTarget();
 	}
 
 	//MonoBehaviour
