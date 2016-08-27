@@ -5,7 +5,11 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 	//GameUnitDelegate implementation
 
 	public GameUnit InstantiateGameUnit() {
-		return (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, gameUnit.gameUnitState, gameUnit.gameUnitState.position, gameUnit.gameUnitState.rotation).GetComponent(typeof(GameUnit));
+		var newGameUnit = (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, gameUnit.gameUnitState, gameUnit.gameUnitState.position, gameUnit.gameUnitState.rotation).GetComponent(typeof(GameUnit));
+		if (newGameUnit.player != null) {
+			newGameUnit.player.TakeControlOf(newGameUnit);
+		}
+		return newGameUnit;
 	}
 
 	public void DestroySelf() {
@@ -48,11 +52,16 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 
 		if (!BoltNetwork.isServer) {
 			Destroy(GetComponent<Rigidbody>());
-			Destroy(GetComponent<Collider>());
+
+			if (shouldDestroyColliderOnClient) {
+				Destroy(GetComponent<Collider>());
+			}
 		}
 	}
 
 	//internal
+
+	protected bool shouldDestroyColliderOnClient = true;
 
 	void ReceivedFirstUpdate() {
 		if (boltState.receivedFirstUpdate) {

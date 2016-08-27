@@ -31,6 +31,10 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 		gameUnit.SlaveFixedUpdate();
 	}
 
+	void Update() {
+		gameUnit.QueuePlayerCommands();
+	}
+
 	//internal
 
 	GameUnit gameUnit {

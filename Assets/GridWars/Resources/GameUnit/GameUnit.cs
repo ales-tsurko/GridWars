@@ -164,6 +164,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	//Networking
 
+	protected List<Bolt.Event> playerCommands;
+
 	GameUnitState _gameUnitState;
 	public GameUnitState gameUnitState {
 		get {
@@ -192,6 +194,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual void MasterSlaveStart() {
+		playerCommands = new List<Bolt.Event>();
 	}
 
 	public virtual void MasterStart() {
@@ -230,6 +233,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual void SlaveFixedUpdate(){}
+
+	public virtual void QueuePlayerCommands(){}
 
 
 	// -----------------------

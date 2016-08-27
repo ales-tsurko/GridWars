@@ -84,6 +84,29 @@ public class Network : Bolt.GlobalEventListener {
 		Battlefield.current.StartGame();
 	}
 
+	public BoltConnection ConnectionForPlayer(Player player) {
+		if (BoltNetwork.IsSinglePlayer) {
+			return null;
+		}
+		else if (BoltNetwork.isServer) {
+			if (player.playerNumber == 1) {
+				return null;
+			}
+			else {
+				return connectedClients[player.playerNumber - 2];
+			}
+			
+		}
+		else {
+			if (player.playerNumber == 1) {
+				return connectionToServer;
+			}
+			else {
+				return null;
+			}
+		}
+	}
+
 	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
 		if (BoltNetwork.isClient) {
 			isRetrievingGameList = true;
@@ -97,6 +120,7 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	List<BoltConnection> connectedClients;
+	BoltConnection connectionToServer;
 
 	bool isGameFull {
 		get {

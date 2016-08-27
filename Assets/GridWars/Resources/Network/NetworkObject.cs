@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkObject : Bolt.EntityBehaviour {
+public class NetworkObject : Bolt.EntityEventListener {
 	//public interface
 
 	public NetworkObjectDelegate networkObjectDelegate {
@@ -30,6 +30,10 @@ public class NetworkObject : Bolt.EntityBehaviour {
 		networkObjectDelegate.SlaveFixedUpdate();
 	}
 
+	public virtual void QueuePlayerCommands() {
+		networkObjectDelegate.QueuePlayerCommands();
+	}
+
 	//internal interface
 
 	public override void Attached() {
@@ -48,6 +52,12 @@ public class NetworkObject : Bolt.EntityBehaviour {
 		base.SimulateOwner();
 
 		MasterFixedUpdate();
+	}
+
+	void Update() {
+		if (entity.isControllerOrOwner) {
+			QueuePlayerCommands();
+		}
 	}
 
 	void FixedUpdate() {

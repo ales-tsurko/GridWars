@@ -7,4 +7,5 @@ public interface NetworkObjectDelegate {
 	void SlaveStart();
 	void MasterFixedUpdate();
 	void SlaveFixedUpdate();
+	void QueuePlayerCommands();
 }

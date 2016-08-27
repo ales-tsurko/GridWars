@@ -5,6 +5,11 @@ public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
 	public float separation = 0.9f;
+	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
+		get {
+			return Network.shared.ConnectionForPlayer(this);
+		}
+	}
 
 	public int playerNumber {
 		get {
@@ -89,4 +94,18 @@ public class Player : MonoBehaviour {
 		}
 		return playerNumber != otherPlayer.playerNumber;
 	}
+
+	// --- Networking ---------------------------------------
+
+	public void TakeControlOf(GameUnit gameUnit) {
+		if (connection) {
+			//give control to client
+			gameUnit.boltEntity.AssignControl(connection);
+		}
+		else {
+			//take control as server
+			gameUnit.boltEntity.TakeControl();
+		}
+	}
+
 }
