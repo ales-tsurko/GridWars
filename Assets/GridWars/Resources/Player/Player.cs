@@ -5,6 +5,8 @@ public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
 	public float separation = 0.9f;
+	public List<GameObject> ownedObjects;
+	private bool _isDead = false;
 
 	public int playerNumber {
 		get {
@@ -31,6 +33,8 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start() {
+		ownedObjects = new List<GameObject>();
+
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
@@ -70,7 +74,8 @@ public class Player : MonoBehaviour {
 	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
-		return units.TrueForAll(u => u.isDestroyed);
+		return _isDead;
+		//return units.TrueForAll(u => u.isDestroyed);
 	}
 
 	// --- Friend / Enemy ---------------------------------------
@@ -88,5 +93,23 @@ public class Player : MonoBehaviour {
 			return false;
 		}
 		return playerNumber != otherPlayer.playerNumber;
+	}
+
+	// --- Tracking Objects --------------------------------------
+
+	public void UpdateIsDead() {
+		_isDead = (ownedObjects.Count == 0);
+	}
+
+	public void AddGameObject(GameObject obj) {
+		if (ownedObjects.Contains(obj) == false) {
+			ownedObjects.Add(obj);
+		}
+		UpdateIsDead();
+	}
+
+	public void RemoveGameObject(GameObject obj) {
+		ownedObjects.Remove(obj);
+		UpdateIsDead();
 	}
 }

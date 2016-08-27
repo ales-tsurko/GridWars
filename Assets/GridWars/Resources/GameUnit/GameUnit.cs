@@ -21,7 +21,15 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
-			gameUnitState.player = value;
+			if (gameUnitState.player != value) {
+				if (gameUnitState.player) {
+					// if unit is changing player, 
+					//we need to remove it from the other player
+					value.RemoveGameObject(gameObject);
+				}
+				gameUnitState.player = value;
+				value.AddGameObject(gameObject);
+			}
 		}
 	}
 		
@@ -171,9 +179,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
+			// warning: this is never called
 			if (value != null) {
 				value.gameUnit = this;
 			}
+
 			_gameUnitState = value;
 		}
 	}
@@ -207,6 +217,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		if (player == null) {
 			gameObject.Paint(Color.white, "Unit");
 		} else {
+			player.AddGameObject(gameObject); // hack because player setter is never called
 			player.Paint(gameObject);
 		}
 
@@ -441,7 +452,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void RemoveIfOutOfBounds () {
 		if (isOutOfBounds() ) {
-			Destroy (gameObject);
+			OnDead();
 		}
 	}
 
@@ -506,6 +517,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public void DestroySelf() {
+
+		if (player) {
+			player.RemoveGameObject(gameObject);
+		}
+
 		_isDestroyed = true;
 		gameUnitDelegate.DestroySelf();
 	}
