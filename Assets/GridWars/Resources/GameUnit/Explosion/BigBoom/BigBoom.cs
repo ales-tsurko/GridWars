@@ -11,7 +11,7 @@ public class BigBoom : Explosion {
 	float blastTime = 1f;
 	float startTime;
 	Vector3 initScale;
-	void Start () {
+	public override void Start () {
 		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
 	}
 
