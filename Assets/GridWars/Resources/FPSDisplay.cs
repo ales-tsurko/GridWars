@@ -4,6 +4,8 @@ using System.Collections;
 public class FPSDisplay : MonoBehaviour
 {
 	float lastTime;
+	int count;
+	int sampleCount = 100;
 
 	public void Start() {
 		TM().text = "";
@@ -13,20 +15,27 @@ public class FPSDisplay : MonoBehaviour
 		return GetComponent<TextMesh>();
 	}
 
-
-	void FixedUpdate()
+	void Update()
 	{
-		if (lastTime > 1) {
-			float dt = Time.time - lastTime;
-			int fps = Mathf.RoundToInt(1.0f / dt);
+		count++; 
 
-			if (fps != 60) {
-				TM().text = Mathf.Round(fps) + " FPS";
-			} else {
-				TM().text = "";
+			if (count == sampleCount) {
+				count = 0;
+
+				float dt = (Time.time - lastTime) / (float)sampleCount;
+				int fps = Mathf.RoundToInt(1.0f / dt);
+				string msg = "";
+
+				msg += Mathf.Round(fps) + " fps";
+				msg += ", " + GameObjectCount() + " objs";
+
+				TM().text = msg;
+				lastTime = Time.time;
 			}
-		}
+	}
 
-		lastTime = Time.time;
+	int GameObjectCount() {
+		GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
+		return allObjects.Length;
 	}
 }

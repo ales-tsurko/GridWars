@@ -206,8 +206,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 		if (player == null) {
 			gameObject.Paint(Color.white, "Unit");
-		}
-		else {
+		} else {
 			player.Paint(gameObject);
 		}
 
@@ -257,12 +256,27 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 		var results = new List<GameObject>();
 		foreach (GameObject obj in objs) {
-			if (obj.activeInHierarchy && !obj.IsDestroyed()) {
-				results.Add(obj);
+			if (obj.activeInHierarchy) {
+				if (!obj.IsDestroyed()) {
+					results.Add(obj);
+				}
 			}
 		}
 		return results;
 	}
+
+	public virtual bool IsFriendOf(GameUnit otherUnit) {
+		if (otherUnit == null) {
+			return false;
+		}
+
+		if (player == null) {
+			return false;
+		}
+
+		return player.IsFriendOf(otherUnit.player);
+	}
+
 
 	public virtual bool IsEnemyOf(GameUnit otherUnit) {
 		if (otherUnit == null) {
@@ -270,22 +284,10 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		if (player == null) {
-			//print ("null player " + this);
 			return false;
 		}
 
-		if (otherUnit == null) {
-			//print ("null otherUnit " + otherUnit);
-			return false;
-		}
-
-		if (otherUnit.player == null) {
-			//print ("null otherUnit.player " + otherUnit.player);
-			return false;
-		}
-
-		return (player.playerNumber != otherUnit.player.playerNumber);
-		//return (player != null) && (otherUnit.player != null) && (player != otherUnit.player);
+		return player.IsEnemyOf(otherUnit.player);
 	}
 
 	public float DistanceToObj(GameObject obj) {
@@ -294,6 +296,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual List<GameObject> EnemyObjects() {
+		/*
+		List<GameUnit> results = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(
+			(unit => !unit.isDestroyed) && this.IsEnemyOf(unit) && this.CanTargetUnit(unit)
+		);
+		*/
 
 		List<GameUnit> gameUnits = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(unit => !unit.isDestroyed);
 		var results = new List<GameObject>();
@@ -305,25 +312,68 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			}
 		}
 		return results;
+	}
 
-		/*var objs = activeGameObjects();
-		foreach (GameObject obj in objs) {
-			GameUnit unit = obj.GetComponent<GameUnit> ();
-			//if (obj.tag.Contains("Player") && !obj.tag.Equals(this.tag)) {
-			if ((obj.tag != null) && (unit != null && IsEnemyOf(unit))) {
-				results.Add(obj);
+	public virtual List<GameObject> EnemyObjectsWithWeapons() {
+		List<GameObject> objs = EnemyObjects();
+		List<GameObject> results = new List<GameObject>();
+		foreach (GameObject enemyObj in objs) {
+			if (enemyObj.GameUnit().Weapons().Length > 0) {
+				results.Add(enemyObj);
 			}
 		}
+		return results;
+	}
 
-		return results;*/
+	/*
+	public virtual List<GameObject> EnemyObjectsWithWeaponsThatCanTargetMe() {
+		List<GameObject> objs = EnemyObjects();
+		List<GameObject> results = new List<GameObject>();
+		foreach (GameObject enemyObj in objs) {
+			if (enemyObj.GameUnit().CanTargetUnit(this)) {
+				results.Add(enemyObj);
+			}
+		}
+		return results;
 	}
 
 	// --- targeting -------------------
 
+
+	public virtual float PriorityToTargetUnit(GameObject obj) {
+		GameUnit unit = object.GameUnit();
+		float p = 0;
+
+		// these two are taken care of elsewhere
+		// higher if we have weapon that can target it
+		// higher if closer 
+
+		if (unit) {
+
+			// higher if has any weapon
+			if (unit.Weapons().Count > 0) {
+				p += 1;
+			}
+
+			// higher if has weapon that can target us
+			if (unit.CanTargetUnit(this)) {
+				p += 1;
+			}
+		}
+
+		return p;
+	}
+	*/
+
 	public virtual bool CanTargetUnit(GameUnit unit) {
 
 		if (unit.isTargetable) {
-			return true;
+			foreach (Weapon weapon in Weapons()) {
+				if (weapon.CanTargetClassOfUnit(unit)) {
+					return true;
+				}
+			}
+			//return true;
 		}
 
 		return false;
@@ -461,6 +511,18 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	// --- Damage ------------------------------------------
+
+	public void WasFiredOnByWeapon(Weapon weapon) {
+		ConsiderTarget(weapon.owner);
+	}
+
+	public virtual void ConsiderTarget(GameObject obj) {
+		if (!obj.IsDestroyed()) {
+			foreach (Weapon weapon in Weapons()) {
+				weapon.ConsiderTarget(obj);
+			}
+		}
+	}
 
 	public virtual void ApplyDamage(float damage) {
 		if (!isAlive) {

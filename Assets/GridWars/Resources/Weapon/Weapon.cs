@@ -93,6 +93,12 @@ public class Weapon : MonoBehaviour {
 
 	// --- target selection -------------------
 
+	public virtual void ConsiderTarget(GameObject obj) {
+		if (CanTargetClassOfUnit(obj.GameUnit())) {
+			target = obj;
+		}
+	}
+
 	public virtual bool CanTargetClassOfUnit(GameUnit unit) {
 		if (unit == null) {
 			return false;
@@ -161,7 +167,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual GameObject ClosestTargetableEnemyObject() {
-		var ownerUnit = owner.GetComponent<GameUnit>();
+		var ownerUnit = owner.GameUnit();
 		var enemyObjs = ownerUnit.EnemyObjects();
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
@@ -268,29 +274,6 @@ public class Weapon : MonoBehaviour {
 		return 0;
 	}
 
-	float ClampAngle(float angle, float from, float to) {
-
-		// adjust to -180 to 180
-		if (angle > 180) {
-			angle -= 360;
-		}
-
-		if (angle < from) {
-			angle = from;
-		}
-
-		if (angle > to) {
-			angle = to;
-		}
-
-		// adjust back to 0 to 360
-		if (angle < 0) {
-			angle += 360;
-		}
-
-		return angle;
-	}
-
 	public void ApplyAngleLimits() {
 		/*
 		if (turretObjX) {
@@ -338,13 +321,12 @@ public class Weapon : MonoBehaviour {
 
 	public string ownerType() {
 		return owner.GetType().ToString();
-		//return gameObject.root.GetType().ToString();
 	}
 
+	// --- Aiming and deciding to fire ------------------
+
 	public bool AimIfAble() { 
-
-		//print(ownerType() + " AimIfAble ");
-
+		
 		if (target) {
 			
 			if (canRotateX()) {
@@ -362,10 +344,9 @@ public class Weapon : MonoBehaviour {
 
 			return true;
 		}
+
 		return false;
 	}
-
-	// --- firing ------------------
 
 	public bool ChooseToFire() {
 		float r = Random.value;
@@ -383,9 +364,9 @@ public class Weapon : MonoBehaviour {
 								ShowDebugAimLine();
 								IsAimed();
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
-								//if (!RayCastHitsNonEnemy()) {
+								if (!RayCastHitsFriend()) {
 									return true;
-								//}
+								}
 							}
 						}
 					}
@@ -407,14 +388,6 @@ public class Weapon : MonoBehaviour {
 	
 	public bool TargetInRange() {
 		return (range == -1) || (targetDistance() < range);
-	}
-
-	public bool hasAmmo() {
-		return (ammoCount == -1) || (ammoCount > 0);
-	}
-
-	public bool isLoaded() {
-		return Time.time > isReloadedAfterTime;
 	}
 
 	public bool IsAimed() {
@@ -440,6 +413,18 @@ public class Weapon : MonoBehaviour {
 		return angleDiffOk;
 	}
 
+	// --- Ammo and Loading -----------------------
+
+	public bool hasAmmo() {
+		return (ammoCount == -1) || (ammoCount > 0);
+	}
+
+	public bool isLoaded() {
+		return Time.time > isReloadedAfterTime;
+	}
+
+
+
 	public void FillClip() {
 		while ((clipAmmo < clipMaxAmmo) && (ammoCount > 0)) {
 			ammoCount--;
@@ -459,7 +444,19 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
+	// --- Firing -----------------------------------------
+
+	public void TellTargetItsBeingFiredOn() {
+		if(target && !target.IsDestroyed()) {
+			var unit = target.GameUnit();
+			if (unit) {
+				unit.WasFiredOnByWeapon(this);
+			}
+		}
+	}
+
 	public void Fire() {
+		TellTargetItsBeingFiredOn();
 		Projectile proj =  CreateProjectile();
 		if (proj != null) {
 			if (fireClip != null) {
@@ -498,7 +495,7 @@ public class Weapon : MonoBehaviour {
 		return projUnit;
 	}
 
-	// --- ray cast ---
+	// --- Ray Casting ----------------------------------------
 
 	public virtual bool RayCastHitsEnemy() {
 		GameObject obj = RayCastHitObject();
@@ -518,6 +515,11 @@ public class Weapon : MonoBehaviour {
 		return obj && !owner.GetComponent<GameUnit>().IsEnemyOf(obj.GetComponent<GameUnit>());
 	}
 
+	public virtual bool RayCastHitsFriend() {
+		GameObject obj = RayCastHitObject();
+		return obj && owner.GetComponent<GameUnit>().IsFriendOf(obj.GetComponent<GameUnit>());
+	}
+
 	public virtual GameObject RayCastHitObject() {
 		RaycastHit hit;
 
@@ -530,6 +532,31 @@ public class Weapon : MonoBehaviour {
 		}
 		
 		return null;
+	}
+
+	// --- Utilities -----------------------------------
+
+	float ClampAngle(float angle, float from, float to) {
+
+		// adjust to -180 to 180
+		if (angle > 180) {
+			angle -= 360;
+		}
+
+		if (angle < from) {
+			angle = from;
+		}
+
+		if (angle > to) {
+			angle = to;
+		}
+
+		// adjust back to 0 to 360
+		if (angle < 0) {
+			angle += 360;
+		}
+
+		return angle;
 	}
 
 	float Convert360to180(float angle) {
@@ -545,6 +572,8 @@ public class Weapon : MonoBehaviour {
 		}
 		return angle;
 	}
+
+	// --- Debugging --------------------------------------
 
 	#if UNITY_EDITOR
 	void OnDrawGizmos() {

@@ -6,6 +6,8 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	public Mesh theMesh;
 
+	bool npcModeOn = true;
+
 	public static Vector3 size {
 		get {
 			/*
@@ -146,6 +148,12 @@ public class Tower : GroundBuilding {
 			
 		if (queueSize > 0) {
 			ReleaseUnits();
+		}
+
+		if (npcModeOn) {
+			if (Random.value < 0.001) {
+				OnMouseDown();
+			}
 		}
 	}
 

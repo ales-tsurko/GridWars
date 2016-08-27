@@ -33,9 +33,9 @@ public class Player : MonoBehaviour {
 	void Start() {
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
-		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation*gameObject.transform.forward.z*battlefield.bounds.z/2);
+		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
 
-		gameObject.tag = "Player" + playerNumber;
+		//gameObject.tag = "Player" + playerNumber;
 
 		fortress = this.CreateChild<Fortress>();
 		fortress.player = this;
@@ -71,5 +71,22 @@ public class Player : MonoBehaviour {
 
 	public virtual bool IsDead() {
 		return units.TrueForAll(u => u.isDestroyed);
+	}
+
+	// --- Friend / Enemy ---------------------------------------
+
+	public virtual bool IsFriendOf(Player otherPlayer) {
+		if (otherPlayer == null) {
+			return false;
+		}
+		return playerNumber == otherPlayer.playerNumber;
+	}
+
+
+	public virtual bool IsEnemyOf(Player otherPlayer) {
+		if (otherPlayer == null) {
+			return false;
+		}
+		return playerNumber != otherPlayer.playerNumber;
 	}
 }
