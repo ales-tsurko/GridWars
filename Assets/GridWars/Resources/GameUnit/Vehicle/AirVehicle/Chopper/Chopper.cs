@@ -111,7 +111,7 @@ public class Chopper : AirVehicle {
 
 		Vector3 rotorUp = mainRotorTransform.up;
 		float speed = ForwardSpeed();
-		float desiredSpeed = ForwardDesire() * 4;
+		float desiredSpeed = ForwardDesire() * 3;
 		float speedDiff = desiredSpeed - speed;
 		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust);
 
