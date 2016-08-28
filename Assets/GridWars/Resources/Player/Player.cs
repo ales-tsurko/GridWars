@@ -102,6 +102,20 @@ public class Player : MonoBehaviour {
 		return playerNumber != otherPlayer.playerNumber;
 	}
 
+	public virtual List<GameObject> EnemyObjects() {
+		List<GameObject> objs = App.shared.stepCache.ActiveGameObjects();
+		var results = new List<GameObject>();
+		foreach (GameObject obj in objs) {
+			if (obj.IsDestroyed() == false) {
+				GameUnit gameUnit = obj.GameUnit();
+				if (gameUnit && gameUnit.player && (gameUnit.player != this)) {
+					results.Add(obj);
+				}
+			}
+		}
+		return results;
+	}
+
 	// --- Tracking Objects --------------------------------------
 
 	public void UpdateIsDead() {

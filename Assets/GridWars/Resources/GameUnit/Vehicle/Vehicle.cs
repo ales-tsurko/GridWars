@@ -137,6 +137,12 @@ public class Vehicle : GameUnit  {
 		return localVelocity.x;
 	}
 
+
+	public List<GameUnit> AllVehicles() {
+		return App.shared.stepCache.AllVehicles();
+	}
+
+	/*
 	public List<GameUnit> AllVehicles() {
 		List <GameObject> objs = activeGameObjects();
 		var results = new List<GameUnit>();
@@ -151,6 +157,7 @@ public class Vehicle : GameUnit  {
 
 		return results;
 	}
+	*/
 		
 	/*
 	public List<Vehicle> OwnVehilces() {

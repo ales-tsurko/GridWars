@@ -52,7 +52,7 @@ public class Tower : GroundBuilding {
 		isStaticUnit = true;
 
 		releaseZones = new List<ReleaseZone>();
-		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GetComponent<GameUnit>().powerCost);
+		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GameUnit().powerCost);
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;
 		var unitLength = unitSize.z;
@@ -223,7 +223,7 @@ public class Tower : GroundBuilding {
 
 	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
 		var gameUnitState = new GameUnitState();
-		gameUnitState.prefabGameUnit = unitPrefab.GetComponent<GameUnit>();
+		gameUnitState.prefabGameUnit = unitPrefab.GameUnit();
 		gameUnitState.player = player;
 		if (position == default(Vector3)) {
 			gameUnitState.position = transform.position + new Vector3(0, 0.1f, 0);

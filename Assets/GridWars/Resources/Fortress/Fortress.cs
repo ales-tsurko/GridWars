@@ -83,7 +83,7 @@ public class Fortress : MonoBehaviour {
 			var unitObject = Instantiate (Resources.Load<GameObject> ("GameUnit/Engineer/Engineer"));
 			unitObject.transform.position = transform.position + new Vector3(0, 0.1f, 0);
 			unitObject.transform.rotation = transform.rotation;
-			var gameUnit = unitObject.GetComponent<GameUnit>();
+			var gameUnit = unitObject.GameUnit();
 			gameUnit.player = player;
 			gameUnit.tag = "Player" + player.playerNumber;
 			gameUnit.GetComponent<Engineer> ().SwitchState (Engineer.State.Init);

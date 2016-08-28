@@ -285,6 +285,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 		
 	public virtual List<GameObject> activeGameObjects() {
+		return App.shared.stepCache.ActiveGameObjects();
+	}
+
+	/*
+	public virtual List<GameObject> activeGameObjects() {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 		var results = new List<GameObject>();
 		foreach (GameObject obj in objs) {
@@ -296,6 +301,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 		return results;
 	}
+	*/
 
 	public virtual bool IsFriendOf(GameUnit otherUnit) {
 		if (otherUnit == null) {
@@ -333,7 +339,18 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			(unit => !unit.isDestroyed) && this.IsEnemyOf(unit) && this.CanTargetUnit(unit)
 		);
 		*/
-
+		List<GameObject> objs = activeGameObjects();
+		var results = new List<GameObject>();
+		foreach (GameObject obj in objs) {
+			if (obj.IsDestroyed() == false) {
+				GameUnit gameUnit = obj.GameUnit();
+				if (gameUnit && gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
+					results.Add(obj);
+				}
+			}
+		}
+		return results;
+		/*
 		List<GameUnit> gameUnits = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(unit => !unit.isDestroyed);
 		var results = new List<GameObject>();
 		foreach (GameUnit gameUnit in gameUnits) {
@@ -344,6 +361,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			}
 		}
 		return results;
+		*/
 	}
 
 	public virtual List<GameObject> EnemyObjectsWithWeapons() {
@@ -613,7 +631,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	void ShowUnitExplosion() {
 		if (deathExplosionPrefab != null) {
-			var unitExplosion = deathExplosionPrefab.GetComponent<GameUnit>();
+			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
 				var state = new GameUnitState();
 				state.prefabGameUnit = deathExplosionPrefab.GetComponent<Explosion>();
@@ -636,7 +654,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	void ShowFxExplosion() {
 		if (deathExplosionPrefab != null) {
-			var unitExplosion = deathExplosionPrefab.GetComponent<GameUnit>();
+			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {
 				var obj = Instantiate(deathExplosionPrefab);
 				obj.transform.position = _t.position;

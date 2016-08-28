@@ -6,7 +6,7 @@ using System.Collections;
 public class GameUnitIcon : MonoBehaviour {
 	public void Enable() {
 		// make sure other units don't target the icon!
-		GameUnit unit = gameObject.GetComponent<GameUnit>();
+		GameUnit unit = gameObject.GameUnit();
 		unit.isTargetable = false;
 
 		unit.deathExplosionPrefab = null;
