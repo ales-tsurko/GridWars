@@ -160,7 +160,13 @@ public class Weapon : MonoBehaviour {
 		if (!CanTargetObj(target)|| !TargetInRange()) {
 			//bool isTargetable = owner.GameUnit().isTargetable;
 			//var oldTarget = target;
-			GameObject newTarget = ClosestTargetableEnemyObject();
+
+			GameObject newTarget = ClosestTargetableEnemyObjectWithWeapon();
+
+			if (newTarget == null) {
+				newTarget = ClosestTargetableEnemyObject();
+			}
+
 			if (target != newTarget) {
 				target = newTarget;
 				UpdatedTarget();
@@ -187,6 +193,25 @@ public class Weapon : MonoBehaviour {
 				if (curDistance < distance) {
 					closest = obj;
 					distance = curDistance;
+				}
+			}
+		}
+		return closest;
+	}
+
+	public virtual GameObject ClosestTargetableEnemyObjectWithWeapon() {
+		var ownerUnit = owner.GameUnit();
+		var enemyObjs = ownerUnit.EnemyObjects();
+		GameObject closest = null;
+		float distance = Mathf.Infinity;
+		foreach (GameObject obj in enemyObjs) {
+			if (CanTargetObj(obj)) {
+				if (obj.GameUnit().Weapons().Length > 0) {
+					float curDistance = DistanceToObj(obj);
+					if (curDistance < distance) {
+						closest = obj;
+						distance = curDistance;
+					}
 				}
 			}
 		}
@@ -431,6 +456,12 @@ public class Weapon : MonoBehaviour {
 		return (ammoCount == -1) || (ammoCount > 0);
 	}
 
+	public void DecrementAmmo() {
+		if (ammoCount > 0) {
+			ammoCount--;
+		}
+	}
+
 	public bool isLoaded() {
 		return Time.time > isReloadedAfterTime;
 	}
@@ -438,8 +469,8 @@ public class Weapon : MonoBehaviour {
 
 
 	public void FillClip() {
-		while ((clipAmmo < clipMaxAmmo) && (ammoCount > 0)) {
-			ammoCount--;
+		while ((clipAmmo < clipMaxAmmo+1) && hasAmmo()) {
+			DecrementAmmo();
 			clipAmmo++;
 		}
 	}
