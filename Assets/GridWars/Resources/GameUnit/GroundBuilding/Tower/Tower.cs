@@ -6,7 +6,7 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	public Mesh theMesh;
 
-	bool npcModeOn = true;
+	bool npcModeOn = false;
 
 	public static Vector3 size {
 		get {
@@ -151,15 +151,31 @@ public class Tower : GroundBuilding {
 			}
 		}
 	}
+		
+	int paintMode = 0;
 
 	public override void SlaveFixedUpdate() {
 		base.SlaveFixedUpdate();
 
 		if (canQueueUnit) {
+			Paint();
+		}
+		else {
+			PaintAsDisabled();
+		}
+	}
+
+	public void Paint() {
+		if (paintMode != 1) {
+			paintMode = 1;
 			player.Paint(gameObject);
 			player.Paint(iconObject);
 		}
-		else {
+	}
+
+	public void PaintAsDisabled() {
+		if (paintMode != 2) {
+			paintMode = 2;
 			player.PaintAsDisabled(gameObject);
 			player.PaintAsDisabled(iconObject);
 		}

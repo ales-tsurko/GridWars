@@ -15,6 +15,7 @@ public class App : MonoBehaviour {
 
 	public AssemblyCSharp.TimerCenter timerCenter;
 	private static App _shared;
+	public int timeCounter = 0;
 
 	public static App shared {
 		get {
@@ -32,10 +33,13 @@ public class App : MonoBehaviour {
 		//BTest.ClassTest();
 
 		timerCenter = new AssemblyCSharp.TimerCenter();
+		Application.targetFrameRate = 60;
+
 	}
 
 	public void FixedUpdate() {
 		timerCenter.Step();
+		timeCounter++;
 	}
 
 	// Finding Paths --------------------

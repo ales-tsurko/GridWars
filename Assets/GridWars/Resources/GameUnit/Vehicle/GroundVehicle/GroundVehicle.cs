@@ -7,13 +7,14 @@ public class GroundVehicle : Vehicle {
 	public override void MasterFixedUpdate () {
 		base.MasterFixedUpdate ();
 
-		PickTarget ();
 		SteerTowardsTarget ();
 
+		// Drive!
 		if (WheelsAreTouchingGround () && !IsInStandoffRange()) {
 			rigidBody ().AddForce (_t.forward * thrust);
 		}
 
+		// Die if flipped
 		if (IsAtWeirdAngle()) {
 			OnDead();
 		}
@@ -33,5 +34,6 @@ public class GroundVehicle : Vehicle {
 		float a2 = AngleBetweenOnAxis (_t.up, worldUp, _t.right); 
 		return Mathf.Abs(a1) + Mathf.Abs(a2);
 	}
+
 
 }

@@ -51,7 +51,7 @@ public class Chopper : AirVehicle {
 		*/
 
 		if (!IsInStandoffRange()) {
-			float angleDiff = Mathf.Abs(AngleToTarget());
+			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
 				float diff = targetDistance() - standOffDistance;
 				return Mathf.Clamp(diff, 0f, 1f);
@@ -68,9 +68,9 @@ public class Chopper : AirVehicle {
 
 	public void  ApplyRotorLRThrust() {
 		// z tilt control ------------------------------------------------------
-		float upThrust = TotalUpThrust()/1f;
+		float upThrust = TotalUpThrust()/2f;
 
-		float offset = 1.0f;
+		float offset = 1.5f;
 		Vector3 thrustPointLeft  = mainRotorTransform.position - mainRotorTransform.right * offset;
 		Vector3 thrustPointRight = mainRotorTransform.position + mainRotorTransform.right * offset;
 
@@ -86,7 +86,7 @@ public class Chopper : AirVehicle {
 	}
 				
 	public float TotalUpThrust() {
-		float upThrust = 16f * UpDesire(); // * 1.5f;
+		float upThrust = thrust * UpDesire(); // * 1.5f;
 
 		if (IsHeavilyDamaged()) {
 			upThrust *= Random.value;
@@ -105,7 +105,7 @@ public class Chopper : AirVehicle {
 
 		// forward/backward control ---------------------------------------------------
 
-		float offset = 1.0f;
+		float offset = 1f;
 		Vector3 mainRotorThrustPointBack  = mainRotorTransform.position + mainRotorTransform.forward * offset;
 		Vector3 mainRotorThrustPointFront = mainRotorTransform.position - mainRotorTransform.forward * offset;
 
@@ -113,7 +113,7 @@ public class Chopper : AirVehicle {
 		float speed = ForwardSpeed();
 		float desiredSpeed = ForwardDesire() * 4;
 		float speedDiff = desiredSpeed - speed;
-		float f = Mathf.Clamp(speedDiff/10, -4, 4);
+		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust);
 
 		Vector3 frontForce = rotorUp * ((upThrust + f) / 2);
 		Vector3 backForce  = rotorUp * ((upThrust - f) / 2);
@@ -130,8 +130,10 @@ public class Chopper : AirVehicle {
 
 	public void SpinRotors() {
 		// rotors don't look right except at certain speeds, so hard wire this
-		Object_rotDY(mainRotor, 40f); //Mathf.Abs(upThrust*5.0f) + 20f);
-		Object_rotDY (tailRotor, 40f);
+		float r = Random.value;
+		float t = TotalUpThrust();
+		Object_rotDY(mainRotor, 20f + t*r); //Mathf.Abs(upThrust*5.0f) + 20f);
+		Object_rotDY (tailRotor, 20f+ 20f*r);
 	}
 
 	public override void MasterFixedUpdate () {

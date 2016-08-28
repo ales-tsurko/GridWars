@@ -21,6 +21,17 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
+			/*
+			if (gameUnitState.player != value) {
+				if (gameUnitState.player) {
+					// if unit is changing player, 
+					//we need to remove it from the other player
+					value.RemoveGameObject(gameObject);
+				}
+				value.AddGameObject(gameObject);
+			}
+				*/
+			
 			gameUnitState.player = value;
 		}
 	}
@@ -60,7 +71,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			return hitPoints/maxHitPoints;
 		}
 	}
-
+		
 
 	// --- Sounds ------------------------------------------
 
@@ -173,9 +184,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		set {
+			// warning: this is never called
 			if (value != null) {
 				value.gameUnit = this;
 			}
+
 			_gameUnitState = value;
 		}
 	}
@@ -210,10 +223,19 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		if (player == null) {
 			gameObject.Paint(Color.white, "Unit");
 		} else {
+			player.AddGameObject(gameObject); // hack because player setter is never called
 			player.Paint(gameObject);
 		}
 
 		PlayBirthSound();
+	}
+
+	public bool IsThinkStep() {
+		return (App.shared.timeCounter % 20 == 0);
+	}
+
+	public virtual void Think() {
+		PickTarget();
 	}
 
 	public virtual void MasterFixedUpdate(){
@@ -222,6 +244,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			print ("SimulateOwner null player on " + this);
 		}
 		*/
+
+		if (IsThinkStep()) {
+			Think();
+		}
+
 
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
@@ -446,16 +473,15 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void RemoveIfOutOfBounds () {
 		if (isOutOfBounds() ) {
-			Destroy (gameObject);
+			OnDead();
 		}
 	}
 
 
 	// --- aiming --------------------
 
-	public float AngleToTarget() {
+	public float YAngleToTarget() {
 		var targetPos = target.transform.position;
-
 		Vector3 targetDir = (targetPos - _t.position).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 		return angle;
@@ -511,6 +537,11 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public void DestroySelf() {
+
+		if (player) {
+			player.RemoveGameObject(gameObject);
+		}
+
 		_isDestroyed = true;
 		gameUnitDelegate.DestroySelf();
 	}

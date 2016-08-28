@@ -54,16 +54,26 @@ public class Weapon : MonoBehaviour {
 	public List<System.Type> targetableTypes;
 
 
-	//Networking
+	// Networking
+
+	public bool IsThinkStep() {
+		return (App.shared.timeCounter % 20 == 0);
+	}
 
 	public void SimulateOwner() {
 		if (isActive) {
-			PickTarget();
+			if (IsThinkStep()) {
+				Think();
+			}
 			FireIfAppropriate();
 			AimIfAble();
 		} else {
 			target = null;
 		}
+	}
+
+	public void Think() {
+		PickTarget();
 	}
 
 	//MonoBehaviour
@@ -339,8 +349,10 @@ public class Weapon : MonoBehaviour {
 
 			ApplyAngleLimits();
 
+			/*
 			ShowDebugAimLine();
 			ShowDebugTargetLine();
+			*/
 
 			return true;
 		}

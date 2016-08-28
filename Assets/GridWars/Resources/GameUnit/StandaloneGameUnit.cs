@@ -15,7 +15,7 @@ public class StandaloneGameUnit : MonoBehaviour, GameUnitDelegate {
 		return newGameUnit;
 	}
 
-	public void DestroySelf() {
+	public virtual void DestroySelf() {
 		Destroy(gameObject);
 	}
 
