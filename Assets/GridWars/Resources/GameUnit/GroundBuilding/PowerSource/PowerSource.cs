@@ -88,6 +88,10 @@ public class PowerSource : GroundBuilding {
 		power = Mathf.Min(power + Time.fixedDeltaTime*generationRate, maxPower);
 	}
 
+	public override void Think() {
+		// doesn't need to pick targets
+	}
+
 	void Update() {
 		var activeSegmentCount = segmentCount*power/maxPower;
 

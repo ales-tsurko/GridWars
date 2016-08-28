@@ -18,6 +18,6 @@ public class DestroyAfter : MonoBehaviour {
 			v = 0f;
 		}
 
-		gameObject.SetAlpha(v);
+		//gameObject.SetAlpha(v);
 	}
 }

@@ -26,6 +26,10 @@ public class Projectile : GameUnit {
 		gameObject.Paint(Color.white, "Unit");
 	}
 
+	public override void Think() {
+		// doesn't need to pick targets
+	}
+
 	protected Collision lastCollision;
 
 	void OnCollisionEnter(Collision collision) {

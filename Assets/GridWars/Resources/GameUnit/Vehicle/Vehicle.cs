@@ -53,30 +53,16 @@ public class Vehicle : GameUnit  {
 		// - not our target
 		// - not us
 
+		List <GameObject> vehicles = App.shared.stepCache.AllVehicleObjects();
+		vehicles.Remove(gameObject);
 
-		nearestObsticle = null;
+		nearestObsticle = ClosestOfObjects(vehicles);
 
-		List <GameUnit> vehicles = AllVehicles();
-		float distance = Mathf.Infinity;
-		 
-		foreach (GameUnit vehicle in vehicles) {
-			var otherObj = vehicle.gameObject;
-			if (otherObj != gameObject) { 
-				if (otherObj != target) {
-					float d = DistanceToObj(otherObj);
-					if (d < distance && d < avoidObsticleDistance) {
-						nearestObsticle = otherObj;
-						distance = d;
-					}
-				}
+		if (nearestObsticle != null) {
+			if (DistanceToObj(nearestObsticle) > avoidObsticleDistance) {
+				nearestObsticle = null;
 			}
 		}
-
-		/*
-		if (distance > avoidDistance) {
-			nearestObsticle = null;
-		}
-		*/
 	}
 
 	public virtual void RotateAwayFromNearestObsticle() {
@@ -117,61 +103,32 @@ public class Vehicle : GameUnit  {
 		rigidBody().AddTorque( _t.up * ya * rotationThrust, ForceMode.Force);
 	}
 
-	// utility methods -----------------------------------------
+	// --- Utility methods -----------------------------------------
 
 	public bool IsHeavilyDamaged() {
-		return ((hitPoints / maxHitPoints) < .5);
+		return (hpRatio < .5);
 	}
 
 	public float SmoothValue(float v) {
-		return Mathf.Sign(v)*Mathf.Sqrt(Mathf.Abs(v));
+		return Mathf.Sign(v) * Mathf.Sqrt(Mathf.Abs(v));
 	}
 		
+	public Vector3 LocalVelocity() {
+		return transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
+	}
+
 	public float ForwardSpeed() {
-		var localVelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
-		return localVelocity.z;
+		return LocalVelocity().z;
 	}
 
 	public float RightSpeed() {
-		var localVelocity = transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);
-		return localVelocity.x;
+		return LocalVelocity().x;
 	}
 
 
-	public List<GameUnit> AllVehicles() {
-		return App.shared.stepCache.AllVehicles();
+	public List<GameUnit> AllVehicleUnits() {
+		return App.shared.stepCache.AllVehicleUnits();
 	}
-
-	/*
-	public List<GameUnit> AllVehicles() {
-		List <GameObject> objs = activeGameObjects();
-		var results = new List<GameUnit>();
-
-		foreach (GameObject obj in objs) {
-			GameUnit unit = obj.GameUnit();
-
-			if (unit && unit.IsOfType(typeof(Vehicle))) {
-				results.Add(unit);
-			}
-		}
-
-		return results;
-	}
-	*/
-		
-	/*
-	public List<Vehicle> OwnVehilces() {
-		var results = new List<Vehicle>();
-
-		foreach (Vehicle vehicle in AllVehicles()) {
-			if (vehicle.player == player) {
-				results.Add(vehicle);
-			}
-		}
-
-		return results;
-	}
-	*/
 		
 	/*
 	public void IgnoreCollisionsWithUnitsOfType(System.Type unitType, bool ignore) {
@@ -196,14 +153,14 @@ public class Vehicle : GameUnit  {
 	public void DisableVehicleCollisions() {
 		if (hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = false;
-			IgnoreCollisionsWithUnits(AllVehicles(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits(), hasVehicleCollisionsOn);
 		}
 	}
 		
 	public void EnableVehicleCollisions() {
 		if (!hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = true;
-			IgnoreCollisionsWithUnits(AllVehicles(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits(), hasVehicleCollisionsOn);
 		}
 	}
 
@@ -220,7 +177,7 @@ public class Vehicle : GameUnit  {
 		if (!hasVehicleCollisionsOn) {
 			BoxCollider myCollider = BoxCollider();
 
-			foreach (var vehicle in AllVehicles()) {
+			foreach (var vehicle in AllVehicleUnits()) {
 				BoxCollider otherCollider = vehicle.BoxCollider();
 
 				if (myCollider.bounds.Intersects(otherCollider.bounds)) {

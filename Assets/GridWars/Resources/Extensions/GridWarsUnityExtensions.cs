@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public static class GridWarsUnityExtensions {
 
@@ -85,6 +86,29 @@ public static class GridWarsUnityExtensions {
 				}
 			}
 		}
+	}
+	*/
+
+	/*
+	public static List<GameUnit> UnitsForObjects(this List <GameObject> self) {
+		List <GameObject> units = new List <GameObject>();
+
+		foreach (GameObject obj in self) {
+			GameUnit unit = obj.GameUnit();
+			if (unit) {
+				units.Add(unit);
+			}
+		}
+		return units;
+	}
+
+	public List<GameObject> ObjectsForUnits(List <GameUnit> self) {
+		List <GameObject> objs = new List <GameObject>();
+
+		foreach (GameUnit unit in self) {
+			objs.Add(unit.gameObject);
+		}
+		return objs;
 	}
 	*/
 }

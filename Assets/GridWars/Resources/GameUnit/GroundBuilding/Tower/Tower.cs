@@ -89,6 +89,10 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	public override void Think() {
+		// doesn't need to pick targets
+	}
+
 	public void AttemptQueueUnit() {
 		if (canQueueUnit) {
 			QueueUnit();

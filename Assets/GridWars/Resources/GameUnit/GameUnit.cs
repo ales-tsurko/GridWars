@@ -71,7 +71,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			return hitPoints/maxHitPoints;
 		}
 	}
-		
 
 	// --- Sounds ------------------------------------------
 
@@ -336,18 +335,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual List<GameObject> EnemyObjects() {
 		return player.EnemyObjects();
-
-		/*
-		List <GameObject> objs = player.EnemyObjects();
-
-		var results = new List<GameObject>();
-		foreach (GameObject obj in objs) {
-			if (CanTargetUnit(obj.GameUnit())) {
-				results.Add(obj);
-			}
-		}
-		return results;
-		*/
 	}
 
 	/*
@@ -409,26 +396,26 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual void PickTarget() {
-		Weapon targetingWeapon = HighestPriorityWeaponWithTarget ();
-
-		if (target && target.IsDestroyed()) {
+		if (target != null && target.IsDestroyed()) {
 			target = null;
 		}
 
-		if (targetingWeapon) {
-			GameObject newTarget = targetingWeapon.target;
-			//GameObject newTarget = ClosestEnemyObject ();
-
-			if (target != newTarget) {
-				target = newTarget;
-				//UpdatedTarget();
+		if (Weapons().Length == 0) {
+			target = ClosestEnemyObject();
+		} else {
+			Weapon targetingWeapon = HighestPriorityWeaponWithTarget();
+			if (targetingWeapon) {
+				target = targetingWeapon.target;
 			}
 		}
 	}
+		
 
-	/*
 	public virtual GameObject ClosestEnemyObject() {
-		var objs = EnemyObjects();
+		return ClosestOfObjects(EnemyObjects());
+	}
+
+	public virtual GameObject ClosestOfObjects( List<GameObject> objs) {
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
 		Vector3 position = _t.position;
@@ -442,7 +429,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 		return closest;
 	}
-	*/
 
 	// -----------------------
 
@@ -659,6 +645,4 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-
-		
 }
