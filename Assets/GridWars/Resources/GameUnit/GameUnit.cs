@@ -611,10 +611,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-	void OnDestroy() { //TODO Unity doesn't like you to make things from OnDestroy
-		ShowFxExplosion();
-	}
-
 	void ShowUnitExplosion() {
 		if (deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GetComponent<GameUnit>();
@@ -624,6 +620,17 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 				state.transform = _t;
 				state.InstantiateGameUnit();
 			}
+		}
+	}
+
+	bool isQuitting = false;
+	void OnApplicationQuit() {
+		isQuitting = true;
+	}
+
+	void OnDestroy() {
+		if (!isQuitting) {
+			ShowFxExplosion();
 		}
 	}
 
