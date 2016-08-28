@@ -9,6 +9,8 @@ public class Player : MonoBehaviour {
 	public List<GameObject> ownedObjects;
 	private bool _isDead = false;
 
+	List<GameObject> _enemyObjects;
+
 	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
 		get {
 			return Network.shared.ConnectionForPlayer(this);
@@ -85,6 +87,20 @@ public class Player : MonoBehaviour {
 		//return units.TrueForAll(u => u.isDestroyed);
 	}
 
+	// ---------------
+
+	public void FixedUpdate() {
+		_enemyObjects = null;
+
+	}
+
+	/*
+	public void SlaveFixedUpdate() {
+		///base.SlaveFixedupdate();
+		_enemyObjects = null;
+	}
+	*/
+
 	// --- Friend / Enemy ---------------------------------------
 
 	public virtual bool IsFriendOf(Player otherPlayer) {
@@ -101,19 +117,28 @@ public class Player : MonoBehaviour {
 		}
 		return playerNumber != otherPlayer.playerNumber;
 	}
-
+		
 	public virtual List<GameObject> EnemyObjects() {
-		List<GameObject> objs = App.shared.stepCache.ActiveGameObjects();
-		var results = new List<GameObject>();
-		foreach (GameObject obj in objs) {
-			if (obj.IsDestroyed() == false) {
-				GameUnit gameUnit = obj.GameUnit();
-				if (gameUnit && gameUnit.player && (gameUnit.player != this)) {
-					results.Add(obj);
+		if (_enemyObjects == null) {
+			List<GameObject> objs = App.shared.stepCache.ActiveGameObjects();
+			_enemyObjects = new List<GameObject>();
+			foreach (GameObject obj in objs) {
+				if (obj.IsDestroyed() == false) {
+					GameUnit gameUnit = obj.GameUnit();
+					if (gameUnit && gameUnit.player && (gameUnit.player != this)) {
+						_enemyObjects.Add(obj);
+					}
 				}
 			}
 		}
-		return results;
+
+
+		for (int i = _enemyObjects.Count - 1; i >= 0; i--) {
+			if (_enemyObjects[i].IsDestroyed()) { 
+				_enemyObjects.RemoveAt(i);
+			}
+		}
+		return _enemyObjects;
 	}
 
 	// --- Tracking Objects --------------------------------------

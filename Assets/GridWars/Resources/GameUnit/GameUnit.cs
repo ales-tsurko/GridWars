@@ -334,34 +334,15 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual List<GameObject> EnemyObjects() {
-		/*
-		List<GameUnit> results = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(
-			(unit => !unit.isDestroyed) && this.IsEnemyOf(unit) && this.CanTargetUnit(unit)
-		);
-		*/
-		List<GameObject> objs = activeGameObjects();
+		List <GameObject> objs = player.EnemyObjects();
+
 		var results = new List<GameObject>();
 		foreach (GameObject obj in objs) {
-			if (obj.IsDestroyed() == false) {
-				GameUnit gameUnit = obj.GameUnit();
-				if (gameUnit && gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
-					results.Add(obj);
-				}
+			if (CanTargetUnit(obj.GameUnit())) {
+				results.Add(obj);
 			}
 		}
 		return results;
-		/*
-		List<GameUnit> gameUnits = new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(unit => !unit.isDestroyed);
-		var results = new List<GameObject>();
-		foreach (GameUnit gameUnit in gameUnits) {
-			if (gameUnit.gameObject.IsDestroyed() == false) {
-				if (gameUnit.player && (gameUnit.player != player) && CanTargetUnit(gameUnit)) {
-					results.Add(gameUnit.gameObject);
-				}
-			}
-		}
-		return results;
-		*/
 	}
 
 	public virtual List<GameObject> EnemyObjectsWithWeapons() {

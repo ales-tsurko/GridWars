@@ -21,7 +21,8 @@ namespace AssemblyCSharp {
 				_allVehicles = null;
 			}
 		}
-			
+
+		/*
 		public GameObject[] CacheFindObjectsOfType(System.Type aType) {
 			string key = aType.Name;
 
@@ -32,6 +33,7 @@ namespace AssemblyCSharp {
 
 			return typeCache[key];
 		}
+		*/
 
 		public List<GameObject> ActiveGameObjects() {
 			if (_activeGameObjects == null) {
@@ -43,6 +45,12 @@ namespace AssemblyCSharp {
 							_activeGameObjects.Add(obj);
 						}
 					}
+				}
+			}
+
+			for (int i = _activeGameObjects.Count - 1; i >= 0; i--) {
+				if (_activeGameObjects[i].IsDestroyed()) { 
+					_activeGameObjects.RemoveAt(i);
 				}
 			}
 			return _activeGameObjects;
@@ -58,6 +66,12 @@ namespace AssemblyCSharp {
 					if (unit && unit.IsOfType(typeof(Vehicle))) {
 						_allVehicles.Add(unit);
 					}
+				}
+			}
+
+			for (int i = _allVehicles.Count - 1; i >= 0; i--) {
+				if (_allVehicles[i].gameObject.IsDestroyed()) { 
+					_allVehicles.RemoveAt(i);
 				}
 			}
 			return _allVehicles;
