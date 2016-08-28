@@ -24,7 +24,7 @@ public class Battlefield : MonoBehaviour {
 		Application.runInBackground = true;
 
 		Network.shared.singlePlayer = true;
-		//Network.shared.singlePlayer = false;
+		Network.shared.singlePlayer = false;
 
 		CameraController.instance.enabled = false;
 	}

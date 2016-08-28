@@ -32,8 +32,13 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 			var s = entity.GetState<ITurretedUnitState>();
 			//TODO: this won't work for more than 1 weapon
 			foreach (var weapon in gameUnit.Weapons()) {
-				s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
-				s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+				if (weapon.turretObjX != null) {
+					s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
+				}
+
+				if (weapon.turretObjY != null) {
+					s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+				}
 			}
 		}
 
