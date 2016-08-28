@@ -12,9 +12,24 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		return newGameUnit;
 	}
 
+	bool isDestoryed = false;
 	public void DestroySelf() {
+		
 		if (BoltNetwork.isServer) {
-			BoltNetwork.Destroy(gameObject);
+
+			if (isDestoryed) {
+				print("DestroySelf called twice!"); 
+			}
+
+			isDestoryed = true;
+
+			try
+			{
+				BoltNetwork.Destroy(gameObject);
+			}
+			catch (BoltException e) {
+				print(e);
+			}
 		}
 		else {
 			throw new System.Exception("Can't destroy NetworkObject on the Client");

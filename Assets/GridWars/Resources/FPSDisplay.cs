@@ -19,23 +19,24 @@ public class FPSDisplay : MonoBehaviour
 	{
 		count++; 
 
-			if (count == sampleCount) {
-				count = 0;
+		if (count == sampleCount) {
+			count = 0;
 
-				float dt = (Time.time - lastTime) / (float)sampleCount;
-				int fps = Mathf.RoundToInt(1.0f / dt);
-				string msg = "";
+			float dt = (Time.time - lastTime) / (float)sampleCount;
+			int fps = Mathf.RoundToInt(1.0f / dt);
+			string msg = "";
 
-				msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " fps";
-				//msg += ", " + GameObjectCount() + " objs";
+			msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " fps";
+			msg += ", " + GameObjectCount() + " objs";
 
-				TM().text = msg;
-				lastTime = Time.time;
-			}
+			TM().text = msg;
+			lastTime = Time.time;
+		}
 	}
 
 	int GameObjectCount() {
-		GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
+		var allObjects = GameObject.FindObjectsOfType(typeof(MonoBehaviour)); 
+		//GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
 		return allObjects.Length;
 	}
 }

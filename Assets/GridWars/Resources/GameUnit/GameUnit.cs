@@ -541,6 +541,10 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			player.RemoveGameObject(gameObject);
 		}
 
+		if (_isDestroyed == true) {
+			print("DestroySelf called twice");
+		}
+
 		_isDestroyed = true;
 		gameUnitDelegate.DestroySelf();
 	}
