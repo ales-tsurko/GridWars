@@ -208,6 +208,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void MasterSlaveStart() {
 		playerCommands = new List<Bolt.Event>();
+		//SetAlpha(0.1f);
 	}
 
 	public virtual void MasterStart() {
@@ -657,5 +658,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			weapon.enabled = false;
 		}
 	}
+
+
 		
 }

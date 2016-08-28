@@ -60,4 +60,31 @@ public static class GridWarsUnityExtensions {
 		return type.IsAssignableFrom(self.GetType());
 	}
 		
+
+
+	// --- Fade ---------------------------
+
+	public static void SetAlpha(this GameObject self, float newAlpha) {
+		foreach (Renderer _renderer in self.GetComponentsInChildren<Renderer>() ) {
+			if (_renderer) {
+				foreach (Material _material in _renderer.materials) {
+					var bC = _material.color;
+					_material.color = new Color(bC.r, bC.g, bC.b, newAlpha);
+				}
+			}
+		}
+	}
+
+	/*
+	public static void FadeOutStep(this GameObject self) {
+		foreach (Renderer _renderer in gameObject.GetComponentsInChildren<Renderer>() ) {
+			if (_renderer) {
+				foreach (Material _material in _renderer.materials) {
+					var bC = _material.color;
+					_material.color = new Color(bC.r, bC.g, bC.b, Mathf.Lerp (bC.a, 0.0f, (Time.deltaTime * 0.01f)));
+				}
+			}
+		}
+	}
+	*/
 }
