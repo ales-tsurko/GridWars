@@ -334,6 +334,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public virtual List<GameObject> EnemyObjects() {
+		return player.EnemyObjects();
+
+		/*
 		List <GameObject> objs = player.EnemyObjects();
 
 		var results = new List<GameObject>();
@@ -343,31 +346,10 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			}
 		}
 		return results;
-	}
-
-	public virtual List<GameObject> EnemyObjectsWithWeapons() {
-		List<GameObject> objs = EnemyObjects();
-		List<GameObject> results = new List<GameObject>();
-		foreach (GameObject enemyObj in objs) {
-			if (enemyObj.GameUnit().Weapons().Length > 0) {
-				results.Add(enemyObj);
-			}
-		}
-		return results;
+		*/
 	}
 
 	/*
-	public virtual List<GameObject> EnemyObjectsWithWeaponsThatCanTargetMe() {
-		List<GameObject> objs = EnemyObjects();
-		List<GameObject> results = new List<GameObject>();
-		foreach (GameObject enemyObj in objs) {
-			if (enemyObj.GameUnit().CanTargetUnit(this)) {
-				results.Add(enemyObj);
-			}
-		}
-		return results;
-	}
-
 	// --- targeting -------------------
 
 
@@ -443,6 +425,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+	/*
 	public virtual GameObject ClosestEnemyObject() {
 		var objs = EnemyObjects();
 		GameObject closest = null;
@@ -458,7 +441,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 		return closest;
 	}
-
+	*/
 
 	// -----------------------
 
@@ -573,8 +556,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		hitPoints -= damage;
-		if (smokeDamage !=null) {
-			smokeDamage.maxParticles = Mathf.Clamp (1000 - (int)((hitPoints / maxHitPoints) * 1000), 250, 1000);
+		if (smokeDamage != null) {
+			float max = 100f;
+			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
 		}
 		if (hitPoints <= 0) {
 			OnDead();

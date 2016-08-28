@@ -349,8 +349,8 @@ public class Weapon : MonoBehaviour {
 
 			ApplyAngleLimits();
 
-			/*
 			ShowDebugAimLine();
+			/*
 			ShowDebugTargetLine();
 			*/
 
@@ -373,7 +373,7 @@ public class Weapon : MonoBehaviour {
 					if (IsAimed()) {
 						if (TargetInRange()) {
 							if (ChooseToFire()) {
-								ShowDebugAimLine();
+								//ShowDebugAimLine();
 								IsAimed();
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
 								if (!RayCastHitsFriend()) {
@@ -608,6 +608,8 @@ public class Weapon : MonoBehaviour {
 	#endif
 
 	public void ShowDebugAimLine() {
+		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+		/*
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
 			
@@ -617,6 +619,7 @@ public class Weapon : MonoBehaviour {
 		}
 
 //		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+*/
 	}
 		
 	public void ShowDebugTargetLine() {

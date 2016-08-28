@@ -36,7 +36,7 @@ public class App : MonoBehaviour {
 		timerCenter = new AssemblyCSharp.TimerCenter();
 		stepCache = new AssemblyCSharp.StepCache();
 
-		Application.targetFrameRate = 120;
+		//Application.targetFrameRate = 120;
 	}
 
 	public void FixedUpdate() {
