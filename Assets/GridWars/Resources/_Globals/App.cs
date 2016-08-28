@@ -13,9 +13,12 @@ using System.Reflection;
 
 public class App : MonoBehaviour {
 
-	public AssemblyCSharp.TimerCenter timerCenter;
 	private static App _shared;
+
+	public AssemblyCSharp.TimerCenter timerCenter;
 	public int timeCounter = 0;
+
+	public AssemblyCSharp.StepCache stepCache;
 
 	public static App shared {
 		get {
@@ -30,15 +33,15 @@ public class App : MonoBehaviour {
 	// Game Loop -------------------
 
 	public void Start() {
-		//BTest.ClassTest();
-
 		timerCenter = new AssemblyCSharp.TimerCenter();
-		Application.targetFrameRate = 60;
+		stepCache = new AssemblyCSharp.StepCache();
 
+		Application.targetFrameRate = 60;
 	}
 
 	public void FixedUpdate() {
 		timerCenter.Step();
+		stepCache.Step();
 		timeCounter++;
 	}
 
@@ -76,8 +79,6 @@ public class App : MonoBehaviour {
 			string soundPath = path + "/Sounds/birth";
 			return Resources.Load<AudioClip>(soundPath);
 	}
-
-
 }
 
 

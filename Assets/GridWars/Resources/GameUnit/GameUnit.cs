@@ -648,24 +648,24 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		
 	// --- Weapons ------------------------------------------
 
+	Weapon[] _weapons;
+
 	public Weapon[] Weapons() {
-		Weapon[] weapons = GetComponentsInChildren<Weapon>();
-		return weapons;
+		if (_weapons == null) {
+			_weapons = GetComponentsInChildren<Weapon>();
+		}
+		return _weapons;
 	}
 
 	public void SetupWeapons() {
-		Weapon[] weapons = Weapons();
-
-		foreach (Weapon weapon in weapons) {
+		foreach (Weapon weapon in Weapons()) {
 			weapon.owner = gameObject;
 			weapon.enabled = true;
 		}
 	}
 
 	public void DeactivateWeapons() {
-		Weapon[] weapons = Weapons();
-
-		foreach (Weapon weapon in weapons) {
+		foreach (Weapon weapon in Weapons()) {
 			weapon.isActive = false;
 			weapon.enabled = false;
 		}
