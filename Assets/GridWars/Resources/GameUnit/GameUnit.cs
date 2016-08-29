@@ -231,7 +231,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % 20 == 0);
+		//return (App.shared.timeCounter % 20 == 0);
+		float chance = 1f / 20f;
+		return (UnityEngine.Random.value < chance);
 	}
 
 	public virtual void Think() {
@@ -359,7 +361,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 		return results;
 	}
-		
 
 	/*
 	// --- targeting -------------------
@@ -398,7 +399,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 					return true;
 				}
 			}
-			//return true;
 		}
 
 		return false;
