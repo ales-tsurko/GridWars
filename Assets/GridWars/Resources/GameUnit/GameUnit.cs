@@ -217,6 +217,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void MasterSlaveStart() {
 		playerCommands = new List<Bolt.Event>();
+		transform.position = gameUnitState.position;
+		transform.rotation = gameUnitState.rotation;
 		//SetAlpha(0.1f);
 	}
 
