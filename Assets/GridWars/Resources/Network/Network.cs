@@ -134,15 +134,40 @@ public class Network : Bolt.GlobalEventListener {
 
 	// Use this for initialization
 	void Start () {
+		
 		if (singlePlayer) {
 			BoltLauncher.StartSinglePlayer();
 		}
+
+		//Join Button Creation
+		UIButton joinButton = UI.RoundButton ();
+		joinButton.SetText ("Join");
+		joinButton.SetAction (StartClient);
+		joinButton.SetPosition (.9f, .8f); //sets the position relative to the center of the screen based on the height and width
+
+		//Host Button Creation
+		UIButton hostButton = UI.RoundButton ();
+		hostButton.SetText ("Host");
+		hostButton.SetAction (StartServer);
+		hostButton.SetPosition (.9f, .4f); //sets the position relative to the center of the screen based on the height and width
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+	void StartServer () {
+		isStarting = true;
+		connectedClients = new List<BoltConnection>();
+		BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
+	}
+
+	void StartClient () {
+		isStarting = true;
+		BoltLauncher.StartClient();
+	}
+
 
 	void OnGUI() {
 		if (!singlePlayer) {
@@ -178,13 +203,10 @@ public class Network : Bolt.GlobalEventListener {
 				}
 				else {
 					if (GUILayout.Button("Host")) {
-						isStarting = true;
-						connectedClients = new List<BoltConnection>();
-						BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
+						StartServer ();
 					}
 					else if(GUILayout.Button("Join")) {
-						isStarting = true;
-						BoltLauncher.StartClient();
+						StartClient ();
 					}
 				}
 			}
