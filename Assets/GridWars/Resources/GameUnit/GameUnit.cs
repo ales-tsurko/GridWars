@@ -401,13 +401,17 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 
 		if (Weapons().Length == 0) {
-			target = ClosestEnemyObject();
+			target = DefaultTarget();
 		} else {
 			Weapon targetingWeapon = HighestPriorityWeaponWithTarget();
 			if (targetingWeapon) {
 				target = targetingWeapon.target;
 			}
 		}
+	}
+
+	public virtual GameObject DefaultTarget() {
+		return ClosestEnemyObject();
 	}
 		
 
@@ -460,7 +464,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		return Vector3.Distance(transform.position, target.transform.position);
 	}
 
-	void OnCollisionEnter(Collision collision) {
+	public virtual void OnCollisionEnter(Collision collision) {
 		/*
 		if (collision.collider.name == "BattlefieldPlane") {
 			return;
