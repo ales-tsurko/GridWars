@@ -69,6 +69,9 @@ public static class GridWarsUnityExtensions {
 		foreach (Renderer _renderer in self.GetComponentsInChildren<Renderer>() ) {
 			if (_renderer) {
 				foreach (Material _material in _renderer.materials) {
+					if (!_material.HasProperty ("_Color")) {
+						continue;
+					}
 					var bC = _material.color;
 					_material.color = new Color(bC.r, bC.g, bC.b, newAlpha);
 				}
