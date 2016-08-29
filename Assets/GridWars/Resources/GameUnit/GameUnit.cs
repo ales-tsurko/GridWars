@@ -72,6 +72,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+	public void BecomeIcon() {
+		isTargetable = false;
+
+		deathExplosionPrefab = null;
+
+		Destroy(GetComponent<Collider>());
+		Destroy(GetComponent<Rigidbody>());
+		gameObject.DeepRemoveScripts();
+	}
+
 	// --- Sounds ------------------------------------------
 
 	AudioSource _audioSource;

@@ -31,6 +31,13 @@ public static class GridWarsUnityExtensions {
 		});
 	}
 
+	public static void DeepRemoveScripts(this GameObject self) {
+		foreach (var script in self.GetComponentsInChildren<MonoBehaviour>()) {
+			script.enabled = false;
+			UnityEngine.Object.Destroy(script);
+		}
+	}
+
 	public static T CreateChild<T>(this MonoBehaviour self) where T: MonoBehaviour {
 		var gameObject = new GameObject();
 		gameObject.transform.parent = self.transform;
