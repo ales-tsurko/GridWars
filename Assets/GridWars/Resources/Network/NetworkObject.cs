@@ -34,6 +34,10 @@ public class NetworkObject : Bolt.EntityEventListener {
 		networkObjectDelegate.QueuePlayerCommands();
 	}
 
+	public virtual void SlaveDied() {
+		networkObjectDelegate.SlaveDied();
+	}
+
 	//internal interface
 
 	public override void Attached() {
@@ -62,5 +66,10 @@ public class NetworkObject : Bolt.EntityEventListener {
 
 	void FixedUpdate() {
 		SlaveFixedUpdate();
+	}
+
+	public override void Detached() {
+		base.Detached();
+		SlaveDied();
 	}
 }

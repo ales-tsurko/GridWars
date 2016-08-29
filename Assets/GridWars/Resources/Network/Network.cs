@@ -55,6 +55,8 @@ public class Network : Bolt.GlobalEventListener {
 		BoltNetwork.RegisterTokenClass<TowerState>();
 		BoltNetwork.RegisterTokenClass<PowerSourceState>();
 		BoltNetwork.RegisterTokenClass<ServerToken>();
+		BoltNetwork.RegisterTokenClass<GameUnitDeathEvent>();
+		BoltNetwork.RegisterTokenClass<ProjectileDeathEvent>();
 	}
 
 	public override void BoltStartDone() {

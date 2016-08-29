@@ -12,20 +12,20 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		return newGameUnit;
 	}
 
-	bool isDestoryed = false;
+	bool isDetroyed = false;
 	public void DestroySelf() {
 		
 		if (BoltNetwork.isServer) {
 
-			if (isDestoryed) {
+			if (isDetroyed) {
 				print("DestroySelf called twice!"); 
 			}
 
-			isDestoryed = true;
+			isDetroyed = true;
 
 			try
 			{
-				BoltNetwork.Destroy(gameObject);
+				BoltNetwork.Destroy(gameObject, networkObjectDelegate.deathEvent);
 			}
 			catch (BoltException e) {
 				print(e);
@@ -79,6 +79,14 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 		}
 
 		boltState.AddCallback("receivedFirstUpdate", ReceivedFirstUpdate);
+	}
+
+	public override void SlaveDied() {
+		gameUnit.deathEvent = entity.detachToken as GameUnitDeathEvent;
+		base.SlaveDied();
+		if (gameUnit.deathEvent != null) {
+			gameUnit.deathEvent.Apply();
+		}
 	}
 
 	//internal

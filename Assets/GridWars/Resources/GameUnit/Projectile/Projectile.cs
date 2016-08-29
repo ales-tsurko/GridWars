@@ -47,6 +47,14 @@ public class Projectile : GameUnit {
 	}
 
 	protected void Explode() {
+		if (!isDestroyed) {
+			deathEvent = new ProjectileDeathEvent();
+			deathEvent.transform = transform;
+			OnDead();
+		}
+	}
+
+	public void AttemptCreateExplosion() {
 		if (explosionPrefab != null) {
 			CreateExplosion();
 		}
@@ -54,8 +62,6 @@ public class Projectile : GameUnit {
 		//Transform t = obj.transform;
 		//obj.transform.eulerAngles = t.eulerAngles + rotOffset.eulerAngles;
 		//print("explode!");
-
-		Destroy (gameObject);
 	}
 
 	protected virtual GameObject CreateExplosion() {
@@ -92,5 +98,4 @@ public class Projectile : GameUnit {
 	public void IgnoreCollisionsWith(GameObject obj) {
 		Physics.IgnoreCollision(GetComponent<Collider>(), obj.GetComponent<Collider>());
 	}
-
 }

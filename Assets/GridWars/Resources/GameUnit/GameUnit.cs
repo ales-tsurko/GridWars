@@ -275,6 +275,22 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void QueuePlayerCommands(){}
 
+	public virtual void SlaveDied(){}
+
+	GameUnitDeathEvent _deathEvent;
+	public GameUnitDeathEvent deathEvent {
+		get {
+			return _deathEvent;
+		}
+
+		set {
+			_deathEvent = value;
+			if (_deathEvent != null) {
+				_deathEvent.gameUnit = this;
+			}
+		}
+	}
+
 
 	// -----------------------
 
