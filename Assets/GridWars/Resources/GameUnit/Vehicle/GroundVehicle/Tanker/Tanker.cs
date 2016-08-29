@@ -42,6 +42,9 @@ public class Tanker : GroundVehicle {
 
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
+		if (!enabled) {
+			return;
+		}
 
 		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
 

@@ -87,10 +87,14 @@ public class GameUnitState : Bolt.IProtocolToken {
 
 	public virtual void Write(UdpKit.UdpPacket packet) {
 		packet.WriteInt(playerNumber);
+		packet.WriteVector3(position);
+		packet.WriteQuaternion(rotation);
 	}
 
 	public virtual void Read(UdpKit.UdpPacket packet) {
 		playerNumber = packet.ReadInt();
+		position = packet.ReadVector3();
+		rotation = packet.ReadQuaternion();
 	}
 
 	public virtual void ApplyToBoltState() {

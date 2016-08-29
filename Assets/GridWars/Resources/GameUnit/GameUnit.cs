@@ -72,6 +72,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+	public void BecomeIcon() {
+		isTargetable = false;
+
+		deathExplosionPrefab = null;
+
+		Destroy(GetComponent<Collider>());
+		Destroy(GetComponent<Rigidbody>());
+		gameObject.DeepRemoveScripts();
+	}
+
 	// --- Sounds ------------------------------------------
 
 	AudioSource _audioSource;
@@ -207,6 +217,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual void MasterSlaveStart() {
 		playerCommands = new List<Bolt.Event>();
+		transform.position = gameUnitState.position;
+		transform.rotation = gameUnitState.rotation;
 		//SetAlpha(0.1f);
 	}
 
@@ -264,6 +276,22 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	public virtual void SlaveFixedUpdate(){}
 
 	public virtual void QueuePlayerCommands(){}
+
+	public virtual void SlaveDied(){}
+
+	GameUnitDeathEvent _deathEvent;
+	public GameUnitDeathEvent deathEvent {
+		get {
+			return _deathEvent;
+		}
+
+		set {
+			_deathEvent = value;
+			if (_deathEvent != null) {
+				_deathEvent.gameUnit = this;
+			}
+		}
+	}
 
 
 	// -----------------------

@@ -6,7 +6,7 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	public Mesh theMesh;
 
-	bool npcModeOn = false;
+	bool npcModeOn = true;
 
 	public static Vector3 size {
 		get {
@@ -76,12 +76,13 @@ public class Tower : GroundBuilding {
 		base.SlaveStart();
 
 		//*
-		iconObject = CreateUnit().gameObject;
+		var iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
+		iconUnit.BecomeIcon();
 
+		iconObject = iconUnit.gameObject;
 		iconObject.transform.SetParent(transform);
 		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
-		iconObject.AddComponent<GameUnitIcon>().Enable();
 		//*/
 
 		if (CameraController.instance != null) {
@@ -208,7 +209,14 @@ public class Tower : GroundBuilding {
 	void ReleaseUnits() {
 		while (queueSize > 0 && unobstructedReleaseZone != null) {
 			var releaseZone = unobstructedReleaseZone;
-			var unit = CreateUnit(releaseZone.transform.position);
+
+			var gameUnitState = new GameUnitState();
+			gameUnitState.prefabGameUnit = unitPrefab.GameUnit();
+			gameUnitState.player = player;
+			gameUnitState.position = releaseZone.transform.position;
+			gameUnitState.rotation = transform.rotation;
+
+			var unit = gameUnitState.InstantiateGameUnit();
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
 			queueSize --;
 		}
@@ -224,24 +232,4 @@ public class Tower : GroundBuilding {
 			return null;
 		}
 	}
-
-	GameUnit CreateUnit(Vector3 position = default(Vector3)) {
-		var gameUnitState = new GameUnitState();
-		gameUnitState.prefabGameUnit = unitPrefab.GameUnit();
-		gameUnitState.player = player;
-		if (position == default(Vector3)) {
-			gameUnitState.position = transform.position + new Vector3(0, 0.1f, 0);
-		}
-		else {
-			gameUnitState.position = position;
-		}
-		gameUnitState.rotation = transform.rotation;
-
-		var unit = gameUnitState.InstantiateGameUnit();
-
-		return unit;
-
-		//unit.tag = "Player" + player.playerNumber; TODO is this used?
-	}
-
 }

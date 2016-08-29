@@ -55,6 +55,8 @@ public class Network : Bolt.GlobalEventListener {
 		BoltNetwork.RegisterTokenClass<TowerState>();
 		BoltNetwork.RegisterTokenClass<PowerSourceState>();
 		BoltNetwork.RegisterTokenClass<ServerToken>();
+		BoltNetwork.RegisterTokenClass<GameUnitDeathEvent>();
+		BoltNetwork.RegisterTokenClass<ProjectileDeathEvent>();
 	}
 
 	public override void BoltStartDone() {
@@ -79,6 +81,9 @@ public class Network : Bolt.GlobalEventListener {
 		isConnecting = false;
 		if (BoltNetwork.isServer) {
 			connectedClients.Add(connection);
+		}
+		else {
+			connectionToServer = connection;
 		}
 
 		Battlefield.current.StartGame();
@@ -139,6 +144,7 @@ public class Network : Bolt.GlobalEventListener {
 			BoltLauncher.StartSinglePlayer();
 		}
 
+		/*
 		//Join Button Creation
 		UIButton joinButton = UI.RoundButton ();
 		joinButton.SetText ("Join");
@@ -150,6 +156,7 @@ public class Network : Bolt.GlobalEventListener {
 		hostButton.SetText ("Host");
 		hostButton.SetAction (StartServer);
 		hostButton.SetPosition (.9f, .4f); //sets the position relative to the center of the screen based on the height and width
+		*/
 	}
 	
 	// Update is called once per frame

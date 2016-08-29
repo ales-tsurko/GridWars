@@ -8,4 +8,6 @@ public interface NetworkObjectDelegate {
 	void MasterFixedUpdate();
 	void SlaveFixedUpdate();
 	void QueuePlayerCommands();
+	void SlaveDied();
+	GameUnitDeathEvent deathEvent { get; set; }
 }
