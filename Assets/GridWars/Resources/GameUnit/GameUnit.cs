@@ -242,10 +242,21 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		PlayBirthSound();
 	}
 
+	public float nextThinkTime;
+
 	public bool IsThinkStep() {
-		//return (App.shared.timeCounter % 20 == 0);
-		float chance = 1f / 20f;
-		return (UnityEngine.Random.value < chance);
+		float waitSeconds = (1f / 20f);
+		if (Time.time > nextThinkTime) {
+			nextThinkTime = Time.time + (waitSeconds * 2f * UnityEngine.Random.value);
+			return true;
+		}
+		/*
+		return (App.shared.timeCounter % 20 == 0);
+		float chancePerSec = 1f / 40f;
+		float secsInLastStep = Time.deltaTime;
+		return (UnityEngine.Random.value < chancePerSec * secsInLastStep);
+		*/
+		return false;
 	}
 
 	public virtual void Think() {
@@ -452,14 +463,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			target = null;
 		}
 
-		if (Weapons().Length == 0) {
-			target = DefaultTarget();
-		} else {
+		if (Weapons().Length > 0) {
 			Weapon targetingWeapon = HighestPriorityWeaponWithTarget();
 			if (targetingWeapon) {
 				target = targetingWeapon.target;
 			}
 		}
+
+		if (target == null) {
+			target = DefaultTarget();
+		} 
 	}
 
 	public virtual GameObject DefaultTarget() {

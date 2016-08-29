@@ -14,11 +14,10 @@ using System.Reflection;
 public class App : MonoBehaviour {
 
 	private static App _shared;
-
 	public AssemblyCSharp.TimerCenter timerCenter;
 	public int timeCounter = 0;
-
 	public AssemblyCSharp.StepCache stepCache;
+	private List <GameObject> _destroyQueue;
 
 	public static App shared {
 		get {
@@ -30,11 +29,12 @@ public class App : MonoBehaviour {
 		}
 	}
 
-	// Game Loop -------------------
+	// --- Game Loop -------------------
 
 	public void Start() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
 		stepCache = new AssemblyCSharp.StepCache();
+		_destroyQueue = new List<GameObject>();
 
 		Application.targetFrameRate = 60;
 	}
@@ -45,7 +45,7 @@ public class App : MonoBehaviour {
 		timeCounter++;
 	}
 
-	// Finding Paths --------------------
+	// --- Finding Paths --------------------
 	// should really have the Types themselve know how to find themselves but
 	// class methods don't have access to the type on which they were called -
 	// they only know the type in which they are declared
@@ -78,6 +78,22 @@ public class App : MonoBehaviour {
 			string path = ResourcePathForUnitType(type);
 			string soundPath = path + "/Sounds/birth";
 			return Resources.Load<AudioClip>(soundPath);
+	}
+
+	// --- Destroying Objects -----------
+
+	public void AddToDestroyQueue(GameObject obj) {
+		if(!_destroyQueue.Contains(obj)) {
+			_destroyQueue.Add(obj);
+		}
+	}
+
+	public void ProcessDestroyQueue() {
+		foreach(GameObject obj in _destroyQueue) {
+			//bolt destroy hook?
+			//Destroy(obj);
+		}
+		_destroyQueue.Clear();
 	}
 }
 
