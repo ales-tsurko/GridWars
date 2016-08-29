@@ -337,6 +337,30 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		return player.EnemyObjects();
 	}
 
+
+	public virtual List <GameObject> NonAirEnemyVehicles() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			if ( !enemy.GameUnit().IsOfType(typeof(AirVehicle)) ) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+
+	public virtual List <GameObject> EnemyBuildings() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			if (enemy.GameUnit().IsOfType(typeof(GroundBuilding)) ) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+		
+
 	/*
 	// --- targeting -------------------
 

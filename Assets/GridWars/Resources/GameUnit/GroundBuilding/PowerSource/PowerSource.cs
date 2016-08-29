@@ -16,7 +16,7 @@ public class PowerSource : GroundBuilding {
 	}
 
 	public float maxPower = 20f;
-	public float generationRate = 2f;
+	public float generationRate = 1.5f;
 
 	public float trackSpacing = 1.0f;
 
@@ -49,6 +49,7 @@ public class PowerSource : GroundBuilding {
 	public override void MasterStart() {
 		base.MasterStart();
 		isTargetable = false;
+		power = 0;
 	}
 
 	public override void SlaveStart() {
@@ -85,7 +86,11 @@ public class PowerSource : GroundBuilding {
 
 	public override void MasterFixedUpdate() {
 		base.MasterFixedUpdate();
-		power = Mathf.Min(power + Time.fixedDeltaTime*generationRate, maxPower);
+		float rate = generationRate;
+		float r = power / maxPower;
+		rate *= (1 + r / 2);
+
+		power = Mathf.Min(power + Time.fixedDeltaTime * rate, maxPower);
 	}
 
 	public override void Think() {

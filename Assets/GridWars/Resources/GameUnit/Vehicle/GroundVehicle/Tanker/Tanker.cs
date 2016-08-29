@@ -18,15 +18,9 @@ public class Tanker : GroundVehicle {
 		}
 	}
 
-	public virtual List <GameObject> PossibleDefaultTargets() {
-		var results = new List<GameObject>();
 
-		foreach (GameObject enemy in EnemyObjects()) {
-			if ( !enemy.GameUnit().IsOfType(typeof(AirVehicle)) ) {
-				results.Add(enemy);
-			}
-		}
-		return results;
+	public virtual List <GameObject> PossibleDefaultTargets() {
+		return NonAirEnemyVehicles();
 	}
 
 	public override GameObject DefaultTarget() {
