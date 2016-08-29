@@ -37,6 +37,7 @@ public class App : MonoBehaviour {
 		_destroyQueue = new List<GameObject>();
 
 		Application.targetFrameRate = 60;
+		QualitySettings.vSyncCount = 0;
 	}
 
 	public void FixedUpdate() {
@@ -76,7 +77,7 @@ public class App : MonoBehaviour {
 
 	public AudioClip SoundNamedForUnitType(string name, System.Type type) {
 			string path = ResourcePathForUnitType(type);
-			string soundPath = path + "/Sounds/birth";
+			string soundPath = path + "/Sounds/" + name;
 			return Resources.Load<AudioClip>(soundPath);
 	}
 

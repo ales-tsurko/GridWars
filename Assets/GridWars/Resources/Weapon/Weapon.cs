@@ -649,8 +649,8 @@ public class Weapon : MonoBehaviour {
 			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		}
 
-//		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
-*/
+		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+	    */
 	}
 		
 	public void ShowDebugTargetLine() {

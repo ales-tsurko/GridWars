@@ -9,6 +9,7 @@ namespace AssemblyCSharp {
 		Dictionary<string, GameObject[]> typeCache;
 		List<GameObject> _activeGameObjects;
 		List<GameObject> _allVehicleObjects;
+		List<GameObject> _allWreckageObjects;
 
 		public StepCache() {
 			typeCache = new Dictionary<string, GameObject[]>(); 
@@ -17,9 +18,8 @@ namespace AssemblyCSharp {
 		public void Step() {
 			typeCache.Clear(); 
 			_activeGameObjects = null;
-			//if (_allVehicleObjects != null) {
-				_allVehicleObjects = null;
-			//}
+			_allVehicleObjects = null;
+			_allWreckageObjects = null;
 		}
 
 		/*
@@ -41,9 +41,9 @@ namespace AssemblyCSharp {
 				_activeGameObjects = new List<GameObject>();
 				foreach (GameObject obj in objs) {
 					if (obj.activeInHierarchy) {
-						if (!obj.IsDestroyed()) {
+						//if (!obj.IsDestroyed()) {
 							_activeGameObjects.Add(obj);
-						}
+						//}
 					}
 				}
 			}
@@ -54,7 +54,7 @@ namespace AssemblyCSharp {
 
 		public List<GameObject> AllVehicleObjects() {
 			if (_allVehicleObjects == null) {
-				List <GameObject> objs = ActiveGameObjects();
+				GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
 				_allVehicleObjects = new List<GameObject>();
 
 				foreach (GameObject obj in objs) {
@@ -73,6 +73,25 @@ namespace AssemblyCSharp {
 			return UnitsForObjects(AllVehicleObjects());
 		}
 
+		// --- Utility ---------------------------------------
+
+		public List<GameObject> AllWreckageObjects() {
+			if (_allWreckageObjects == null) {
+
+				GameObject [] objs = GameObject.FindGameObjectsWithTag("Wreckage");
+				_allWreckageObjects = new List<GameObject>();
+
+				foreach (GameObject obj in objs) {
+					//DestroyAfter script = obj.GetComponent<DestroyAfter>();
+					//if (script != null) {
+						_allWreckageObjects.Add(obj);
+					//}
+				}
+			}
+
+			RemoveDestroyedObjectsFromList(_allWreckageObjects);
+			return _allWreckageObjects;
+		}
 
 		// --- Utility ---------------------------------------
 

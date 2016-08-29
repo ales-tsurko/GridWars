@@ -503,9 +503,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	public virtual bool isOutOfBounds () {
 		return (
-			(y() < -3) || (y() > 50) ||
-			(x() > 50) || (x() > 50) ||
-			(z() > 50) || (z() > 50) 
+			(y() < -3) || (y() > 150) ||
+			(x() > 150) || (x() > 150) ||
+			(z() > 150) || (z() > 150) 
 		);
 	}
 

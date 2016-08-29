@@ -54,6 +54,7 @@ public class Vehicle : GameUnit  {
 		// - not us
 
 		List <GameObject> vehicles = App.shared.stepCache.AllVehicleObjects();
+		vehicles.AddRange(App.shared.stepCache.AllWreckageObjects());
 		vehicles.Remove(gameObject);
 
 		nearestObsticle = ClosestOfObjects(vehicles);
@@ -62,6 +63,10 @@ public class Vehicle : GameUnit  {
 			if (DistanceToObj(nearestObsticle) > avoidObsticleDistance) {
 				nearestObsticle = null;
 			}
+		}
+
+		if (nearestObsticle) {
+			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
 		}
 	}
 
@@ -75,10 +80,11 @@ public class Vehicle : GameUnit  {
 			Vector3 dir = (otherPos - _t.position).normalized;
 			float angleToTarget = AngleBetweenOnAxis(_t.forward, dir, _t.up);
 
+			/*
 			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
 			Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
 			Debug.DrawLine(_t.position, _t.position + dir*rotationThrust, Color.red); // targetDir red
-
+			*/
 			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * rotationThrust, ForceMode.Force);
 		}
 	}
