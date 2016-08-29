@@ -77,6 +77,8 @@ public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
 				Destroy(GetComponent<Collider>());
 			}
 		}
+
+		boltState.AddCallback("receivedFirstUpdate", ReceivedFirstUpdate);
 	}
 
 	//internal
