@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+
 public static class UI {
 
 	const string DIR = "UI/";
@@ -34,6 +37,9 @@ public static class UI {
 			canvas.name = CANVAS;
 			var scaler = canvas.gameObject.AddComponent<CanvasScaler> ();
 			var raycaster = canvas.gameObject.AddComponent<GraphicRaycaster> ();
+			raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
+			var eventSystem = new GameObject ().AddComponent<EventSystem> ();
+			eventSystem.gameObject.AddComponent<StandaloneInputModule> ();
 			return canvas;
 		} else {
 			return go.GetComponent<Canvas> ();
