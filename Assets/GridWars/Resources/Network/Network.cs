@@ -139,6 +139,7 @@ public class Network : Bolt.GlobalEventListener {
 			BoltLauncher.StartSinglePlayer();
 		}
 
+		/*
 		//Join Button Creation
 		UIButton joinButton = UI.RoundButton ();
 		joinButton.SetText ("Join");
@@ -150,6 +151,7 @@ public class Network : Bolt.GlobalEventListener {
 		hostButton.SetText ("Host");
 		hostButton.SetAction (StartServer);
 		hostButton.SetPosition (.9f, .4f); //sets the position relative to the center of the screen based on the height and width
+		*/
 	}
 	
 	// Update is called once per frame
