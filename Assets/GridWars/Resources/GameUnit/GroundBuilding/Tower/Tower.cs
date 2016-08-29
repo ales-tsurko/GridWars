@@ -6,7 +6,7 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	public Mesh theMesh;
 
-	bool npcModeOn = false;
+	bool npcModeOn = true;
 
 	public static Vector3 size {
 		get {
