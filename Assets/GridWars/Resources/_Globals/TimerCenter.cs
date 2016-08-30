@@ -56,6 +56,14 @@ namespace AssemblyCSharp {
 			}
 		}
 
+		public void RemoveTimersWithTarget(object aTarget) {
+			for (int i = timers.Count - 1; i >= 0; i--) {
+				if (timers[i].target == aTarget) { 
+					timers.RemoveAt(i);
+				}
+			}
+		}
+
 		// untested version of AddTimer which 
 		// uses BinarySearch to find queue insertion point
 
