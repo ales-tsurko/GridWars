@@ -8,6 +8,7 @@ namespace AssemblyCSharp {
 		public TimerCenter timerCenter;
 		public object target;
 		public string method;
+		public Action action;
 		public float fireTime;
 
 		// optional ivars for attaching info to the timer 
@@ -37,9 +38,15 @@ namespace AssemblyCSharp {
 		}
 
 		public void Send() {
-			Type targetType = target.GetType();
-			MethodInfo methodInfo = targetType.GetMethod(method);
-			methodInfo.Invoke(target, null);
+			if (action == null) {
+				Type targetType = target.GetType();
+				MethodInfo methodInfo = targetType.GetMethod(method);
+				methodInfo.Invoke(target, null);
+			}
+			else {
+				action();
+			}
+
 
 			/*
 			MethodInfo methodInfo = target.GetType().GetMethod(method);
@@ -50,6 +57,10 @@ namespace AssemblyCSharp {
 
 		public void Start() {
 			timerCenter.AddTimer(this);
+		}
+
+		public void Cancel() {
+			timerCenter.RemoveTimer(this);
 		}
 
 		public int CompareTo(Timer otherTimer) {

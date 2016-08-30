@@ -575,16 +575,22 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	}
 
 	public void DestroySelf() {
+		if (_isDestroyed == true) {
+			return;
+		}
+
+		_isDestroyed = true;
+
+		//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
+
+		App.shared.AddToDestroyQueue(gameObject);
 
 		if (player) {
 			player.RemoveGameObject(gameObject);
 		}
+	}
 
-		if (_isDestroyed == true) {
-			print("DestroySelf called twice");
-		}
-
-		_isDestroyed = true;
+	public void ActuallyDestroySelf() {
 		gameUnitDelegate.DestroySelf();
 	}
 
