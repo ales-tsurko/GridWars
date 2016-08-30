@@ -148,6 +148,8 @@ public class Network : Bolt.GlobalEventListener {
 
 		menu.AddItem (UI.MenuItem ("Host", HostClicked, MenuItemType.ButtonRound));
 		menu.AddItem (UI.MenuItem ("Join", JoinClicked, MenuItemType.ButtonRound));
+		menu.AddItem (UI.MenuItem ("Hide", HideAll, MenuItemType.ButtonRound));
+
 		menu.Show();
 
 		if (singlePlayer) {
@@ -189,7 +191,12 @@ public class Network : Bolt.GlobalEventListener {
 		indicator.SetText ("Waiting for Players");
 		indicator.Show();
 	}
-	
+	public void HideAll (UIMenuItem item) {
+		menu.Hide ();
+		indicator.Hide ();
+	}
+
+
 	// Update is called once per frame
 	void Update () {
 	
