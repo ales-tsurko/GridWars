@@ -4,20 +4,21 @@ using System.Collections;
 public class DestroyAfter : MonoBehaviour {
 
 	public float destroyTime = 10f;
-	public float endTime;
+
+	AssemblyCSharp.Timer timer;
 
 	void Start () {
-		Destroy (gameObject, destroyTime);
-		endTime = Time.time + destroyTime - 0.3f;
+		timer = App.shared.timerCenter.NewTimer();
+		timer.action = AddToDestroyQueue;
+		timer.SetTimeout(destroyTime);
+		timer.Start();
 	}
 
-	public void FixedUpdate() {
+	void AddToDestroyQueue() {
+		App.shared.AddToDestroyQueue(gameObject);
+	}
 
-		float v = (endTime - Time.time) / destroyTime;
-		if (v < 0) { 
-			v = 0f;
-		}
-
-		//gameObject.SetAlpha(v);
+	void OnDestroy() {
+		timer.Cancel();
 	}
 }

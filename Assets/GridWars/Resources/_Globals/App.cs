@@ -83,6 +83,10 @@ public class App : MonoBehaviour {
 
 	// --- Destroying Objects -----------
 
+	void LateUpdate() {
+		ProcessDestroyQueue();
+	}
+
 	public void AddToDestroyQueue(GameObject obj) {
 		if(!_destroyQueue.Contains(obj)) {
 			_destroyQueue.Add(obj);
@@ -91,8 +95,14 @@ public class App : MonoBehaviour {
 
 	public void ProcessDestroyQueue() {
 		foreach(GameObject obj in _destroyQueue) {
-			//bolt destroy hook?
-			//Destroy(obj);
+			//Debug.Log("ProcessDestroyQueue: " + obj);
+			GameUnit gameUnit;
+			if ((gameUnit = obj.GetComponent<GameUnit>()) != null) {
+				gameUnit.ActuallyDestroySelf();
+			}
+			else {
+				Destroy(obj);
+			}
 		}
 		_destroyQueue.Clear();
 	}
