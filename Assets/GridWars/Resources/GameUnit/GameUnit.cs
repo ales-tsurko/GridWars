@@ -714,4 +714,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
+	// --- AI eval ------------------------------------------
+
+	public float evalPosition(Vector3 pos) {
+		// higher to be closer to targetable objects
+		// diff weights for targets
+
+		// lower to be too close to obsticles
+
+
+	}
+
+
 }
