@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-
+using UnityEngine.UI;
 public class ServerToken : Bolt.IProtocolToken {
 	public string serverVersion = "0.1";
 	public string gameName = "0.1";
@@ -137,26 +137,57 @@ public class Network : Bolt.GlobalEventListener {
 	bool isStarting = false;
 	bool isRetrievingGameList = false;
 
+	UIMenu menu;
+	UIActivityIndicator indicator;
+
 	// Use this for initialization
 	void Start () {
-		
+		indicator = UI.ActivityIndicator ("Loading...");
+
+		menu = UI.Menu ();
+
+		menu.AddItem (UI.MenuItem ("Host", HostClicked, MenuItemType.ButtonRound));
+		menu.AddItem (UI.MenuItem ("Join", JoinClicked, MenuItemType.ButtonRound));
+		menu.Show();
+
 		if (singlePlayer) {
 			BoltLauncher.StartSinglePlayer();
 		}
+	}
 
-		/*
-		//Join Button Creation
-		UIButton joinButton = UI.RoundButton ();
-		joinButton.SetText ("Join");
-		joinButton.SetAction (StartClient);
-		joinButton.SetPosition (.9f, .8f); //sets the position relative to the center of the screen based on the height and width
+	void RetrievedGameList(Game[] games) {
+		menu.Reset();
+		foreach (var game in games) {
+			var menuItem = UI.MenuItem (game.name, GameClicked, MenuItemType.ButtonSquare);
+			menuItem.data = game;
+			menuItem.SetSize (200, 50, false);
+			menuItem.SetImageType (Image.Type.Sliced);
+			menu.AddItem (menuItem);
+		}
+		menu.Show ();
+	}
+	void GameClicked(UIMenuItem item) {
+		(item.data as Game).Start();
+	}
 
-		//Host Button Creation
-		UIButton hostButton = UI.RoundButton ();
-		hostButton.SetText ("Host");
-		hostButton.SetAction (StartServer);
-		hostButton.SetPosition (.9f, .4f); //sets the position relative to the center of the screen based on the height and width
-		*/
+	void RetrieveGameList () {
+		Game[] game = new Game[4];
+		for (int i = 0; i < game.Length; i++){
+			game[i] = new Game () { name = "Game" + UnityEngine.Random.Range (1, 10000) };
+		}
+		RetrievedGameList (game);
+	}
+
+	public void JoinClicked(UIMenuItem item) {
+		menu.Hide();
+		indicator.SetText ("Retrieving Game List");
+		indicator.Show();
+		RetrieveGameList();
+	}
+	public void HostClicked(UIMenuItem item) {
+		menu.Hide();
+		indicator.SetText ("Waiting for Players");
+		indicator.Show();
 	}
 	
 	// Update is called once per frame
@@ -219,4 +250,9 @@ public class Network : Bolt.GlobalEventListener {
 			}
 		}
 	}
+}
+
+class Game {
+	public string name;
+	public void Start(){}
 }
