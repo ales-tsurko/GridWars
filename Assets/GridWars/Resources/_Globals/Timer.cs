@@ -52,6 +52,10 @@ namespace AssemblyCSharp {
 			timerCenter.AddTimer(this);
 		}
 
+		public void Cancel() {
+			timerCenter.RemoveTimer(this);
+		}
+
 		public int CompareTo(Timer otherTimer) {
 			float f1 = fireTime;
 			float f2 = otherTimer.fireTime;
