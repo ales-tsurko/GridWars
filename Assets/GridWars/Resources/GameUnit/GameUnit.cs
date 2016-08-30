@@ -7,6 +7,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	public float thrust;
 	public float rotationThrust;
 	bool isAlive = true;
+	//bool shouldPaint = true;
 
 	GameUnitDelegate gameUnitDelegate {
 		get {
@@ -65,6 +66,9 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
+
+	public float nextThinkTime;
+
 
 	public float hpRatio {
 		get {
@@ -233,16 +237,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		gameObject.CloneMaterials();
 
 		if (player == null) {
-			gameObject.Paint(Color.white, "Unit");
+			//gameObject.Paint(Color.white, "Unit");
 		} else {
 			player.AddGameObject(gameObject); // hack because player setter is never called
 			player.Paint(gameObject);
 		}
 
 		PlayBirthSound();
+		
 	}
 
-	public float nextThinkTime;
 
 	public bool IsThinkStep() {
 		float waitSeconds = (1f / 20f);
@@ -647,7 +651,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	// --- Death ------------------------------------------
 
-	public virtual void OnDead() {
+	public virtual void OnDead() { // only called on Master
 		if (isAlive) {
 			isAlive = false;
 			Camera cam = _t.GetComponentInChildren<Camera>();
@@ -665,7 +669,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
 				var state = new GameUnitState();
-				state.prefabGameUnit = deathExplosionPrefab.GetComponent<Explosion>();
+				state.player = player;
+				state.prefabGameUnit = deathExplosionPrefab.GetComponent<GameUnit>();
 				state.transform = _t;
 				state.InstantiateGameUnit();
 			}
@@ -677,13 +682,15 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		isQuitting = true;
 	}
 
-	void OnDestroy() {
+	void OnDestroy() { // called on Master and Slave
 		if (!isQuitting) {
 			ShowFxExplosion();
 		}
 	}
 
-	void ShowFxExplosion() {
+	void ShowFxExplosion() {  // called on Master and Slave
+
+		// show an fx explosion 
 		if (deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {
@@ -728,7 +735,6 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 		// lower to be too close to obsticles
 		return 0f;
-
 	}
 
 

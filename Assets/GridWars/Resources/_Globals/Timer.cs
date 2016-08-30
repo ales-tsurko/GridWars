@@ -9,7 +9,9 @@ namespace AssemblyCSharp {
 		public object target;
 		public string method;
 		public Action action;
+		public float timeout; // helper
 		public float fireTime;
+		public float startTime; // helper
 
 		// optional ivars for attaching info to the timer 
 		public string label; 
@@ -19,7 +21,7 @@ namespace AssemblyCSharp {
 		}
 
 		public Timer SetTimeout(float secs) {
-			fireTime = Time.time + secs;
+			timeout = secs;
 			return this;
 		}
 
@@ -57,6 +59,16 @@ namespace AssemblyCSharp {
 
 		public void Start() {
 			timerCenter.AddTimer(this);
+			startTime = Time.time;
+			fireTime = startTime + timeout;
+		}
+
+		public float ratioDone() {
+			float v = (Time.time - startTime) / timeout;
+			if (v > 1) {
+				v = 1;
+			}
+			return v;
 		}
 
 		public void Cancel() {
