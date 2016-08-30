@@ -727,7 +727,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		// diff weights for targets
 
 		// lower to be too close to obsticles
-
+		return 0f;
 
 	}
 
