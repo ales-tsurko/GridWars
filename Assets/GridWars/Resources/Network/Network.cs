@@ -137,6 +137,11 @@ public class Network : Bolt.GlobalEventListener {
 
 	// Use this for initialization
 	void Start () {
+		
+		if (singlePlayer) {
+			BoltLauncher.StartSinglePlayer();
+			return;
+		}
 		indicator = UI.ActivityIndicator ("Loading...");
 
 		menu = UI.Menu ();
@@ -147,9 +152,6 @@ public class Network : Bolt.GlobalEventListener {
 
 		menu.Show();
 
-		if (singlePlayer) {
-			BoltLauncher.StartSinglePlayer();
-		}
 	}
 
 	void RetrievedGameList(Game[] games) {
