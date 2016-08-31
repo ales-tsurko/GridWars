@@ -73,6 +73,9 @@ public class GameUnit : NetworkObject {
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
+	public float nextThinkTime;
+
+
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -274,16 +277,16 @@ public class GameUnit : NetworkObject {
 		gameObject.CloneMaterials();
 
 		if (player == null) {
-			gameObject.Paint(Color.white, "Unit");
+			//gameObject.Paint(Color.white, "Unit");
 		} else {
 			player.AddGameObject(gameObject); // hack because player setter is never called
 			player.Paint(gameObject);
 		}
 
 		PlayBirthSound();
+		
 	}
 
-	public float nextThinkTime;
 
 	public bool IsThinkStep() {
 		float waitSeconds = (1f / 20f);
@@ -679,7 +682,7 @@ public class GameUnit : NetworkObject {
 
 	// --- Death ------------------------------------------
 
-	public virtual void OnDead() {
+	public virtual void OnDead() { // only called on Master
 		if (isAlive) {
 			isAlive = false;
 			Camera cam = _t.GetComponentInChildren<Camera>();
@@ -696,12 +699,14 @@ public class GameUnit : NetworkObject {
 		if (deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
-				var explosion = deathExplosionPrefab.GetComponent<Explosion>().Instantiate();
+				var explosion = deathExplosionPrefab.GetComponent<GameUnit>().Instantiate();
+				explosion.player = player;
 				explosion.transform.position = _t.position;
 				explosion.transform.rotation = _t.rotation;
 			}
 		}
 	}
+
 
 	public void ShowFxExplosion() {
 		if (deathExplosionPrefab != null) {
@@ -748,7 +753,6 @@ public class GameUnit : NetworkObject {
 
 		// lower to be too close to obsticles
 		return 0f;
-
 	}
 
 

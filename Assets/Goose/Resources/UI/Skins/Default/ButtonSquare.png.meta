@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 8d51b358391a3fd40bf2c2d610df9c4d
-timeCreated: 1445849517
+guid: 8ccda14f1bbb5824da96939ea283b220
+timeCreated: 1445849516
 licenseType: Store
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -17,7 +17,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: 0.25
+    heightScale: .25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -42,17 +42,14 @@ TextureImporter:
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 112, y: 112, z: 112, w: 112}
   spritePixelsToUnits: 256
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    serializedVersion: 2
     sprites: []
-    outline: []
   spritePackingTag: 
   userData: 
   assetBundleName: 
