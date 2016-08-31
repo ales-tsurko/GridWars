@@ -25,7 +25,7 @@ using System.Collections;
 
 	public void VerifyLayer() {
 		if (gameObject.layer != LayerMask.NameToLayer("Wreckage")) {
-			print("WARNING: you forgot to set the layer of this object to Wreckage");
+			print("WARNING: you forgot to set the layer of " + gameObject.name + " to Wreckage");
 			gameObject.layer = LayerMask.NameToLayer("Wreckage");
 		}
 	}
