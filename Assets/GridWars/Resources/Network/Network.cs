@@ -50,12 +50,56 @@ public class Network : Bolt.GlobalEventListener {
 	public string listenEndpoint = "0.0.0.0:27000";
 	public string zeusEndpoint = "159.8.0.207:24000";
 
+	// Use this for initialization
+	void Start () {
+
+		if (singlePlayer) {
+			BoltLauncher.StartSinglePlayer();
+			return;
+		}
+
+		indicator = UI.ActivityIndicator ("Loading...");
+
+		menu = UI.Menu ();
+
+		menu.AddItem (UI.MenuItem ("Host", HostClicked));
+		menu.AddItem (UI.MenuItem ("Join", JoinClicked));
+
+		menu.Show();
+	}
+
+	public void HostClicked(UIMenuItem item) {
+		menu.Hide();
+
+		indicator.SetText("Initializing Network ...");
+		indicator.Show();
+
+		StartServer();
+	}
+
+	void StartServer() {
+		connectedClients = new List<BoltConnection>();
+		BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
+	}
+
+	public void JoinClicked(UIMenuItem item) {
+		menu.Hide();
+
+		indicator.SetText("Retrieving Game List ...");
+		indicator.Show();
+
+		StartClient();
+	}
+
+	void StartClient() {
+		BoltLauncher.StartClient();
+	}
+
 	public override void BoltStartBegin() {
 		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 
 	public override void BoltStartDone() {
-		isStarting = false;
 		if (BoltNetwork.IsSinglePlayer) {
 			Battlefield.current.StartGame();
 		}
@@ -64,22 +108,55 @@ public class Network : Bolt.GlobalEventListener {
 				var st = new ServerToken();
 				st.gameName = System.DateTime.UtcNow.ToString();
 				BoltNetwork.SetHostInfo("GridWars", st);
+				indicator.SetText("Waiting for players ...");
 			}
 			else {
-				isRetrievingGameList = true;
+				indicator.SetText("Retrieving Game List ...");
 			}
 			Bolt.Zeus.Connect(UdpKit.UdpEndPoint.Parse(zeusEndpoint));
 		}
 	}
 
+	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
+		if (BoltNetwork.isClient) {
+			Bolt.Zeus.RequestSessionList();
+		}
+	}
+
+	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
+		base.SessionListUpdated(sessionList);
+		menu.Reset();
+		indicator.Hide();
+		foreach (var session in sessionList) {
+			if (session.Value.HostName == "GridWars") {
+				var item = UI.MenuItem(
+					(session.Value.GetProtocolToken() as ServerToken).gameName,
+					GameItemClicked
+				);
+				item.data = session.Value;
+				menu.AddItem(item);
+			}
+		}
+		menu.Show();
+	}
+
+	void GameItemClicked(UIMenuItem item) {
+		BoltNetwork.Connect(item.data as UdpKit.UdpSession); //TODO: stopped here
+		menu.Hide();
+		indicator.SetText("Joining Game ...");
+		indicator.Show();
+	}
+
 	public override void Connected(BoltConnection connection) {
-		isConnecting = false;
 		if (BoltNetwork.isServer) {
 			connectedClients.Add(connection);
 		}
 		else {
 			connectionToServer = connection;
 		}
+
+		indicator.Hide();
+		menu.Hide();
 
 		Battlefield.current.StartGame();
 	}
@@ -107,18 +184,6 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
-		if (BoltNetwork.isClient) {
-			isRetrievingGameList = true;
-			Bolt.Zeus.RequestSessionList();
-		}
-	}
-
-	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
-		isRetrievingGameList = false;
-		base.SessionListUpdated(sessionList);
-	}
-
 	List<BoltConnection> connectedClients;
 	BoltConnection connectionToServer;
 
@@ -128,89 +193,11 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	bool isConnecting = false;
-	bool isStarting = false;
-	bool isRetrievingGameList = false;
-
 	UIMenu menu;
 	UIActivityIndicator indicator;
 
-	// Use this for initialization
-	void Start () {
-		
-		if (singlePlayer) {
-			BoltLauncher.StartSinglePlayer();
-			return;
-		}
-		indicator = UI.ActivityIndicator ("Loading...");
 
-		menu = UI.Menu ();
-
-		menu.AddItem (UI.MenuItem ("Host", HostClicked, MenuItemType.ButtonRound));
-		menu.AddItem (UI.MenuItem ("Join", JoinClicked, MenuItemType.ButtonRound));
-		menu.AddItem (UI.MenuItem ("Hide", HideAll, MenuItemType.ButtonRound));
-
-		menu.Show();
-
-	}
-
-	void RetrievedGameList(Game[] games) {
-		menu.Reset();
-		foreach (var game in games) {
-			var menuItem = UI.MenuItem (game.name, GameClicked, MenuItemType.ButtonSquare);
-			menuItem.data = game;
-			menuItem.SetSize (200, 50, false);
-			menuItem.SetImageType (Image.Type.Sliced);
-			menu.AddItem (menuItem);
-		}
-		menu.Show ();
-	}
-	void GameClicked(UIMenuItem item) {
-		(item.data as Game).Start();
-	}
-
-	void RetrieveGameList () {
-		Game[] game = new Game[4];
-		for (int i = 0; i < game.Length; i++){
-			game[i] = new Game () { name = "Game" + UnityEngine.Random.Range (1, 10000) };
-		}
-		RetrievedGameList (game);
-	}
-
-	public void JoinClicked(UIMenuItem item) {
-		menu.Hide();
-		indicator.SetText ("Retrieving Game List");
-		indicator.Show();
-		RetrieveGameList();
-	}
-	public void HostClicked(UIMenuItem item) {
-		menu.Hide();
-		indicator.SetText ("Waiting for Players");
-		indicator.Show();
-	}
-	public void HideAll (UIMenuItem item) {
-		menu.Hide ();
-		indicator.Hide ();
-	}
-
-
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	void StartServer () {
-		isStarting = true;
-		connectedClients = new List<BoltConnection>();
-		BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse(listenEndpoint));
-	}
-
-	void StartClient () {
-		isStarting = true;
-		BoltLauncher.StartClient();
-	}
-
-
+	/*
 	void OnGUI() {
 		if (!singlePlayer) {
 			if (BoltNetwork.isRunning) {
@@ -254,9 +241,5 @@ public class Network : Bolt.GlobalEventListener {
 			}
 		}
 	}
-}
-
-class Game {
-	public string name;
-	public void Start(){}
+	*/
 }
