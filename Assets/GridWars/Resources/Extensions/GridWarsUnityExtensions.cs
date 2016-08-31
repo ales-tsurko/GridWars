@@ -64,7 +64,7 @@ public static class GridWarsUnityExtensions {
 		//return gameObject == null && !ReferenceEquals(gameObject, null);
 
 		var gameUnit = self.GetComponent<GameUnit>();
-		return (gameUnit != null) && !gameUnit.isAlive;
+		return (gameUnit != null) && !gameUnit.isInGame;
 	}
 
 	public static bool inheritsFrom(this System.Object self, System.Type type) {

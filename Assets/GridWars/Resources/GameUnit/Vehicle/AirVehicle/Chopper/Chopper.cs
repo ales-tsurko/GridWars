@@ -18,13 +18,13 @@ public class Chopper : AirVehicle {
 	//public float defaultCruiseHeight = 5f;
 	public float damageRotation;
 
-	public override void MasterSlaveStart() {
+	public override void ServerAndClientJoinedGame() {
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 	}
 
-	public override void MasterStart () {
-		base.MasterStart();
+	public override void ServerJoinedGame () {
+		base.ServerJoinedGame();
 		isRunning = true;
 
 		//cruiseHeight = defaultCruiseHeight; // + Mathf.Floor(Random.Range(-2.0f, 0.0f)) * 1.0f;
@@ -137,8 +137,8 @@ public class Chopper : AirVehicle {
 		Object_rotDY (tailRotor, 20f+ 20f*r);
 	}
 
-	public override void MasterFixedUpdate () {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
 		if (isRunning) {
 			PickTarget();
 			SteerTowardsTarget();
@@ -147,8 +147,8 @@ public class Chopper : AirVehicle {
 		RemoveIfOutOfBounds();
 	}
 
-	public override void SlaveFixedUpdate () {
-		base.SlaveFixedUpdate();
+	public override void ServerAndClientFixedUpdate () {
+		base.ServerAndClientFixedUpdate();
 		SpinRotors();
 	}
 

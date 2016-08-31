@@ -8,11 +8,11 @@ public class Wreckage : GameUnit {
 	private AssemblyCSharp.Timer timer;
 
 
-	public override void SlaveStart() {
+	public override void ServerAndClientJoinedGame() {
 		// avoid normal setup
 	}
 
-	public override void MasterStart () {
+	public override void ServerJoinedGame () {
 		timer = App.shared.timerCenter.NewTimer();
 		timer.action = AddToDestroyQueue;
 		timer.SetTimeout(destroyPeriod);
@@ -28,7 +28,7 @@ public class Wreckage : GameUnit {
 		Physics.IgnoreCollision(bc, mc, true);
 	}
 
-	public override void MasterFixedUpdate() {
+	public override void ServerFixedUpdate() {
 		Vector3 pos = transform.position;
 		if (timer.ratioDone() < .5) {
 			pos.y = 0;

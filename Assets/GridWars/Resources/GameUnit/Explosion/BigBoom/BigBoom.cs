@@ -12,8 +12,8 @@ public class BigBoom : Explosion {
 	float startTime;
 	Vector3 initScale;
 
-	public override void SlaveStart () {
-		base.SlaveStart();
+	public override void ServerAndClientJoinedGame () {
+		base.ServerAndClientJoinedGame();
 		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
 		currentBlastRadius = minBlastRadius;
 		startTime = Time.time;
@@ -22,8 +22,8 @@ public class BigBoom : Explosion {
 		initScale = transform.localScale;
 	}
 
-	public override void MasterFixedUpdate () {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
 		if (DoneRatio() > 1) {
 			DestroySelf();
 		} else {
@@ -31,8 +31,8 @@ public class BigBoom : Explosion {
 		}
 	}
 
-	public override void SlaveFixedUpdate () {
-		base.SlaveFixedUpdate();
+	public override void ServerAndClientFixedUpdate () {
+		base.ServerAndClientFixedUpdate();
 		UpdateRadius();
 	}
 

@@ -12,16 +12,16 @@ public class Engineer : GroundVehicle {
 	GameObject towerToBuild;
 	GameObject tower;
 
-	public override void MasterStart () {
-		base.MasterStart();
+	public override void ServerJoinedGame () {
+		base.ServerJoinedGame();
 		thrust = 190;
 		rotationThrust = 40;
 
 	
 	}
 	
-	public override void MasterFixedUpdate () {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
 		switch (engineerState) {
 		case State.Move:
 			if (Vector3.Distance (_t.position, moveTarget.position) < 1) {

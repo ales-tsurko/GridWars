@@ -46,8 +46,28 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	public override void MasterStart() {
-		base.MasterStart();
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+	}
+
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
+		var iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
+		iconUnit.BecomeIcon();
+
+		iconObject = iconUnit.gameObject;
+		iconObject.transform.SetParent(transform);
+		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
+		iconObject.transform.localRotation = Quaternion.identity;
+
+		if (CameraController.instance != null) {
+			CameraController.instance.InitCamera (transform);
+		}
+	}
+
+	public override void ServerJoinedGame() {
+		base.ServerJoinedGame();
 
 		isStaticUnit = true;
 
@@ -75,26 +95,8 @@ public class Tower : GroundBuilding {
 	}
 
 	public override void ClientInit() {
-		base.ClientInit();
 		shouldDestroyColliderOnClient = false;
-	}
-
-	public override void SlaveStart() {
-		base.SlaveStart();
-
-		//*
-		var iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
-		iconUnit.BecomeIcon();
-
-		iconObject = iconUnit.gameObject;
-		iconObject.transform.SetParent(transform);
-		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
-		iconObject.transform.localRotation = Quaternion.identity;
-		//*/
-
-		if (CameraController.instance != null) {
-			CameraController.instance.InitCamera (transform);
-		}
+		base.ClientInit();
 	}
 
 	public override void Think() {
@@ -154,8 +156,8 @@ public class Tower : GroundBuilding {
 
 
 	//TODO move input logic to slavesfkey
-	public override void MasterFixedUpdate () {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
 			
 		if (queueSize > 0) {
 			ReleaseUnits();
@@ -170,8 +172,8 @@ public class Tower : GroundBuilding {
 		
 	int paintMode = 0;
 
-	public override void SlaveFixedUpdate() {
-		base.SlaveFixedUpdate();
+	public override void ServerAndClientFixedUpdate() {
+		base.ServerAndClientFixedUpdate();
 
 		if (canQueueUnit) {
 			Paint();

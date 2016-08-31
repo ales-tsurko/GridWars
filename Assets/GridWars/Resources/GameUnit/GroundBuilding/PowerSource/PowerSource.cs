@@ -46,16 +46,11 @@ public class PowerSource : GroundBuilding {
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 	}
 
-	public override void MasterStart() {
-		base.MasterStart();
+	public override void ServerInit() {
+		base.ServerInit();
 		isTargetable = false;
-		//power = 0;
-		power = maxPower;
-	}
-
-	public override void SlaveStart() {
-		base.SlaveStart();
-		Setup();
+		power = 0f;
+		//power = maxPower;
 	}
 
 	public void Setup() {
@@ -81,12 +76,10 @@ public class PowerSource : GroundBuilding {
 			segment.SetActive(false);
 			segments.Add(segment);
 		}
-
-		player.fortress.powerSource = this;
 	}
 
-	public override void MasterFixedUpdate() {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate() {
+		base.ServerFixedUpdate();
 		float rate = generationRate;
 		float r = power / maxPower;
 		rate *= (1 + r / 2);

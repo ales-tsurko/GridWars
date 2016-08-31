@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class GroundVehicle : Vehicle {
 
-	public override void MasterFixedUpdate () {
-		base.MasterFixedUpdate ();
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate ();
 
 		SteerTowardsTarget ();
 

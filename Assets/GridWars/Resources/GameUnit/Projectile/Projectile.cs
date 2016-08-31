@@ -15,13 +15,13 @@ public class Projectile : GameUnit {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
 	}
 
-	public override void MasterStart () {
-		base.MasterStart();
+	public override void ServerJoinedGame () {
+		base.ServerJoinedGame();
 		isTargetable = false;
 	}
 
-	public override void SlaveStart() {
-		base.SlaveStart();
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
 		PlayBirthSound();
 		gameObject.Paint(Color.white, "Unit");
 	}
@@ -52,8 +52,8 @@ public class Projectile : GameUnit {
 		}
 	}
 
-	public override void SlaveDied(){
-		base.SlaveDied();
+	public override void ServerAndClientLeftGame(){
+		base.ServerAndClientLeftGame();
 		AttemptCreateExplosion();
 	}
 

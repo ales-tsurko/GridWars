@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class AirVehicle : Vehicle {
 
-	public override void MasterStart() {
-		base.MasterStart();
+	public override void ServerJoinedGame() {
+		base.ServerJoinedGame();
 		IgnoreAirVehicleCollisions();
 	}
 

@@ -7,8 +7,8 @@ public class Bullet : Projectile {
 
 	public float muzzleImpulse; // define in prefab inspector
 
-	public override void MasterStart () {
-		base.MasterStart();
+	public override void ServerJoinedGame () {
+		base.ServerJoinedGame();
 
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
 	}

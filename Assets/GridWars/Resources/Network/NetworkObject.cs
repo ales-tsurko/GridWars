@@ -10,36 +10,122 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	public virtual void MasterInit() {
+	public virtual void ServerAndClientInit() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientInit");
+		}
+	}
+
+	public virtual void ServerInit() {
+		if (debug) {
+			Debug.Log(this + " ServerInit");
+		}
 	}
 
 	public virtual void ClientInit() {
+		if (debug) {
+			Debug.Log(this + " ClientInit");
+		}
 	}
 
-	public virtual void SlaveInit() {
+	public virtual void ServerAndClientJoinedGame() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientJoinedGame");
+		}
 	}
 
-	public virtual void MasterSlaveStart() {
+	public virtual void ServerJoinedGame() {
+		if (debug) {
+			Debug.Log(this + " ServerJoinedGame");
+		}
 	}
 
-	public virtual void MasterStart() {
+	public virtual void ClientJoinedGame() {
+		if (debug) {
+			Debug.Log(this + " ClientJoinedGame");
+		}
 	}
 
-	public virtual void ClientStart() {
+	public virtual void ServerFixedUpdate() {
+		if (debug) {
+			Debug.Log(this + " ServerFixedUpdate");
+		}
 	}
 
-	public virtual void SlaveStart() {
+	//Note: unlike others, this is called AFTER ServerFixedUpdate
+	public virtual void ServerAndClientFixedUpdate() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientFixedUpdate");
+		}
 	}
 
-	public virtual void MasterFixedUpdate() {
+	public virtual void ClientFixedUpdate() {
+		if (debug) {
+			Debug.Log(this + " ClientFixedUpdate");
+		}
 	}
 
-	public virtual void SlaveFixedUpdate() {
+	public virtual void ServerAndClientUpdate() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientUpdate");
+		}
 	}
 
-	public virtual void QueuePlayerCommands() {
+	public virtual void ServerUpdate() {
+		if (debug) {
+			Debug.Log(this + " ServerUpdate");
+		}
 	}
 
-	public virtual void SlaveDied() {
+	public virtual void ClientUpdate() {
+		if (debug) {
+			Debug.Log(this + " ClientUpdate");
+		}
 	}
+
+	public virtual void ServerAndClientLeftGame() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientLeftGame");
+		}
+	}
+
+	public virtual void ServerLeftGame() {
+		if (debug) {
+			Debug.Log(this + " ServerLeftGame");
+		}
+	}
+
+	public virtual void ClientLeftGame() {
+		if (debug) {
+			Debug.Log(this + " ClientLeftGame");
+		}
+	}
+
+	// protected
+
+	protected void DidLeaveGame() {
+		ServerAndClientLeftGame();
+		if (BoltNetwork.isServer) {
+			ServerLeftGame();
+		}
+		else {
+			ClientLeftGame();
+		}
+	}
+
+	//MonoBehaviour
+
+	/*
+	protected virtual void FixedUpdate() {
+		throw new System.Exception("FixedUpdate shouldn't be used in NetworkObjects");
+	}
+
+	protected virtual void Update() {
+		throw new System.Exception("Update shouldn't be used in NetworkObjects");
+	}
+	*/
+
+	//internal 
+
+	bool debug = false;
 }

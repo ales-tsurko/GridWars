@@ -45,13 +45,13 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	public bool isAlive {
+	public bool isInGame {
 		get {
-			return gameUnitState.isAlive;
+			return gameUnitState.isInGame;
 		}
 
 		set {
-			gameUnitState.isAlive = value;
+			gameUnitState.isInGame = value;
 		}
 	}
 
@@ -197,22 +197,174 @@ public class GameUnit : NetworkObject {
 		return (T) Instantiate(typeof(T));
 	}
 
-	public override void MasterInit() {
-		base.MasterInit();
+	void isInGameChanged() {
+		//Debug.Log(this + " ExistsInWorldChanged: " + state.existsInWorld);
+		if (isInGame) {
+			SetVisibleAndEnabled(true);
+		}
+		else {
+			SetVisibleAndEnabled(false);
+			DidLeaveGame();
+		}
+	}
+
+
+	//NetworkObject
+
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+		gameUnitState.AddCallback("isInGame", isInGameChanged);
+	}
+
+	public override void ServerInit() {
+		base.ServerInit();
+		isInGame = true;
 		hitPoints = maxHitPoints;
 	}
 
-	public void HideAndDisable() {
-		//Debug.Log(this + " HideAndDisable");
-		SetVisibleAndEnabled(false);
+	public override void ClientInit() {
+		base.ServerInit();
+		Destroy(GetComponent<Rigidbody>());
+
+		if (shouldDestroyColliderOnClient) {
+			Destroy(GetComponent<Collider>());
+		}
+
+		if (!isInGame) {
+			SetVisibleAndEnabled(false);
+		}
 	}
 
-	public void ShowAndEnable() {
-		//Debug.Log(this + " ShowAndEnable");
-		SetVisibleAndEnabled(true);
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
+		gameUnitState.SetTransforms(gameUnitState.transform, transform);
+
+		if (typeof(ITurretedUnitState).IsAssignableFrom(gameUnitState.GetType())) {
+			var s = entity.GetState<ITurretedUnitState>();
+			//TODO: this won't work for more than 1 weapon
+			foreach (var weapon in Weapons()) {
+				if (weapon.turretObjX != null) {
+					s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
+				}
+
+				if (weapon.turretObjY != null) {
+					s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+				}
+			}
+		}
+
+		playerCommands = new List<Bolt.Event>();
+
+		SetupWeapons();
+		SetupSmokeDamage ();
+		SetupDeathExplosion ();
+
+		gameObject.CloneMaterials();
+
+		if (player == null) {
+			//gameObject.Paint(Color.white, "Unit");
+		} else {
+			player.AddGameObject(gameObject); // hack because player setter is never called
+			player.Paint(gameObject);
+		}
+
+		PlayBirthSound();
+	}
+
+	public override void ServerJoinedGame() {
+		base.ServerJoinedGame();
+
+		gameUnitState.isInGame = true; //TODO: try to match frame?
+	}
+
+	public override void ClientJoinedGame() {
+		base.ClientJoinedGame();
+	}
+		
+	public override void ServerAndClientFixedUpdate() {
+		base.ServerAndClientFixedUpdate();
+	}
+
+	public override void ServerFixedUpdate(){
+		base.ServerFixedUpdate();
+		/*
+		if (player == null) {
+			print ("SimulateOwner null player on " + this);
+		}
+		*/
+
+		if (IsThinkStep()) {
+			Think();
+		}
+
+
+		foreach (var weapon in Weapons()) {
+			if (weapon.isActiveAndEnabled) {
+				weapon.SimulateOwner();
+			}
+		}
+
+		RemoveIfOutOfBounds ();
+	}
+		
+	public override void ClientFixedUpdate(){
+		base.ClientFixedUpdate();
+	}
+
+	public override void ServerAndClientUpdate() {
+		base.ServerAndClientUpdate();
+	}
+
+	public override void ServerUpdate() {
+		base.ServerUpdate();
+	}
+
+	public override void ClientUpdate() {
+		base.ClientUpdate();
+
+		QueuePlayerCommands();
+	}
+
+	public override void ServerAndClientLeftGame(){
+		base.ServerAndClientLeftGame();
+		ShowFxExplosion();
+	}
+
+	public override void ServerLeftGame() {
+		base.ServerLeftGame();
+	}
+
+	public override void ClientLeftGame() {
+		base.ClientLeftGame();
+	}
+
+
+	// -----------------------
+
+	public virtual void QueuePlayerCommands(){}
+
+	public bool IsThinkStep() {
+		float waitSeconds = (1f / 20f);
+		if (Time.time > nextThinkTime) {
+			nextThinkTime = Time.time + (waitSeconds * 2f * UnityEngine.Random.value);
+			return true;
+		}
+		/*
+		return (App.shared.timeCounter % 20 == 0);
+		float chancePerSec = 1f / 40f;
+		float secsInLastStep = Time.deltaTime;
+		return (UnityEngine.Random.value < chancePerSec * secsInLastStep);
+		*/
+		return false;
+	}
+
+	public virtual void Think() {
+		PickTarget();
 	}
 
 	void SetVisibleAndEnabled(bool visibleAndEnabled) {
+		//Debug.Log(this + " SetVisibleAndEnabled: " + visibleAndEnabled);
 		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
 			if (script.GetType() != typeof(BoltEntity)) {
 				script.enabled = visibleAndEnabled;
@@ -235,113 +387,6 @@ public class GameUnit : NetworkObject {
 			rigidBody.isKinematic = !visibleAndEnabled;
 		}
 	}
-
-	public override void MasterSlaveStart() {
-		base.MasterSlaveStart();
-
-		gameUnitState.SetTransforms(gameUnitState.transform, transform);
-
-		if (typeof(ITurretedUnitState).IsAssignableFrom(gameUnitState.GetType())) {
-			var s = entity.GetState<ITurretedUnitState>();
-			//TODO: this won't work for more than 1 weapon
-			foreach (var weapon in Weapons()) {
-				if (weapon.turretObjX != null) {
-					s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
-				}
-
-				if (weapon.turretObjY != null) {
-					s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
-				}
-			}
-		}
-
-		playerCommands = new List<Bolt.Event>();
-	}
-
-	public override void MasterStart() {
-		gameUnitState.isAlive = true;
-
-		base.MasterStart();
-	}
-
-	public override void ClientStart() {
-		base.ClientStart();
-	}
-
-	public override void SlaveStart() {
-		base.SlaveStart();
-		SetupWeapons();
-		SetupSmokeDamage ();
-		SetupDeathExplosion ();
-
-		gameObject.CloneMaterials();
-
-		if (player == null) {
-			//gameObject.Paint(Color.white, "Unit");
-		} else {
-			player.AddGameObject(gameObject); // hack because player setter is never called
-			player.Paint(gameObject);
-		}
-
-		PlayBirthSound();
-		
-	}
-
-
-	public bool IsThinkStep() {
-		float waitSeconds = (1f / 20f);
-		if (Time.time > nextThinkTime) {
-			nextThinkTime = Time.time + (waitSeconds * 2f * UnityEngine.Random.value);
-			return true;
-		}
-		/*
-		return (App.shared.timeCounter % 20 == 0);
-		float chancePerSec = 1f / 40f;
-		float secsInLastStep = Time.deltaTime;
-		return (UnityEngine.Random.value < chancePerSec * secsInLastStep);
-		*/
-		return false;
-	}
-
-	public virtual void Think() {
-		PickTarget();
-	}
-
-	public override void MasterFixedUpdate(){
-		base.MasterFixedUpdate();
-		/*
-		if (player == null) {
-			print ("SimulateOwner null player on " + this);
-		}
-		*/
-
-		if (IsThinkStep()) {
-			Think();
-		}
-
-
-		foreach (var weapon in Weapons()) {
-			if (weapon.isActiveAndEnabled) {
-				weapon.SimulateOwner();
-			}
-		}
-
-		RemoveIfOutOfBounds ();
-	}
-
-	public override void SlaveFixedUpdate(){
-		base.SlaveFixedUpdate();
-	}
-
-	public override void QueuePlayerCommands(){}
-
-	public override void SlaveDied(){
-		base.SlaveDied();
-		ShowFxExplosion();
-	}
-
-
-	// -----------------------
 
 	public virtual Rigidbody rigidBody() {
 		if (body == null) {
@@ -608,7 +653,7 @@ public class GameUnit : NetworkObject {
 			return;
 		}
 
-		gameUnitState.isAlive = false;
+		gameUnitState.isInGame = false;
 
 		//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
 
@@ -644,7 +689,7 @@ public class GameUnit : NetworkObject {
 	}
 
 	public virtual void ApplyDamage(float damage) {
-		if (!isAlive) {
+		if (!isInGame) {
 			return;
 		}
 
@@ -683,8 +728,8 @@ public class GameUnit : NetworkObject {
 	// --- Death ------------------------------------------
 
 	public virtual void OnDead() { // only called on Master
-		if (isAlive) {
-			isAlive = false;
+		if (isInGame) {
+			isInGame = false;
 			Camera cam = _t.GetComponentInChildren<Camera>();
 			if (cam) {
 				cam.transform.parent = null;

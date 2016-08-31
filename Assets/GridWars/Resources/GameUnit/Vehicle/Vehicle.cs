@@ -22,8 +22,8 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
-	public override void MasterFixedUpdate() {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate() {
+		base.ServerFixedUpdate();
 		//EnableVehicleCollisionsIfClear();
 	}
 

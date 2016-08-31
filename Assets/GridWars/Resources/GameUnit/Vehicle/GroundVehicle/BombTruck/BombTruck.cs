@@ -8,8 +8,8 @@ public class BombTruck : GroundVehicle {
 	[HideInInspector]
 	public GameUnit bomb;
 
-	public override void MasterStart() {
-		base.MasterStart();
+	public override void ServerJoinedGame() {
+		base.ServerJoinedGame();
 
 		/*
 		var initialState = new InitialGameUnitState();

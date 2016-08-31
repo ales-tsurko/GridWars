@@ -9,8 +9,6 @@ public class Player : MonoBehaviour {
 	public List<GameObject> ownedObjects;
 	private bool _isDead = false;
 
-	List<GameObject> _enemyObjects;
-
 	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
 		get {
 			return Network.shared.ConnectionForPlayer(this);
@@ -37,7 +35,7 @@ public class Player : MonoBehaviour {
 
 	public List<GameUnit> units {
 		get {
-			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.isAlive && gameUnit.player == this);
+			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.isInGame && gameUnit.player == this);
 		}
 	}
 
@@ -86,20 +84,6 @@ public class Player : MonoBehaviour {
 		return _isDead;
 		//return units.TrueForAll(u => u.isDestroyed);
 	}
-
-	// ---------------
-
-	public void FixedUpdate() {
-		_enemyObjects = null;
-
-	}
-
-	/*
-	public void SlaveFixedUpdate() {
-		///base.SlaveFixedupdate();
-		_enemyObjects = null;
-	}
-	*/
 
 	// --- Friend / Enemy ---------------------------------------
 

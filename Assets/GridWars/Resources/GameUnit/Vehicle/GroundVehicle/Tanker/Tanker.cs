@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
 		
-	public override void MasterFixedUpdate() {
-		base.MasterFixedUpdate();
+	public override void ServerFixedUpdate() {
+		base.ServerFixedUpdate();
 
 		if (IsInStandoffRange()) {
 			OnDead();
