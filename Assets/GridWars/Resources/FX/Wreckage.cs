@@ -12,8 +12,8 @@ using System.Collections;
 	public class Wreckage : MonoBehaviour {
 
 	private float deathHeight;
-	private float chillPeriod = 4f;
-	private float sinkPeriod  = 4f;
+	private float chillPeriod = 5f;
+	private float sinkPeriod  = 5f;
 	private float chillDoneTime;
 	private float sinkStartTime;
 	private float sinkDoneTime;
