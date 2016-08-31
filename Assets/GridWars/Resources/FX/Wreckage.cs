@@ -11,16 +11,23 @@ using System.Collections;
 
 	public class Wreckage : MonoBehaviour {
 
-	private float sinkPeriod  = 6f;
-	private float chillPeriod = 6f;
 	private float deathHeight;
-	private AssemblyCSharp.Timer chillTimer = null;
-	private AssemblyCSharp.Timer sinkTimer  = null;
+	private float chillPeriod = 4f;
+	private float sinkPeriod  = 4f;
+	private float chillDoneTime;
+	private float sinkStartTime;
+	private float sinkDoneTime;
 
 	public void Start () {
 		VerifyLayer();
 		Collider bc = gameObject.GetComponent<Collider>();
 		deathHeight = bc.bounds.size.y * 2f;
+
+		chillDoneTime = Time.time + chillPeriod;
+
+		if (Physics.GetIgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"))) {
+			Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
+		}
 	}
 
 	public void VerifyLayer() {
@@ -31,43 +38,34 @@ using System.Collections;
 	}
 
 	public void FixedUpdate() {
-		if (chillTimer == null) {
-			if (IsStill()) {
-				StartChillTimer();
+		if (Time.time > chillDoneTime) {
+			if (sinkDoneTime == 0) {
+				sinkStartTime = Time.time;
+				sinkDoneTime = Time.time + sinkPeriod;
+
+				DisableRemainingCollisions();
 			}
-		} else if (sinkTimer != null) {
 			SinkStep();
 		}
 	}
 
-	public void StartChillTimer() {
-
-		chillTimer = App.shared.timerCenter.NewTimer();
-		chillTimer.action = StartSinkTimer;
-		chillTimer.SetTimeout(chillPeriod);
-		chillTimer.Start();
-
-	}
-
-	public void StartSinkTimer() {
-		sinkTimer = App.shared.timerCenter.NewTimer();
-		sinkTimer.action = AddToDestroyQueue;
-		sinkTimer.SetTimeout(sinkPeriod);
-		sinkTimer.Start();
-
-		DisableRemainingCollisions();
-	}
-
 	public void DisableRemainingCollisions() {
-		/*
 		gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 		gameObject.GetComponent<Collider>().enabled = false;
-		*/
 	}
 
 	public void SinkStep() {
+		float ratio = (Time.time - sinkStartTime) / sinkPeriod;
+		SetY( - ratio * deathHeight );
+
+		if (Time.time > sinkDoneTime) {
+			AddToDestroyQueue();
+		}
+	}
+
+	public void SetY(float y) {
 		Vector3 pos = transform.position;
-		pos.y = - sinkTimer.ratioDone() * deathHeight;
+		pos.y = y;
 		transform.position = pos;
 	}
 
@@ -80,11 +78,6 @@ using System.Collections;
 	}
 
 	void OnDestroy() {
-		if (chillTimer != null) {
-			chillTimer.Cancel();
-		}
-		if (sinkTimer != null) {
-			sinkTimer.Cancel();
-		}
+
 	}
 }
