@@ -41,6 +41,7 @@ public class App : MonoBehaviour {
 
 
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
 	}
 
 	public void FixedUpdate() {
