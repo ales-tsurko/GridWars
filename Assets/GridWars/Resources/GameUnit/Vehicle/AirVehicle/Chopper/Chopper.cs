@@ -19,6 +19,7 @@ public class Chopper : AirVehicle {
 	public float damageRotation;
 
 	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 	}
