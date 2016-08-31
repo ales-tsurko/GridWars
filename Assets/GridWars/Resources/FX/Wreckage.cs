@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+	/*
+	 * Setting this script on an object will
+	 * disable it's collisions with the Default layer,
+	 * wait until the object comes to rest, then 
+	 * cause it to sink into the ground and then be removed from the game.
+	 * 
+	 * */
+
 	public class Wreckage : MonoBehaviour {
 
-	private float sinkPeriod;
+	private float sinkPeriod  = 6f;
+	private float chillPeriod = 6f;
 	private float deathHeight;
-	private AssemblyCSharp.Timer timer;
-	private float miny = 0;
+	private AssemblyCSharp.Timer chillTimer = null;
+	private AssemblyCSharp.Timer sinkTimer  = null;
 
 	public void Start () {
-		sinkPeriod = 6f; 
 		VerifyLayer();
-		BoxCollider bc = gameObject.GetComponent<BoxCollider>();
+		Collider bc = gameObject.GetComponent<Collider>();
 		deathHeight = bc.bounds.size.y * 2f;
 	}
 
@@ -22,53 +30,61 @@ using System.Collections;
 		}
 	}
 
-	public void StartRemoveTimer() {
-		timer = App.shared.timerCenter.NewTimer();
-		timer.action = AddToDestroyQueue;
-		timer.SetTimeout(sinkPeriod);
-		timer.Start();
+	public void FixedUpdate() {
+		if (chillTimer == null) {
+			if (IsStill()) {
+				StartChillTimer();
+			}
+		} else if (sinkTimer != null) {
+			SinkStep();
+		}
 	}
 
-	public void DisableCollisions() {
+	public void StartChillTimer() {
+
+		chillTimer = App.shared.timerCenter.NewTimer();
+		chillTimer.action = StartSinkTimer;
+		chillTimer.SetTimeout(chillPeriod);
+		chillTimer.Start();
+
+	}
+
+	public void StartSinkTimer() {
+		sinkTimer = App.shared.timerCenter.NewTimer();
+		sinkTimer.action = AddToDestroyQueue;
+		sinkTimer.SetTimeout(sinkPeriod);
+		sinkTimer.Start();
+
+		DisableRemainingCollisions();
+	}
+
+	public void DisableRemainingCollisions() {
+		/*
 		gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 		gameObject.GetComponent<Collider>().enabled = false;
-
+		*/
 	}
 
-	public void UpdateMinY() {
-		if (timer.ratioDone() > .5) {
-			miny = - (timer.ratioDone() - 0.5f) * 2f * deathHeight;
-		}
-	}
-	 
-	public void FixedUpdate() {
-
-		if (timer == null) {
-			if (IsStill()) {
-				StartSinking();
-			}
-		} else {
-			UpdateMinY();
-			Vector3 pos = transform.position;
-			pos.y = miny;
-			transform.position = pos;
-		}
+	public void SinkStep() {
+		Vector3 pos = transform.position;
+		pos.y = - sinkTimer.ratioDone() * deathHeight;
+		transform.position = pos;
 	}
 
 	public bool IsStill() {
 		return Mathf.Approximately(gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude, 0.0f);
 	}
-
-	public void StartSinking() {
-		DisableCollisions();
-		StartRemoveTimer();
-	}
-
+		
 	void AddToDestroyQueue() {
 		App.shared.AddToDestroyQueue(gameObject);
 	}
 
 	void OnDestroy() {
-		timer.Cancel();
+		if (chillTimer != null) {
+			chillTimer.Cancel();
+		}
+		if (sinkTimer != null) {
+			sinkTimer.Cancel();
+		}
 	}
 }
