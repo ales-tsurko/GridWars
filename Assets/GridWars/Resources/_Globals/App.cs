@@ -38,6 +38,9 @@ public class App : MonoBehaviour {
 
 		Application.targetFrameRate = 60;
 		QualitySettings.vSyncCount = 0;
+
+
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
 	}
 
 	public void FixedUpdate() {
