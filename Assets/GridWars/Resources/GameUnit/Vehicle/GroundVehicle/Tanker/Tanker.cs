@@ -5,10 +5,6 @@ using System.Collections.Generic;
 
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
-
-	public override void Start() {
-		base.Start();
-	}
 		
 	public override void MasterFixedUpdate() {
 		base.MasterFixedUpdate();
@@ -28,11 +24,10 @@ public class Tanker : GroundVehicle {
 	}
 
 	public void BlowUp() {
-		var initialState = new GameUnitState();
-		initialState.prefabGameUnit = prefabBombExplosion.GetComponent<BigBoom>();
-		initialState.player = player;
-		initialState.transform = transform;
-		initialState.InstantiateGameUnit();
+		var boom = prefabBombExplosion.GetComponent<BigBoom>().Instantiate();
+		boom.player = player;
+		boom.transform.position = transform.position;
+		boom.transform.rotation = transform.rotation;
 	}
 
 	public override void OnDead() {

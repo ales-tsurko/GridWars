@@ -7,11 +7,11 @@ public class PowerSource : GroundBuilding {
 	float _power;
 	public float power {
 		get {
-			return (gameUnitState as PowerSourceState).power;
+			return entity.GetState<IPowerSourceState>().power;
 		}
 
 		set {
-			(gameUnitState as PowerSourceState).power = value;
+			entity.GetState<IPowerSourceState>().power = value;
 		}
 	}
 
@@ -49,7 +49,8 @@ public class PowerSource : GroundBuilding {
 	public override void MasterStart() {
 		base.MasterStart();
 		isTargetable = false;
-		power = 0;
+		//power = 0;
+		power = maxPower;
 	}
 
 	public override void SlaveStart() {

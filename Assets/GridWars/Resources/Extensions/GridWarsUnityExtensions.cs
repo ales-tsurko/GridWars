@@ -55,13 +55,16 @@ public static class GridWarsUnityExtensions {
 	/// <param name="gameObject">GameObject reference to check for destructedness</param>
 	/// <returns>If the game object has been marked as destroyed by UnityEngine</returns>
 	/// 
-	public static bool IsDestroyed(this GameObject gameObject)
+	public static bool IsDestroyed(this GameObject self)
 	{
 		// UnityEngine overloads the == opeator for the GameObject type
 		// and returns null when the object has been destroyed, but 
 		// actually the object is still there but has not been cleaned up yet
 		// if we test both we can determine if the object has been destroyed.
-		return gameObject == null && !ReferenceEquals(gameObject, null);
+		//return gameObject == null && !ReferenceEquals(gameObject, null);
+
+		var gameUnit = self.GetComponent<GameUnit>();
+		return (gameUnit != null) && !gameUnit.isAlive;
 	}
 
 	public static bool inheritsFrom(this System.Object self, System.Type type) {

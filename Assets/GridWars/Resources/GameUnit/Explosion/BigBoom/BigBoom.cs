@@ -11,12 +11,10 @@ public class BigBoom : Explosion {
 	float blastTime = 1f;
 	float startTime;
 	Vector3 initScale;
-	public override void Start () {
-		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
-	}
 
 	public override void SlaveStart () {
 		base.SlaveStart();
+		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
 		currentBlastRadius = minBlastRadius;
 		startTime = Time.time;
 		isTargetable = false;

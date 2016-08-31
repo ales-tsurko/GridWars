@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 public class Missile : Projectile {
 	
-	public override void Start () {
+	public override void MasterStart () {
 		thrust = 10f;
-		base.Start();
+		base.MasterStart();
 	}
 
-	public override void FixedUpdate () {
+	public override void MasterFixedUpdate () {
 		rigidBody().AddForce (transform.forward * thrust);
 	}
 

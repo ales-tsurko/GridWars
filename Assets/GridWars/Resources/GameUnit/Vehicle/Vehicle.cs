@@ -15,11 +15,6 @@ public class Vehicle : GameUnit  {
 	// each frame we test for vehicle box collision,
 	// when it fails we enable vehicle collisions
 
-	public override void Start() {
-		base.Start();
-		//DisableVehicleCollisions();
-	}
-
 	/*
 	public virtual void SetThrustForMaxSpeed(float speed) { // world units per second
 		Rigidbody rb = GetComponent<Rigidbody>();

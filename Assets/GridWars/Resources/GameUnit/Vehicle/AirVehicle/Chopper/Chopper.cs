@@ -18,13 +18,14 @@ public class Chopper : AirVehicle {
 	//public float defaultCruiseHeight = 5f;
 	public float damageRotation;
 
-
-	public override void Start () {
-		base.Start();
-		isRunning = true;
-
+	public override void MasterSlaveStart() {
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
+	}
+
+	public override void MasterStart () {
+		base.MasterStart();
+		isRunning = true;
 
 		//cruiseHeight = defaultCruiseHeight; // + Mathf.Floor(Random.Range(-2.0f, 0.0f)) * 1.0f;
 		cruiseHeight = 10f;

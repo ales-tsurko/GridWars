@@ -11,16 +11,17 @@ public class Engineer : GroundVehicle {
 	Animation anim;
 	GameObject towerToBuild;
 	GameObject tower;
-	public override void Start () {
-		base.Start();
+
+	public override void MasterStart () {
+		base.MasterStart();
 		thrust = 190;
 		rotationThrust = 40;
 
 	
 	}
 	
-	public override void FixedUpdate () {
-		base.FixedUpdate();
+	public override void MasterFixedUpdate () {
+		base.MasterFixedUpdate();
 		switch (engineerState) {
 		case State.Move:
 			if (Vector3.Distance (_t.position, moveTarget.position) < 1) {

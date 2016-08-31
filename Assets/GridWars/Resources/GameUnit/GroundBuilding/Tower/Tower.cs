@@ -28,11 +28,11 @@ public class Tower : GroundBuilding {
 		
 	public string unitPrefabPath {
 		get {
-			return (gameUnitState as TowerState).unitPrefabPath;
+			return entity.GetState<ITowerState>().unitPrefabPath;
 		}
 
 		set {
-			(gameUnitState as TowerState).unitPrefabPath = value;
+			entity.GetState<ITowerState>().unitPrefabPath = value;
 		}
 	}
 
@@ -70,6 +70,13 @@ public class Tower : GroundBuilding {
 		}
 
 		tag = "Player" + player.playerNumber;
+
+		entity.AddEventCallback<AttemptQueueUnitEvent>(AttemptQueueUnit);
+	}
+
+	public override void ClientInit() {
+		base.ClientInit();
+		shouldDestroyColliderOnClient = false;
 	}
 
 	public override void SlaveStart() {
@@ -92,6 +99,10 @@ public class Tower : GroundBuilding {
 
 	public override void Think() {
 		// doesn't need to pick targets
+	}
+
+	public void AttemptQueueUnit(AttemptQueueUnitEvent e) {
+		AttemptQueueUnit();
 	}
 
 	public void AttemptQueueUnit() {
@@ -187,8 +198,8 @@ public class Tower : GroundBuilding {
 	}
 
 	public void OnMouseDown() {
-		if (boltEntity.hasControl) {
-			AttemptQueueUnitEvent.Create(boltEntity).Send();
+		if (entity.hasControl) {
+			AttemptQueueUnitEvent.Create(entity).Send();
 		}
 	}
 
@@ -196,7 +207,7 @@ public class Tower : GroundBuilding {
 		base.QueuePlayerCommands();
 
 		if (Input.GetKeyDown(attemptQueueUnitKeyCode)) {
-			AttemptQueueUnitEvent.Create(boltEntity).Send();
+			AttemptQueueUnitEvent.Create(entity).Send();
 		}
 	}
 
@@ -210,13 +221,11 @@ public class Tower : GroundBuilding {
 		while (queueSize > 0 && unobstructedReleaseZone != null) {
 			var releaseZone = unobstructedReleaseZone;
 
-			var gameUnitState = new GameUnitState();
-			gameUnitState.prefabGameUnit = unitPrefab.GameUnit();
-			gameUnitState.player = player;
-			gameUnitState.position = releaseZone.transform.position;
-			gameUnitState.rotation = transform.rotation;
+			var unit = unitPrefab.GameUnit().Instantiate();
+			unit.player = player;
+			unit.transform.position = releaseZone.transform.position;
+			unit.transform.rotation = transform.rotation;
 
-			var unit = gameUnitState.InstantiateGameUnit();
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
 			queueSize --;
 		}

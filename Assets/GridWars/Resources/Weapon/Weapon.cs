@@ -146,8 +146,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
-
-		if (target && target.IsDestroyed()) {
+		if (target != null && target.IsDestroyed()) {
 			target = null;
 		}
 
@@ -526,16 +525,14 @@ public class Weapon : MonoBehaviour {
 			CreateMuzzleFlash ();
 		}
 			
-		var state = new GameUnitState();
-		state.prefabGameUnit = prefabProjectile.GetComponent<Projectile>();
-		state.player = player;
-		state.transform = transform;
+		var projectile = prefabProjectile.GetComponent<Projectile>().Instantiate() as Projectile;
+		projectile.player = player;
+		projectile.transform.position = transform.position;
+		projectile.transform.rotation = transform.rotation;
+		projectile.copyVelocityFrom(owner);
+		projectile.IgnoreCollisionsWith(owner);
 
-		var projUnit = state.InstantiateGameUnit() as Projectile;
-		projUnit.copyVelocityFrom(owner);
-		projUnit.IgnoreCollisionsWith(owner);
-
-		return projUnit;
+		return projectile;
 	}
 
 	// --- Ray Casting ----------------------------------------

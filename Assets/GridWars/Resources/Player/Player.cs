@@ -37,7 +37,7 @@ public class Player : MonoBehaviour {
 
 	public List<GameUnit> units {
 		get {
-			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.enabled && gameUnit.player == this);
+			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.isAlive && gameUnit.player == this);
 		}
 	}
 
@@ -117,28 +117,21 @@ public class Player : MonoBehaviour {
 		}
 		return playerNumber != otherPlayer.playerNumber;
 	}
+
+	public List<Player> enemies {
+		get {
+			return Battlefield.current.players.FindAll(p => p.playerNumber != playerNumber);
+		}
+	}
 		
 	public virtual List<GameObject> EnemyObjects() {
-		if (_enemyObjects == null) {
-			List<GameObject> objs = App.shared.stepCache.ActiveGameObjects();
-			_enemyObjects = new List<GameObject>();
-			foreach (GameObject obj in objs) {
-				if (obj.IsDestroyed() == false) {
-					GameUnit gameUnit = obj.GameUnit();
-					if (gameUnit && gameUnit.player && (gameUnit.player != this)) {
-						_enemyObjects.Add(obj);
-					}
-				}
+		var enemyObjects = new List<GameObject>();
+		foreach(var enemy in enemies) {
+			foreach (var unit in enemy.units) {
+				enemyObjects.Add(unit.gameObject);
 			}
 		}
-
-
-		for (int i = _enemyObjects.Count - 1; i >= 0; i--) {
-			if (_enemyObjects[i].IsDestroyed()) { 
-				_enemyObjects.RemoveAt(i);
-			}
-		}
-		return _enemyObjects;
+		return enemyObjects;
 	}
 
 	// --- Tracking Objects --------------------------------------
@@ -165,12 +158,11 @@ public class Player : MonoBehaviour {
 	public void TakeControlOf(GameUnit gameUnit) {
 		if (connection) {
 			//give control to client
-			gameUnit.boltEntity.AssignControl(connection);
+			gameUnit.entity.AssignControl(connection);
 		}
 		else {
 			//take control as server
-			gameUnit.boltEntity.TakeControl();
+			gameUnit.entity.TakeControl();
 		}
 	}
-
 }

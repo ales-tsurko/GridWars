@@ -3,41 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
+public class GameUnit : NetworkObject {
 	public float thrust;
 	public float rotationThrust;
-	bool isAlive = true;
 
-	GameUnitDelegate gameUnitDelegate {
-		get {
-			return GetComponent<GameUnitDelegate>();
-		}
-	}
-
-	Player _player;
 	public Player player {
 		get {
-			return gameUnitState.player;
+			if (gameUnitState.playerNumber > 0) {
+				return Battlefield.current.PlayerNumbered(gameUnitState.playerNumber);
+			}
+			else {
+				return null;
+			}
 		}
 
 		set {
-			/*
-			if (gameUnitState.player != value) {
-				if (gameUnitState.player) {
-					// if unit is changing player, 
-					//we need to remove it from the other player
-					value.RemoveGameObject(gameObject);
-				}
-				value.AddGameObject(gameObject);
+			if (value == null) {
+				gameUnitState.playerNumber = 0;
 			}
-				*/
-			
-			gameUnitState.player = value;
+			else {
+				gameUnitState.playerNumber = value.playerNumber;
+				value.TakeControlOf(this);
+			}
+		}
+	}
+
+	public int playerNumber {
+		get {
+			return gameUnitState.playerNumber;
 		}
 	}
 		
 	// Damagable
-	float _hitPoints;
 	public float hitPoints {
 		get {
 			return gameUnitState.hitPoints;
@@ -45,6 +42,16 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 		set {
 			gameUnitState.hitPoints = value;
+		}
+	}
+
+	public bool isAlive {
+		get {
+			return gameUnitState.isAlive;
+		}
+
+		set {
+			gameUnitState.isAlive = value;
 		}
 	}
 
@@ -158,74 +165,108 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 
 	// --- MonoBehaviour --------------------------------------------
 
-	//Awake might be called multiple times for the same loaded prefab.
-	//Make sure that its idempotent.
 	protected override void Awake() {
 		base.Awake();
 
 		isTargetable = true;
-
-		if (gameUnitDelegate == null) {
-			if (boltEntity == null) {
-				gameObject.AddComponent<StandaloneGameUnit>();
-			}
-			else {
-				gameObject.AddComponent<NetworkedGameUnit>();
-			}
-		}
 	}
-
-	//TODO: Remove after all subclasses implement NetworkObjectDelegate
-	public virtual void Start() {
-	}
-
-	//TODO: Remove after all subclasses implement NetworkObjectDelegate
-	public virtual void FixedUpdate() {}
 
 	//Networking
 
+	public bool shouldDestroyColliderOnClient = true;
 	protected List<Bolt.Event> playerCommands;
 
-	GameUnitState _gameUnitState;
-	public GameUnitState gameUnitState {
+	public IGameUnitState gameUnitState {
 		get {
-			return _gameUnitState;
-		}
-
-		set {
-			// warning: this is never called
-			if (value != null) {
-				value.gameUnit = this;
-			}
-
-			_gameUnitState = value;
-		}
-	}
-
-	public BoltEntity boltEntity {
-		get {
-			return GetComponent<BoltEntity>();
+			return entity.GetState<IGameUnitState>();
 		}
 	}
 
 	public GameUnit Instantiate() {
-		Awake();
-		var unit = gameUnitDelegate.InstantiateGameUnit();
-		gameUnitState = null;
-		return unit;
+		return BoltNetwork.Instantiate(gameObject).GetComponent<GameUnit>();
 	}
 
-	public virtual void MasterSlaveStart() {
+	public static GameUnit Instantiate(System.Type unitType) {
+		return Load(unitType).GetComponent<GameUnit>().Instantiate();
+	}
+
+	public static T Instantiate<T>() where T: GameUnit {
+		return (T) Instantiate(typeof(T));
+	}
+
+	public override void MasterInit() {
+		base.MasterInit();
+		hitPoints = maxHitPoints;
+	}
+
+	public void HideAndDisable() {
+		//Debug.Log(this + " HideAndDisable");
+		SetVisibleAndEnabled(false);
+	}
+
+	public void ShowAndEnable() {
+		//Debug.Log(this + " ShowAndEnable");
+		SetVisibleAndEnabled(true);
+	}
+
+	void SetVisibleAndEnabled(bool visibleAndEnabled) {
+		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
+			if (script.GetType() != typeof(BoltEntity)) {
+				script.enabled = visibleAndEnabled;
+			}
+		}
+
+		foreach (var renderer in GetComponentsInChildren<ParticleSystemRenderer>()) {
+			renderer.enabled = visibleAndEnabled;
+		}
+
+		gameObject.EachRenderer(r => r.enabled = visibleAndEnabled);
+
+		var collider = GetComponent<Collider>();
+		if (collider != null) {
+			collider.enabled = visibleAndEnabled;
+		}
+
+		var rigidBody = GetComponent<Rigidbody>();
+		if (rigidBody != null) {
+			rigidBody.isKinematic = !visibleAndEnabled;
+		}
+	}
+
+	public override void MasterSlaveStart() {
+		base.MasterSlaveStart();
+
+		gameUnitState.SetTransforms(gameUnitState.transform, transform);
+
+		if (typeof(ITurretedUnitState).IsAssignableFrom(gameUnitState.GetType())) {
+			var s = entity.GetState<ITurretedUnitState>();
+			//TODO: this won't work for more than 1 weapon
+			foreach (var weapon in Weapons()) {
+				if (weapon.turretObjX != null) {
+					s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
+				}
+
+				if (weapon.turretObjY != null) {
+					s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
+				}
+			}
+		}
+
 		playerCommands = new List<Bolt.Event>();
-		transform.position = gameUnitState.position;
-		transform.rotation = gameUnitState.rotation;
-		//SetAlpha(0.1f);
 	}
 
-	public virtual void MasterStart() {
+	public override void MasterStart() {
+		gameUnitState.isAlive = true;
+
+		base.MasterStart();
 	}
 
-	public virtual void SlaveStart() {
+	public override void ClientStart() {
+		base.ClientStart();
+	}
+
+	public override void SlaveStart() {
+		base.SlaveStart();
 		SetupWeapons();
 		SetupSmokeDamage ();
 		SetupDeathExplosion ();
@@ -263,7 +304,8 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		PickTarget();
 	}
 
-	public virtual void MasterFixedUpdate(){
+	public override void MasterFixedUpdate(){
+		base.MasterFixedUpdate();
 		/*
 		if (player == null) {
 			print ("SimulateOwner null player on " + this);
@@ -284,24 +326,15 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		RemoveIfOutOfBounds ();
 	}
 
-	public virtual void SlaveFixedUpdate(){}
+	public override void SlaveFixedUpdate(){
+		base.SlaveFixedUpdate();
+	}
 
-	public virtual void QueuePlayerCommands(){}
+	public override void QueuePlayerCommands(){}
 
-	public virtual void SlaveDied(){}
-
-	GameUnitDeathEvent _deathEvent;
-	public GameUnitDeathEvent deathEvent {
-		get {
-			return _deathEvent;
-		}
-
-		set {
-			_deathEvent = value;
-			if (_deathEvent != null) {
-				_deathEvent.gameUnit = this;
-			}
-		}
+	public override void SlaveDied(){
+		base.SlaveDied();
+		ShowFxExplosion();
 	}
 
 
@@ -567,31 +600,30 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		}
 	}
 
-	bool _isDestroyed = false;
-	public bool isDestroyed {
-		get {
-			return _isDestroyed || gameObject.IsDestroyed();
-		}
-	}
-
 	public void DestroySelf() {
-		if (_isDestroyed == true) {
+		if (!isActiveAndEnabled) {
 			return;
 		}
 
-		_isDestroyed = true;
+		gameUnitState.isAlive = false;
 
 		//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
-
-		App.shared.AddToDestroyQueue(gameObject);
 
 		if (player) {
 			player.RemoveGameObject(gameObject);
 		}
+
+		App.shared.AddToDestroyQueue(gameObject);
 	}
 
 	public void ActuallyDestroySelf() {
-		gameUnitDelegate.DestroySelf();
+		var timer = App.shared.timerCenter.NewTimer().SetTimeout(3*1f/20); //TODO use frames instead
+		timer.action = NetworkDestroySelf;
+		timer.Start();
+	}
+
+	void NetworkDestroySelf() {
+		BoltNetwork.Destroy(gameObject);
 	}
 
 	// --- Damage ------------------------------------------
@@ -613,7 +645,7 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 			return;
 		}
 
-		if (isDestroyed) {
+		if (gameObject.IsDestroyed()) {
 			return;
 		}
 
@@ -664,26 +696,14 @@ public class GameUnit : BetterMonoBehaviour, NetworkObjectDelegate {
 		if (deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
-				var state = new GameUnitState();
-				state.prefabGameUnit = deathExplosionPrefab.GetComponent<Explosion>();
-				state.transform = _t;
-				state.InstantiateGameUnit();
+				var explosion = deathExplosionPrefab.GetComponent<Explosion>().Instantiate();
+				explosion.transform.position = _t.position;
+				explosion.transform.rotation = _t.rotation;
 			}
 		}
 	}
 
-	bool isQuitting = false;
-	void OnApplicationQuit() {
-		isQuitting = true;
-	}
-
-	void OnDestroy() {
-		if (!isQuitting) {
-			ShowFxExplosion();
-		}
-	}
-
-	void ShowFxExplosion() {
+	public void ShowFxExplosion() {
 		if (deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {

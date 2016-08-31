@@ -51,12 +51,7 @@ public class Network : Bolt.GlobalEventListener {
 	public string zeusEndpoint = "159.8.0.207:24000";
 
 	public override void BoltStartBegin() {
-		BoltNetwork.RegisterTokenClass<GameUnitState>();
-		BoltNetwork.RegisterTokenClass<TowerState>();
-		BoltNetwork.RegisterTokenClass<PowerSourceState>();
 		BoltNetwork.RegisterTokenClass<ServerToken>();
-		BoltNetwork.RegisterTokenClass<GameUnitDeathEvent>();
-		BoltNetwork.RegisterTokenClass<ProjectileDeathEvent>();
 	}
 
 	public override void BoltStartDone() {

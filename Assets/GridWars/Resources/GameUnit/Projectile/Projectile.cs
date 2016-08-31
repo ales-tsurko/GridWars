@@ -32,7 +32,7 @@ public class Projectile : GameUnit {
 
 	protected Collision lastCollision;
 
-	void OnCollisionEnter(Collision collision) {
+	public override void OnCollisionEnter(Collision collision) {
 		lastCollision = collision;
 		Explode();
 		ApplyDamageTo(collision.gameObject);
@@ -47,11 +47,14 @@ public class Projectile : GameUnit {
 	}
 
 	protected void Explode() {
-		if (!isDestroyed) {
-			deathEvent = new ProjectileDeathEvent();
-			deathEvent.transform = transform;
+		if (!gameObject.IsDestroyed()) {
 			OnDead();
 		}
+	}
+
+	public override void SlaveDied(){
+		base.SlaveDied();
+		AttemptCreateExplosion();
 	}
 
 	public void AttemptCreateExplosion() {

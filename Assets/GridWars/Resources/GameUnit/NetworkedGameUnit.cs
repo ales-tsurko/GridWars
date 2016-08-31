@@ -1,113 +1,87 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkedGameUnit : NetworkObject, GameUnitDelegate {
-	//GameUnitDelegate implementation
-
-	public GameUnit InstantiateGameUnit() {
-		var newGameUnit = (GameUnit) BoltNetwork.Instantiate(entity.ModifySettings().prefabId, gameUnit.gameUnitState, gameUnit.gameUnitState.position, gameUnit.gameUnitState.rotation).GetComponent(typeof(GameUnit));
-		if (newGameUnit.player != null) {
-			newGameUnit.player.TakeControlOf(newGameUnit);
-		}
-		return newGameUnit;
-	}
-
-	bool isDetroyed = false;
-	public void DestroySelf() {
-		
-		if (BoltNetwork.isServer) {
-
-			if (isDetroyed) {
-				print("DestroySelf called twice!"); 
-			}
-
-			isDetroyed = true;
-
-			try
-			{
-				BoltNetwork.Destroy(gameObject, networkObjectDelegate.deathEvent);
-			}
-			catch (BoltException e) {
-				print(e);
-			}
-		}
-		else {
-			throw new System.Exception("Can't destroy NetworkObject on the Client");
-		}
-	}
-
-	//NetworkObject overrides
-
-	public override void MasterSlaveStart() {
-		gameUnit.gameUnitState = (entity.attachToken as GameUnitState);
-
-		boltState.SetTransforms(boltState.transform, transform);
-
-		if (typeof(ITurretedUnitState).IsAssignableFrom(boltState.GetType())) {
-			var s = entity.GetState<ITurretedUnitState>();
-			//TODO: this won't work for more than 1 weapon
-			foreach (var weapon in gameUnit.Weapons()) {
-				if (weapon.turretObjX != null) {
-					s.SetTransforms(s.turretXTransform, weapon.turretObjX.transform);
-				}
-
-				if (weapon.turretObjY != null) {
-					s.SetTransforms(s.turretYTransform, weapon.turretObjY.transform);
-				}
-			}
-		}
-
-		base.MasterSlaveStart();
-	}
-
-	public override void MasterStart() {
-		gameUnit.gameUnitState.ApplyToBoltState();
-		boltState.receivedFirstUpdate = true;
-		base.MasterStart();
-	}
-
-
-	public override void SlaveStart() {
-		base.SlaveStart();
-
-		if (!BoltNetwork.isServer) {
-			Destroy(GetComponent<Rigidbody>());
-
-			if (shouldDestroyColliderOnClient) {
-				Destroy(GetComponent<Collider>());
-			}
-		}
-
-		boltState.AddCallback("receivedFirstUpdate", ReceivedFirstUpdate);
-	}
-
-	public override void SlaveDied() {
-		gameUnit.deathEvent = entity.detachToken as GameUnitDeathEvent;
-		base.SlaveDied();
-		if (gameUnit.deathEvent != null) {
-			gameUnit.deathEvent.Apply();
-		}
-	}
-
-	//internal
-
-	protected bool shouldDestroyColliderOnClient = true;
-
-	void ReceivedFirstUpdate() {
-		if (boltState.receivedFirstUpdate) {
-			gameUnit.gameUnitState.useBoltState = true;
-		}
-	}
-
+public class NetworkedGameUnit : Bolt.EntityBehaviour {
 	GameUnit gameUnit {
 		get {
 			return GetComponent<GameUnit>();
 		}
 	}
 
-	IGameUnitState boltState {
+	IGameUnitState state {
 		get {
 			return entity.GetState<IGameUnitState>();
+		}
+	}
+
+	public override void Attached() {
+		base.Attached();
+
+		if (BoltNetwork.isServer) {
+			gameUnit.MasterInit();
+			state.isAlive = true;
+		}
+		else if (BoltNetwork.isClient) {
+			gameUnit.ClientInit();
+
+			Debug.Log(this + "state:");
+			Debug.Log("isAlive: " + state.isAlive);
+			Debug.Log("playerNumber: " + state.playerNumber);
+			Debug.Log("position: " + transform.position);
+			Debug.Log("rotation: " + transform.rotation);
+
+			Destroy(GetComponent<Rigidbody>());
+
+			if (gameUnit.shouldDestroyColliderOnClient) {
+				Debug.Log(this + "DestroyCollider");
+				Destroy(GetComponent<Collider>());
+			}
+
+			if (!state.isAlive) {
+				transform.position = Camera.current.transform.position - 100f*Camera.current.transform.forward;
+				gameUnit.HideAndDisable();
+			}
+		}
+
+		state.AddCallback("isAlive", IsAliveChanged);
+
+		gameUnit.SlaveInit();
+	}
+
+	void IsAliveChanged() {
+		//Debug.Log(this + " ExistsInWorldChanged: " + state.existsInWorld);
+		if (state.isAlive) {
+			gameUnit.ShowAndEnable();
+		}
+		else {
+			gameUnit.HideAndDisable();
+			gameUnit.SlaveDied();
+		}
+	}
+
+	void Start() {
+		//Debug.Log(this + " NetworkedGameObject Start");
+		gameUnit.MasterSlaveStart();
+		if (BoltNetwork.isServer) {
+			gameUnit.MasterStart();
+		}
+		else if (BoltNetwork.isClient) {
+			gameUnit.ClientStart();
+		}
+		gameUnit.SlaveStart();
+	}
+
+	public override void SimulateOwner() {
+		gameUnit.MasterFixedUpdate();
+	}
+
+	void FixedUpdate() {
+		gameUnit.SlaveFixedUpdate();
+	}
+
+	void Update() {
+		if (entity.isControllerOrOwner) {
+			gameUnit.QueuePlayerCommands();
 		}
 	}
 }

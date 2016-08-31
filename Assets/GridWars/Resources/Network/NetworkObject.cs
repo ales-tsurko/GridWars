@@ -1,75 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkObject : Bolt.EntityEventListener {
+public class NetworkObject : BetterMonoBehaviour {
 	//public interface
 
-	public NetworkObjectDelegate networkObjectDelegate {
+	public BoltEntity entity {
 		get {
-			return GetComponent<NetworkObjectDelegate>();
+			return GetComponent<BoltEntity>();
 		}
+	}
+
+	public virtual void MasterInit() {
+	}
+
+	public virtual void ClientInit() {
+	}
+
+	public virtual void SlaveInit() {
 	}
 
 	public virtual void MasterSlaveStart() {
-		networkObjectDelegate.MasterSlaveStart();
 	}
 
 	public virtual void MasterStart() {
-		networkObjectDelegate.MasterStart();
+	}
+
+	public virtual void ClientStart() {
 	}
 
 	public virtual void SlaveStart() {
-		networkObjectDelegate.SlaveStart();
 	}
 
 	public virtual void MasterFixedUpdate() {
-		networkObjectDelegate.MasterFixedUpdate();
 	}
 
 	public virtual void SlaveFixedUpdate() {
-		networkObjectDelegate.SlaveFixedUpdate();
 	}
 
 	public virtual void QueuePlayerCommands() {
-		networkObjectDelegate.QueuePlayerCommands();
 	}
 
 	public virtual void SlaveDied() {
-		networkObjectDelegate.SlaveDied();
-	}
-
-	//internal interface
-
-	public override void Attached() {
-		base.Attached();
-
-		MasterSlaveStart();
-
-		if (BoltNetwork.isServer) {
-			MasterStart();
-		}
-
-		SlaveStart();
-	}
-
-	public override void SimulateOwner() {
-		base.SimulateOwner();
-
-		MasterFixedUpdate();
-	}
-
-	void Update() {
-		if (entity.isControllerOrOwner) {
-			QueuePlayerCommands();
-		}
-	}
-
-	void FixedUpdate() {
-		SlaveFixedUpdate();
-	}
-
-	public override void Detached() {
-		base.Detached();
-		SlaveDied();
 	}
 }
