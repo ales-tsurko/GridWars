@@ -66,6 +66,11 @@ public class Player : MonoBehaviour {
 		gameObject.Paint(c, "Unit");
 	}
 
+	public void PaintAsHighlighted(GameObject gameObject) {
+		var c = Color.Lerp(color, Color.white, 0.35f);
+		gameObject.Paint(c, "Unit");
+	}
+
 	string resourcesPath {
 		get {
 			return "Player/" + playerNumber + "/";

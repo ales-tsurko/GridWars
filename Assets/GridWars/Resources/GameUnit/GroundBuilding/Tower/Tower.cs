@@ -4,9 +4,11 @@ using System.Collections.Generic;
 public class Tower : GroundBuilding {
 
 	public string activationKey;
-	public Mesh theMesh;
+	//public Mesh theMesh;
 
 	bool npcModeOn = false;
+	public GameObject topComponent;
+	public GameObject baseComponent;
 
 	public static Vector3 size {
 		get {
@@ -15,12 +17,7 @@ public class Tower : GroundBuilding {
 			return mesh.bounds.size;
 			*/
 
-			/*
-			BoxCollider bc = GameUnit.Load<Tower>().BoxCollider();
-			if (bc != null ) {
-				return bc.bounds.size;
-			}
-			*/
+			//float y = GameUnit.Load<Tower>().GetComponent<Collider>().bounds.size.y;
 
 			return new Vector3(5f, 2f, 5f);
 		}
@@ -64,6 +61,8 @@ public class Tower : GroundBuilding {
 		if (CameraController.instance != null) {
 			CameraController.instance.InitCamera (transform);
 		}
+
+		StartPaint();
 	}
 
 	public override void ServerJoinedGame() {
@@ -183,19 +182,33 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	public void StartPaint() {
+		player.Paint(topComponent);
+		player.Paint(baseComponent);
+		player.Paint(iconObject);
+	}
+
 	public void Paint() {
 		if (paintMode != 1) {
 			paintMode = 1;
+			/*
 			player.Paint(gameObject);
 			player.Paint(iconObject);
+			*/
+			player.PaintAsHighlighted(topComponent);
+
 		}
 	}
 
 	public void PaintAsDisabled() {
 		if (paintMode != 2) {
 			paintMode = 2;
+			/*
 			player.PaintAsDisabled(gameObject);
 			player.PaintAsDisabled(iconObject);
+			*/
+			player.Paint(topComponent);
+
 		}
 	}
 
