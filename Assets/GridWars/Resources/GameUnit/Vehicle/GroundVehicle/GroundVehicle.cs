@@ -16,7 +16,7 @@ public class GroundVehicle : Vehicle {
 
 		// Die if flipped
 		if (IsAtWeirdAngle()) {
-			OnDead();
+			Die();
 		}
 	}
 		

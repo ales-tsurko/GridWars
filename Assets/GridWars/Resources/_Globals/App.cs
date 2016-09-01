@@ -100,13 +100,7 @@ public class App : MonoBehaviour {
 	public void ProcessDestroyQueue() {
 		foreach(GameObject obj in _destroyQueue) {
 			//Debug.Log("ProcessDestroyQueue: " + obj);
-			GameUnit gameUnit;
-			if ((gameUnit = obj.GetComponent<GameUnit>()) != null) {
-				gameUnit.ActuallyDestroySelf();
-			}
-			else {
-				Destroy(obj);
-			}
+			Destroy(obj);
 		}
 		_destroyQueue.Clear();
 	}

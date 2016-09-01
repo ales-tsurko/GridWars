@@ -39,6 +39,10 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 	public override void SimulateOwner() {
 		base.SimulateOwner();
 
+		if (!gameUnit.isInGame) {
+			return;
+		}
+
 		if (debug) {
 			Debug.Log(this + " SimulateOwner");
 		}
@@ -53,9 +57,14 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 	}
 
 	protected virtual void FixedUpdate() {
+		if (!gameUnit.isInGame) {
+			return;
+		}
+
 		if (debug) {
 			Debug.Log(this + " FixedUpdate");
 		}
+
 		gameUnit.ServerAndClientFixedUpdate();
 		if (BoltNetwork.isClient) {
 			gameUnit.ClientFixedUpdate();
@@ -63,6 +72,10 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 	}
 
 	protected virtual void Update() {
+		if (!gameUnit.isInGame) {
+			return;
+		}
+
 		gameUnit.ServerAndClientUpdate();
 		if (BoltNetwork.isServer) {
 			gameUnit.ServerUpdate();

@@ -9,13 +9,20 @@ public class DestroyAfter : MonoBehaviour {
 
 	void Start () {
 		timer = App.shared.timerCenter.NewTimer();
-		timer.action = AddToDestroyQueue;
+		timer.action = DestroyObject;
 		timer.SetTimeout(destroyTime);
 		timer.Start();
 	}
 
-	void AddToDestroyQueue() {
-		App.shared.AddToDestroyQueue(gameObject);
+	void DestroyObject() {
+		var gameUnit = GetComponent<GameUnit>();
+		if (gameUnit == null) {
+			Destroy(gameObject);
+		}
+		else {
+			gameUnit.Die();
+		}
+		//App.shared.AddToDestroyQueue(gameObject);
 	}
 
 	void OnDestroy() {

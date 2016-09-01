@@ -25,7 +25,7 @@ public class BigBoom : Explosion {
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate();
 		if (DoneRatio() > 1) {
-			DestroySelf();
+			Die();
 		} else {
 			ApplyForcesAndDamageStep();
 		}

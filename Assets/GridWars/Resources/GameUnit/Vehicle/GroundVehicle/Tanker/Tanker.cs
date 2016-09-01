@@ -10,7 +10,7 @@ public class Tanker : GroundVehicle {
 		base.ServerFixedUpdate();
 
 		if (IsInStandoffRange()) {
-			OnDead();
+			Die();
 		}
 	}
 
@@ -30,8 +30,8 @@ public class Tanker : GroundVehicle {
 		boom.transform.rotation = transform.rotation;
 	}
 
-	public override void OnDead() {
-		base.OnDead();
+	public override void Die() {
+		base.Die();
 		BlowUp();
 	}
 
@@ -45,14 +45,9 @@ public class Tanker : GroundVehicle {
 
 		if (otherUnit != null && !IsFriendOf(otherUnit)) {
 			if (!otherUnit.IsOfType(typeof(Projectile))) {
-				OnDead();
+				Die();
 			}
 		}
-			/*
-			if (collision.relativeVelocity.) {
-				OnDead()
-			}
-			*/
 	}
 
 }

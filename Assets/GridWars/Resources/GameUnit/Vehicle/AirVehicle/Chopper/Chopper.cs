@@ -159,7 +159,7 @@ public class Chopper : AirVehicle {
 		// destroy on ground collision
 		if (collision.collider.name == "BattlefieldPlane") {
 			if (collision.relativeVelocity.magnitude > 2) {
-				OnDead();
+				Die();
 			}
 		}
 	}

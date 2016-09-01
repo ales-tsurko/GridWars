@@ -48,7 +48,7 @@ public class Projectile : GameUnit {
 
 	protected void Explode() {
 		if (!gameObject.IsDestroyed()) {
-			OnDead();
+			Die();
 		}
 	}
 

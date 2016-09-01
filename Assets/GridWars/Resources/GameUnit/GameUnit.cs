@@ -592,7 +592,7 @@ public class GameUnit : NetworkObject {
 
 	public virtual void RemoveIfOutOfBounds () {
 		if (isOutOfBounds() ) {
-			OnDead();
+			Die();
 		}
 	}
 
@@ -648,32 +648,6 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	public void DestroySelf() {
-		if (!isActiveAndEnabled) {
-			return;
-		}
-
-		gameUnitState.isInGame = false;
-
-		//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
-
-		if (player) {
-			player.RemoveGameObject(gameObject);
-		}
-
-		App.shared.AddToDestroyQueue(gameObject);
-	}
-
-	public void ActuallyDestroySelf() {
-		var timer = App.shared.timerCenter.NewTimer().SetTimeout(3*1f/20); //TODO use frames instead
-		timer.action = NetworkDestroySelf;
-		timer.Start();
-	}
-
-	void NetworkDestroySelf() {
-		BoltNetwork.Destroy(gameObject);
-	}
-
 	// --- Damage ------------------------------------------
 
 	public void WasFiredOnByWeapon(Weapon weapon) {
@@ -703,7 +677,7 @@ public class GameUnit : NetworkObject {
 			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
 		}
 		if (hitPoints <= 0) {
-			OnDead();
+			Die();
 		}
 	}
 
@@ -727,17 +701,33 @@ public class GameUnit : NetworkObject {
 
 	// --- Death ------------------------------------------
 
-	public virtual void OnDead() { // only called on Master
+	public virtual void Die() { // should only be called on Server.
 		if (isInGame) {
-			isInGame = false;
 			Camera cam = _t.GetComponentInChildren<Camera>();
 			if (cam) {
 				cam.transform.parent = null;
 				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
 			}
+
 			ShowUnitExplosion();
-			DestroySelf();
+
+			//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
+
+			if (player) {
+				player.RemoveGameObject(gameObject);
+			}
+
+			var timer = App.shared.timerCenter.NewTimer();
+			timer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
+			timer.action = DestroySelf;
+			timer.Start();
+
+			isInGame = false;
 		}
+	}
+
+	void DestroySelf() {
+		BoltNetwork.Destroy(gameObject);
 	}
 
 	void ShowUnitExplosion() {
