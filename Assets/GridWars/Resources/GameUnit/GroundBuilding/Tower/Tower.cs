@@ -249,7 +249,7 @@ public class Tower : GroundBuilding {
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
 
-			if (unit.IsOfType(typeof(AirVehicle))) {
+			if (unit.IsOfType(typeof(AirVehicle)) || unit.IsOfType(typeof(Tanker)) ) {
 				unit.transform.position = iconObject.transform.position;
 			} else {
 				unit.transform.position = releaseZone.transform.position;
