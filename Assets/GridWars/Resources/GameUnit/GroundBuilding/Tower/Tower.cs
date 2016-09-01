@@ -195,7 +195,7 @@ public class Tower : GroundBuilding {
 			player.Paint(gameObject);
 			player.Paint(iconObject);
 			*/
-			player.PaintAsHighlighted(topComponent);
+			player.PaintAsHighlighted(topComponent, 0.5f);
 
 		}
 	}

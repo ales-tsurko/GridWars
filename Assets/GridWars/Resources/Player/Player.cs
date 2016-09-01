@@ -66,8 +66,8 @@ public class Player : MonoBehaviour {
 		gameObject.Paint(c, "Unit");
 	}
 
-	public void PaintAsHighlighted(GameObject gameObject) {
-		var c = Color.Lerp(color, Color.white, 0.35f);
+	public void PaintAsHighlighted(GameObject gameObject, float level) {
+		var c = Color.Lerp(color, Color.white, level);
 		gameObject.Paint(c, "Unit");
 	}
 
