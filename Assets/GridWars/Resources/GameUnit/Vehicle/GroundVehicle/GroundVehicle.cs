@@ -21,11 +21,12 @@ public class GroundVehicle : Vehicle {
 	}
 		
 	public bool WheelsAreTouchingGround() {
-		return DiffWithWorldUpAngle() < 5f;
+		return true;
+		//return DiffWithWorldUpAngle() < 5f;
 	}
 		
 	public bool IsAtWeirdAngle() {
-		return DiffWithWorldUpAngle() > 10f;
+		return DiffWithWorldUpAngle() > 70f;
 	}
 
 	public float DiffWithWorldUpAngle() {

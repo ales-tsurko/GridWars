@@ -3,12 +3,15 @@ using System.Collections.Generic;
 
 public class Tower : GroundBuilding {
 
+	public GameObject iconPlacement;
+
 	public string activationKey;
 	//public Mesh theMesh;
 
 	bool npcModeOn = false;
-	public GameObject topComponent;
-	public GameObject baseComponent;
+	//public GameObject topComponent;
+	//public GameObject baseComponent;
+	private GameUnit iconUnit;
 
 	public static Vector3 size {
 		get {
@@ -19,7 +22,7 @@ public class Tower : GroundBuilding {
 
 			//float y = GameUnit.Load<Tower>().GetComponent<Collider>().bounds.size.y;
 
-			return new Vector3(5f, 2f, 5f);
+			return new Vector3(5f, 1.5f, 5f);
 		}
 	}
 		
@@ -50,12 +53,12 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientJoinedGame() {
 		base.ServerAndClientJoinedGame();
 
-		var iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
+		iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
 		iconUnit.BecomeIcon();
 
 		iconObject = iconUnit.gameObject;
 		iconObject.transform.SetParent(transform);
-		iconObject.transform.localPosition = new Vector3(0f, size.y, 0f);
+		iconObject.transform.localPosition = new Vector3(0f, iconPlacement.transform.position.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
 
 		if (CameraController.instance != null) {
@@ -82,7 +85,7 @@ public class Tower : GroundBuilding {
 			var releaseZone = this.CreateChild<ReleaseZone>();
 			var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
 			collider.size = unitSize;
-			collider.center = new Vector3(0f, collider.size.y/2, 0f);
+			collider.center = new Vector3(0f, collider.size.y/2 + 0.1f, 0f);
 			collider.isTrigger = true;
 			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
 			releaseZones.Add(releaseZone);
@@ -171,31 +174,42 @@ public class Tower : GroundBuilding {
 		
 	int paintMode = 0;
 
+
+	public void ShowIconUnit() {
+		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+			renderer.enabled = true;
+		}
+	}
+
+	public void HideIconUnit() {
+		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+			renderer.enabled = false;
+		}
+	}
+	
 	public override void ServerAndClientFixedUpdate() {
 		base.ServerAndClientFixedUpdate();
 
 		if (canQueueUnit) {
-			Paint();
+			//Paint();
+			ShowIconUnit();
+
 		}
 		else {
-			PaintAsDisabled();
+			//PaintAsDisabled();
+			HideIconUnit();
 		}
 	}
 
 	public void StartPaint() {
-		player.Paint(topComponent);
-		player.Paint(baseComponent);
+		player.Paint(gameObject);
 		player.Paint(iconObject);
 	}
 
 	public void Paint() {
 		if (paintMode != 1) {
 			paintMode = 1;
-			/*
-			player.Paint(gameObject);
-			player.Paint(iconObject);
-			*/
-			player.PaintAsHighlighted(topComponent, 0.5f);
+			//player.PaintAsHighlighted(gameObject, 0.5f);
 
 		}
 	}
@@ -203,11 +217,7 @@ public class Tower : GroundBuilding {
 	public void PaintAsDisabled() {
 		if (paintMode != 2) {
 			paintMode = 2;
-			/*
-			player.PaintAsDisabled(gameObject);
-			player.PaintAsDisabled(iconObject);
-			*/
-			player.Paint(topComponent);
+			//player.Paint(topComponent);
 
 		}
 	}
@@ -238,7 +248,13 @@ public class Tower : GroundBuilding {
 
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
-			unit.transform.position = releaseZone.transform.position;
+
+			if (unit.IsOfType(typeof(AirVehicle))) {
+				unit.transform.position = iconObject.transform.position;
+			} else {
+				unit.transform.position = releaseZone.transform.position;
+			}
+				
 			unit.transform.rotation = transform.rotation;
 
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
