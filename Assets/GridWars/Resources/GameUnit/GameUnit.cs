@@ -664,13 +664,20 @@ public class GameUnit : NetworkObject {
 		App.shared.AddToDestroyQueue(gameObject);
 	}
 
+	private AssemblyCSharp.Timer actuallyDestroyedTimer = null;
+
 	public void ActuallyDestroySelf() {
-		var timer = App.shared.timerCenter.NewTimer().SetTimeout(3*1f/20); //TODO use frames instead
-		timer.action = NetworkDestroySelf;
-		timer.Start();
+		if (actuallyDestroyedTimer != null) {
+			throw new System.InvalidOperationException("called ActuallyDestroySelf twice");
+		}
+
+		actuallyDestroyedTimer = App.shared.timerCenter.NewTimer().SetTimeout(3*1f/20); //TODO use frames instead
+		actuallyDestroyedTimer.action = NetworkDestroySelf;
+		actuallyDestroyedTimer.Start();
 	}
 
 	void NetworkDestroySelf() {
+		//App.shared.ThrowIfQueuedToDestroyOrAlreadyDestroyed(gameObject);
 		BoltNetwork.Destroy(gameObject);
 	}
 
