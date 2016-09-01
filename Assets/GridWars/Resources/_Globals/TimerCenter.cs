@@ -34,9 +34,9 @@ namespace AssemblyCSharp {
 			foreach (Timer timer in timers) {
 				if (newTimer.fireTime < timer.fireTime) {
 					timers.Insert(index, newTimer);
-					index++;
 					return;
 				}
+				index++;
 			}
 
 			timers.Add(newTimer);
