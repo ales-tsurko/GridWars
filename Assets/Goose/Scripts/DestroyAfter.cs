@@ -26,6 +26,8 @@ public class DestroyAfter : MonoBehaviour {
 	}
 
 	void OnDestroy() {
-		timer.Cancel();
+		if (timer) { //in case start is never called.
+			timer.Cancel();
+		}
 	}
 }
