@@ -72,7 +72,7 @@ public class Chopper : AirVehicle {
 		// z tilt control ------------------------------------------------------
 		float upThrust = TotalUpThrust()/2f;
 
-		float offset = 1.5f;
+		float offset = 2f;
 		Vector3 thrustPointLeft  = mainRotorTransform.position - mainRotorTransform.right * offset;
 		Vector3 thrustPointRight = mainRotorTransform.position + mainRotorTransform.right * offset;
 
