@@ -4,14 +4,27 @@ using System.Collections.Generic;
 public class ReleaseZone : MonoBehaviour {
 	public bool isObstructed {
 		get {
-			return obstructions.Count > 0;
+
+			var myCollider = GetComponent<Collider>();
+
+			foreach (var vehicle in App.shared.stepCache.AllVehicleUnits()) {
+				BoxCollider otherCollider = vehicle.BoxCollider();
+
+				if (myCollider.bounds.Intersects(otherCollider.bounds)) {
+					return true;
+				}
+			}
+			return false;
+
+			//return obstructions.Count > 0;
 		}
 	}
 
 	public void AddObstruction(Collider obstruction) {
-		OnTriggerEnter(obstruction);
+		//OnTriggerEnter(obstruction);
 	}
 
+	/*
 	List<Collider> obstructions;
 
 	// Use this for initialization
@@ -34,4 +47,5 @@ public class ReleaseZone : MonoBehaviour {
 		//Debug.Log("OnTriggerExit: " + obstruction.name);
 		obstructions.Remove(obstruction);
 	}
+	*/
 }

@@ -5,9 +5,11 @@ using System;
 
 public class Vehicle : GameUnit  {
 
-	[HideInInspector]
-	public bool hasVehicleCollisionsOn;
 
+	[HideInInspector]
+
+	bool disableCollisionsOnLaunch = true;
+	bool hasVehicleCollisionsOn;
 	GameObject nearestVehicle;
 
 	// some code to avoid vehicle collisions on launch from tower
@@ -22,9 +24,18 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+		if (disableCollisionsOnLaunch) {
+			DisableVehicleCollisions();
+		}
+	}
+
 	public override void ServerFixedUpdate() {
 		base.ServerFixedUpdate();
-		//EnableVehicleCollisionsIfClear();
+		if (disableCollisionsOnLaunch) {
+			//EnableVehicleCollisionsIfClear();
+		}
 	}
 
 	public virtual void SteerTowardsTarget() {
@@ -42,7 +53,7 @@ public class Vehicle : GameUnit  {
 	private GameObject nearestObsticle;
 	private float avoidObsticleDistance = 6f;
 
-	public void UpdateNearestObsticle() {
+	virtual public void UpdateNearestObsticle() {
 		// find nearest object that's 
 		// - a vehicle
 		// - not our target
