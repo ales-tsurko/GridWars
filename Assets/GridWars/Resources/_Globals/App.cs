@@ -115,12 +115,7 @@ public class App : MonoBehaviour {
 				//throw new System.InvalidOperationException("found already destroyed gameobject in destroy queue");
 				print("WARNING: found already destroyed gameobject in destroy queue");
 			} else {
-				GameUnit gameUnit = obj.GetComponent<GameUnit>();
-				if (gameUnit != null) {
-					gameUnit.ActuallyDestroySelf();
-				} else {
-					Destroy(obj);
-				}
+				Destroy(obj);
 			}
 		}
 

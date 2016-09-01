@@ -9,6 +9,6 @@ public class UIActivityIndicator : UIElement {
 
 	void Update () {
 		transform.GetComponentInChildren<Text> ().rectTransform.rotation = Quaternion.Euler (Vector3.zero);
-		transform.RotateAround (transform.forward, Time.deltaTime * rotateSpeed);
+		transform.Rotate (transform.forward, Time.deltaTime * rotateSpeed);
 	}
 }

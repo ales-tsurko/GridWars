@@ -8,7 +8,7 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	//public Mesh theMesh;
 
-	bool npcModeOn = false;
+	bool npcModeOn = true;
 	//public GameObject topComponent;
 	//public GameObject baseComponent;
 	private GameUnit iconUnit;

@@ -58,9 +58,9 @@ namespace AssemblyCSharp {
 		}
 
 		public void Start() {
-			timerCenter.AddTimer(this);
 			startTime = Time.time;
 			fireTime = startTime + timeout;
+			timerCenter.AddTimer(this);
 		}
 
 		public float ratioDone() {

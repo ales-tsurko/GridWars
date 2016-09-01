@@ -28,7 +28,6 @@ public static class UI {
 		case MenuItemType.ButtonRound:
 		case MenuItemType.ButtonSquare:
 			return Button (title, action, type, skin);
-			break;
 		}
 		return null;
 	}
@@ -66,7 +65,7 @@ public static class UI {
 			canvas = go.AddComponent<Canvas> ();
 			canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 			canvas.name = CANVAS;
-			var scaler = canvas.gameObject.AddComponent<CanvasScaler> ();
+			//var scaler = canvas.gameObject.AddComponent<CanvasScaler> ();
 			var raycaster = canvas.gameObject.AddComponent<GraphicRaycaster> ();
 			raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
 			var eventSystem = new GameObject ().AddComponent<EventSystem> ();
