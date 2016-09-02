@@ -6,8 +6,12 @@ public class DestroyAfter : MonoBehaviour {
 	public float destroyTime = 10f;
 
 	AssemblyCSharp.Timer timer;
-
+	ParticleSystem ps;
 	void Start () {
+		ps = GetComponent<ParticleSystem> ();
+		if (ps != null) {
+			return;
+		}
 		timer = App.shared.timerCenter.NewTimer();
 		timer.action = DestroyObject;
 		timer.SetTimeout(destroyTime);
@@ -25,6 +29,15 @@ public class DestroyAfter : MonoBehaviour {
 		//App.shared.AddToDestroyQueue(gameObject);
 	}
 
+	void Update (){
+		if (ps == null || Time.frameCount % 60 != 0) {
+			return;
+		}
+		if (!ps.IsAlive (true)) {
+			Destroy(gameObject);
+		}
+
+	}
 	void OnDestroy() {
 		if (timer != null) { //in case start is never called.
 			timer.Cancel();
