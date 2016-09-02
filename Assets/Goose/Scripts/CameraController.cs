@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour {
 	}
 	public void InitCamera () {
 		Tower[] towers = FindObjectsOfType<Tower> ();
-		Tower closest = new Tower ();
+		Tower closest = towers[0];
 		float closestDist = Mathf.Infinity;
 		foreach (Tower tower in towers) {
 			float thisDist = Vector3.Distance (tower.transform.position, cam.transform.position);
