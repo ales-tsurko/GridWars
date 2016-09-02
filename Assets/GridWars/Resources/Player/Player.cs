@@ -7,7 +7,6 @@ public class Player : MonoBehaviour {
 	public float separation = 0.9f;
 
 	public List<GameObject> ownedObjects;
-	private bool _isDead = false;
 
 	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
 		get {
@@ -33,10 +32,10 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public List<GameUnit> units {
-		get {
-			return new List<GameUnit>(FindObjectsOfType<GameUnit>()).FindAll(gameUnit => gameUnit.isInGame && gameUnit.player == this);
-		}
+	public List<GameUnit> units;
+
+	void Awake() {
+		units = new List<GameUnit>();
 	}
 
 	void Start() {
@@ -86,8 +85,7 @@ public class Player : MonoBehaviour {
 	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
-		return _isDead;
-		//return units.TrueForAll(u => u.isDestroyed);
+		return units.Count == 0;
 	}
 
 	// --- Friend / Enemy ---------------------------------------
@@ -122,26 +120,7 @@ public class Player : MonoBehaviour {
 		}
 		return enemyObjects;
 	}
-
-	// --- Tracking Objects --------------------------------------
-
-	public void UpdateIsDead() {
-		_isDead = (ownedObjects.Count == 1); // 1 is the PowerSource
-	}
-
-	public void AddGameObject(GameObject obj) {
-		if (obj) {
-			if (ownedObjects.Contains(obj) == false) {
-				ownedObjects.Add(obj);
-			}
-			UpdateIsDead();
-		}
-	}
-
-	public void RemoveGameObject(GameObject obj) {
-		ownedObjects.Remove(obj);
-		UpdateIsDead();
-	}
+		
 	// --- Networking ---------------------------------------
 
 	public void TakeControlOf(GameUnit gameUnit) {

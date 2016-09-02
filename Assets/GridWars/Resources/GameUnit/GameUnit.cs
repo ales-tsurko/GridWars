@@ -75,9 +75,6 @@ public class GameUnit : NetworkObject {
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
 
-	public float nextThinkTime;
-
-
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -277,7 +274,7 @@ public class GameUnit : NetworkObject {
 		if (player == null) {
 			//gameObject.Paint(Color.white, "Unit");
 		} else {
-			player.AddGameObject(gameObject); // hack because player setter is never called
+			player.units.Add(this);
 			player.Paint(gameObject);
 		}
 
@@ -334,32 +331,34 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientLeftGame(){
 		base.ServerAndClientLeftGame();
+		if (player != null) {
+			player.units.Remove(this);	
+		}
 		ShowFxExplosion();
+	}
+
+	// Thinking
+
+	int thinkFrequency = 20;
+
+	int thinkBucket {
+		get {
+			return (int)((uint)GetHashCode() % (uint)thinkFrequency);
+		}
+	}
+
+	public bool IsThinkStep() {
+		return (App.shared.timeCounter % thinkFrequency == 0);
+	}
+
+	public virtual void Think() {
+		PickTarget();
 	}
 
 
 	// -----------------------
 
 	public virtual void QueuePlayerCommands(){}
-
-	public bool IsThinkStep() {
-		float waitSeconds = (1f / 20f);
-		if (Time.time > nextThinkTime) {
-			nextThinkTime = Time.time + (waitSeconds * 2f * UnityEngine.Random.value);
-			return true;
-		}
-		/*
-		return (App.shared.timeCounter % 20 == 0);
-		float chancePerSec = 1f / 40f;
-		float secsInLastStep = Time.deltaTime;
-		return (UnityEngine.Random.value < chancePerSec * secsInLastStep);
-		*/
-		return false;
-	}
-
-	public virtual void Think() {
-		PickTarget();
-	}
 
 	void SetVisibleAndEnabled(bool visibleAndEnabled) {
 		//Debug.Log(this + " SetVisibleAndEnabled: " + visibleAndEnabled);
@@ -710,10 +709,6 @@ public class GameUnit : NetworkObject {
 			ShowUnitExplosion();
 
 			//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
-
-			if (player) {
-				player.RemoveGameObject(gameObject);
-			}
 
 			var timer = App.shared.timerCenter.NewTimer();
 			timer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated

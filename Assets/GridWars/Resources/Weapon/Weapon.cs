@@ -53,12 +53,25 @@ public class Weapon : MonoBehaviour {
 	public int priority = 0; // vehicle's uses target chosen by highest priority weapon
 	public List<System.Type> targetableTypes;
 
+	// Thinking
 
-	// Networking
+	int thinkFrequency = 20;
+
+	int thinkBucket {
+		get {
+			return (int)((uint)GetHashCode() % (uint)thinkFrequency);
+		}
+	}
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % 20 == 0);
+		return (App.shared.timeCounter % thinkFrequency == 0);
 	}
+
+	public void Think() {
+		PickTarget();
+	}
+
+	// Networking
 
 	public void SimulateOwner() {
 		if (isActive) {
@@ -70,10 +83,6 @@ public class Weapon : MonoBehaviour {
 		} else {
 			target = null;
 		}
-	}
-
-	public void Think() {
-		PickTarget();
 	}
 
 	//MonoBehaviour
