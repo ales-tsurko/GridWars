@@ -22,17 +22,6 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 
 		gameUnit.ServerAndClientInit();
 	}
-		
-	void Start() {
-		if (debug) {
-			Debug.Log(this + " Start");
-		}
-			
-		if (BoltNetwork.isClient) {
-			gameUnit.ClientJoinedGame();
-			gameUnit.ServerAndClientJoinedGame();
-		}
-	}
 
 	bool serverStarted = false;
 
@@ -54,22 +43,30 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 		}
 
 		gameUnit.ServerFixedUpdate();
+		gameUnit.ServerAndClientFixedUpdate();
 	}
-
+		
+	bool clientStarted = false;
+		
 	protected virtual void FixedUpdate() {
 		if (!gameUnit.isInGame) {
 			return;
 		}
 
-		if (debug) {
-			Debug.Log(this + " FixedUpdate");
-		}
-			
 		if (BoltNetwork.isClient) {
-			gameUnit.ClientFixedUpdate();
-		}
+			if (debug) {
+				Debug.Log(this + " FixedUpdate");
+			}
 
-		gameUnit.ServerAndClientFixedUpdate();
+			if (!clientStarted) {
+				gameUnit.ClientJoinedGame();
+				gameUnit.ServerAndClientJoinedGame();
+				clientStarted = true;
+			}
+
+			gameUnit.ClientFixedUpdate();
+			gameUnit.ServerAndClientFixedUpdate();
+		}
 	}
 
 	protected virtual void Update() {
@@ -77,14 +74,14 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 			return;
 		}
 			
-		if (BoltNetwork.isServer) {
+		if (BoltNetwork.isServer && serverStarted) {
 			gameUnit.ServerUpdate();
+			gameUnit.ServerAndClientUpdate();
 		}
-		else {
+		else if (clientStarted) {
 			gameUnit.ClientUpdate();
+			gameUnit.ServerAndClientUpdate();
 		}
-
-		gameUnit.ServerAndClientUpdate();
 	}
 
 	// internal

@@ -46,26 +46,9 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	public override void ServerAndClientInit() {
-		base.ServerAndClientInit();
-	}
-
-	public override void ServerAndClientJoinedGame() {
-		base.ServerAndClientJoinedGame();
-
-		iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
-		iconUnit.BecomeIcon();
-
-		iconObject = iconUnit.gameObject;
-		iconObject.transform.SetParent(transform);
-		iconObject.transform.localPosition = new Vector3(0f, iconPlacement.transform.position.y, 0f);
-		iconObject.transform.localRotation = Quaternion.identity;
-
-		if (CameraController.instance != null) {
-			CameraController.instance.InitCamera (transform);
-		}
-
-		StartPaint();
+	public override void ClientInit() {
+		shouldDestroyColliderOnClient = false;
+		base.ClientInit();
 	}
 
 	public override void ServerJoinedGame() {
@@ -96,9 +79,50 @@ public class Tower : GroundBuilding {
 		entity.AddEventCallback<AttemptQueueUnitEvent>(AttemptQueueUnit);
 	}
 
-	public override void ClientInit() {
-		shouldDestroyColliderOnClient = false;
-		base.ClientInit();
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
+		iconUnit = Instantiate(unitPrefab).GetComponent<GameUnit>();
+		iconUnit.BecomeIcon();
+
+		iconObject = iconUnit.gameObject;
+		iconObject.transform.SetParent(transform);
+		iconObject.transform.localPosition = new Vector3(0f, iconPlacement.transform.position.y, 0f);
+		iconObject.transform.localRotation = Quaternion.identity;
+
+		if (CameraController.instance != null) {
+			CameraController.instance.InitCamera (transform);
+		}
+
+		StartPaint();
+	}
+
+	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
+
+		if (queueSize > 0) {
+			ReleaseUnits();
+		}
+
+		if (npcModeOn) {
+			if (Random.value < 0.001) {
+				AttemptQueueUnit();
+			}
+		}
+	}
+
+	public override void ServerAndClientUpdate() {
+		base.ServerAndClientFixedUpdate();
+
+		if (canQueueUnit) {
+			//Paint();
+			ShowIconUnit();
+
+		}
+		else {
+			//PaintAsDisabled();
+			HideIconUnit();
+		}
 	}
 
 	public override void Think() {
@@ -106,7 +130,6 @@ public class Tower : GroundBuilding {
 	}
 
 	public void AttemptQueueUnit(AttemptQueueUnitEvent e) {
-		Debug.Log("Received AttemptQueueUnit");
 		AttemptQueueUnit();
 	}
 
@@ -156,20 +179,6 @@ public class Tower : GroundBuilding {
 			}
 		}
 	}
-
-	public override void ServerFixedUpdate () {
-		base.ServerFixedUpdate();
-			
-		if (queueSize > 0) {
-			ReleaseUnits();
-		}
-
-		if (npcModeOn) {
-			if (Random.value < 0.001) {
-				AttemptQueueUnit();
-			}
-		}
-	}
 		
 	int paintMode = 0;
 
@@ -183,20 +192,6 @@ public class Tower : GroundBuilding {
 	public void HideIconUnit() {
 		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
 			renderer.enabled = false;
-		}
-	}
-	
-	public override void ServerAndClientUpdate() {
-		base.ServerAndClientFixedUpdate();
-
-		if (canQueueUnit) {
-			//Paint();
-			ShowIconUnit();
-
-		}
-		else {
-			//PaintAsDisabled();
-			HideIconUnit();
 		}
 	}
 
@@ -222,9 +217,7 @@ public class Tower : GroundBuilding {
 	}
 
 	public void OnMouseDown() {
-		Debug.Log("OnMouseDown");
 		if (entity.hasControl) {
-			Debug.Log("SendEvent");
 			AttemptQueueUnitEvent.Create(entity).Send();
 		}
 	}
