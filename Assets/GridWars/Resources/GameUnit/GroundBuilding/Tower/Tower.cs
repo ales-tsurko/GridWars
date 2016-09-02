@@ -8,7 +8,7 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	//public Mesh theMesh;
 
-	bool npcModeOn = false;
+	bool npcModeOn = true;
 	//public GameObject topComponent;
 	//public GameObject baseComponent;
 	private GameUnit iconUnit;
@@ -103,16 +103,10 @@ public class Tower : GroundBuilding {
 		if (queueSize > 0) {
 			ReleaseUnits();
 		}
-
-		if (npcModeOn) {
-			if (Random.value < 0.001) {
-				AttemptQueueUnit();
-			}
-		}
 	}
 
 	public override void ServerAndClientUpdate() {
-		base.ServerAndClientFixedUpdate();
+		base.ServerAndClientUpdate();
 
 		if (canQueueUnit) {
 			//Paint();
@@ -217,15 +211,25 @@ public class Tower : GroundBuilding {
 	}
 
 	public void OnMouseDown() {
-		if (entity.hasControl) {
-			AttemptQueueUnitEvent.Create(entity).Send();
-		}
+		SendAttemptQueueUnit();
 	}
 
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
+		if (npcModeOn) {
+			if (Random.value < 0.001*4) {
+				SendAttemptQueueUnit();
+			}
+		}
+
 		if (Input.GetKeyDown(attemptQueueUnitKeyCode)) {
+			SendAttemptQueueUnit();
+		}
+	}
+
+	void SendAttemptQueueUnit() {
+		if (entity.hasControl) {
 			AttemptQueueUnitEvent.Create(entity).Send();
 		}
 	}

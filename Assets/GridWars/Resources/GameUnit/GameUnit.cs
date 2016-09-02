@@ -318,14 +318,10 @@ public class GameUnit : NetworkObject {
 		base.ServerUpdate();
 	}
 
-	public override void ClientUpdate() {
-		base.ClientUpdate();
-
-		QueuePlayerCommands();
-	}
-
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
+
+		QueuePlayerCommands();
 	}
 
 	public override void ServerLeftGame() {
