@@ -40,7 +40,7 @@ public static class UI {
 		return _menu;
 	}
 
-	public static UIActivityIndicator ActivityIndicator (string text = "", float rotateSpeed = 2, string skin = "Default"){
+	public static UIActivityIndicator ActivityIndicator (string text = "", float rotateSpeed = 50, string skin = "Default"){
 		skin += "/";
 		GameObject go = new GameObject ();
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator> ();
