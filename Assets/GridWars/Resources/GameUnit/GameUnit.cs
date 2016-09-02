@@ -23,7 +23,9 @@ public class GameUnit : NetworkObject {
 			}
 			else {
 				gameUnitState.playerNumber = value.playerNumber;
-				value.TakeControlOf(this);
+				if (BoltNetwork.isServer) {
+					value.TakeControlOf(this);
+				}
 			}
 		}
 	}
@@ -197,7 +199,7 @@ public class GameUnit : NetworkObject {
 		return (T) Instantiate(typeof(T));
 	}
 
-	void isInGameChanged() {
+	void IsInGameChanged() {
 		//Debug.Log(this + " ExistsInWorldChanged: " + state.existsInWorld);
 		if (isInGame) {
 			SetVisibleAndEnabled(true);
@@ -210,11 +212,6 @@ public class GameUnit : NetworkObject {
 
 
 	//NetworkObject
-
-	public override void ServerAndClientInit() {
-		base.ServerAndClientInit();
-		gameUnitState.AddCallback("isInGame", isInGameChanged);
-	}
 
 	public override void ServerInit() {
 		base.ServerInit();
@@ -233,6 +230,21 @@ public class GameUnit : NetworkObject {
 		if (!isInGame) {
 			SetVisibleAndEnabled(false);
 		}
+	}
+
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+		gameUnitState.AddCallback("isInGame", IsInGameChanged);
+	}
+
+	public override void ServerJoinedGame() {
+		base.ServerJoinedGame();
+
+		gameUnitState.isInGame = true; //TODO: try to match frame?
+	}
+
+	public override void ClientJoinedGame() {
+		base.ClientJoinedGame();
 	}
 
 	public override void ServerAndClientJoinedGame() {
@@ -272,20 +284,6 @@ public class GameUnit : NetworkObject {
 		PlayBirthSound();
 	}
 
-	public override void ServerJoinedGame() {
-		base.ServerJoinedGame();
-
-		gameUnitState.isInGame = true; //TODO: try to match frame?
-	}
-
-	public override void ClientJoinedGame() {
-		base.ClientJoinedGame();
-	}
-		
-	public override void ServerAndClientFixedUpdate() {
-		base.ServerAndClientFixedUpdate();
-	}
-
 	public override void ServerFixedUpdate(){
 		base.ServerFixedUpdate();
 		/*
@@ -312,8 +310,8 @@ public class GameUnit : NetworkObject {
 		base.ClientFixedUpdate();
 	}
 
-	public override void ServerAndClientUpdate() {
-		base.ServerAndClientUpdate();
+	public override void ServerAndClientFixedUpdate() {
+		base.ServerAndClientFixedUpdate();
 	}
 
 	public override void ServerUpdate() {
@@ -326,9 +324,8 @@ public class GameUnit : NetworkObject {
 		QueuePlayerCommands();
 	}
 
-	public override void ServerAndClientLeftGame(){
-		base.ServerAndClientLeftGame();
-		ShowFxExplosion();
+	public override void ServerAndClientUpdate() {
+		base.ServerAndClientUpdate();
 	}
 
 	public override void ServerLeftGame() {
@@ -337,6 +334,11 @@ public class GameUnit : NetworkObject {
 
 	public override void ClientLeftGame() {
 		base.ClientLeftGame();
+	}
+
+	public override void ServerAndClientLeftGame(){
+		base.ServerAndClientLeftGame();
+		ShowFxExplosion();
 	}
 
 

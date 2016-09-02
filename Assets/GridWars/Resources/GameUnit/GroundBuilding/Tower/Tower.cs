@@ -106,6 +106,7 @@ public class Tower : GroundBuilding {
 	}
 
 	public void AttemptQueueUnit(AttemptQueueUnitEvent e) {
+		Debug.Log("Received AttemptQueueUnit");
 		AttemptQueueUnit();
 	}
 
@@ -156,8 +157,6 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-
-	//TODO move input logic to slavesfkey
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate();
 			
@@ -187,7 +186,7 @@ public class Tower : GroundBuilding {
 		}
 	}
 	
-	public override void ServerAndClientFixedUpdate() {
+	public override void ServerAndClientUpdate() {
 		base.ServerAndClientFixedUpdate();
 
 		if (canQueueUnit) {
@@ -223,7 +222,9 @@ public class Tower : GroundBuilding {
 	}
 
 	public void OnMouseDown() {
+		Debug.Log("OnMouseDown");
 		if (entity.hasControl) {
+			Debug.Log("SendEvent");
 			AttemptQueueUnitEvent.Create(entity).Send();
 		}
 	}

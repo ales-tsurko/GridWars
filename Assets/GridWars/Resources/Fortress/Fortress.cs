@@ -43,11 +43,11 @@ public class Fortress : MonoBehaviour {
 			placement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
 			placement.transform.localRotation = Quaternion.identity;
 
+			//client sets powerSource reference separately
 			powerSource = GameUnit.Instantiate<PowerSource>();
 			powerSource.player = player;
 			powerSource.transform.position = transform.position;
 			powerSource.transform.rotation = transform.rotation;
-			powerSource.Setup(); //needs player before it can setup
 
 			//*
 			towers = new List<Tower>();

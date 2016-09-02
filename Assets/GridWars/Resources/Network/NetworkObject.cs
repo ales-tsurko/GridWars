@@ -10,6 +10,8 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
+	//The following methods are called in the order that they appear
+
 	public virtual void ServerAndClientInit() {
 		if (debug) {
 			Debug.Log(this + " ServerAndClientInit");
@@ -28,12 +30,6 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	public virtual void ServerAndClientJoinedGame() {
-		if (debug) {
-			Debug.Log(this + " ServerAndClientJoinedGame");
-		}
-	}
-
 	public virtual void ServerJoinedGame() {
 		if (debug) {
 			Debug.Log(this + " ServerJoinedGame");
@@ -46,16 +42,15 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	public virtual void ServerFixedUpdate() {
+	public virtual void ServerAndClientJoinedGame() {
 		if (debug) {
-			Debug.Log(this + " ServerFixedUpdate");
+			Debug.Log(this + " ServerAndClientJoinedGame");
 		}
 	}
 
-	//Note: unlike others, this is called AFTER ServerFixedUpdate
-	public virtual void ServerAndClientFixedUpdate() {
+	public virtual void ServerFixedUpdate() {
 		if (debug) {
-			Debug.Log(this + " ServerAndClientFixedUpdate");
+			Debug.Log(this + " ServerFixedUpdate");
 		}
 	}
 
@@ -65,9 +60,9 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	public virtual void ServerAndClientUpdate() {
+	public virtual void ServerAndClientFixedUpdate() {
 		if (debug) {
-			Debug.Log(this + " ServerAndClientUpdate");
+			Debug.Log(this + " ServerAndClientFixedUpdate");
 		}
 	}
 
@@ -83,15 +78,21 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	public virtual void ServerAndClientLeftGame() {
+	public virtual void ServerAndClientUpdate() {
 		if (debug) {
-			Debug.Log(this + " ServerAndClientLeftGame");
+			Debug.Log(this + " ServerAndClientUpdate");
 		}
 	}
 
 	public virtual void ServerLeftGame() {
 		if (debug) {
 			Debug.Log(this + " ServerLeftGame");
+		}
+	}
+
+	public virtual void ServerAndClientLeftGame() {
+		if (debug) {
+			Debug.Log(this + " ServerAndClientLeftGame");
 		}
 	}
 
