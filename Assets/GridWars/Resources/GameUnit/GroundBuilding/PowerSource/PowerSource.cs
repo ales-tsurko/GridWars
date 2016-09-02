@@ -53,7 +53,16 @@ public class PowerSource : GroundBuilding {
 		//power = maxPower;
 	}
 
-	public void Setup() {
+	public override void ClientInit() {
+		base.ServerAndClientInit();
+
+		//need to setup here so its available to other objects.  Server sets it when creating fortress
+		player.fortress.powerSource = this;
+	}
+
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
 		bounds = new Vector3(player.fortress.bounds.x, bounds.y, bounds.z);
 
 		var segmentLength = (trackLength - trackSpacing*(segmentCount - 1))/segmentCount;
@@ -91,7 +100,9 @@ public class PowerSource : GroundBuilding {
 		// doesn't need to pick targets
 	}
 
-	void Update() {
+	public override void ServerAndClientUpdate() {
+		base.ServerAndClientUpdate();
+
 		var activeSegmentCount = segmentCount*power/maxPower;
 
 		for (var i = 0; i < segmentCount; i ++) {
