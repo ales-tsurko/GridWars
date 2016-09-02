@@ -5,6 +5,7 @@ public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
 	public float separation = 0.9f;
+	public Material unitMaterial;
 
 	public List<GameObject> ownedObjects;
 
@@ -39,6 +40,9 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start() {
+		unitMaterial = new Material(Resources.Load("Materials/Unit") as Material);
+		unitMaterial.color = color;
+			
 		ownedObjects = new List<GameObject>();
 
 		gameObject.transform.parent = battlefield.transform;
@@ -53,10 +57,18 @@ public class Player : MonoBehaviour {
 		fortress.transform.localRotation = Quaternion.identity;
 	}
 
+	//Painting
+
 	public void Paint(GameObject gameObject) {
-		gameObject.Paint(color, "Unit");
+		//gameObject.Paint(color, "Unit");
+		gameObject.EachRenderer(r => {
+			if (r.material.name.StartsWith("Unit")) {
+				r.material = unitMaterial;
+			}
+		});
 	}
 
+	/*
 	public void PaintAsDisabled(GameObject gameObject) {
 		var c = new Color();
 		c.r = color.r/2;
@@ -69,6 +81,7 @@ public class Player : MonoBehaviour {
 		var c = Color.Lerp(color, Color.white, level);
 		gameObject.Paint(c, "Unit");
 	}
+	*/
 
 	string resourcesPath {
 		get {

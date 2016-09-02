@@ -269,12 +269,9 @@ public class GameUnit : NetworkObject {
 		SetupSmokeDamage ();
 		SetupDeathExplosion ();
 
-		gameObject.CloneMaterials();
-
-		if (player == null) {
-			//gameObject.Paint(Color.white, "Unit");
-		} else {
+		if (player != null) {
 			player.units.Add(this);
+
 			player.Paint(gameObject);
 		}
 

@@ -94,7 +94,8 @@ public class Tower : GroundBuilding {
 			CameraController.instance.InitCamera (transform);
 		}
 
-		StartPaint();
+		player.Paint(gameObject);
+		player.Paint(iconObject);
 	}
 
 	public override void ServerFixedUpdate () {
@@ -173,9 +174,6 @@ public class Tower : GroundBuilding {
 			}
 		}
 	}
-		
-	int paintMode = 0;
-
 
 	public void ShowIconUnit() {
 		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
@@ -186,27 +184,6 @@ public class Tower : GroundBuilding {
 	public void HideIconUnit() {
 		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
 			renderer.enabled = false;
-		}
-	}
-
-	public void StartPaint() {
-		player.Paint(gameObject);
-		player.Paint(iconObject);
-	}
-
-	public void Paint() {
-		if (paintMode != 1) {
-			paintMode = 1;
-			//player.PaintAsHighlighted(gameObject, 0.5f);
-
-		}
-	}
-
-	public void PaintAsDisabled() {
-		if (paintMode != 2) {
-			paintMode = 2;
-			//player.Paint(topComponent);
-
 		}
 	}
 
