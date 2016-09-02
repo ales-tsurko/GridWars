@@ -649,7 +649,7 @@ public class GameUnit : NetworkObject {
 			//Gizmos.DrawLine (_t.position, target.transform.position);
 		}
 	}
-
+		
 	// --- Damage ------------------------------------------
 
 	public void WasFiredOnByWeapon(Weapon weapon) {

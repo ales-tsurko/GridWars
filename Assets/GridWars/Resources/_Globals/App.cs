@@ -19,6 +19,8 @@ public class App : MonoBehaviour {
 	public AssemblyCSharp.StepCache stepCache;
 	private List <GameObject> _destroyQueue;
 
+	private bool _isProcessingDestroyQueue = false;
+
 	public static App shared {
 		get {
 			if (_shared == null) {
@@ -39,9 +41,7 @@ public class App : MonoBehaviour {
 		Application.targetFrameRate = 60;
 		QualitySettings.vSyncCount = 0;
 
-
-		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
-		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
+		Wreckage.SetupLayerCollisions();
 	}
 
 	public void FixedUpdate() {
@@ -91,18 +91,52 @@ public class App : MonoBehaviour {
 		ProcessDestroyQueue();
 	}
 
+
 	public void AddToDestroyQueue(GameObject obj) {
+		//ThrowIfQueuedToDestroyOrAlreadyDestroyed(obj);
+
 		if(!_destroyQueue.Contains(obj)) {
 			_destroyQueue.Add(obj);
 		}
 	}
 
+
 	public void ProcessDestroyQueue() {
-		foreach(GameObject obj in _destroyQueue) {
-			//Debug.Log("ProcessDestroyQueue: " + obj);
-			Destroy(obj);
+		if (_isProcessingDestroyQueue) {
+			throw new System.InvalidOperationException("circular call of ProcessDestroyQueue");
 		}
+
+		_isProcessingDestroyQueue = true;
+
+		foreach(GameObject obj in _destroyQueue) {
+			if (obj == null) { 
+				//throw new System.InvalidOperationException("found already destroyed gameobject in destroy queue");
+				print("WARNING: found already destroyed gameobject in destroy queue");
+			} else {
+				Destroy(obj);
+			}
+		}
+
 		_destroyQueue.Clear();
+		_isProcessingDestroyQueue = false;
+	}
+
+	public void ThrowIfQueuedToDestroyOrAlreadyDestroyed(GameObject obj) {
+		if (App.shared.HasQueuedToDestroy(obj)) {
+			throw new System.InvalidOperationException("has queued to destroy");
+		}
+
+		if (obj == null) { // && !ReferenceEquals(obj, null)) {
+			throw new System.InvalidOperationException("null game object");
+		}
+	}
+
+	public bool HasQueuedToDestroy(GameObject obj) {
+		return _destroyQueue.Contains(obj);
+	}
+
+	public void ImmediateDestory(GameObject obj) {
+		Destroy(obj);
 	}
 }
 

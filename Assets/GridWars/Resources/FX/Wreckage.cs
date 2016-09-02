@@ -18,6 +18,12 @@ using System.Collections;
 	private float sinkStartTime;
 	private float sinkDoneTime;
 
+	static public void SetupLayerCollisions() {
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Wreckage"), true);
+	}
+
 	public void Start () {
 		VerifyLayer();
 		Collider bc = gameObject.GetComponent<Collider>();
