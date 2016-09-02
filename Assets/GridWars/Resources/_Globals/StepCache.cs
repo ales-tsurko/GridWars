@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AssemblyCSharp {
 
@@ -8,17 +9,17 @@ namespace AssemblyCSharp {
 		
 		Dictionary<string, GameObject[]> typeCache;
 		List<GameObject> _activeGameObjects;
-		List<GameObject> _allVehicleObjects;
+		List<Vehicle> _allVehicles;
 		List<GameObject> _allWreckageObjects;
 
 		public StepCache() {
 			typeCache = new Dictionary<string, GameObject[]>(); 
+			_allVehicles = new List<Vehicle>();
 		}
 
 		public void Step() {
 			typeCache.Clear(); 
 			_activeGameObjects = null;
-			_allVehicleObjects = null;
 			_allWreckageObjects = null;
 		}
 
@@ -53,24 +54,19 @@ namespace AssemblyCSharp {
 		}
 
 		public List<GameObject> AllVehicleObjects() {
-			if (_allVehicleObjects == null) {
-				GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
-				_allVehicleObjects = new List<GameObject>();
-
-				foreach (GameObject obj in objs) {
-					GameUnit unit = obj.GameUnit();
-					if (unit && unit.IsOfType(typeof(Vehicle))) {
-						_allVehicleObjects.Add(obj);
-					}
-				}
-			}
-
-			RemoveDestroyedObjectsFromList(_allVehicleObjects);
-			return _allVehicleObjects;
+			return _allVehicles.Select<Vehicle, GameObject>(vehicle => vehicle.gameObject).ToList();
 		}
 
-		public List<GameUnit> AllVehicleUnits() {
-			return UnitsForObjects(AllVehicleObjects());
+		public List<Vehicle> AllVehicleUnits() {
+			return _allVehicles;
+		}
+
+		public void AddVehicle(Vehicle vehicle) {
+			_allVehicles.Add(vehicle);
+		}
+
+		public void RemoveVehicle(Vehicle vehicle) {
+			_allVehicles.Remove(vehicle);
 		}
 
 		// --- Utility ---------------------------------------

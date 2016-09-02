@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class Vehicle : GameUnit  {
 
@@ -24,11 +25,26 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
+
+	//NetworkObject
+
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 		if (disableCollisionsOnLaunch) {
 			DisableVehicleCollisions();
 		}
+	}
+
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
+		App.shared.stepCache.AddVehicle(this);
+	}
+
+	public override void ServerAndClientLeftGame() {
+		base.ServerAndClientLeftGame();
+
+		App.shared.stepCache.RemoveVehicle(this);
 	}
 
 	public override void ServerFixedUpdate() {
@@ -47,13 +63,13 @@ public class Vehicle : GameUnit  {
 
 	public override void Think() {
 		base.Think();
-		UpdateNearestObsticle();
+		UpdateNearestObstacle();
 	}
 
 	private GameObject nearestObsticle;
 	private float avoidObsticleDistance = 6f;
 
-	virtual public void UpdateNearestObsticle() {
+	virtual public void UpdateNearestObstacle() {
 		// find nearest object that's 
 		// - a vehicle
 		// - not our target
@@ -138,7 +154,7 @@ public class Vehicle : GameUnit  {
 	}
 
 
-	public List<GameUnit> AllVehicleUnits() {
+	public List<Vehicle> AllVehicleUnits() {
 		return App.shared.stepCache.AllVehicleUnits();
 	}
 		
@@ -165,14 +181,15 @@ public class Vehicle : GameUnit  {
 	public void DisableVehicleCollisions() {
 		if (hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = false;
-			IgnoreCollisionsWithUnits(AllVehicleUnits(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>().ToList(), hasVehicleCollisionsOn);
 		}
 	}
 		
 	public void EnableVehicleCollisions() {
+
 		if (!hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = true;
-			IgnoreCollisionsWithUnits(AllVehicleUnits(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>().ToList(), hasVehicleCollisionsOn);
 		}
 	}
 

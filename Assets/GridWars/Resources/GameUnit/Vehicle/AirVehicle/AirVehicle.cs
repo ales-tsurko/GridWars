@@ -19,7 +19,7 @@ public class AirVehicle : Vehicle {
 		}
 	}
 
-	override public void UpdateNearestObsticle() {
+	override public void UpdateNearestObstacle() {
 	}
 
 
