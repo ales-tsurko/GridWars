@@ -1,5 +1,12 @@
-﻿Beta 0.4.3.16
-Added: New Samples (3rd person sample client and server auth, click to move server auth, rigidbody player server auth)
+﻿Beta 0.4.3.17
+Fixed: event issue introduced in last release
+Fixed: hitbox issue introduced in last release
+Fixed: Issue for Unity 5.4 on OSX
+Fixed: Render transform
+Fixed: Miscellaneous sample fixes
+
+Beta 0.4.3.16
+Added: New Samples (3rd person sample client and server auth, click to move server auth)
 Changed: XLM Serialization
 Changed: Miscellanious optimizations
 Fixed: Issue with correction interpolation for commands pooling and initial values compression
