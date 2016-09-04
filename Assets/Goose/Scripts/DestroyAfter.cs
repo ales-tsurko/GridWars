@@ -23,7 +23,7 @@ public class DestroyAfter : MonoBehaviour {
 		if (gameUnit == null) {
 			Destroy(gameObject);
 		}
-		else {
+		else if (BoltNetwork.isServer){
 			gameUnit.Die();
 		}
 		//App.shared.AddToDestroyQueue(gameObject);
