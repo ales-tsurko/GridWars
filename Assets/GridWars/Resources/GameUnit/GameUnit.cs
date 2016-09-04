@@ -696,6 +696,11 @@ public class GameUnit : NetworkObject {
 	// --- Death ------------------------------------------
 
 	public virtual void Die() { // should only be called on Server.
+		if (!BoltNetwork.isServer) {
+			Debug.LogWarning(this + " Die called on client!");
+			return;
+		}
+
 		if (isInGame) {
 			Camera cam = _t.GetComponentInChildren<Camera>();
 			if (cam) {
