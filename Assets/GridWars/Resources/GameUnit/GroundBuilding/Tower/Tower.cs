@@ -54,7 +54,7 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 
-		hitPoints = 1f;
+		//hitPoints = 1f;
 	}
 
 	public override void ServerJoinedGame() {
@@ -240,13 +240,7 @@ public class Tower : GroundBuilding {
 
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
 
-			releaseZone.isObstructed = true;
-
 			queueSize --;
-		}
-
-		foreach (var rz in releaseZones) {
-			rz.isObstructed = false; //this will be ignored next unobstructedReleaseZone check
 		}
 	}
 
