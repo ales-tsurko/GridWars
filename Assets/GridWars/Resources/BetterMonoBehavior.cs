@@ -8,7 +8,7 @@ public class BetterMonoBehaviour : MonoBehaviour {
 	[HideInInspector]
 	public Transform _t;
 
-	protected virtual void Awake() {
+	public virtual void Awake() {
 		_t = transform;
 	}
 

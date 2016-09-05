@@ -76,6 +76,7 @@ public class GameUnit : NetworkObject {
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
+	public Vector3 launchDirection = Vector3.forward;
 
 	public float hpRatio {
 		get {
@@ -169,9 +170,9 @@ public class GameUnit : NetworkObject {
 
 	// --- MonoBehaviour --------------------------------------------
 
-	protected override void Awake() {
+	public override void Awake() {
 		base.Awake();
-
+		launchDirection = Vector3.forward;
 		isTargetable = true;
 	}
 

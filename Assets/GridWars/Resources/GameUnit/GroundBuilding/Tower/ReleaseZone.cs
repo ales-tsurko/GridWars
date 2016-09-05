@@ -12,7 +12,7 @@ public class ReleaseZone : MonoBehaviour {
 		OnTriggerEnter(obstruction);
 	}
 
-	List<Collider> obstructions;
+	public List<Collider> obstructions;
 
 	// Use this for initialization
 	void Start () {
@@ -21,11 +21,15 @@ public class ReleaseZone : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		foreach (var obstruction in new List<Collider>(obstructions)) {
+			if (obstruction == null) {
+				obstructions.Remove(obstruction);
+			}
+		}
 	}
 
 	void OnTriggerEnter(Collider obstruction) {
-		if (!obstructions.Contains(obstruction)) {
+		if ((obstructions != null) && (obstruction.GetComponent<Vehicle>() != null) && !obstructions.Contains(obstruction)) {
 			obstructions.Add(obstruction);
 		}
 	}

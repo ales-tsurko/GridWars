@@ -41,6 +41,7 @@ public class Tower : GroundBuilding {
 		get {
 			if (_unitPrefab == null) {
 				_unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
+				_unitPrefab.GetComponent<GameUnit>().Awake();
 			}
 			return _unitPrefab;
 		}
@@ -76,7 +77,13 @@ public class Tower : GroundBuilding {
 			collider.size = unitSize;
 			collider.center = new Vector3(0f, collider.size.y/2 + 0.1f, 0f);
 			collider.isTrigger = true;
-			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 3 + size.z/2 + unitLength/2 + unitSpacing);
+			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 0f);
+
+			releaseZone.transform.Translate(Vector3.Scale(
+				new Vector3(0f, size.y/2 + unitSize.y/2 + unitSpacing, size.z/2 + unitLength/2 + unitSpacing),
+				unitPrefab.GetComponent<GameUnit>().launchDirection
+			));
+
 			releaseZones.Add(releaseZone);
 		}
 
@@ -230,11 +237,7 @@ public class Tower : GroundBuilding {
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
 
-			if (unit.IsOfType(typeof(AirVehicle)) /*|| unit.IsOfType(typeof(Tanker)) */ ) {
-				unit.transform.position = iconObject.transform.position;
-			} else {
-				unit.transform.position = releaseZone.transform.position;
-			}
+			unit.transform.position = releaseZone.transform.position;
 				
 			unit.transform.rotation = transform.rotation;
 

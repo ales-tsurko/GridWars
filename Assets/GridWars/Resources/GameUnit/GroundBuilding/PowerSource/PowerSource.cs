@@ -41,7 +41,7 @@ public class PowerSource : GroundBuilding {
 
 	List<GameObject>segments;
 
-	protected override void Awake () {
+	public override void Awake () {
 		base.Awake();
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 	}

@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class AirVehicle : Vehicle {
+	public override void Awake() {
+		base.Awake();
+
+		launchDirection = Vector3.up;
+	}
 
 	public override void ServerJoinedGame() {
 		base.ServerJoinedGame();
