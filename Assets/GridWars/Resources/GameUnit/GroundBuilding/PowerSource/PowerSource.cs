@@ -55,7 +55,7 @@ public class PowerSource : GroundBuilding {
 		base.ServerInit();
 		isTargetable = false;
 		power = 0f;
-		power = maxPower;
+		//power = maxPower;
 	}
 
 	public override void ClientInit() {
