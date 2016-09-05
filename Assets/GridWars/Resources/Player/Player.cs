@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
-	public float separation = 0.4f;
+	public float separation = 0.9f;
 	public Material unitMaterial;
 
 	public List<GameObject> ownedObjects;
