@@ -99,7 +99,11 @@ public class Network : Bolt.GlobalEventListener {
 		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 
+
+	bool didStart = false;
 	public override void BoltStartDone() {
+		didStart = true;
+
 		if (BoltNetwork.IsSinglePlayer) {
 			Battlefield.current.StartGame();
 		}
@@ -196,6 +200,11 @@ public class Network : Bolt.GlobalEventListener {
 	UIMenu menu;
 	UIActivityIndicator indicator;
 
+	void Update() {
+		if (didStart && !BoltNetwork.isRunning) {
+			UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
+		}
+	}
 
 	/*
 	void OnGUI() {

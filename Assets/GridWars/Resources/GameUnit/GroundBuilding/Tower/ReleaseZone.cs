@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 
 public class ReleaseZone : MonoBehaviour {
+	bool _isObstructed;
+
 	public bool isObstructed {
 		get {
+
+			if (_isObstructed) {
+				return true;
+			}
 
 			var myCollider = GetComponent<Collider>();
 
@@ -17,6 +23,10 @@ public class ReleaseZone : MonoBehaviour {
 			return false;
 
 			//return obstructions.Count > 0;
+		}
+
+		set {
+			_isObstructed = value;
 		}
 	}
 
