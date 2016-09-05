@@ -35,6 +35,8 @@ public class GameUnit : NetworkObject {
 			return gameUnitState.playerNumber;
 		}
 	}
+
+	public bool shouldAddToPlayerUnits = true;
 		
 	// Damagable
 	public float hitPoints {
@@ -270,7 +272,10 @@ public class GameUnit : NetworkObject {
 		SetupDeathExplosion ();
 
 		if (player != null) {
-			player.units.Add(this);
+			if (shouldAddToPlayerUnits) {
+				player.units.Add(this);
+			}
+
 
 			player.Paint(gameObject);
 		}
@@ -329,7 +334,9 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientLeftGame(){
 		base.ServerAndClientLeftGame();
 		if (player != null) {
-			player.units.Remove(this);	
+			if (shouldAddToPlayerUnits) {
+				player.units.Remove(this);
+			}
 		}
 		ShowFxExplosion();
 	}

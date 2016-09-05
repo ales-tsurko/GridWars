@@ -23,7 +23,7 @@ public class Battlefield : MonoBehaviour {
 	void Start() {
 		Application.runInBackground = true;
 
-		Network.shared.singlePlayer = false;
+		Network.shared.singlePlayer = true;
 
 		CameraController.instance.enabled = false;
 	}
@@ -39,8 +39,17 @@ public class Battlefield : MonoBehaviour {
 
 		if (livingPlayers().Count == 1) {
 			print("Game Over Man");
+			//App.shared.enabled = false;
+			//this.enabled = false;
+			/*
+			if (BoltNetwork.isRunning) {
+				BoltLauncher.Shutdown();
+			}
+			*/
+			//UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
 			Pause();
-			UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
+			BoltLauncher.Shutdown();
+			//UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
 		}
 	}
 
@@ -67,7 +76,9 @@ public class Battlefield : MonoBehaviour {
 		List <GameObject> objs = activeGameObjects();
 
 		foreach (GameObject obj in objs) {
-			obj.SetActive(false);
+			if (!new List<string>(new string[]{ "Network", "BoltControl", "BoltBehaviours" }).Contains(obj.name)) {
+				Destroy(obj);
+			}
 		}
 	}
 

@@ -46,6 +46,11 @@ public class PowerSource : GroundBuilding {
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 	}
 
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+		shouldAddToPlayerUnits = false;
+	}
+
 	public override void ServerInit() {
 		base.ServerInit();
 		isTargetable = false;

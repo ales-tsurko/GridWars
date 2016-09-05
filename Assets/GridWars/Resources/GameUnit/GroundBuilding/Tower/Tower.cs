@@ -51,6 +51,12 @@ public class Tower : GroundBuilding {
 		base.ClientInit();
 	}
 
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+
+		//hitPoints = 1f;
+	}
+
 	public override void ServerJoinedGame() {
 		base.ServerJoinedGame();
 
@@ -233,6 +239,7 @@ public class Tower : GroundBuilding {
 			unit.transform.rotation = transform.rotation;
 
 			releaseZone.AddObstruction(unit.GetComponent<Collider>());
+
 			queueSize --;
 		}
 	}
