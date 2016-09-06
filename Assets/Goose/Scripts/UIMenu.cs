@@ -18,11 +18,12 @@ public class UIMenu : UIElement {
 	public void OrderMenu (float _spacing = 0){
 		float h = GetComponent<RectTransform> ().sizeDelta.y;
 		if (_spacing <= 0) {
-			_spacing =  h / items.Count;
+			_spacing = items [0].GetComponent<RectTransform> ().sizeDelta.y * items.Count / items.Count * 1.1f;
 		}
+		SetSize (items [0].GetComponent<RectTransform> ().sizeDelta.x, items [0].GetComponent<RectTransform> ().sizeDelta.y * items.Count);
 		spacing = _spacing;
 		for (int i = 0; i < items.Count; i++){
-			items [i].GetComponent<RectTransform> ().localPosition = new Vector2 (0, (i * h) - (h * .5f));
+			items [i].GetComponent<RectTransform> ().localPosition = new Vector2 (0, (-i * spacing) + (h * .5f));
 		}
 	}
 
