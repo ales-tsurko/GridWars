@@ -56,7 +56,7 @@ public class Vehicle : GameUnit  {
 
 	public virtual void SteerTowardsTarget() {
 		if (target != null) {
-			RotateTowardObject (target);
+			RotateTowardTarget();
 		}
 		RotateAwayFromNearestObsticle();
 	}
@@ -111,8 +111,13 @@ public class Vehicle : GameUnit  {
 		}
 	}
 
+	public virtual float RotateDesire() { // -1 to 1 - y axis and clockwise?
+		float ya = YAngleToTarget();
+		float d = ya / 180f;
+		return d;
+	}
 
-	public virtual void RotateTowardObject(GameObject obj) {
+	public virtual void RotateTowardTarget() {
 		/*
 		var targetPos = obj.transform.position;
 
@@ -129,6 +134,7 @@ public class Vehicle : GameUnit  {
 		*/
 
 		rigidBody().AddTorque( _t.up * ya * rotationThrust, ForceMode.Force);
+		//rigidBody().AddTorque( _t.up * 90f * RotateDesire() * rotationThrust, ForceMode.Force);
 	}
 
 	// --- Utility methods -----------------------------------------
