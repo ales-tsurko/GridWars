@@ -9,8 +9,8 @@ public class UIButton : UIMenuItem {
 
 	UnityEvent method;
 	void Awake () {
-		if (GetComponentInChildren<Text> ()) {
-			UI.CreateTextObj (GetComponent<RectTransform>());
+		if (GetComponentInChildren<Text> () == null) {
+			UI.CreateTextObj (GetComponent<RectTransform>(), UIFont.Army);
 		}
 	}
 
