@@ -54,12 +54,24 @@ public class Network : Bolt.GlobalEventListener {
 
 		menu = UI.Menu();
 
-		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
-		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
-		menu.AddItem(UI.MenuItem("You vs. Computer", PlayerVsCompClicked));
-		menu.AddItem(UI.MenuItem("Computer vs. Computer", CompVsCompClicked));
+		menu.AddItem(UI.MenuItem("Single Player", SinglePlayerClicked));
+		menu.AddItem(UI.MenuItem("Multi Player", MultiplayerClicked));
 
 		menu.Show();
+	}
+
+	void SinglePlayerClicked(UIMenuItem item) {
+		menu.Reset();
+
+		menu.AddItem(UI.MenuItem("You vs Comp", PlayerVsCompClicked));
+		menu.AddItem(UI.MenuItem("Comp vs Comp", CompVsCompClicked));
+	}
+
+	void MultiplayerClicked(UIMenuItem item) {
+		menu.Reset();
+
+		menu.AddItem(UI.MenuItem("Shared Screen", SharedScreenPvpClicked));
+		menu.AddItem(UI.MenuItem("Internet", InternetPvpClicked));
 	}
 
 	void SharedScreenPvpClicked(UIMenuItem item) {
