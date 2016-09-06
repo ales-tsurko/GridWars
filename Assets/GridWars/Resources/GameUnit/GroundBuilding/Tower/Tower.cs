@@ -241,8 +241,6 @@ public class Tower : GroundBuilding {
 				
 			unit.transform.rotation = transform.rotation;
 
-			releaseZone.AddObstruction(unit.GetComponent<Collider>());
-
 			queueSize --;
 		}
 	}
