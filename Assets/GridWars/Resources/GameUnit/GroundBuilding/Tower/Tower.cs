@@ -8,7 +8,12 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	//public Mesh theMesh;
 
-	bool npcModeOn = false;
+	public bool npcModeOn {
+		get {
+			return player.npcModeOn;
+		}
+	}
+
 	//public GameObject topComponent;
 	//public GameObject baseComponent;
 	private GameUnit iconUnit;
@@ -201,7 +206,9 @@ public class Tower : GroundBuilding {
 	}
 
 	public void OnMouseDown() {
-		SendAttemptQueueUnit();
+		if (!npcModeOn) {
+			SendAttemptQueueUnit();
+		}
 	}
 
 	public override void QueuePlayerCommands() {
@@ -213,7 +220,7 @@ public class Tower : GroundBuilding {
 			}
 		}
 
-		if (Input.GetKeyDown(attemptQueueUnitKeyCode)) {
+		if (!npcModeOn && Input.GetKeyDown(attemptQueueUnitKeyCode)) {
 			SendAttemptQueueUnit();
 		}
 	}

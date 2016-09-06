@@ -35,6 +35,8 @@ public class Player : MonoBehaviour {
 
 	public List<GameUnit> units;
 
+	public bool npcModeOn;
+
 	void Awake() {
 		units = new List<GameUnit>();
 	}

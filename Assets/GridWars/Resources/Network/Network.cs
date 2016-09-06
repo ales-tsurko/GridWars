@@ -29,8 +29,6 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	public bool singlePlayer = true;
-
 	public bool isServer {
 		get {
 			//return false; 
@@ -52,20 +50,46 @@ public class Network : Bolt.GlobalEventListener {
 
 	// Use this for initialization
 	void Start () {
+		indicator = UI.ActivityIndicator("Loading ...");
 
-		if (singlePlayer) {
-			BoltLauncher.StartSinglePlayer();
-			return;
-		}
+		menu = UI.Menu();
 
-		indicator = UI.ActivityIndicator ("Loading...");
-
-		menu = UI.Menu ();
-
-		menu.AddItem (UI.MenuItem ("Host", HostClicked));
-		menu.AddItem (UI.MenuItem ("Join", JoinClicked));
+		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
+		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
+		menu.AddItem(UI.MenuItem("You vs. Computer", PlayerVsCompClicked));
+		menu.AddItem(UI.MenuItem("Computer vs. Computer", CompVsCompClicked));
 
 		menu.Show();
+	}
+
+	void SharedScreenPvpClicked(UIMenuItem item) {
+		BoltLauncher.StartSinglePlayer();
+		menu.Hide();
+	}
+
+	void InternetPvpClicked(UIMenuItem item) {
+		menu.Reset();
+
+		menu.AddItem (UI.MenuItem("Host", HostClicked));
+		menu.AddItem (UI.MenuItem("Join", JoinClicked));
+
+		menu.Show();
+	}
+
+	bool vsComp = false;
+
+	void PlayerVsCompClicked(UIMenuItem item) {
+		vsComp = true;
+		BoltLauncher.StartSinglePlayer();
+		menu.Hide();
+	}
+
+	bool compVsComp = false;
+
+	void CompVsCompClicked(UIMenuItem item) {
+		compVsComp = true;
+		BoltLauncher.StartSinglePlayer();
+		menu.Hide();
 	}
 
 	public void HostClicked(UIMenuItem item) {
@@ -106,6 +130,12 @@ public class Network : Bolt.GlobalEventListener {
 
 		if (BoltNetwork.IsSinglePlayer) {
 			Battlefield.current.StartGame();
+			if (vsComp || compVsComp) {
+				Battlefield.current.PlayerNumbered(2).npcModeOn = true;
+			}
+			if (compVsComp) {
+				Battlefield.current.PlayerNumbered(1).npcModeOn = true;
+			}
 		}
 		else {
 			if (BoltNetwork.isServer) {
