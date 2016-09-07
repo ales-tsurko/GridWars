@@ -11,7 +11,7 @@ public static class UI {
 	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
-	public const UIFont DEFAULTFONT = UIFont.EuroStile;
+	public const UIFont DEFAULTFONT = UIFont.LGS;
 
 	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
@@ -125,5 +125,5 @@ public static class UI {
 }
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly}
-public enum UIFont {None, Army, EuroStile}
+public enum UIFont {None, Army, EuroStile, LGS}
 public class UIMenuItem : UIElement {}
