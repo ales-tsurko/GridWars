@@ -69,14 +69,14 @@ public class BigBoom : Explosion {
 				// apply force to rigid body if it has one
 				Rigidbody rb = hit.GetComponent<Rigidbody>();
 				if (rb) {
-					rb.AddExplosionForce(power, explosionPos, currentBlastRadius, 2.0F);
+					rb.AddExplosionForce(power, explosionPos, currentBlastRadius, 0.2F);
 				}
 
 				// apply damage to unit
 				//float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
 				//float maxDamage = 1f;
 				//float damage = maxDamage / (1f + dist);
-				unit.ApplyDamage(0.01f);
+				unit.ApplyDamage(0.1f);
 			}
 		}
 	}

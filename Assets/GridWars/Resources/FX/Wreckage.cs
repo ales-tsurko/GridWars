@@ -12,7 +12,7 @@ using System.Collections;
 	public class Wreckage : MonoBehaviour {
 
 	private float deathHeight;
-	private float chillPeriod = 3.5f;
+	private float chillPeriod = 1.5f;
 	private float sinkPeriod  = 2f;
 	private float chillDoneTime;
 	private float sinkStartTime;
@@ -44,12 +44,15 @@ using System.Collections;
 	}
 
 	public void FixedUpdate() {
+		float y = transform.position.y;
 		if (Time.time > chillDoneTime) {
-			if (sinkDoneTime == 0) {
-				sinkStartTime = Time.time;
-				sinkDoneTime = Time.time + sinkPeriod;
+			if (y < 0.1f) {
+				if (sinkDoneTime == 0) {
+					sinkStartTime = Time.time;
+					sinkDoneTime = Time.time + sinkPeriod;
 
-				DisableRemainingCollisions();
+					DisableRemainingCollisions();
+				}
 			}
 			SinkStep();
 		}
