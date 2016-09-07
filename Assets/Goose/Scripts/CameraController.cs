@@ -61,9 +61,13 @@ public class CameraController : MonoBehaviour {
 		for (int i = 0; i < positions.Count; i++) {
 			cam.position = originalPositions [i].position;
 			cam.rotation = originalPositions [i].rotation;
+			float mod = 0;
+			#if !UNITY_EDITOR
+				mod = i == 0 ? .1f : 0;
+			#endif
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
-				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f && screenPoint.x < .9f && screenPoint.y > 0 && screenPoint.y < .9f) {
+				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f +mod && screenPoint.x < .9f-mod && screenPoint.y > 0.1f+mod && screenPoint.y < .9f-mod) {
 					positions [i].position = cam.position;
 					break;
 				} else {
