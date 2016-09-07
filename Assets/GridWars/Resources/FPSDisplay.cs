@@ -5,7 +5,7 @@ public class FPSDisplay : MonoBehaviour
 {
 	float lastTime;
 	int count;
-	int sampleCount = 25;
+	int sampleCount = 100;
 
 	public void Start() {
 		TM().text = "";

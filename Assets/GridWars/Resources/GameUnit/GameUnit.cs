@@ -769,6 +769,10 @@ public class GameUnit : NetworkObject {
 		return _weapons;
 	}
 
+	virtual public bool HasWeapons() {
+		return Weapons().Length > 0;
+	}
+
 	public void SetupWeapons() {
 		foreach (Weapon weapon in Weapons()) {
 			weapon.owner = gameObject;

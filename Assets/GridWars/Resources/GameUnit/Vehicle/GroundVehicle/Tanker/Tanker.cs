@@ -50,4 +50,8 @@ public class Tanker : GroundVehicle {
 		}
 	}
 
+	override public bool HasWeapons() {
+		return true;
+	}
+
 }

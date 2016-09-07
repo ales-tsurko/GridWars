@@ -70,7 +70,7 @@ public static class UI {
 		return indicator;
 	}
 	public static Font GetFont (UIFont _font) {
-		Debug.Log (FONTDIR + _font.ToString ());
+		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
 	}
 	/// <summary>
