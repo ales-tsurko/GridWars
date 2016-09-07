@@ -13,7 +13,7 @@ public static class UI {
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.EuroStile;
 
-	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated){
+	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -35,16 +35,16 @@ public static class UI {
 			image.color = new Color (1f, 1f, 1f, 0f);
 		}
 		button.SetAction(action);
-		button.SetText(title);
+		button.SetText(title, allcaps);
 		return button;
 	}
 
-	public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonTextOnly, string skin = "Default", bool animated = true){
+	public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonTextOnly, string skin = "Default", bool animated = true, bool allCaps = true){
 		switch (type) {
 		case MenuItemType.ButtonRound:
 		case MenuItemType.ButtonSquare:
 		case MenuItemType.ButtonTextOnly:
-			return Button (title, action, type, skin, animated);
+			return Button (title, action, type, skin, animated, allCaps);
 		}
 		return null;
 	}

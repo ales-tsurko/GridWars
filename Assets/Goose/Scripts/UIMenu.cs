@@ -34,7 +34,7 @@ public class UIMenu : UIElement {
 		items = new List<UIMenuItem> ();
 	}
 
-	public override void SetText (string s, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
+	public override void SetText (string s, bool allcaps = false, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
 		Text textObj = null;
 		RectTransform _t = GetComponent<RectTransform> ();
 		textObj = GetComponentInChildren<Text> ();	
@@ -42,6 +42,9 @@ public class UIMenu : UIElement {
 			textObj = UI.CreateTextObj (_t).GetComponent<Text>();
 		}
 		textObj.GetComponent<RectTransform> ().localPosition = new Vector2 (0, (GetComponent<RectTransform> ().sizeDelta.y * .5f / 2) - offset);
+		if (allcaps) {
+			s = s.ToUpper ();
+		}
 		textObj.text = s;
 		gameObject.name = s;
 	}

@@ -9,12 +9,15 @@ public class UIElement : MonoBehaviour {
 	/// Sets the text of the GameButton
 	/// </summary>
 	/// <param name="s">S.</param>
-	public virtual void SetText (string s, float offset = 0, UIFont _font = UI.DEFAULTFONT){
+	public virtual void SetText (string s, bool allcaps = false, float offset = 0, UIFont _font = UI.DEFAULTFONT){
 		Text textObj = null;
 		RectTransform _t = GetComponent<RectTransform> ();
 		textObj = GetComponentInChildren<Text> ();	
 		if (textObj == null) {
 			textObj = UI.CreateTextObj (_t).GetComponent<Text>();
+		}
+		if (allcaps) {
+			s = s.ToUpper ();
 		}
 		textObj.text = s;
 		textObj.font = UI.GetFont (_font);
