@@ -25,7 +25,7 @@ public class Battlefield : MonoBehaviour {
 
 		Network.shared.enabled = true;
 
-		CameraController.instance.enabled = false;
+		CameraController.instance.enabled = true;
 	}
 
 	public void StartGame() {

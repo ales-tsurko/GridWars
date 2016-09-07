@@ -30,9 +30,9 @@ public class CameraController : MonoBehaviour {
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
-
+	bool initComplete = false;
 	void Start () {
-		
+		initComplete = false;
 		foreach (Transform pos in positions) {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
 		}
@@ -75,6 +75,7 @@ public class CameraController : MonoBehaviour {
 		cam.rotation = positions [0].rotation;
 		pos = -1;
 		NextPosition ();
+		initComplete = true;
 	}
 
 	Vector2 lastScreenRes;
@@ -87,6 +88,9 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (!initComplete) {
+			return;
+		}
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
 			Vector2 thisScreenRes = GetMainGameViewSize();
