@@ -11,7 +11,7 @@ public static class UI {
 	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
-	const UIFont DEFAULTFONT = UIFont.Army;
+	public const UIFont DEFAULTFONT = UIFont.EuroStile;
 
 	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated){
 		skin += "/";
@@ -69,7 +69,7 @@ public static class UI {
 		indicator.name = "ActivityIndicator";
 		return indicator;
 	}
-	public static Font UseFont (UIFont _font) {
+	public static Font GetFont (UIFont _font) {
 		Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
 	}
@@ -117,7 +117,7 @@ public static class UI {
 		if (_font == UIFont.None) {
 			text.font = Resources.GetBuiltinResource<Font> ("Arial.ttf");
 		} else {
-			text.font = UseFont (_font);
+			text.font = GetFont (_font);
 		}
 		text.alignment = TextAnchor.MiddleCenter;
 		return textObj.GetComponent<RectTransform> ();
@@ -125,5 +125,5 @@ public static class UI {
 }
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly}
-public enum UIFont {None, Army}
+public enum UIFont {None, Army, EuroStile}
 public class UIMenuItem : UIElement {}
