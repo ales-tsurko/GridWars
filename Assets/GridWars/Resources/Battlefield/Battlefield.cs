@@ -39,17 +39,7 @@ public class Battlefield : MonoBehaviour {
 
 		if (livingPlayers().Count == 1) {
 			print("Game Over Man");
-			//App.shared.enabled = false;
-			//this.enabled = false;
-			/*
-			if (BoltNetwork.isRunning) {
-				BoltLauncher.Shutdown();
-			}
-			*/
-			//UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
-			Pause();
-			BoltLauncher.Shutdown();
-			//UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
+			Network.shared.LeaveGame();
 		}
 	}
 
@@ -72,7 +62,7 @@ public class Battlefield : MonoBehaviour {
 		return results;
 	}
 
-	void Pause() {
+	public void Pause() {
 		List <GameObject> objs = activeGameObjects();
 
 		foreach (GameObject obj in objs) {

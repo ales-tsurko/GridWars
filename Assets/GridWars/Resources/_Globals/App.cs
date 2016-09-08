@@ -18,6 +18,7 @@ public class App : MonoBehaviour {
 	public int timeCounter = 0;
 	public AssemblyCSharp.StepCache stepCache;
 	private List <GameObject> _destroyQueue;
+	public bool debug = false;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -137,6 +138,12 @@ public class App : MonoBehaviour {
 
 	public void ImmediateDestory(GameObject obj) {
 		Destroy(obj);
+	}
+
+	public void Log(object message, UnityEngine.Object context = null) {
+		if (debug) {
+			Debug.Log(message, context);
+		}
 	}
 }
 
