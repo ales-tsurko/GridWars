@@ -2,17 +2,31 @@
 using System.Collections;
 
 public class DeformMesh : MonoBehaviour {
-
+	public bool pollAltitude = false;
+	public Vector2 altitudeThreshold;
 	Vector3 [] originalMesh;
 	public float damageRadius, maxDisplacement, maxVertexFracture;
+	public float randomDamageRadius, randomMaxDisplacement;
+	public Vector3 randomMin, randomMax;
 	public Vector3 localImpactPos;
 	public Vector3 impactVelocity;
+	public Vector3 randomImpactPos;
 	Mesh mesh;
 	void Start (){
+		if (pollAltitude) {
+			float alt = transform.position.y;
+			if (alt < altitudeThreshold.x || alt > altitudeThreshold.y) {
+				this.enabled = false;
+				return;
+			}
+		}
 		mesh = GetComponent<MeshFilter> ().mesh;
 		originalMesh = mesh.vertices;
 		mesh.MarkDynamic ();
 		ProcessImpact ();
+		maxDisplacement += Random.Range (-randomMaxDisplacement, randomMaxDisplacement);
+		impactVelocity += new Vector3 (Random.Range (randomMin.x, randomMax.x), Random.Range (randomMin.y, randomMax.y), Random.Range (randomMin.z, randomMax.z));
+		localImpactPos += new Vector3 (Random.Range (-randomImpactPos.x, randomImpactPos.x), Random.Range (-randomImpactPos.y, randomImpactPos.y), Random.Range (-randomImpactPos.z, randomImpactPos.z));
 	}
 
 	void ProcessImpact ()

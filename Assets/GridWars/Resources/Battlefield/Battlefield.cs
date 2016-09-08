@@ -25,7 +25,7 @@ public class Battlefield : MonoBehaviour {
 
 		Network.shared.enabled = true;
 
-		CameraController.instance.enabled = false;
+		CameraController.instance.enabled = true;
 	}
 
 	public void StartGame() {
@@ -81,5 +81,17 @@ public class Battlefield : MonoBehaviour {
 			}
 		}
 		return results;
+	}
+
+	// --- Music ----------------------------------------------------
+
+	AudioSource _bgAudioSource;
+	protected AudioSource bgAudioSource {
+		get {
+			if (_bgAudioSource == null) {
+				_bgAudioSource = gameObject.AddComponent<AudioSource>();
+			}
+			return _bgAudioSource;
+		}
 	}
 }

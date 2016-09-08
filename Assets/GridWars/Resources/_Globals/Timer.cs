@@ -25,7 +25,7 @@ namespace AssemblyCSharp {
 			return this;
 		}
 
-		public Timer SetTartget(object aTarget) {
+		public Timer SetTarget(object aTarget) {
 			target = aTarget;
 			return this;
 		}

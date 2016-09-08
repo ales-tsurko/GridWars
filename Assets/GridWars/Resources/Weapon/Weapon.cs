@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Weapon : MonoBehaviour {
 	public Player player;
@@ -186,11 +187,21 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float DistanceToObj(GameObject obj) {
-		// please do not change this to sqrMagnitude
+		// Please do not change this to sqrMagnitude
 		return Vector3.Distance(transform.position, obj.transform.position);
 	}
 
-	public virtual GameObject ClosestTargetableEnemyObject() {
+	/*
+	public virtual float EvalTarget(GameObject obj) {
+		float distance = DistanceToObj(obj);
+
+
+	}
+
+	public virtual GameObject EvaledTargets() {
+		Tuple <GameObject, float> tuple =
+			new Tuple<GameObject, float>(1, "cat", true);
+
 		var ownerUnit = owner.GameUnit();
 		var enemyObjs = ownerUnit.EnemyObjects();
 		GameObject closest = null;
@@ -206,25 +217,51 @@ public class Weapon : MonoBehaviour {
 		}
 		return closest;
 	}
+	*/
 
-	public virtual GameObject ClosestTargetableEnemyObjectWithWeapon() {
+
+	public virtual List <GameObject> TargetableEnemyObjects() { 
 		var ownerUnit = owner.GameUnit();
 		var enemyObjs = ownerUnit.EnemyObjects();
+		List <GameObject> results = enemyObjs.Where(obj => this.CanTargetObj(obj)).ToList();
+		return results;
+	}
+		
+	public virtual GameObject ClosestTargetableEnemyObject() {
+		return ClosestOfObjects(TargetableEnemyObjects());
+	}
+
+	public virtual List <GameObject> TargetableEnemyObjectWithWeapons() {
+		var results = TargetableEnemyObjects().Where(obj => obj.GameUnit() != null && obj.GameUnit().HasWeapons()).ToList();
+		return (List <GameObject> )results;
+	}
+
+
+	public virtual GameObject ClosestTargetableEnemyObjectWithWeapon() {
+		return ClosestOfObjects(TargetableEnemyObjectWithWeapons());
+	}
+
+	public virtual GameObject ClosestTargetableEnemyVehicles() {
+		List <GameObject> vehicles = App.shared.stepCache.AllVehicleObjects();
+		return ClosestOfObjects(vehicles);
+	}
+
+	public virtual GameObject ClosestOfObjects( List<GameObject> objs) {
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
-		foreach (GameObject obj in enemyObjs) {
-			if (CanTargetObj(obj)) {
-				if (obj.GameUnit().Weapons().Length > 0) {
-					float curDistance = DistanceToObj(obj);
-					if (curDistance < distance) {
-						closest = obj;
-						distance = curDistance;
-					}
-				}
+		var ownerUnit = owner.GameUnit();
+		Vector3 position = ownerUnit.transform.position;
+		foreach (GameObject obj in objs) {
+			Vector3 diff = obj.transform.position - position;
+			float curDistance = diff.sqrMagnitude;
+			if (curDistance < distance) {
+				closest = obj;
+				distance = curDistance;
 			}
 		}
 		return closest;
 	}
+
 
 	// --- aiming ------------------
 
@@ -282,8 +319,8 @@ public class Weapon : MonoBehaviour {
 			/*
 			if (true) {
 				var r = range == -1 ? 1000 : range;
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
 			}
 			*/
 
@@ -305,8 +342,8 @@ public class Weapon : MonoBehaviour {
 			/*
 			if (true) {
 				//var r = range == -1 ? 10 : range;
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
 			}
 			*/
 
@@ -645,23 +682,23 @@ public class Weapon : MonoBehaviour {
 	#endif
 
 	public void ShowDebugAimLine() {
-		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		/*
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
 			
-			Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
+			//Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
 		} else {
-			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+			//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		}
 
-		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
 	    */
 	}
 		
 	public void ShowDebugTargetLine() {
 		if (target) {
-			Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.black, 0, true); 
+			//Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.black, 0, true); 
 		} 
 	}
 }

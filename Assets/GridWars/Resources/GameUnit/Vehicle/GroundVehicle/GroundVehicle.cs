@@ -11,7 +11,7 @@ public class GroundVehicle : Vehicle {
 
 		// Drive!
 		if (WheelsAreTouchingGround () && !IsInStandoffRange()) {
-			rigidBody ().AddForce (_t.forward * thrust);
+			rigidBody ().AddForce (_t.forward * AvailableThrust());
 		}
 
 		// Die if flipped
@@ -35,6 +35,5 @@ public class GroundVehicle : Vehicle {
 		float a2 = AngleBetweenOnAxis (_t.up, worldUp, _t.right); 
 		return Mathf.Abs(a1) + Mathf.Abs(a2);
 	}
-
 
 }

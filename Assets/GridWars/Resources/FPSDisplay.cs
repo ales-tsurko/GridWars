@@ -5,7 +5,7 @@ public class FPSDisplay : MonoBehaviour
 {
 	float lastTime;
 	int count;
-	int sampleCount = 25;
+	int sampleCount = 60;
 
 	public void Start() {
 		TM().text = "";
@@ -26,7 +26,7 @@ public class FPSDisplay : MonoBehaviour
 			int fps = Mathf.RoundToInt(1.0f / dt);
 			string msg = "";
 
-			if (fps < 50) {
+			if (fps < 40) {
 				msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " fps";
 				//msg += ", " + GameObjectCount() + " objs";
 			}

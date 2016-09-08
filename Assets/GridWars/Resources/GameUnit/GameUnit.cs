@@ -6,6 +6,8 @@ using System;
 public class GameUnit : NetworkObject {
 	public float thrust;
 	public float rotationThrust;
+	public float birthVolume = 1;
+	public Color paintedColor;
 
 	public Player player {
 		get {
@@ -114,7 +116,7 @@ public class GameUnit : NetworkObject {
 		
 	protected void PlayBirthSound() {
 		if (birthSound != null) {
-			audioSource.PlayOneShot(birthSound);
+			audioSource.PlayOneShot(birthSound, birthVolume);
 		}
 	}
 
@@ -303,6 +305,8 @@ public class GameUnit : NetworkObject {
 			}
 		}
 
+		//Debug.DrawLine( new Vector3(0,0,0), _t.position, Color.white); 
+
 		RemoveIfOutOfBounds ();
 	}
 		
@@ -322,6 +326,8 @@ public class GameUnit : NetworkObject {
 		base.ServerAndClientUpdate();
 
 		QueuePlayerCommands();
+
+
 	}
 
 	public override void ServerLeftGame() {
@@ -613,32 +619,6 @@ public class GameUnit : NetworkObject {
 	}
 
 	public virtual void OnCollisionEnter(Collision collision) {
-		/*
-		if (collision.collider.name == "BattlefieldPlane") {
-			return;
-		}
-
-		GameUnit otherUnit = collision.gameObject.GetComponent<GameUnit> ();
-
-		//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
-
-		if (IsEnemyOf (otherUnit)) {
-			//print(this.player.playerNumber + " collision " + otherUnit.player.playerNumber);
-			//Destroy (gameObject);
-		}
-
-		foreach (ContactPoint contact in collision.contacts) {
-			Debug.DrawRay (contact.point, contact.normal, Color.white);
-		}
-		*/
-
-		/*
-		if (collision.relativeVelocity.magnitude > 2) {
-			//audio.Play ();
-			//print("collision");
-			Destroy (gameObject);
-		}
-		*/
 	}
 
 	// --- icons --------------------
@@ -769,6 +749,10 @@ public class GameUnit : NetworkObject {
 		return _weapons;
 	}
 
+	virtual public bool HasWeapons() {
+		return Weapons().Length > 0;
+	}
+
 	public void SetupWeapons() {
 		foreach (Weapon weapon in Weapons()) {
 			weapon.owner = gameObject;
@@ -793,5 +777,16 @@ public class GameUnit : NetworkObject {
 		return 0f;
 	}
 
+
+	public Vector3 ExpectedPositionAfterTime(float leadTime) {
+		Vector3 pos = target.GameUnit().ColliderCenter();
+		Rigidbody rb = target.GetComponent<Rigidbody>();
+
+		if (rb) {
+			return pos + rb.velocity * leadTime;
+		}
+
+		return pos;
+	}
 
 }

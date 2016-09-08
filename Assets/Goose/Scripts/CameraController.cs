@@ -30,9 +30,9 @@ public class CameraController : MonoBehaviour {
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
-
+	bool initComplete = false;
 	void Start () {
-		
+		initComplete = false;
 		foreach (Transform pos in positions) {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
 		}
@@ -61,9 +61,13 @@ public class CameraController : MonoBehaviour {
 		for (int i = 0; i < positions.Count; i++) {
 			cam.position = originalPositions [i].position;
 			cam.rotation = originalPositions [i].rotation;
+			float mod = 0;
+			#if !UNITY_EDITOR
+				mod = i == 0 ? .1f : 0;
+			#endif
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
-				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f && screenPoint.x < .9f && screenPoint.y > 0 && screenPoint.y < .9f) {
+				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f +mod && screenPoint.x < .9f-mod && screenPoint.y > 0.1f+mod && screenPoint.y < .9f-mod) {
 					positions [i].position = cam.position;
 					break;
 				} else {
@@ -75,6 +79,7 @@ public class CameraController : MonoBehaviour {
 		cam.rotation = positions [0].rotation;
 		pos = -1;
 		NextPosition ();
+		initComplete = true;
 	}
 
 	Vector2 lastScreenRes;
@@ -87,6 +92,9 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (!initComplete) {
+			return;
+		}
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
 			Vector2 thisScreenRes = GetMainGameViewSize();

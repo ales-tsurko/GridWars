@@ -16,7 +16,7 @@ public class PowerSource : GroundBuilding {
 	}
 
 	public float maxPower = 20f;
-	public float generationRate = 1.5f;
+	public float generationRate;
 
 	public float trackSpacing = 1.0f;
 
@@ -44,6 +44,7 @@ public class PowerSource : GroundBuilding {
 	public override void Awake () {
 		base.Awake();
 		bounds = new Vector3(0f, 1.0f, 2.5f);
+		generationRate = 1.3f;
 	}
 
 	public override void ServerAndClientInit() {

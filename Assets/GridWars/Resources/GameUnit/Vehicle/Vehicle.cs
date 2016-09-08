@@ -26,7 +26,18 @@ public class Vehicle : GameUnit  {
 	*/
 
 
-	//NetworkObject
+	virtual public float AvailableThrust() {
+		float r = 0.1f;
+		return thrust * ((1.0f - r) + (hpRatio * r));
+	}
+
+
+	virtual public float AvailableRotationThrust() {
+		float r = 0.1f;
+		return rotationThrust *  ((1.0f - r) + (hpRatio * r));
+	}
+
+	// NetworkObject ----------------------------------------
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
@@ -87,9 +98,11 @@ public class Vehicle : GameUnit  {
 			}
 		}
 
+		/*
 		if (nearestObsticle) {
-			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
+			//Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
 		}
+		*/
 	}
 
 	public virtual void RotateAwayFromNearestObsticle() {
@@ -102,12 +115,11 @@ public class Vehicle : GameUnit  {
 			Vector3 dir = (otherPos - _t.position).normalized;
 			float angleToTarget = AngleBetweenOnAxis(_t.forward, dir, _t.up);
 
-			/*
-			Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-			Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
-			Debug.DrawLine(_t.position, _t.position + dir*rotationThrust, Color.red); // targetDir red
-			*/
-			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * rotationThrust, ForceMode.Force);
+			//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+			//Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
+			//Debug.DrawLine(_t.position, _t.position + dir*AvailableRotationThrust, Color.red); // targetDir red
+
+			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * AvailableRotationThrust(), ForceMode.Force);
 		}
 	}
 
@@ -127,14 +139,11 @@ public class Vehicle : GameUnit  {
 
 		float ya = YAngleToTarget();
 
-		/*
-		Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-		Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
-		Debug.DrawLine(_t.position, _t.position + targetDir*rotationThrust, Color.red); // targetDir red
-		*/
+		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
+		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow
+		//Debug.DrawLine(_t.position, _t.position + targetDir*AvailableRotationThrust(), Color.red); // targetDir red
 
-		rigidBody().AddTorque( _t.up * ya * rotationThrust, ForceMode.Force);
-		//rigidBody().AddTorque( _t.up * 90f * RotateDesire() * rotationThrust, ForceMode.Force);
+		rigidBody().AddTorque( _t.up * ya * AvailableRotationThrust(), ForceMode.Force);
 	}
 
 	// --- Utility methods -----------------------------------------

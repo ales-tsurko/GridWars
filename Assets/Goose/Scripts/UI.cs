@@ -11,9 +11,9 @@ public static class UI {
 	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
-	const UIFont DEFAULTFONT = UIFont.Army;
+	public const UIFont DEFAULTFONT = UIFont.LGS;
 
-	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated){
+	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -35,16 +35,16 @@ public static class UI {
 			image.color = new Color (1f, 1f, 1f, 0f);
 		}
 		button.SetAction(action);
-		button.SetText(title);
+		button.SetText(title, allcaps);
 		return button;
 	}
 
-	public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonTextOnly, string skin = "Default", bool animated = true){
+	public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonTextOnly, string skin = "Default", bool animated = true, bool allCaps = true){
 		switch (type) {
 		case MenuItemType.ButtonRound:
 		case MenuItemType.ButtonSquare:
 		case MenuItemType.ButtonTextOnly:
-			return Button (title, action, type, skin, animated);
+			return Button (title, action, type, skin, animated, allCaps);
 		}
 		return null;
 	}
@@ -69,8 +69,8 @@ public static class UI {
 		indicator.name = "ActivityIndicator";
 		return indicator;
 	}
-	public static Font UseFont (UIFont _font) {
-		Debug.Log (FONTDIR + _font.ToString ());
+	public static Font GetFont (UIFont _font) {
+		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
 	}
 	/// <summary>
@@ -117,7 +117,7 @@ public static class UI {
 		if (_font == UIFont.None) {
 			text.font = Resources.GetBuiltinResource<Font> ("Arial.ttf");
 		} else {
-			text.font = UseFont (_font);
+			text.font = GetFont (_font);
 		}
 		text.alignment = TextAnchor.MiddleCenter;
 		return textObj.GetComponent<RectTransform> ();
@@ -125,5 +125,5 @@ public static class UI {
 }
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly}
-public enum UIFont {None, Army}
+public enum UIFont {None, Army, EuroStile, LGS}
 public class UIMenuItem : UIElement {}
