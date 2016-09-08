@@ -53,13 +53,9 @@ public class Chopper : AirVehicle {
 	}
 
 	public float TiltRightDesire() { // -1.0 to 1.0
-		// find tilt angle in world coordinates
-
 		Vector3 worldUp = new Vector3(0, 1, 0);
-		float za = AngleBetweenOnAxis(_t.up, worldUp, _t.forward);
-
-		//float za = transform.rotation.eulerAngles.z; // positive means leaning to left
-		return Mathf.Clamp(za/10.0f, -1.0f, 1.0f)/10f;
+		float a = AngleBetweenOnAxis(_t.up, worldUp, _t.forward); // left is positive angle
+		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/10f;
 	}
 
 	public void  ApplyRotorLRThrust() { // z tilt control ------------------------------------------------------
@@ -80,11 +76,10 @@ public class Chopper : AirVehicle {
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
 
-		Debug.DrawLine(mainRotorTransform.position, mainRotorTransform.position + (mainRotorTransform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
-		Debug.DrawLine(thrustPointLeft, thrustPointLeft + leftForce , Color.black); 
-		Debug.DrawLine(thrustPointRight, thrustPointRight + rightForce , Color.black); 
 
-
+		//Debug.DrawLine(mainRotorTransform.position, mainRotorTransform.position + (mainRotorTransform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
+		//Debug.DrawLine(thrustPointLeft, thrustPointLeft + leftForce , Color.black); 
+		//Debug.DrawLine(thrustPointRight, thrustPointRight + rightForce , Color.black); 
 	}
 				
 	public float TotalUpThrust() {
