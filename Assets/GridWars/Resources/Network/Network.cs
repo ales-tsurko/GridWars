@@ -67,11 +67,26 @@ public class Network : Bolt.GlobalEventListener {
 
 		menu = UI.Menu();
 
+		ShowMainMenu();
+	}
+
+	void ShowMainMenu(UIMenuItem item = null) {
+		menu.Reset();
+
 		menu.AddItem(UI.MenuItem("Player vs Player", MultiplayerClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
+		menu.AddItem(UI.MenuItem("Quit", Quit));
 
 		menu.Show();
+	}
+
+	void Quit(UIMenuItem item) {
+		Application.Quit();
+
+		#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+		#endif
 	}
 
 	void Update() {
@@ -101,6 +116,7 @@ public class Network : Bolt.GlobalEventListener {
 
 		menu.AddItem(UI.MenuItem("Internet", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen", SharedScreenPvpClicked));
+		menu.AddItem(UI.MenuItem("Back", ShowMainMenu));
 	}
 
 	void SharedScreenPvpClicked(UIMenuItem item) {
