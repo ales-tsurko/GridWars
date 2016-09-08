@@ -8,6 +8,8 @@ public class Tower : GroundBuilding {
 	public string activationKey;
 	//public Mesh theMesh;
 
+	KeyCode attemptQueueUnitKeyCode = KeyCode.None;
+
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -111,6 +113,10 @@ public class Tower : GroundBuilding {
 
 		player.Paint(gameObject);
 		player.Paint(iconObject);
+
+		if (player.playerNumber <= gameUnit.buildKeyCodeForPlayers.Length) {
+			attemptQueueUnitKeyCode = gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
+		}
 	}
 
 	public override void ServerFixedUpdate () {
@@ -179,26 +185,23 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	KeyCode attemptQueueUnitKeyCode {
-		get {
-			if (player.playerNumber <= gameUnit.buildKeyCodeForPlayers.Length) {
-				return gameUnit.buildKeyCodeForPlayers[player.playerNumber - 1];
-			}
-			else {
-				return KeyCode.None;
-			}
-		}
-	}
+	bool iconIsHidden = false;
 
 	public void ShowIconUnit() {
-		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-			renderer.enabled = true;
+		if (iconIsHidden) {
+			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+				renderer.enabled = true;
+			}
+			iconIsHidden = false;
 		}
 	}
 
 	public void HideIconUnit() {
-		foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-			renderer.enabled = false;
+		if (!iconIsHidden) {
+			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+				renderer.enabled = false;
+			}
+			iconIsHidden = true;
 		}
 	}
 
