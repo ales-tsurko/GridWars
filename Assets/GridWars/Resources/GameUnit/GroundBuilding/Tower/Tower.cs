@@ -71,7 +71,7 @@ public class Tower : GroundBuilding {
 		isStaticUnit = true;
 
 		releaseZones = new List<ReleaseZone>();
-		var concurrency = Mathf.Floor(player.powerSource.maxPower / unitPrefab.GameUnit().powerCost);
+		var concurrency = Mathf.Ceil(player.powerSource.maxPower / unitPrefab.GameUnit().powerCost);
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;
 		var unitLength = unitSize.z;
