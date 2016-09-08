@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 
 public class ReleaseZone : MonoBehaviour {
+	public Vector3 size;
+
 	public bool isObstructed {
 		get {
 			foreach (var hitInfo in Physics.BoxCastAll(transform.position, size/2, Vector3.up, Quaternion.identity, size.y)) {
@@ -12,10 +14,9 @@ public class ReleaseZone : MonoBehaviour {
 			return false;
 		}
 	}
-
-	protected Vector3 size {
-		get {
-			return GetComponent<BoxCollider>().size;
-		}
+		
+	void OnDrawGizmos() {
+		Gizmos.color = Color.white;
+		Gizmos.DrawWireCube(transform.position + new Vector3(0f, size.y/2, 0f), size);
 	}
 }

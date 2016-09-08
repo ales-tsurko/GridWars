@@ -78,10 +78,7 @@ public class Tower : GroundBuilding {
 
 		for (var i = 0; i < concurrency; i ++) {
 			var releaseZone = this.CreateChild<ReleaseZone>();
-			var collider = releaseZone.gameObject.AddComponent<BoxCollider>();
-			collider.size = unitSize;
-			collider.center = new Vector3(0f, collider.size.y/2 + 0.1f, 0f);
-			collider.isTrigger = true;
+			releaseZone.size = unitSize;
 			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.1f, 0f);
 
 			releaseZone.transform.Translate(Vector3.Scale(
