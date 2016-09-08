@@ -56,16 +56,16 @@ public class Weapon : MonoBehaviour {
 
 	// Thinking
 
-	int thinkFrequency = 20;
+	int thinkPeriod = 25;
 
 	int thinkBucket {
 		get {
-			return (int)((uint)GetHashCode() % (uint)thinkFrequency);
+			return (int)((uint)GetHashCode() % (uint)thinkPeriod);
 		}
 	}
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkFrequency == thinkBucket);
+		return (App.shared.timeCounter % thinkPeriod == thinkBucket);
 	}
 
 	public void Think() {
@@ -74,7 +74,7 @@ public class Weapon : MonoBehaviour {
 
 	// Networking
 
-	public void SimulateOwner() {
+	public void ServerFixedUpdate() {
 		if (isActive) {
 			if (IsThinkStep()) {
 				Think();

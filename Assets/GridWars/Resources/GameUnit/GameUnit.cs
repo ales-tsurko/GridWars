@@ -299,7 +299,7 @@ public class GameUnit : NetworkObject {
 
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
-				weapon.SimulateOwner();
+				weapon.ServerFixedUpdate();
 			}
 		}
 
@@ -348,16 +348,16 @@ public class GameUnit : NetworkObject {
 
 	// Thinking
 
-	int thinkFrequency = 20;
+	int thinkPeriod = 25;
 
 	int thinkBucket {
 		get {
-			return (int)((uint)GetHashCode() % (uint)thinkFrequency);
+			return (int)((uint)GetHashCode() % (uint)thinkPeriod);
 		}
 	}
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkFrequency == thinkBucket);
+		return (App.shared.timeCounter % thinkPeriod == thinkBucket);
 	}
 
 	public virtual void Think() {
