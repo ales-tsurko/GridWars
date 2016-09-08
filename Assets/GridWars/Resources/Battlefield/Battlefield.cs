@@ -92,4 +92,16 @@ public class Battlefield : MonoBehaviour {
 		}
 		return results;
 	}
+
+	// --- Music ----------------------------------------------------
+
+	AudioSource _bgAudioSource;
+	protected AudioSource bgAudioSource {
+		get {
+			if (_bgAudioSource == null) {
+				_bgAudioSource = gameObject.AddComponent<AudioSource>();
+			}
+			return _bgAudioSource;
+		}
+	}
 }

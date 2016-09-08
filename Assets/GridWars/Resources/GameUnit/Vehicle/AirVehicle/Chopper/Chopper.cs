@@ -42,6 +42,7 @@ public class Chopper : AirVehicle {
 		}
 			
 		if (!IsInStandoffRange()) {
+			// don't tilt forward until we're facing the target
 			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
 				float diff = targetDistance() - standOffDistance;
@@ -55,7 +56,7 @@ public class Chopper : AirVehicle {
 	public float TiltRightDesire() { // -1.0 to 1.0
 		Vector3 worldUp = new Vector3(0, 1, 0);
 		float a = AngleBetweenOnAxis(_t.up, worldUp, _t.forward); // left is positive angle
-		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/10f;
+		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/5f;
 	}
 
 	public void  ApplyRotorLRThrust() { // z tilt control ------------------------------------------------------

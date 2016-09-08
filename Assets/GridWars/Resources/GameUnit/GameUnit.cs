@@ -7,6 +7,7 @@ public class GameUnit : NetworkObject {
 	public float thrust;
 	public float rotationThrust;
 	public float birthVolume = 1;
+	public Color paintedColor;
 
 	public Player player {
 		get {
