@@ -319,8 +319,8 @@ public class Weapon : MonoBehaviour {
 			/*
 			if (true) {
 				var r = range == -1 ? 1000 : range;
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.red, 0, true); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.red, 0, true); // targetDir 
 			}
 			*/
 
@@ -342,8 +342,8 @@ public class Weapon : MonoBehaviour {
 			/*
 			if (true) {
 				//var r = range == -1 ? 10 : range;
-				Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
-				Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
+				//Debug.DrawLine (t.position, t.position + t.forward * r, Color.yellow); // forward 
+				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
 			}
 			*/
 
@@ -682,23 +682,23 @@ public class Weapon : MonoBehaviour {
 	#endif
 
 	public void ShowDebugAimLine() {
-		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		/*
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
 			
-			Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
+			//Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
 		} else {
-			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+			//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
 		}
 
-		Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
 	    */
 	}
 		
 	public void ShowDebugTargetLine() {
 		if (target) {
-			Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.black, 0, true); 
+			//Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.black, 0, true); 
 		} 
 	}
 }

@@ -11,11 +11,7 @@ public class Chopper : AirVehicle {
 
 	Transform mainRotorTransform; // set in start
 
-	//public transform mainRotorThrustPointFront;
-	//public transform mainRotorThrustPointBack;
-
 	[HideInInspector]
-	//public float defaultCruiseHeight = 5f;
 	public float damageRotation;
 
 	public override void ServerAndClientJoinedGame() {
@@ -28,14 +24,11 @@ public class Chopper : AirVehicle {
 		base.ServerJoinedGame();
 		isRunning = true;
 
-		//cruiseHeight = defaultCruiseHeight; // + Mathf.Floor(Random.Range(-2.0f, 0.0f)) * 1.0f;
-		cruiseHeight = 10f;
+		cruiseHeight = 10f + Random.Range(-1.0f, 1.0f);
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
 
-		damageRotation = (Random.value - 0.5f)*10f;
-
-//		/rotationThrust = 5f;
+		damageRotation = (Random.value - 0.5f) * 10f;
 	}
 
 	public float UpDesire() { // 0.0 to 1.0
@@ -47,13 +40,7 @@ public class Chopper : AirVehicle {
 		if (!target) {
 			return 0f;
 		}
-
-		/*
-		if (y() < thrustHeight) {
-			return 0f;
-		}
-		*/
-
+			
 		if (!IsInStandoffRange()) {
 			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
@@ -65,27 +52,38 @@ public class Chopper : AirVehicle {
 		return 0f;
 	}
 
-	public float TiltDesire() { // -1.0 to 1.0
+	public float TiltRightDesire() { // -1.0 to 1.0
 		// find tilt angle in world coordinates
-		return Mathf.Clamp(transform.rotation.eulerAngles.z/10.0f, -1.0f, 1.0f);
+
+		Vector3 worldUp = new Vector3(0, 1, 0);
+		float za = AngleBetweenOnAxis(_t.up, worldUp, _t.forward);
+
+		//float za = transform.rotation.eulerAngles.z; // positive means leaning to left
+		return Mathf.Clamp(za/10.0f, -1.0f, 1.0f)/10f;
 	}
 
-	public void  ApplyRotorLRThrust() {
-		// z tilt control ------------------------------------------------------
+	public void  ApplyRotorLRThrust() { // z tilt control ------------------------------------------------------
 		float upThrust = TotalUpThrust()/2f;
 
-		float offset = 4f;
+		float offset = 1f;
 		Vector3 thrustPointLeft  = mainRotorTransform.position - mainRotorTransform.right * offset;
 		Vector3 thrustPointRight = mainRotorTransform.position + mainRotorTransform.right * offset;
 
-		float f = TiltDesire();
+		float f = TiltRightDesire();
 
 		Vector3 rotorUp = mainRotorTransform.up;
-		Vector3 leftForce = rotorUp * ((upThrust * f) / 2);
-		Vector3 rightForce  = rotorUp * ((upThrust * f) / 2);
+		Vector3 leftForce  = rotorUp * ((upThrust - f) / 2);
+		Vector3 rightForce = rotorUp * ((upThrust + f) / 2);
 
-		rigidBody().AddForceAtPosition(leftForce, thrustPointLeft);
-		rigidBody().AddForceAtPosition(rightForce,  thrustPointRight);
+		rigidBody().AddForceAtPosition(leftForce,  thrustPointLeft);
+		rigidBody().AddForceAtPosition(rightForce, thrustPointRight);
+
+		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
+
+		Debug.DrawLine(mainRotorTransform.position, mainRotorTransform.position + (mainRotorTransform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
+		Debug.DrawLine(thrustPointLeft, thrustPointLeft + leftForce , Color.black); 
+		Debug.DrawLine(thrustPointRight, thrustPointRight + rightForce , Color.black); 
+
 
 	}
 				
@@ -101,7 +99,8 @@ public class Chopper : AirVehicle {
 
 	public void  ApplyRotorThrust() {
 		// points around top rotor to apply force
-		// a difference between the force applied to these causes chopper to tilt and then move forward or back
+		// a difference between the force applied to these 
+		// causes chopper to tilt and then move forward or back
 
 		float upThrust = TotalUpThrust();
 
@@ -115,7 +114,7 @@ public class Chopper : AirVehicle {
 
 		Vector3 rotorUp = mainRotorTransform.up;
 		float speed = ForwardSpeed();
-		float desiredSpeed = ForwardDesire() * 3;
+		float desiredSpeed = ForwardDesire() * 4;
 		float speedDiff = desiredSpeed - speed;
 		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust);
 
@@ -126,10 +125,8 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForceAtPosition(backForce,  mainRotorThrustPointBack);
 
 	
-		/*
-		Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
-		Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
-		*/
+		//Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
+		//Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
 	}
 
 	public void SpinRotors() {
