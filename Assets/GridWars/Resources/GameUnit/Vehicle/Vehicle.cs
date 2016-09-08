@@ -86,7 +86,7 @@ public class Vehicle : GameUnit  {
 		// - not our target
 		// - not us
 
-		List <GameObject> vehicles = App.shared.stepCache.AllVehicleObjects();
+		List <GameObject> vehicles = new List<GameObject>(App.shared.stepCache.AllVehicleObjects());
 		vehicles.AddRange(App.shared.stepCache.AllWreckageObjects());
 		vehicles.Remove(gameObject);
 
@@ -169,7 +169,7 @@ public class Vehicle : GameUnit  {
 	}
 
 
-	public List<Vehicle> AllVehicleUnits() {
+	public IEnumerable<Vehicle> AllVehicleUnits() {
 		return App.shared.stepCache.AllVehicleUnits();
 	}
 		
@@ -185,7 +185,7 @@ public class Vehicle : GameUnit  {
 	}
 	*/
 
-	public void IgnoreCollisionsWithUnits(List <GameUnit> units, bool ignore) {
+	public void IgnoreCollisionsWithUnits(IEnumerable<GameUnit> units, bool ignore) {
 		foreach (var unit in units) {
 			if (unit != this) {
 				Physics.IgnoreCollision(unit.BoxCollider(), BoxCollider(), ignore);
@@ -196,7 +196,7 @@ public class Vehicle : GameUnit  {
 	public void DisableVehicleCollisions() {
 		if (hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = false;
-			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>().ToList(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>(), hasVehicleCollisionsOn);
 		}
 	}
 		
@@ -204,7 +204,7 @@ public class Vehicle : GameUnit  {
 
 		if (!hasVehicleCollisionsOn) {
 			hasVehicleCollisionsOn = true;
-			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>().ToList(), hasVehicleCollisionsOn);
+			IgnoreCollisionsWithUnits(AllVehicleUnits().Cast<GameUnit>(), hasVehicleCollisionsOn);
 		}
 	}
 

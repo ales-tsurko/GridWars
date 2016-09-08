@@ -53,8 +53,8 @@ namespace AssemblyCSharp {
 			return _activeGameObjects;
 		}
 
-		public List<GameObject> AllVehicleObjects() {
-			return _allVehicles.Select<Vehicle, GameObject>(vehicle => vehicle.gameObject).ToList();
+		public IEnumerable<GameObject> AllVehicleObjects() {
+			return _allVehicles.Select<Vehicle, GameObject>(vehicle => vehicle.gameObject);
 		}
 
 		public List<Vehicle> AllVehicleUnits() {

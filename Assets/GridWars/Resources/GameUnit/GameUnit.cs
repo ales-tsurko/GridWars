@@ -183,11 +183,9 @@ public class GameUnit : NetworkObject {
 	public bool shouldDestroyColliderOnClient = true;
 	protected List<Bolt.Event> playerCommands;
 
-	public IGameUnitState gameUnitState {
-		get {
-			return entity.GetState<IGameUnitState>();
-		}
-	}
+	IGameUnitState _gameUnitState;
+
+	public IGameUnitState gameUnitState;
 
 	public GameUnit Instantiate() {
 		return BoltNetwork.Instantiate(gameObject).GetComponent<GameUnit>();

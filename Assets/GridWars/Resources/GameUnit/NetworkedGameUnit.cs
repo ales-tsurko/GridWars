@@ -2,14 +2,14 @@
 using System.Collections;
 
 public class NetworkedGameUnit : Bolt.EntityBehaviour {
-	GameUnit gameUnit {
-		get {
-			return GetComponent<GameUnit>();
-		}
-	}
+	GameUnit gameUnit;
 
 	public override void Attached() {
 		base.Attached();
+
+		gameUnit = GetComponent<GameUnit>();
+
+		gameUnit.gameUnitState = entity.GetState<IGameUnitState>();
 
 		//Debug.Log(this + " Attached");
 

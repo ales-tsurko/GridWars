@@ -220,20 +220,18 @@ public class Weapon : MonoBehaviour {
 	*/
 
 
-	public virtual List <GameObject> TargetableEnemyObjects() { 
+	public virtual IEnumerable<GameObject> TargetableEnemyObjects() { 
 		var ownerUnit = owner.GameUnit();
 		var enemyObjs = ownerUnit.EnemyObjects();
-		List <GameObject> results = enemyObjs.Where(obj => this.CanTargetObj(obj)).ToList();
-		return results;
+		return enemyObjs.Where(obj => this.CanTargetObj(obj));
 	}
 		
 	public virtual GameObject ClosestTargetableEnemyObject() {
 		return ClosestOfObjects(TargetableEnemyObjects());
 	}
 
-	public virtual List <GameObject> TargetableEnemyObjectWithWeapons() {
-		var results = TargetableEnemyObjects().Where(obj => obj.GameUnit() != null && obj.GameUnit().HasWeapons()).ToList();
-		return (List <GameObject> )results;
+	public virtual IEnumerable <GameObject> TargetableEnemyObjectWithWeapons() {
+		return TargetableEnemyObjects().Where(obj => obj.GameUnit() != null && obj.GameUnit().HasWeapons());
 	}
 
 
@@ -242,11 +240,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual GameObject ClosestTargetableEnemyVehicles() {
-		List <GameObject> vehicles = App.shared.stepCache.AllVehicleObjects();
-		return ClosestOfObjects(vehicles);
+		return ClosestOfObjects(App.shared.stepCache.AllVehicleObjects());
 	}
 
-	public virtual GameObject ClosestOfObjects( List<GameObject> objs) {
+	public virtual GameObject ClosestOfObjects(IEnumerable<GameObject> objs) {
 		GameObject closest = null;
 		float distance = Mathf.Infinity;
 		var ownerUnit = owner.GameUnit();
