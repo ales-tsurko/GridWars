@@ -205,6 +205,11 @@ public class Network : Bolt.GlobalEventListener {
 		networkDelegate.Disconnected(connection);
 	}
 
+	public override void BoltShutdownBegin(Bolt.AddCallback registerDoneCallback) {
+		base.BoltShutdownBegin(registerDoneCallback);
+		App.shared.Log("BoltShutdownBegin", this);
+	}
+
 	public void StartGame() {
 		indicator.Hide();
 		Battlefield.current.StartGame();
@@ -215,9 +220,11 @@ public class Network : Bolt.GlobalEventListener {
 		Bolt.Zeus.Disconnect();
 	}
 
-	public void LeaveGame() {
+	public void LeaveGame(bool restartBolt = true) {
 		didLeaveGame = true;
 		Battlefield.current.Pause();
-		RestartBolt();
+		if (restartBolt) {
+			RestartBolt();
+		}
 	}
 }

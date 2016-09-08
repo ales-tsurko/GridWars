@@ -75,7 +75,7 @@ public class PvpClient : DefaultNetworkDelegate {
 		base.Disconnected(connection);
 		App.shared.Log("Opponent Disconnected.  Restarting.", this);
 
-		Network.shared.LeaveGame();
+		Network.shared.LeaveGame(false);
 	}
 
 	public override void BoltShutdownCompleted() {
