@@ -65,7 +65,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkFrequency == 0);
+		return (App.shared.timeCounter % thinkFrequency == thinkBucket);
 	}
 
 	public void Think() {
