@@ -106,10 +106,6 @@ public class Tower : GroundBuilding {
 		iconObject.transform.localPosition = new Vector3(0f, iconPlacement.transform.position.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
 
-		if (CameraController.instance != null) {
-			CameraController.instance.InitCamera (transform);
-		}
-
 		player.Paint(gameObject);
 		player.Paint(iconObject);
 

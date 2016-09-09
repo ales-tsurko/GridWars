@@ -38,9 +38,18 @@ public class CameraController : MonoBehaviour {
 		}
 		mouseLook = cam.GetComponent<MouseLook> ();
 		DontDestroyOnLoad (gameObject);
+		InitCamera ();
 	}
 	public void InitCamera () {
+		print ("Init Camera");
+		StartCoroutine (WaitForTowers ());
+	}
+	IEnumerator WaitForTowers () {
 		Tower[] towers = FindObjectsOfType<Tower> ();
+		while (towers.Length == 0) {
+			towers = FindObjectsOfType<Tower> ();
+			yield return null;
+		}
 		Tower closest = towers[0];
 		float closestDist = Mathf.Infinity;
 		foreach (Tower tower in towers) {
@@ -52,7 +61,6 @@ public class CameraController : MonoBehaviour {
 		}
 		InitCamera (closest.transform);
 	}
-		
 	public void InitCamera (Transform _base){
 		if (_base == null) {
 			Debug.LogError ("Tower is null, can't init camera positions");
@@ -63,7 +71,7 @@ public class CameraController : MonoBehaviour {
 			cam.rotation = originalPositions [i].rotation;
 			float mod = 0;
 			#if !UNITY_EDITOR
-				mod = i == 0 ? .1f : 0;
+				mod = i == 0 ? 0f : 0;
 			#endif
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
@@ -107,6 +115,9 @@ public class CameraController : MonoBehaviour {
 		#endif
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
+		}
+		if (Input.GetKeyDown (KeyCode.V)) {
+			InitCamera ();
 		}
 		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
