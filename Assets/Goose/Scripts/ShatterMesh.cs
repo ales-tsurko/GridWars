@@ -49,7 +49,9 @@ public class ShatterMesh : MonoBehaviour {
 		for (int submesh = 0; submesh < M.subMeshCount; submesh++) {
 
 			int[] indices = M.GetTriangles(submesh);
-
+			GameObject deadChopper = new GameObject ();
+			deadChopper.name = "DeadChopper";
+			Destroy (deadChopper, 3);
 			for (int i = 0; i < indices.Length; i += 12)    {
 				Vector3[] newVerts = new Vector3[3];
 				Vector3[] newNormals = new Vector3[3];
@@ -74,10 +76,10 @@ public class ShatterMesh : MonoBehaviour {
 				GO.transform.rotation = transform.rotation;
 				GO.AddComponent<MeshRenderer>().material = materials[submesh];
 				GO.AddComponent<MeshFilter>().mesh = mesh;
-				GO.AddComponent<BoxCollider>();
+				//GO.AddComponent<BoxCollider>();
 				Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), transform.position.y + Random.Range(0f, 0.5f), transform.position.z + Random.Range(-0.5f, 0.5f));
 				GO.AddComponent<Rigidbody>().AddExplosionForce(Random.Range(300,500), explosionPos, 5);
-				Destroy(GO, 5 + Random.Range(0.0f, 5.0f));
+				GO.transform.SetParent (deadChopper.transform);
 			}
 		}
 
