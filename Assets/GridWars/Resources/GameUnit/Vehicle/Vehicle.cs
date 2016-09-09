@@ -6,6 +6,7 @@ using System.Linq;
 
 public class Vehicle : GameUnit  {
 
+	public float damageThrustAdjustment = 0.1f;
 
 	[HideInInspector]
 
@@ -27,13 +28,13 @@ public class Vehicle : GameUnit  {
 
 
 	virtual public float AvailableThrust() {
-		float r = 0.1f;
+		float r = damageThrustAdjustment;
 		return thrust * ((1.0f - r) + (hpRatio * r));
 	}
 
 
 	virtual public float AvailableRotationThrust() {
-		float r = 0.1f;
+		float r = damageThrustAdjustment;
 		return rotationThrust *  ((1.0f - r) + (hpRatio * r));
 	}
 

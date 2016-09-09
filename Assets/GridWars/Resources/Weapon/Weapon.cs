@@ -118,7 +118,11 @@ public class Weapon : MonoBehaviour {
 
 	public virtual void ConsiderTarget(GameObject obj) {
 		if (CanTargetClassOfUnit(obj.GameUnit())) {
-			target = obj;
+			if (target == null) { // if we don't have a target
+				target = obj;
+			} else if (target.GameUnit().HasWeapons() == false) { // or our target doesn't have a weapon
+				target = obj;
+			}
 		}
 	}
 
