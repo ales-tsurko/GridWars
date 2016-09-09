@@ -77,7 +77,8 @@ public class GameUnit : NetworkObject {
 	public float powerCost = 4f;
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
-	public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
+	//public KeyCode[] buildKeyCodeForPlayers = new KeyCode[2];
+	public string[] buildKeyCodeForPlayersS = new string[2];
 	public Vector3 launchDirection = Vector3.forward;
 
 	public float hpRatio {
