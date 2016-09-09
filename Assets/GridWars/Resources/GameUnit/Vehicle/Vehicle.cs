@@ -29,13 +29,15 @@ public class Vehicle : GameUnit  {
 
 	virtual public float AvailableThrust() {
 		float r = damageThrustAdjustment;
-		return thrust * ((1.0f - r) + (hpRatio * r));
+		float entropy = (1 - UnityEngine.Random.value * 0.025f);
+		return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
 	}
 
 
 	virtual public float AvailableRotationThrust() {
 		float r = damageThrustAdjustment;
-		return rotationThrust *  ((1.0f - r) + (hpRatio * r));
+		float entropy = (1 - UnityEngine.Random.value * 0.025f);
+		return rotationThrust *  ((1.0f - r) + (hpRatio * r)) * entropy;
 	}
 
 	// NetworkObject ----------------------------------------
