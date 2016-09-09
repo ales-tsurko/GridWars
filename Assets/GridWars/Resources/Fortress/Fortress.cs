@@ -29,6 +29,7 @@ public class Fortress : MonoBehaviour {
 		typeof(MobileSAM),
 		//typeof(Tanker),
 		typeof(Tank),
+		typeof(Jeep),
 		typeof(BigTank),
 		typeof(Chopper)
 	};
