@@ -5,6 +5,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class UIElement : MonoBehaviour {
 
+	public bool isHidden {
+		get {
+			return !gameObject.activeInHierarchy;
+		}
+	}
+
 	/// <summary>
 	/// Sets the text of the GameButton
 	/// </summary>

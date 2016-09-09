@@ -104,6 +104,10 @@ public class Network : Bolt.GlobalEventListener {
 				networkDelegate.BoltShutdownCompleted();
 			}
 		}
+
+		if (Input.GetKeyDown(KeyCode.Escape) && indicator.isHidden) {
+			ToggleMenu();
+		}
 	}
 
 	//Menus 
@@ -141,6 +145,19 @@ public class Network : Bolt.GlobalEventListener {
 
 		new PvpClient().Start();
 		//new PvpServer().Start();
+	}
+
+	void HideMenu(UIMenuItem item) {
+		menu.Hide();
+	}
+
+	void ToggleMenu() {
+		if (menu.isHidden) {
+			menu.Show();
+		}
+		else {
+			menu.Hide();
+		}
 	}
 
 	/*
@@ -228,7 +245,15 @@ public class Network : Bolt.GlobalEventListener {
 
 	public void StartGame() {
 		indicator.Hide();
+		menu.Reset();
+		menu.AddItem(UI.MenuItem("Concede", Concede));
+		menu.AddItem(UI.MenuItem("Cancel", HideMenu));
+
 		Battlefield.current.StartGame();
+	}
+
+	void Concede(UIMenuItem item) {
+		LeaveGame();
 	}
 
 	public void RestartBolt() {
