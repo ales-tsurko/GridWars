@@ -15,7 +15,7 @@ public class UIElement : MonoBehaviour {
 	/// Sets the text of the GameButton
 	/// </summary>
 	/// <param name="s">S.</param>
-	public virtual void SetText (string s, bool allcaps = false, float offset = 0, UIFont _font = UI.DEFAULTFONT){
+	public virtual Text SetText (string s, bool allcaps = false, float offset = 0, UIFont _font = UI.DEFAULTFONT){
 		Text textObj = null;
 		RectTransform _t = GetComponent<RectTransform> ();
 		textObj = GetComponentInChildren<Text> ();	
@@ -27,6 +27,7 @@ public class UIElement : MonoBehaviour {
 		}
 		textObj.text = s;
 		textObj.font = UI.GetFont (_font);
+		return textObj;
 	}
 
 	public System.Object data;
@@ -75,4 +76,5 @@ public class UIElement : MonoBehaviour {
 	public void SetAction (System.Action<UIMenuItem> _action){
 		action = _action;
 	}
+
 }

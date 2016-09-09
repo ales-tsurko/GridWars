@@ -63,7 +63,7 @@ public class Network : Bolt.GlobalEventListener {
 		App.shared.enabled = true; //Load App so Start gets called
 		App.shared.debug = true;
 
-		indicator = UI.ActivityIndicator("Loading ...");
+		indicator = UI.ActivityIndicator("Loading\n");
 
 		menu = UI.Menu();
 
@@ -140,7 +140,7 @@ public class Network : Bolt.GlobalEventListener {
 
 	void InternetPvpClicked(UIMenuItem item) {
 		menu.Hide();
-		indicator.SetText("Finding a game ...");
+		indicator.SetText("Finding a game\n");
 		indicator.Show();
 
 		new PvpClient().Start();

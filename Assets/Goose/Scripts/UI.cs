@@ -63,7 +63,11 @@ public static class UI {
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator> ();
 		AssignToCanvas (go);
 		indicator.GetComponent<Image> ().overrideSprite = Resources.Load<Sprite> (SKINDIR + skin + "Activity");
-		indicator.SetText (text);
+		indicator.GetComponent<Image> ().color = new Color (1, 1, 1, 0);
+		Text _text = indicator.SetText (text);
+		_text.resizeTextForBestFit = true;
+		_text.rectTransform.sizeDelta = new Vector2 (Screen.width, 200);
+		indicator.SetSize (400, 200);
 		indicator.rotateSpeed = rotateSpeed;
 		indicator.Hide ();
 		indicator.name = "ActivityIndicator";

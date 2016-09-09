@@ -8,7 +8,10 @@ public class UIActivityIndicator : UIElement {
 	Text text;
 
 	void Update () {
-		transform.GetComponentInChildren<Text> ().rectTransform.rotation = Quaternion.Euler (Vector3.zero);
-		transform.Rotate (transform.forward, Time.deltaTime * rotateSpeed);
+		if (Time.frameCount % 60 == 0) {
+			transform.GetComponentInChildren<Text> ().text += ".";
+		}
+		//transform.GetComponentInChildren<Text> ().rectTransform.rotation = Quaternion.Euler (Vector3.zero);
+		//transform.Rotate (transform.forward, Time.deltaTime * rotateSpeed);
 	}
 }
