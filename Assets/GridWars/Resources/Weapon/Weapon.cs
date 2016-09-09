@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Weapon : MonoBehaviour {
-	public Player player;
-	public GameObject owner;
-	public GameObject target;
+
 	public GameObject prefabProjectile;
 	public GameObject muzzleFlash;
 	public Transform muzzleFlashPoint;
@@ -41,12 +39,17 @@ public class Weapon : MonoBehaviour {
 	public bool canTargetGround = true;
 	public bool canTargetAir = true;
 
+	public float targetLeadTime;
+
 	//public bool usesRayCastAimCheck = false;
 
 	[HideInInspector]
+	public Player player;
+	public GameObject owner;
+	public GameObject target;
+
 	float isReloadedAfterTime = 2;
 
-	public float targetLeadTime;
 
 
 	// targeting
