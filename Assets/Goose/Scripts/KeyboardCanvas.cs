@@ -23,6 +23,9 @@ public class KeyboardCanvas : MonoBehaviour {
 		}
 		StartCoroutine (KeyDisplay ());
 		foreach (Tower t in towers) {
+			if (!t.player.isLocal) {
+				continue;
+			}
 			var button = (GameObject)Instantiate (keyboardButton);
 			button.transform.SetParent (transform);
 			button.transform.position = t.transform.position + (t.transform.forward * 6) + new Vector3 (0, .05f, 0);
