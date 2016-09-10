@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using AssemblyCSharp;
 
 public class PvpClient : DefaultNetworkDelegate {
 	bool startServer = false;
 	int processSessionsListCount = 0;
 	Timer requestSessionListTimer;
+
+	public override List<Player> localPlayers {
+		get {
+			var list = new List<Player>();
+			list.Add(Battlefield.current.PlayerNumbered(2));
+			return list;
+		}
+	}
 
 	public override void Start() {
 		base.Start();

@@ -1,5 +1,8 @@
-﻿public interface NetworkDelegate {
+﻿using System.Collections.Generic;
+
+public interface NetworkDelegate {
 	BoltConnection connection { get; set; }
+	List<Player> localPlayers { get; }
 	bool boltStarted { get; set; }
 	void Start();
 	void BoltStartDone();

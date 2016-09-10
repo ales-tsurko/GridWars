@@ -5,7 +5,6 @@ public class Tower : GroundBuilding {
 
 	public GameObject iconPlacement;
 
-	public string activationKey;
 	//public Mesh theMesh;
 	[HideInInspector]
 	public KeyCode attemptQueueUnitKeyCode = KeyCode.None;

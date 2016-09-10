@@ -37,6 +37,12 @@ public class Player : MonoBehaviour {
 
 	public bool npcModeOn;
 
+	public bool isLocal {
+		get {
+			return Network.shared.localPlayers.Contains(this);
+		}
+	}
+
 	void Awake() {
 		units = new List<GameUnit>();
 	}

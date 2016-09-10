@@ -13,7 +13,5 @@ public class CompVsComp : DefaultNetworkDelegate {
 		Network.shared.StartGame();
 		Battlefield.current.PlayerNumbered(1).npcModeOn = true;
 		Battlefield.current.PlayerNumbered(2).npcModeOn = true;
-
-
 	}
 }

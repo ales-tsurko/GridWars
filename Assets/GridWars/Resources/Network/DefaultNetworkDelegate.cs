@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class DefaultNetworkDelegate : UnityEngine.Object, NetworkDelegate {
 	public bool boltStarted { get; set; }
 	public BoltConnection connection { get; set; }
+	public virtual List<Player> localPlayers {
+		get {
+			return new List<Player>();
+		}
+	}
 
 	public virtual void Start() {
 		boltStarted = false;

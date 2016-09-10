@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using AssemblyCSharp;
 
 public class PvpServer : DefaultNetworkDelegate {
@@ -7,6 +7,13 @@ public class PvpServer : DefaultNetworkDelegate {
 	Timer requestSessionsTimer;
 	bool startClient = false;
 
+	public override List<Player> localPlayers {
+		get {
+			var list = new List<Player>();
+			list.Add(Battlefield.current.PlayerNumbered(1));
+			return list;
+		}
+	}
 
 	public override void Start() {
 		base.Start();

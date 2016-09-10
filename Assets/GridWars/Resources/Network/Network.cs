@@ -56,6 +56,12 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
+	public List<Player> localPlayers {
+		get {
+			return networkDelegate.localPlayers;
+		}
+	}
+
 	// MonoBehaviour
 
 	void Start () {
