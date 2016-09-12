@@ -29,6 +29,7 @@ public class Chopper : AirVehicle {
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
 
 		damageRotation = (Random.value - 0.5f) * 10f;
+		SetAllowFriendlyFire(false);
 	}
 
 	public float UpDesire() { // 0.0 to 1.0
@@ -157,5 +158,9 @@ public class Chopper : AirVehicle {
 				Die();
 			}
 		}
+	}
+
+	override public void ApplyDamage(float damage) {
+		base.ApplyDamage(damage);
 	}
 }

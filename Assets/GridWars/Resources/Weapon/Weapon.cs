@@ -40,6 +40,7 @@ public class Weapon : MonoBehaviour {
 	public bool canTargetAir = true;
 
 	public float targetLeadTime;
+	public bool allowFriendlyFire = true;
 
 	//public bool usesRayCastAimCheck = false;
 
@@ -579,6 +580,7 @@ public class Weapon : MonoBehaviour {
 		projectile.transform.rotation = transform.rotation;
 		projectile.copyVelocityFrom(owner);
 		projectile.IgnoreCollisionsWith(owner);
+		projectile.allowFriendlyFire = allowFriendlyFire;
 
 		return projectile;
 	}

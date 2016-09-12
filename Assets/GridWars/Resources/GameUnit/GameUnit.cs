@@ -8,6 +8,7 @@ public class GameUnit : NetworkObject {
 	public float rotationThrust;
 	public float birthVolume = 1;
 	public Color paintedColor;
+	//public bool allowFriendlyFire = true;
 
 	public Player player {
 		get {
@@ -756,6 +757,14 @@ public class GameUnit : NetworkObject {
 		foreach (Weapon weapon in Weapons()) {
 			weapon.owner = gameObject;
 			weapon.enabled = true;
+			weapon.player = player;
+			//weapon.allowFriendlyFire = allowFriendlyFire;
+		}
+	}
+
+	public void SetAllowFriendlyFire(bool v) {
+		foreach (Weapon weapon in Weapons()) {
+			weapon.allowFriendlyFire = v;
 		}
 	}
 

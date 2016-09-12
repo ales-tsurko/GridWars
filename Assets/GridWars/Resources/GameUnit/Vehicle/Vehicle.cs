@@ -81,7 +81,7 @@ public class Vehicle : GameUnit  {
 	}
 
 	private GameObject nearestObsticle;
-	private float avoidObsticleDistance = 6f;
+	private float avoidObsticleDistance = 4f;
 
 	virtual public void UpdateNearestObstacle() {
 		// find nearest object that's 

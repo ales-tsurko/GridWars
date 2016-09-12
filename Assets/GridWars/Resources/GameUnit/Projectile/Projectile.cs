@@ -9,6 +9,7 @@ public class Projectile : GameUnit {
 
 	public AudioClip damageClip;
 	public float damageClipVolume;
+	public bool allowFriendlyFire = true;
 
 
 	public void copyVelocityFrom(GameObject obj) {
@@ -38,11 +39,24 @@ public class Projectile : GameUnit {
 		ApplyDamageTo(collision.gameObject);
 	}
 
+	bool CanDamageUnit(GameUnit otherUnit) {
+		if (player != null) {
+			if (allowFriendlyFire == false) {
+				if (otherUnit.player == player) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	void ApplyDamageTo(GameObject otherGameObject) {
 		var otherUnit = otherGameObject.GetComponent<GameUnit>();
 
-		if (otherUnit != null) {
-			otherUnit.ApplyDamage(damage);
+		if (otherUnit != null ) {
+			if (CanDamageUnit(otherUnit)) {
+				otherUnit.ApplyDamage(damage);
+			}
 		}
 	}
 
