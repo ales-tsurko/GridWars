@@ -2,9 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
-public class UIActivityIndicator : UIElement {
+public class UIActivityIndicator : UIMenuItem {
 	public Image image;
-	public float rotateSpeed;
 	Text text;
 
 	void Update () {

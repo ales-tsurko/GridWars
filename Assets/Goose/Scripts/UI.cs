@@ -57,7 +57,7 @@ public static class UI {
 		return _menu;
 	}
 
-	public static UIActivityIndicator ActivityIndicator (string text = "", float rotateSpeed = 50, string skin = "Default"){
+	public static UIActivityIndicator ActivityIndicator (string text = "", string skin = "Default"){
 		skin += "/";
 		GameObject go = new GameObject ();
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator> ();
@@ -68,7 +68,6 @@ public static class UI {
 		_text.resizeTextForBestFit = true;
 		_text.rectTransform.sizeDelta = new Vector2 (Screen.width, 200);
 		indicator.SetSize (400, 200);
-		indicator.rotateSpeed = rotateSpeed;
 		indicator.Hide ();
 		indicator.name = "ActivityIndicator";
 		return indicator;
