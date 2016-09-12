@@ -108,10 +108,9 @@ public class Tower : GroundBuilding {
 		player.Paint(gameObject);
 		player.Paint(iconObject);
 
-		//if (player.playerNumber <= gameUnit.buildKeyCodeForPlayers.Length) {
-		if (player.playerNumber <= gameUnit.buildKeyCodeForPlayersS.Length) {
-			Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit> ().GetType ().ToString () + playerNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
-		}
+		Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
+
+		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 	}
 
 	public override void ServerFixedUpdate () {

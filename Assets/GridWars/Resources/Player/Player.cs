@@ -43,6 +43,12 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public int localNumber {
+		get {
+			return Network.shared.localPlayers.IndexOf(this) + 1;
+		}
+	}
+
 	void Awake() {
 		units = new List<GameUnit>();
 	}
