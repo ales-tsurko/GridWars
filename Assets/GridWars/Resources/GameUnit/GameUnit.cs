@@ -9,6 +9,8 @@ public class GameUnit : NetworkObject {
 	public float birthVolume = 1;
 	public Color paintedColor;
 	//public bool allowFriendlyFire = true;
+	//public AssemblyCSharp.TimerCenter timerCenterForServer; // use these timers to do mutations
+	//public AssemblyCSharp.TimerCenter timerCenterForClient; // use these timers for fx
 
 	public Player player {
 		get {
@@ -237,6 +239,7 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
+		gameObject.AddComponent<BrightFadeIn>();
 	}
 
 	public override void ServerJoinedGame() {
