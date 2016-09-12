@@ -119,4 +119,11 @@ public class PvpServer : DefaultNetworkDelegate {
 			requestSessionsTimer = null;
 		}
 	}
+
+	public override void Cancel() {
+		base.Cancel();
+
+		Network.shared.LeaveGame();
+		startClient = false;
+	}
 }

@@ -157,7 +157,9 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	void CancelInternetPvpClicked(UIMenuItem item) {
+		networkDelegate.Cancel();
 		LeaveGame();
+		menu.Hide();
 	}
 
 	void Quit(UIMenuItem item) {
@@ -193,8 +195,10 @@ public class Network : Bolt.GlobalEventListener {
 
 	public NetworkDelegate networkDelegate;
 	bool didLeaveGame = false;
+	bool isRestarting = false;
 
 	public override void BoltStartBegin() {
+		isRestarting = false;
 		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 		
@@ -265,8 +269,9 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public void RestartBolt() {
-		BoltLauncher.Shutdown();
-		if (Bolt.Zeus.IsConnected) {
+		if (!isRestarting) {
+			isRestarting = true;
+			BoltLauncher.Shutdown();
 			Bolt.Zeus.Disconnect();
 		}
 	}

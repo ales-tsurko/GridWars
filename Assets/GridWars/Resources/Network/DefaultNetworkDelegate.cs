@@ -48,4 +48,8 @@ public class DefaultNetworkDelegate : UnityEngine.Object, NetworkDelegate {
 	public virtual void Disconnected(BoltConnection connection) {
 		App.shared.Log("Disconnected", this);
 	}
+
+	public virtual void Cancel() {
+		App.shared.Log("Cancel", this);
+	}
 }

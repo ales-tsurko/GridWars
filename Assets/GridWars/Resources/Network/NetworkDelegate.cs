@@ -13,4 +13,5 @@ public interface NetworkDelegate {
 	void Connected(BoltConnection connection);
 	void BoltShutdownCompleted();
 	void Disconnected(BoltConnection connection);
+	void Cancel();
 }

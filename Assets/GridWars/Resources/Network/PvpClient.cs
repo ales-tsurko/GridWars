@@ -100,4 +100,11 @@ public class PvpClient : DefaultNetworkDelegate {
 			new PvpServer().Start();
 		}
 	}
+
+	public override void Cancel() {
+		base.Cancel();
+
+		Network.shared.LeaveGame();
+		startServer = false;
+	}
 }
