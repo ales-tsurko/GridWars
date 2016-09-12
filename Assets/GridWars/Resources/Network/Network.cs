@@ -144,11 +144,20 @@ public class Network : Bolt.GlobalEventListener {
 
 	void InternetPvpClicked(UIMenuItem item) {
 		menu.Hide();
+
 		indicator.SetText("Finding a game\n");
-		indicator.Show();
+
+		menu.Reset();
+		menu.AddItem(indicator);
+		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
+		menu.Show();
 
 		new PvpClient().Start();
 		//new PvpServer().Start();
+	}
+
+	void CancelInternetPvpClicked(UIMenuItem item) {
+		LeaveGame();
 	}
 
 	void Quit(UIMenuItem item) {
@@ -257,7 +266,9 @@ public class Network : Bolt.GlobalEventListener {
 
 	public void RestartBolt() {
 		BoltLauncher.Shutdown();
-		Bolt.Zeus.Disconnect();
+		if (Bolt.Zeus.IsConnected) {
+			Bolt.Zeus.Disconnect();
+		}
 	}
 
 	public void LeaveGame(bool restartBolt = true) {
