@@ -63,7 +63,7 @@ namespace AssemblyCSharp {
 			timerCenter.AddTimer(this);
 		}
 
-		public float ratioDone() {
+		public float RatioDone() {
 			float v = (Time.time - startTime) / timeout;
 			if (v > 1) {
 				v = 1;

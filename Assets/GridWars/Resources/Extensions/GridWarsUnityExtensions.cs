@@ -8,6 +8,7 @@ public static class GridWarsUnityExtensions {
 		return self.GetComponent<GameUnit>();
 	}
 
+	// Rendering
 
 	public static void EachRenderer(this GameObject self, Action<MeshRenderer> f) {
 		foreach (var renderer in self.GetComponentsInChildren<MeshRenderer>()) {

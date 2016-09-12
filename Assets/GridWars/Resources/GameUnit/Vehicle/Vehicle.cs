@@ -29,14 +29,14 @@ public class Vehicle : GameUnit  {
 
 	virtual public float AvailableThrust() {
 		float r = damageThrustAdjustment;
-		float entropy = (1 - UnityEngine.Random.value * 0.025f);
+		float entropy = (1 - UnityEngine.Random.value * 0.1f);
 		return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
 	}
 
 
 	virtual public float AvailableRotationThrust() {
 		float r = damageThrustAdjustment;
-		float entropy = (1 - UnityEngine.Random.value * 0.025f);
+		float entropy = (1 - UnityEngine.Random.value * 0.1f);
 		return rotationThrust *  ((1.0f - r) + (hpRatio * r)) * entropy;
 	}
 
@@ -81,7 +81,7 @@ public class Vehicle : GameUnit  {
 	}
 
 	private GameObject nearestObsticle;
-	private float avoidObsticleDistance = 6f;
+	private float avoidObsticleDistance = 4f;
 
 	virtual public void UpdateNearestObstacle() {
 		// find nearest object that's 
