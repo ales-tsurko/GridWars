@@ -225,6 +225,10 @@ public class GameUnit : NetworkObject {
 		base.ServerInit();
 		isInGame = true;
 		hitPoints = maxHitPoints;
+
+		thinkThrottle = new Throttle();
+		thinkThrottle.behaviour = this;
+		thinkThrottle.period = 25;
 	}
 
 	public override void ClientInit() {
@@ -304,7 +308,7 @@ public class GameUnit : NetworkObject {
 		}
 		*/
 
-		if (IsThinkStep()) {
+		if (thinkThrottle.isOff) {
 			Think();
 		}
 
@@ -360,17 +364,7 @@ public class GameUnit : NetworkObject {
 
 	// Thinking
 
-	int thinkPeriod = 25;
-
-	int thinkBucket {
-		get {
-			return (int)((uint)GetHashCode() % (uint)thinkPeriod);
-		}
-	}
-
-	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkPeriod == thinkBucket);
-	}
+	Throttle thinkThrottle;
 
 	public virtual void Think() {
 		PickTarget();
