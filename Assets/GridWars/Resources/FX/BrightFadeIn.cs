@@ -28,9 +28,16 @@ public class BrightFadeIn : MonoBehaviour {
 	}
 
 	void Update (){
-		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
+		/*
+		 float t = timer.RatioDone();
 
-		//Color color = new Color(1f, 1f, 1f);
+		float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
+		float g = EaseInOutSine(t, startColor.g, realColor.g - startColor.g, 1); 
+		float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
+		Color color = new Color(r, g, b);
+
+		*/
+		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
 		gameObject.Paint(color);
 	}
 
@@ -38,5 +45,9 @@ public class BrightFadeIn : MonoBehaviour {
 		if (timer != null) { //in case start is never called.
 			timer.Cancel();
 		}
+	}
+
+	float EaseInOutSine(float time, float startValue, float changeInValue, float duration) {
+		return - changeInValue / 2 * (Mathf.Cos(Mathf.PI * time / duration) - 1) + startValue;
 	}
 }

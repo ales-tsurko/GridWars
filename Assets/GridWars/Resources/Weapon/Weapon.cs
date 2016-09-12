@@ -581,6 +581,7 @@ public class Weapon : MonoBehaviour {
 		projectile.copyVelocityFrom(owner);
 		projectile.IgnoreCollisionsWith(owner);
 		projectile.allowFriendlyFire = allowFriendlyFire;
+		projectile.target = target;
 
 		return projectile;
 	}

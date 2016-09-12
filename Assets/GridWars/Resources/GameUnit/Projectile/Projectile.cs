@@ -11,6 +11,8 @@ public class Projectile : GameUnit {
 	public float damageClipVolume;
 	public bool allowFriendlyFire = true;
 
+	[HideInInspector]
+
 
 	public void copyVelocityFrom(GameObject obj) {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
