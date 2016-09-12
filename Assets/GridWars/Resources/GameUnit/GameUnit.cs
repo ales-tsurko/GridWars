@@ -84,6 +84,10 @@ public class GameUnit : NetworkObject {
 	public string[] buildKeyCodeForPlayersS = new string[2];
 	public Vector3 launchDirection = Vector3.forward;
 
+	//FX
+
+	protected bool shouldFadeIn = false;
+
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -239,7 +243,10 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
-		gameObject.AddComponent<BrightFadeIn>();
+
+		if (shouldFadeIn) {
+			gameObject.AddComponent<BrightFadeIn>();
+		}
 	}
 
 	public override void ServerJoinedGame() {
