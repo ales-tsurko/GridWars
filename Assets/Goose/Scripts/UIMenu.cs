@@ -12,6 +12,7 @@ public class UIMenu : UIElement {
 		RectTransform _i = _item.GetComponent<RectTransform> ();
 		_i.SetParent (_t);
 		items.Add (_item);
+		_item.Show ();
 		OrderMenu ();
 	}
 
