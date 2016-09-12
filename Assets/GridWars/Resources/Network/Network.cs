@@ -145,10 +145,8 @@ public class Network : Bolt.GlobalEventListener {
 	void InternetPvpClicked(UIMenuItem item) {
 		menu.Hide();
 
-		indicator.SetText("Finding a game\n");
-
 		menu.Reset();
-		menu.AddItem(indicator);
+		menu.AddItem(UI.ActivityIndicator("Finding a game\n"));
 		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
 		menu.Show();
 
@@ -260,6 +258,7 @@ public class Network : Bolt.GlobalEventListener {
 		menu.Reset();
 		menu.AddItem(UI.MenuItem("Concede", Concede));
 		menu.AddItem(UI.MenuItem("Cancel", HideMenu));
+		menu.Hide();
 
 		Battlefield.current.StartGame();
 	}
