@@ -63,6 +63,7 @@ public class Weapon : MonoBehaviour {
 
 	Throttle thinkThrottle;
 	Throttle fireThrottle;
+	Throttle aimThrottle;
 
 	public void Think() {
 		PickTarget();
@@ -78,7 +79,9 @@ public class Weapon : MonoBehaviour {
 			if (fireThrottle.isOff) {
 				FireIfAppropriate();
 			}
-			AimIfAble();
+			if (aimThrottle.isOff) {
+				AimIfAble();
+			}
 		} else {
 			target = null;
 		}
@@ -98,6 +101,10 @@ public class Weapon : MonoBehaviour {
 		fireThrottle = new Throttle();
 		fireThrottle.behaviour = this;
 		fireThrottle.period = 10;
+
+		aimThrottle = new Throttle();
+		aimThrottle.behaviour = this;
+		aimThrottle.period = 4;
 
 		targetableTypes = new List<System.Type>();
 

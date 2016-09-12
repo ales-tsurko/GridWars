@@ -94,7 +94,8 @@ public class PowerSource : GroundBuilding {
 	}
 
 	public override void ServerFixedUpdate() {
-		base.ServerFixedUpdate();
+		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.
+
 		float rate = generationRate;
 		float r = power / maxPower;
 		rate *= (1 + r / 2);
