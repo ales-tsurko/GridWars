@@ -60,17 +60,9 @@ public class Weapon : MonoBehaviour {
 
 	// Thinking
 
-	int thinkPeriod = 25;
 
-	int thinkBucket {
-		get {
-			return (int)((uint)GetHashCode() % (uint)thinkPeriod);
-		}
-	}
-
-	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkPeriod == thinkBucket);
-	}
+	Throttle thinkThrottle;
+	Throttle fireThrottle;
 
 	public void Think() {
 		PickTarget();
@@ -80,10 +72,12 @@ public class Weapon : MonoBehaviour {
 
 	public void ServerFixedUpdate() {
 		if (isActive) {
-			if (IsThinkStep()) {
+			if (thinkThrottle.isOff) {
 				Think();
 			}
-			FireIfAppropriate();
+			if (fireThrottle.isOff) {
+				FireIfAppropriate();
+			}
 			AimIfAble();
 		} else {
 			target = null;
@@ -96,6 +90,14 @@ public class Weapon : MonoBehaviour {
 	public void Start () {
 		//base.Start();
 		Reload();
+
+		thinkThrottle = new Throttle();
+		thinkThrottle.behaviour = this;
+		thinkThrottle.period = 25;
+
+		fireThrottle = new Throttle();
+		fireThrottle.behaviour = this;
+		fireThrottle.period = 10;
 
 		targetableTypes = new List<System.Type>();
 
@@ -435,7 +437,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool ChooseToFire() {
 		float r = Random.value;
-		return r < chanceOfFire; 
+		return r < chanceOfFire*fireThrottle.period;
 	}
 
 	public bool ShouldFire() {

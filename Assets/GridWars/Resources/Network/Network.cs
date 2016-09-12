@@ -76,25 +76,6 @@ public class Network : Bolt.GlobalEventListener {
 		ShowMainMenu();
 	}
 
-	void ShowMainMenu(UIMenuItem item = null) {
-		menu.Reset();
-
-		menu.AddItem(UI.MenuItem("Player vs Player", MultiplayerClicked));
-		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
-		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
-		menu.AddItem(UI.MenuItem("Quit", Quit));
-
-		menu.Show();
-	}
-
-	void Quit(UIMenuItem item) {
-		Application.Quit();
-
-		#if UNITY_EDITOR
-		UnityEditor.EditorApplication.isPlaying = false;
-		#endif
-	}
-
 	void Update() {
 		if (!BoltNetwork.isRunning && !Bolt.Zeus.IsConnected) {
 			if (didLeaveGame) {
@@ -121,12 +102,29 @@ public class Network : Bolt.GlobalEventListener {
 	UIMenu menu;
 	UIActivityIndicator indicator;
 
-	void MultiplayerClicked(UIMenuItem item) {
+	void HideMenu(UIMenuItem item) {
+		menu.Hide();
+	}
+
+	void ToggleMenu() {
+		if (menu.isHidden) {
+			menu.Show();
+		}
+		else {
+			menu.Hide();
+		}
+	}
+
+	void ShowMainMenu(UIMenuItem item = null) {
 		menu.Reset();
 
-		menu.AddItem(UI.MenuItem("Internet", InternetPvpClicked));
-		menu.AddItem(UI.MenuItem("Shared Screen", SharedScreenPvpClicked));
-		menu.AddItem(UI.MenuItem("Back", ShowMainMenu));
+		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
+		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
+		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
+		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
+		menu.AddItem(UI.MenuItem("Quit", Quit));
+
+		menu.Show();
 	}
 
 	void SharedScreenPvpClicked(UIMenuItem item) {
@@ -153,17 +151,12 @@ public class Network : Bolt.GlobalEventListener {
 		//new PvpServer().Start();
 	}
 
-	void HideMenu(UIMenuItem item) {
-		menu.Hide();
-	}
+	void Quit(UIMenuItem item) {
+		Application.Quit();
 
-	void ToggleMenu() {
-		if (menu.isHidden) {
-			menu.Show();
-		}
-		else {
-			menu.Hide();
-		}
+		#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+		#endif
 	}
 
 	/*

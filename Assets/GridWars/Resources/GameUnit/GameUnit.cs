@@ -84,6 +84,10 @@ public class GameUnit : NetworkObject {
 	public string[] buildKeyCodeForPlayersS = new string[2];
 	public Vector3 launchDirection = Vector3.forward;
 
+	//FX
+
+	protected bool shouldFadeIn = false;
+
 	public float hpRatio {
 		get {
 			return hitPoints/maxHitPoints;
@@ -221,6 +225,10 @@ public class GameUnit : NetworkObject {
 		base.ServerInit();
 		isInGame = true;
 		hitPoints = maxHitPoints;
+
+		thinkThrottle = new Throttle();
+		thinkThrottle.behaviour = this;
+		thinkThrottle.period = 25;
 	}
 
 	public override void ClientInit() {
@@ -239,7 +247,10 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
-		gameObject.AddComponent<BrightFadeIn>();
+
+		if (shouldFadeIn) {
+			gameObject.AddComponent<BrightFadeIn>();
+		}
 	}
 
 	public override void ServerJoinedGame() {
@@ -297,7 +308,7 @@ public class GameUnit : NetworkObject {
 		}
 		*/
 
-		if (IsThinkStep()) {
+		if (thinkThrottle.isOff) {
 			Think();
 		}
 
@@ -353,17 +364,7 @@ public class GameUnit : NetworkObject {
 
 	// Thinking
 
-	int thinkPeriod = 25;
-
-	int thinkBucket {
-		get {
-			return (int)((uint)GetHashCode() % (uint)thinkPeriod);
-		}
-	}
-
-	public bool IsThinkStep() {
-		return (App.shared.timeCounter % thinkPeriod == thinkBucket);
-	}
+	Throttle thinkThrottle;
 
 	public virtual void Think() {
 		PickTarget();
