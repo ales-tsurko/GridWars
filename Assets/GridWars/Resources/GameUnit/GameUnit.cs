@@ -87,6 +87,7 @@ public class GameUnit : NetworkObject {
 	//FX
 
 	protected bool shouldFadeIn = false;
+	protected bool isPlayerPainted = true;
 
 	public float hpRatio {
 		get {
@@ -293,8 +294,9 @@ public class GameUnit : NetworkObject {
 				player.units.Add(this);
 			}
 
-
-			player.Paint(gameObject);
+			if (isPlayerPainted) {
+				player.Paint(gameObject);
+			}
 		}
 
 		PlayBirthSound();
