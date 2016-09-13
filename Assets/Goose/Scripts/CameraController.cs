@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
 		}
 		mouseLook = cam.GetComponent<MouseLook> ();
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
 		InitCamera ();
 	}
 	public void InitCamera () {

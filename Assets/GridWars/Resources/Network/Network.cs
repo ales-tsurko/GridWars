@@ -146,7 +146,7 @@ public class Network : Bolt.GlobalEventListener {
 		menu.Hide();
 
 		menu.Reset();
-		menu.AddItem(UI.ActivityIndicator("Finding a game\n"));
+		menu.AddItem(UI.ActivityIndicator("Finding a game"));
 		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
 		menu.Show();
 
@@ -276,8 +276,12 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public void LeaveGame(bool restartBolt = true) {
+		menu.Hide();
+		indicator.SetText("Ending Game");
+		indicator.Show();
+
 		didLeaveGame = true;
-		Battlefield.current.Pause();
+		Battlefield.current.Reset();
 		if (restartBolt) {
 			RestartBolt();
 		}

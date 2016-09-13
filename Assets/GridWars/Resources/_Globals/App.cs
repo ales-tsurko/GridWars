@@ -26,6 +26,7 @@ public class App : MonoBehaviour {
 		get {
 			if (_shared == null) {
 				GameObject go = new GameObject();
+				go.name = "App";
 				_shared = go.AddComponent<App>();
 			}
 			return _shared;
