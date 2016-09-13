@@ -115,15 +115,19 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 
-	void ShowMainMenu(UIMenuItem item = null) {
+	void ResetMenu() {
 		menu.Reset();
+	}
+
+	void ShowMainMenu(UIMenuItem item = null) {
+		ResetMenu();
 
 		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
-        menu.AddItem(UI.Background(Color.black));
+		menu.AddItem(UI.Background(Color.black));
 
 		menu.Show();
 	}
@@ -146,9 +150,10 @@ public class Network : Bolt.GlobalEventListener {
 	void InternetPvpClicked(UIMenuItem item) {
 		menu.Hide();
 
-		menu.Reset();
+		ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("Finding a game"));
 		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
+		menu.AddItem(UI.Background(Color.black));
 		menu.Show();
 
 		new PvpClient().Start();
@@ -256,9 +261,10 @@ public class Network : Bolt.GlobalEventListener {
 
 	public void StartGame() {
 		indicator.Hide();
-		menu.Reset();
+		ResetMenu();
 		menu.AddItem(UI.MenuItem("Concede", Concede));
 		menu.AddItem(UI.MenuItem("Cancel", HideMenu));
+		menu.AddItem(UI.Background(Color.black));
 		menu.Hide();
 
 		Battlefield.current.StartGame();
@@ -280,13 +286,10 @@ public class Network : Bolt.GlobalEventListener {
         if (didLeaveGame) {
             return;
         }
-        menu.Hide();
-        UIMenu endGameMenu = UI.Menu();
-        endGameMenu.AddItem(UI.ActivityIndicator("Returning to Main Menu"));
-        endGameMenu.AddItem(UI.Background(Color.black));
-        endGameMenu.Show();
-		//indicator.SetText("Returning to Main Menu");
-		//indicator.Show();
+		ResetMenu();
+        menu.AddItem(UI.ActivityIndicator("Returning to Main Menu"));
+		menu.AddItem(UI.Background(Color.black));
+		menu.Show();
 
 		didLeaveGame = true;
 		Battlefield.current.Reset();
