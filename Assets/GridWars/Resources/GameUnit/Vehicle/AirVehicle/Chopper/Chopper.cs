@@ -13,7 +13,7 @@ public class Chopper : AirVehicle {
 	Transform mainRotorTransform; // set in start
 
 	[HideInInspector]
-	public bool usesSoundtrack = false;
+	public bool usesSoundtrack = true;
 	public float damageRotation;
 
 	public override void ServerAndClientJoinedGame() {
@@ -35,6 +35,12 @@ public class Chopper : AirVehicle {
 		SetAllowFriendlyFire(false);
 
 		//Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.5f);
+		//rigidBody().velocity = new Vector3(0, 4f, 0f);
+		_t.position = new Vector3(_t.position.x, _t.position.y*2, _t.position.z);
+
+		Vector3 e = _t.eulerAngles;
+		e.x = 20f;
+		_t.eulerAngles = e; //new Vector3(e.x, e.y, e.z);
 	}
 
 	public Weapon Minigun() {
@@ -57,7 +63,7 @@ public class Chopper : AirVehicle {
 		}
 			
 		if (!IsInStandoffRange()) {
-			// don't tilt forward until we're facing the target
+			// don't tilt forward until we're roughly facing the target
 			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
 				float diff = targetDistance() - standOffDistance;
@@ -125,9 +131,9 @@ public class Chopper : AirVehicle {
 
 		Vector3 rotorUp = mainRotorTransform.up;
 		float speed = ForwardSpeed();
-		float desiredSpeed = ForwardDesire() * 4;
+		float desiredSpeed = ForwardDesire() * 4f;
 		float speedDiff = desiredSpeed - speed;
-		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust);
+		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust); //*1.1f;
 
 		Vector3 frontForce = rotorUp * ((upThrust + f) / 2);
 		Vector3 backForce  = rotorUp * ((upThrust - f) / 2);
@@ -180,8 +186,8 @@ public class Chopper : AirVehicle {
 
 	// Soundtrack ----------------------------------------
 
-	override public void DestroySelf() {
-		base.DestroySelf();
+	override public void ServerAndClientLeftGame(){
+		base.ServerAndClientLeftGame();
 		UpdateSoundtrack();
 	}
 

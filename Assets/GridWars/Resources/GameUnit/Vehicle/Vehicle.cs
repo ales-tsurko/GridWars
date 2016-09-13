@@ -6,6 +6,9 @@ using System.Linq;
 
 public class Vehicle : GameUnit  {
 
+	public float maxSpeed = 10f;
+	//public float timeToMaxSpeed = 1f;
+
 	public float damageThrustAdjustment = 0.1f;
 
 	[HideInInspector]
@@ -28,9 +31,16 @@ public class Vehicle : GameUnit  {
 
 
 	virtual public float AvailableThrust() {
-		float r = damageThrustAdjustment;
-		float entropy = (1 - UnityEngine.Random.value * 0.1f);
-		return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
+		//if (ForwardSpeed() < maxSpeed) {
+			/*
+			float r = damageThrustAdjustment;
+			float entropy = (1 - UnityEngine.Random.value * 0.1f);
+			return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
+			*/
+			return thrust;
+	//	}
+
+		//return 0f;
 	}
 
 

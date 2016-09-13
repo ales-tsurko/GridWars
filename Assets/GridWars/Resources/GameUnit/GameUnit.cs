@@ -7,6 +7,7 @@ public class GameUnit : NetworkObject {
 	public float thrust;
 	public float rotationThrust;
 	public float birthVolume = 1;
+	public float deathVolume = 1;
 	public Color paintedColor;
 	//public bool allowFriendlyFire = true;
 	//public AssemblyCSharp.TimerCenter timerCenterForServer; // use these timers to do mutations
@@ -115,6 +116,8 @@ public class GameUnit : NetworkObject {
 		}
 	}
 		
+	// Birth
+
 	public AudioClip birthSound {
 		get {
 			return SoundNamed("birth");
@@ -126,6 +129,22 @@ public class GameUnit : NetworkObject {
 			audioSource.PlayOneShot(birthSound, birthVolume);
 		}
 	}
+
+	// Death - can't do this because game unit destroys it's audioSource before sound finishes
+	/*
+	public AudioClip deathSound {
+		get {
+			return SoundNamed("death");
+		}
+	}
+
+	protected void PlayDeathSound() {
+		if (deathSound != null) {
+			audioSource.PlayOneShot(deathSound, deathVolume);
+		}
+	}
+	*/
+
 
 	// ----------------------------------------------
 
@@ -361,6 +380,7 @@ public class GameUnit : NetworkObject {
 			}
 		}
 		ShowFxExplosion();
+		//PlayDeathSound();
 	}
 
 	// Thinking
@@ -717,6 +737,7 @@ public class GameUnit : NetworkObject {
 	virtual public void DestroySelf() {
 		BoltNetwork.Destroy(gameObject);
 	}
+
 
 	void ShowUnitExplosion() {
 		if (deathExplosionPrefab != null) {
