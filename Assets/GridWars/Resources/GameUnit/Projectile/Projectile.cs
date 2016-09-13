@@ -29,7 +29,6 @@ public class Projectile : GameUnit {
 		isPlayerPainted = false;
 		base.ServerAndClientJoinedGame();
 		PlayBirthSound();
-		//gameObject.Paint(Color.white, "Unit");
 	}
 
 	public override void Think() {

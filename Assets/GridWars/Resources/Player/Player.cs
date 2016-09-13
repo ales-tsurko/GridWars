@@ -74,28 +74,12 @@ public class Player : MonoBehaviour {
 	//Painting
 
 	public void Paint(GameObject gameObject) {
-		//gameObject.Paint(color, "Unit");
 		gameObject.EachRenderer(r => {
 			if (r.material.name.StartsWith("Unit")) {
 				r.material = unitMaterial;
 			}
 		});
 	}
-
-	/*
-	public void PaintAsDisabled(GameObject gameObject) {
-		var c = new Color();
-		c.r = color.r/2;
-		c.g = color.g/2;
-		c.b = color.b/2;
-		gameObject.Paint(c, "Unit");
-	}
-
-	public void PaintAsHighlighted(GameObject gameObject, float level) {
-		var c = Color.Lerp(color, Color.white, level);
-		gameObject.Paint(c, "Unit");
-	}
-	*/
 
 	string resourcesPath {
 		get {

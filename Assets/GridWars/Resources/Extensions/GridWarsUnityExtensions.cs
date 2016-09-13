@@ -129,4 +129,13 @@ public static class GridWarsUnityExtensions {
 		return objs;
 	}
 	*/
+
+	// Keyboard
+
+	public static string FormatForKeyboard (this string s){
+		if (s.StartsWith ("Alpha")) {
+			return s.Remove (0, 5);
+		}
+		return s;
+	}
 }

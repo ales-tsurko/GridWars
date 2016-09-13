@@ -109,19 +109,15 @@ public class Tower : GroundBuilding {
 		iconObject.transform.localRotation = Quaternion.identity;
 
 		player.Paint(gameObject);
-		player.Paint(iconObject);
+		//player.Paint(iconObject);
 
 		Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
-        if (!player.isLocal) {
-           // continue;
-        }
 
-		keyIcon = (GameObject)Instantiate(Resources.Load<GameObject>("UI/KeyboardButton"));
-        keyIcon.transform.SetParent (KeyboardCanvas.instance.transform);
-        keyIcon.transform.position = transform.position + (transform.forward * 6) + new Vector3 (0, .05f, 0);
-        keyIcon.transform.localRotation = Quaternion.Euler (new Vector3 (90, -90, 0));
-        keyIcon.transform.localScale = Vector3.one * .35f;
-        keyIcon.transform.GetComponentInChildren<Text> ().text = attemptQueueUnitKeyCode.ToString ().FormatForKeyboard();
+        keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
+
+		if (playerNumber == 2) {
+			keyIcon.transform.Rotate(new Vector3(0, 0, 180));
+		}
 
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
@@ -156,7 +152,7 @@ public class Tower : GroundBuilding {
 	GameObject iconObject;
 	bool hudIsHidden = false;
 
-	GameObject keyIcon;
+	public GameObject keyIcon;
 
 
 	public void ShowHud() {
