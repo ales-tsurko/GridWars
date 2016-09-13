@@ -277,7 +277,7 @@ public class Network : Bolt.GlobalEventListener {
 
 	public void LeaveGame(bool restartBolt = true) {
 		menu.Hide();
-		indicator.SetText("Ending Game");
+		indicator.SetText("Returning to Main Menu");
 		indicator.Show();
 
 		didLeaveGame = true;
