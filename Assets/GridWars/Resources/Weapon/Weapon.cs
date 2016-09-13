@@ -42,11 +42,11 @@ public class Weapon : MonoBehaviour {
 	public float targetLeadTime;
 	public bool allowFriendlyFire = true;
 
-	private Dictionary<System.Type, float> damageAdjustments;
 
 	//public bool usesRayCastAimCheck = false;
 
 	[HideInInspector]
+	public Dictionary<System.Type, float> damageAdjustments;
 	public Player player;
 	public GameObject owner;
 	public GameObject target;
