@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Tower : GroundBuilding {
 
@@ -109,6 +110,16 @@ public class Tower : GroundBuilding {
 		player.Paint(iconObject);
 
 		Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
+        if (!player.isLocal) {
+           // continue;
+        }
+        var button = (GameObject)Instantiate(Resources.Load<GameObject>("UI/KeyboardButton"));
+        button.transform.SetParent (KeyboardCanvas.instance.transform);
+        button.transform.position = transform.position + (transform.forward * 6) + new Vector3 (0, .05f, 0);
+        button.transform.localRotation = Quaternion.Euler (new Vector3 (90, -90, 0));
+        button.transform.localScale = Vector3.one * .35f;
+        button.transform.GetComponentInChildren<Text> ().text = attemptQueueUnitKeyCode.ToString ().FormatForKeyboard();
+
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 	}
