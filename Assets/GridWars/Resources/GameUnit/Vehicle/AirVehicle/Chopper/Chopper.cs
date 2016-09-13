@@ -21,6 +21,7 @@ public class Chopper : AirVehicle {
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 		UpdateSoundtrack();
+		gameObject.TurnOffShadows(); // apply to prefab?
 	}
 
 	public override void ServerJoinedGame () {
