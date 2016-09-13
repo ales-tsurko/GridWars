@@ -47,6 +47,9 @@ public class App : MonoBehaviour {
 		QualitySettings.vSyncCount = 0;
 
 		Wreckage.SetupLayerCollisions();
+
+		SoundtrackNamed("Wagner_Ride_of_the_Valkyries"); // preload
+
 	}
 
 	public void FixedUpdate() {
@@ -157,7 +160,7 @@ public class App : MonoBehaviour {
 			return tracks[0];
 		}
 		var track = gameObject.AddComponent<Soundtrack>();
-		track.trackName = trackName;
+		track.SetTrackName(trackName);
 		soundtracks.Add(track);
 		return track;
 	}

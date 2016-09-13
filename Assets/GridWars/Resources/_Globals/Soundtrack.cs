@@ -6,10 +6,10 @@ public class Soundtrack : MonoBehaviour {
 	public float maxVolume = 0.5f;
 	public string trackName;
 	AssemblyCSharp.Timer fadeTimer = null;
+	AudioClip clip;
 
 	public void Play() {
 		if (audioSource.isPlaying == false) {
-			var clip = Resources.Load<AudioClip>(ResourcePath());
 			audioSource.PlayOneShot(clip, maxVolume);
 			audioSource.time = 0;
 		}
@@ -17,6 +17,11 @@ public class Soundtrack : MonoBehaviour {
 
 	public string ResourcePath() {
 		return  "Music/" + trackName;
+	}
+
+	public void SetTrackName(string aTrackName) {
+		trackName = aTrackName;
+		clip = Resources.Load<AudioClip>(ResourcePath());
 	}
 
 	AudioSource _audioSource;

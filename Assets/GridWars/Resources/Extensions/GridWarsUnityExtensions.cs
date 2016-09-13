@@ -24,6 +24,10 @@ public static class GridWarsUnityExtensions {
 		self.EachRenderer(r => r.material = new Material(r.material));
 	}
 
+	public static void TurnOffShadows(this GameObject self) {
+		self.EachRenderer(r => r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off);
+	}
+
 	public static void Paint(this GameObject self, Color color, string materialName = null) {
 		self.EachMaterial(m => {
 			if (materialName == null || m.name.StartsWith(materialName)) {
