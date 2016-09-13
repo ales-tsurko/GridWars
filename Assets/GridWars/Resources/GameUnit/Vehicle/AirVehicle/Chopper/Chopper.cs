@@ -162,6 +162,11 @@ public class Chopper : AirVehicle {
 			SteerTowardsTarget();
 			ApplyRotorThrust();
 		}
+
+		if (rigidBody().velocity.magnitude > 14f) {
+			Die();
+		}
+
 		RemoveIfOutOfBounds();
 	}
 
