@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Chopper : AirVehicle {
 	public float cruiseHeight = 12f;
@@ -12,12 +13,14 @@ public class Chopper : AirVehicle {
 	Transform mainRotorTransform; // set in start
 
 	[HideInInspector]
+	public bool usesSoundtrack = false;
 	public float damageRotation;
 
 	public override void ServerAndClientJoinedGame() {
 		base.ServerAndClientJoinedGame();
 		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
 		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
+		UpdateSoundtrack();
 	}
 
 	public override void ServerJoinedGame () {
@@ -162,5 +165,38 @@ public class Chopper : AirVehicle {
 
 	override public void ApplyDamage(float damage) {
 		base.ApplyDamage(damage);
+	}
+
+	// Soundtrack ----------------------------------------
+
+	override public void DestroySelf() {
+		base.DestroySelf();
+		UpdateSoundtrack();
+	}
+
+	public int PlayerChopperCount() {
+		var choppers = player.units.Where(unit => unit.IsOfType(typeof(Chopper))).ToList<GameUnit>();
+		return choppers.Count;
+	}
+
+	public Soundtrack Soundtrack() {
+		return App.shared.SoundtrackNamed("Wagner_Ride_of_the_Valkyries");
+	}
+
+	public void UpdateSoundtrack() {
+		if (usesSoundtrack) {
+			float count = (float)PlayerChopperCount();
+
+			float threshold = 4f;
+
+			if (count > 4) {
+				Soundtrack().Play();
+				Soundtrack().SetTargetVolume(1f);
+			}
+
+			if (count < 4) {
+				Soundtrack().SetTargetVolume(count / threshold);
+			}
+		}
 	}
 }

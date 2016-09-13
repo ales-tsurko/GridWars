@@ -45,6 +45,7 @@ public class BrightFadeIn : MonoBehaviour {
 		if (timer != null) { //in case start is never called.
 			timer.Cancel();
 		}
+		gameObject.Paint(realColor);
 	}
 
 	float EaseInOutSine(float time, float startValue, float changeInValue, float duration) {

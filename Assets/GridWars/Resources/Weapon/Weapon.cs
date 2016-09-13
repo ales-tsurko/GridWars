@@ -42,6 +42,8 @@ public class Weapon : MonoBehaviour {
 	public float targetLeadTime;
 	public bool allowFriendlyFire = true;
 
+	private Dictionary<System.Type, float> damageAdjustments;
+
 	//public bool usesRayCastAimCheck = false;
 
 	[HideInInspector]
@@ -73,15 +75,19 @@ public class Weapon : MonoBehaviour {
 
 	public void ServerFixedUpdate() {
 		if (isActive) {
+			
 			if (thinkThrottle.isOff) {
 				Think();
 			}
-			if (fireThrottle.isOff) {
-				FireIfAppropriate();
-			}
+
 			if (aimThrottle.isOff) {
 				AimIfAble();
 			}
+
+			if (fireThrottle.isOff) {
+				FireIfAppropriate();
+			}
+
 		} else {
 			target = null;
 		}
@@ -93,6 +99,8 @@ public class Weapon : MonoBehaviour {
 	public void Start () {
 		//base.Start();
 		Reload();
+
+		damageAdjustments = new Dictionary<System.Type, float>();
 
 		thinkThrottle = new Throttle();
 		thinkThrottle.behaviour = this;
@@ -384,7 +392,8 @@ public class Weapon : MonoBehaviour {
 
 	public void AimOnXAxis() {
 		float angle = XAngleToTarget();
-		float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
+		//float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
+		float dx = angle * aimRateX; // hack for now
 
 		Transform tt = turretObjX.transform;
 		var e = tt.eulerAngles;
@@ -394,7 +403,8 @@ public class Weapon : MonoBehaviour {
 
 	public void AimOnYAxis() {
 		float angle = YAngleToTarget();
-		float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateY; // hack for now
+		//float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateY; // hack for now
+		float dy = angle * aimRateY; // hack for now
 
 		Transform tt = turretObjY.transform;
 		var e = tt.eulerAngles;
@@ -591,6 +601,13 @@ public class Weapon : MonoBehaviour {
 		projectile.IgnoreCollisionsWith(owner);
 		projectile.allowFriendlyFire = allowFriendlyFire;
 		projectile.target = target;
+
+		foreach (KeyValuePair<System.Type, float> kvp in damageAdjustments )
+		{
+			if (target.GameUnit().IsOfType(kvp.Key)) {
+				projectile.damage *= kvp.Value;
+			}
+		}
 
 		return projectile;
 	}

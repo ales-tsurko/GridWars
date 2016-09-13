@@ -9,6 +9,7 @@ public class Projectile : GameUnit {
 
 	public AudioClip damageClip;
 	public float damageClipVolume;
+	public float damageVarianceRatio;
 	public bool allowFriendlyFire = true;
 
 	[HideInInspector]
@@ -21,6 +22,7 @@ public class Projectile : GameUnit {
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 		isTargetable = false;
+		damage += damageVarianceRatio * (UnityEngine.Random.value*2f - 1f);
 	}
 
 	public override void ServerAndClientJoinedGame() {

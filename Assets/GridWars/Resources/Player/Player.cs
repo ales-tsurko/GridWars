@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	public float separation = 0.9f;
 	public Material unitMaterial;
 
-	public List<GameObject> ownedObjects;
+	//public List<GameObject> ownedObjects;
 
 	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
 		get {
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour {
 		unitMaterial = new Material(Resources.Load("Materials/Unit") as Material);
 		unitMaterial.color = color;
 			
-		ownedObjects = new List<GameObject>();
+		//ownedObjects = new List<GameObject>();
 
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
@@ -137,7 +137,7 @@ public class Player : MonoBehaviour {
 			return Battlefield.current.players.FindAll(p => p.playerNumber != playerNumber);
 		}
 	}
-		
+
 	public virtual List<GameObject> EnemyObjects() {
 		var enemyObjects = new List<GameObject>();
 		foreach(var enemy in enemies) {

@@ -57,10 +57,11 @@ namespace AssemblyCSharp {
 			*/
 		}
 
-		public void Start() {
+		public Timer Start() {
 			startTime = Time.time;
 			fireTime = startTime + timeout;
 			timerCenter.AddTimer(this);
+			return this;
 		}
 
 		public float RatioDone() {

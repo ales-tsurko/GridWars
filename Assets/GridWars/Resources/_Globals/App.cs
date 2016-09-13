@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using System.Linq;
 
 /*
  *  This is a singleton. Access like this:
@@ -19,6 +20,7 @@ public class App : MonoBehaviour {
 	public AssemblyCSharp.StepCache stepCache;
 	private List <GameObject> _destroyQueue;
 	public bool debug = false;
+	public List <Soundtrack> soundtracks;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -38,6 +40,7 @@ public class App : MonoBehaviour {
 		timerCenter = new AssemblyCSharp.TimerCenter();
 		stepCache = new AssemblyCSharp.StepCache();
 		_destroyQueue = new List<GameObject>();
+		soundtracks = new List<Soundtrack>();
 
 		Application.targetFrameRate = 60;
 		QualitySettings.vSyncCount = 0;
@@ -145,6 +148,17 @@ public class App : MonoBehaviour {
 		if (debug) {
 			Debug.Log(message, context);
 		}
+	}
+
+	public Soundtrack SoundtrackNamed(string trackName) {
+		var tracks = soundtracks.Where(t => t.trackName == trackName).ToList(); 
+		if (tracks.Count() > 0) {
+			return tracks[0];
+		}
+		var track = gameObject.AddComponent<Soundtrack>();
+		track.trackName = trackName;
+		soundtracks.Add(track);
+		return track;
 	}
 }
 

@@ -84,7 +84,7 @@ public class GameUnit : NetworkObject {
 
 	//FX
 
-	protected bool shouldFadeIn = false;
+	protected bool shouldFadeIn = true;
 	protected bool isPlayerPainted = true;
 
 	public float hpRatio {
@@ -231,7 +231,7 @@ public class GameUnit : NetworkObject {
 	}
 
 	public override void ClientInit() {
-		base.ServerInit();
+		base.ClientInit();
 		Destroy(GetComponent<Rigidbody>());
 
 		if (shouldDestroyColliderOnClient) {
@@ -245,6 +245,7 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
+
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
 
 		if (shouldFadeIn) {
@@ -713,7 +714,7 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	void DestroySelf() {
+	virtual public void DestroySelf() {
 		BoltNetwork.Destroy(gameObject);
 	}
 
