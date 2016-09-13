@@ -3,9 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 public class UIMenu : UIElement {
+	Image image;
 
 	public List<UIMenuItem> items = new List<UIMenuItem> ();
 	public float spacing;
+
+	public Color backgroundColor {
+		get {
+			return image.color;
+		}
+
+		set {
+			image.color = value;
+		}
+	}
+
+	public void Init() {
+		image = gameObject.AddComponent<Image>();
+		image.color = Color.black;
+
+		RectTransform t = GetComponent<RectTransform>();
+		t.anchorMin = new Vector2(0, 0);
+		t.anchorMax = new Vector2(1, 1);
+		t.offsetMin = new Vector2(0, 0);
+		t.offsetMax = new Vector2(0, 0);
+	}
 
 	public void AddItem (UIMenuItem _item){
 		RectTransform _t = GetComponent<RectTransform> ();

@@ -51,6 +51,8 @@ public static class UI {
 
 	public static UIMenu Menu (string title = "", string skin = "Default"){
 		UIMenu _menu = new GameObject ().AddComponent<UIMenu> ();
+		_menu.gameObject.name = "Menu";
+		_menu.Init();
 		AssignToCanvas (_menu.gameObject);
 		//add graphic options here re skins
 		_menu.SetText(title);
@@ -73,15 +75,7 @@ public static class UI {
 		indicator.name = "ActivityIndicator";
 		return indicator;
 	}
-
-    public static UIBackground Background (Color _color){
-        GameObject go = new GameObject();
-        UIBackground bg = go.AddComponent<UIBackground>();
-        AssignToCanvas(go);
-        bg.Init(_color);
-        return bg;
-    }
-
+		
 	public static Font GetFont (UIFont _font) {
 		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
@@ -108,6 +102,7 @@ public static class UI {
 				return canvas;
 			}
 		}
+
 		go.name = CANVAS;
 		return go.GetComponent<Canvas> ();
 	}
