@@ -53,6 +53,8 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	// NetworkedGameUnit
+
 	public override void ClientInit() {
 		shouldDestroyColliderOnClient = false;
 		base.ClientInit();
@@ -113,12 +115,13 @@ public class Tower : GroundBuilding {
         if (!player.isLocal) {
            // continue;
         }
-        var button = (GameObject)Instantiate(Resources.Load<GameObject>("UI/KeyboardButton"));
-        button.transform.SetParent (KeyboardCanvas.instance.transform);
-        button.transform.position = transform.position + (transform.forward * 6) + new Vector3 (0, .05f, 0);
-        button.transform.localRotation = Quaternion.Euler (new Vector3 (90, -90, 0));
-        button.transform.localScale = Vector3.one * .35f;
-        button.transform.GetComponentInChildren<Text> ().text = attemptQueueUnitKeyCode.ToString ().FormatForKeyboard();
+
+		keyIcon = (GameObject)Instantiate(Resources.Load<GameObject>("UI/KeyboardButton"));
+        keyIcon.transform.SetParent (KeyboardCanvas.instance.transform);
+        keyIcon.transform.position = transform.position + (transform.forward * 6) + new Vector3 (0, .05f, 0);
+        keyIcon.transform.localRotation = Quaternion.Euler (new Vector3 (90, -90, 0));
+        keyIcon.transform.localScale = Vector3.one * .35f;
+        keyIcon.transform.GetComponentInChildren<Text> ().text = attemptQueueUnitKeyCode.ToString ().FormatForKeyboard();
 
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
@@ -137,14 +140,46 @@ public class Tower : GroundBuilding {
 
 		if (canQueueUnit) {
 			//Paint();
-			ShowIconUnit();
+			ShowHud();
+			keyIcon.SetActive(true);
 
 		}
 		else {
 			//PaintAsDisabled();
-			HideIconUnit();
+			HideHud();
+			keyIcon.SetActive(false);
 		}
 	}
+
+	// HUD
+
+	GameObject iconObject;
+	bool hudIsHidden = false;
+
+	GameObject keyIcon;
+
+
+	public void ShowHud() {
+		if (hudIsHidden) {
+			keyIcon.SetActive(true);
+			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+				renderer.enabled = true;
+			}
+			hudIsHidden = false;
+		}
+
+	}
+
+	public void HideHud() {
+		if (!hudIsHidden) {
+			keyIcon.SetActive(false);
+			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+				renderer.enabled = false;
+			}
+			hudIsHidden = true;
+		}
+	}
+
 
 	public override void Think() {
 		// doesn't need to pick targets
@@ -160,7 +195,6 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	GameObject iconObject;
 	float lastProductionTime = 0f;
 	//int releaseLocationIndex = 0;
 	int queueSize = 0;
@@ -187,26 +221,6 @@ public class Tower : GroundBuilding {
 	GameUnit gameUnit {
 		get {
 			return unitPrefab.GetComponent<GameUnit>();
-		}
-	}
-
-	bool iconIsHidden = false;
-
-	public void ShowIconUnit() {
-		if (iconIsHidden) {
-			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-				renderer.enabled = true;
-			}
-			iconIsHidden = false;
-		}
-	}
-
-	public void HideIconUnit() {
-		if (!iconIsHidden) {
-			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-				renderer.enabled = false;
-			}
-			iconIsHidden = true;
 		}
 	}
 
