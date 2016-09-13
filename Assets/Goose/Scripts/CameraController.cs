@@ -31,16 +31,13 @@ public class CameraController : MonoBehaviour {
 	MouseLook mouseLook;
 	bool actionMode;
 	bool initComplete = false;
-	Color gameColor;
 	void Start () {
-		gameColor = cam.GetComponent<Camera> ().backgroundColor;
-		cam.GetComponent<Camera> ().backgroundColor = Color.black;
 		initComplete = false;
 		foreach (Transform pos in positions) {
 			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
 		}
 		mouseLook = cam.GetComponent<MouseLook> ();
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
 		InitCamera ();
 	}
 	public void InitCamera () {
@@ -61,7 +58,6 @@ public class CameraController : MonoBehaviour {
 				closest = tower;
 			}
 		}
-		cam.GetComponent<Camera> ().backgroundColor = gameColor;
 		InitCamera (closest.transform);
 	}
 	public void InitCamera (Transform _base){

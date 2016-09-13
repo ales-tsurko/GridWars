@@ -73,6 +73,15 @@ public static class UI {
 		indicator.name = "ActivityIndicator";
 		return indicator;
 	}
+
+    public static UIBackground Background (Color _color){
+        GameObject go = new GameObject();
+        UIBackground bg = go.AddComponent<UIBackground>();
+        AssignToCanvas(go);
+        bg.Init(_color);
+        return bg;
+    }
+
 	public static Font GetFont (UIFont _font) {
 		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());

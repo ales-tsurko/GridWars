@@ -18,6 +18,8 @@ namespace AssemblyCSharp {
 	public class TimerCenter {
 		List <Timer> timers;
 
+		public bool isPaused;
+
 		public TimerCenter() {
 			timers = new List<Timer>();
 		}
@@ -43,6 +45,10 @@ namespace AssemblyCSharp {
 		}
 
 		public void Step() {
+			if (isPaused) {
+				return;
+			}
+
 			while (timers.Count > 0) {
 				Timer timer = timers[0];
 				if (timer.IsReady()) {
@@ -68,6 +74,12 @@ namespace AssemblyCSharp {
 
 		public void RemoveTimer(Timer timer) {
 			timers.Remove(timer);
+		}
+
+		public void CancelAllTimers() {
+			foreach (var timer in new List<Timer>(timers)) {
+				timer.Cancel();
+			}
 		}
 
 		// untested version of AddTimer which 

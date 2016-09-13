@@ -123,6 +123,7 @@ public class Network : Bolt.GlobalEventListener {
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
+        menu.AddItem(UI.Background(Color.black));
 
 		menu.Show();
 	}
@@ -146,7 +147,7 @@ public class Network : Bolt.GlobalEventListener {
 		menu.Hide();
 
 		menu.Reset();
-		menu.AddItem(UI.ActivityIndicator("Finding a game\n"));
+		menu.AddItem(UI.ActivityIndicator("Finding a game"));
 		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
 		menu.Show();
 
@@ -276,8 +277,19 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public void LeaveGame(bool restartBolt = true) {
+        if (didLeaveGame) {
+            return;
+        }
+        menu.Hide();
+        UIMenu endGameMenu = UI.Menu();
+        endGameMenu.AddItem(UI.ActivityIndicator("Returning to Main Menu"));
+        endGameMenu.AddItem(UI.Background(Color.black));
+        endGameMenu.Show();
+		//indicator.SetText("Returning to Main Menu");
+		//indicator.Show();
+
 		didLeaveGame = true;
-		Battlefield.current.Pause();
+		Battlefield.current.Reset();
 		if (restartBolt) {
 			RestartBolt();
 		}
