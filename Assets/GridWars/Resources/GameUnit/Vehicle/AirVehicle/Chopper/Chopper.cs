@@ -33,6 +33,17 @@ public class Chopper : AirVehicle {
 
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
+
+		//Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.5f);
+	}
+
+	public Weapon Minigun() {
+		foreach (Weapon w in Weapons()) {
+			if (w.name == "Minigun") {
+				return w;
+			}
+		}
+		return null;
 	}
 
 	public float UpDesire() { // 0.0 to 1.0
