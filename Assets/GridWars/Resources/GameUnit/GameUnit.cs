@@ -680,7 +680,7 @@ public class GameUnit : NetworkObject {
 
 		hitPoints -= damage;
 		if (smokeDamage != null) {
-			float max = 100f;
+			float max = 50f;
 			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
 		}
 		if (hitPoints <= 0) {

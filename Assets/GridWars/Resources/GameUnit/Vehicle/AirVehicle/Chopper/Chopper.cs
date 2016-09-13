@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Chopper : AirVehicle {
-	public float cruiseHeight = 12f;
+	public float cruiseHeight;
 	public float thrustHeight = 2f;
 
 	public GameObject mainRotor;
@@ -28,7 +28,7 @@ public class Chopper : AirVehicle {
 		base.ServerJoinedGame();
 		isRunning = true;
 
-		cruiseHeight = 10f + Random.Range(-1.0f, 1.0f);
+		cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
 
