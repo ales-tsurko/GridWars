@@ -62,11 +62,28 @@ public class Battlefield : MonoBehaviour {
 		return results;
 	}
 
-	public void Pause() {
-		List <GameObject> objs = activeGameObjects();
+	public void Reset() {
+		
+		App.shared.timerCenter.isPaused = true;
+
+		var preservedGameObjectNames = new List<string>(new string[]{
+			"Main Camera",
+			"Canvas",
+			"Directional Light",
+			"Battlefield",
+			"CameraPositions",
+			"KeyboardUICanvas",
+			"EventSystem",
+			"Network",
+			"App",
+			"BoltControl",
+			"BoltBehaviours"
+		});
+
+		var objs = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
 
 		foreach (GameObject obj in objs) {
-			if (!new List<string>(new string[]{ "Network", "BoltControl", "BoltBehaviours" }).Contains(obj.name)) {
+			if (!preservedGameObjectNames.Contains(obj.name)) {
 				Destroy(obj);
 			}
 		}

@@ -713,7 +713,7 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	void DestroySelf() {
+	public void DestroySelf() {
 		BoltNetwork.Destroy(gameObject);
 	}
 
