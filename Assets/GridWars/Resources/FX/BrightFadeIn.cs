@@ -38,14 +38,14 @@ public class BrightFadeIn : MonoBehaviour {
 
 		*/
 		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
-		gameObject.Paint(color);
+		gameObject.Paint(color, "Unit");
 	}
 
 	void OnDestroy() {
 		if (timer != null) { //in case start is never called.
 			timer.Cancel();
 		}
-		gameObject.Paint(realColor);
+		gameObject.Paint(realColor, "Unit");
 	}
 
 	float EaseInOutSine(float time, float startValue, float changeInValue, float duration) {
