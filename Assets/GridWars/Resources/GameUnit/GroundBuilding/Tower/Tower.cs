@@ -137,7 +137,7 @@ public class Tower : GroundBuilding {
 		if (canQueueUnit) {
 			//Paint();
 			ShowHud();
-			keyIcon.SetActive(true);
+			keyIcon.SetActive((attemptQueueUnitKeyCode != KeyCode.None) && true);
 
 		}
 		else {
