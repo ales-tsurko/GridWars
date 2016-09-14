@@ -11,16 +11,20 @@ public class UIButton : UIMenuItem {
 	
     public Text textComponent;
 
+	string _text;
     public string text {
         get {
-            return textComponent.text;
+			return _text;
         }
 
         set {
-            textComponent.text = value;
+			_text = value;
+			textComponent.text = value.ToUpper();
             SizeToFit();
         }
     }
+
+	public Vector2 innerMargins = new Vector2(1, 1); //ratio of font height
 
     Button buttonComponent {
         get {
@@ -58,19 +62,28 @@ public class UIButton : UIMenuItem {
     public void Update () {
        
     }
-    IEnumerator SizeButtonToFit () {
-        yield return new WaitForEndOfFrame();
-        rectTransform.sizeDelta = new Vector2(textComponent.rectTransform.sizeDelta.x + 10f, rectTransform.sizeDelta.y);
 
-    }
     public void SizeToFit() {
-        StartCoroutine(SizeButtonToFit());
-      //  rectTransform.sizeDelta = new Vector2(textComponent.rectTransform.sizeDelta.x + 10f, rectTransform.sizeDelta.y);
+		//textComponent.
+		//var settings = textComponent.GetGenerationSettings(new Vector2(float.MaxValue, float.MaxValue));
+		//var settings = textComponent.GetGenerationSettings(new Vector2(1920f, 1080f));
+		//var settings = textComponent.GetGenerationSettings(textComponent.rect);
+		//var w = textComponent.cachedTextGenerator.GetPreferredWidth(textComponent.text, settings);
+		//var h = textComponent.cachedTextGenerator.GetPreferredHeight(textComponent.text, settings);
+		var w = textComponent.preferredWidth;
+		var h = textComponent.fontSize;
+
+		rectTransform.sizeDelta = new Vector2(
+			w + h*innerMargins.x*2,
+			h + h*innerMargins.y*2
+		);
     }
+
     public void SetMenuSize (Vector2 size){
         menuSize = size;
         rectTransform.sizeDelta = menuSize;
     }
+
     public void SetFillColor (Color _color, ButtonColorType type = ButtonColorType.Normal){
         ColorBlock c = GetComponent<Button>().colors;
         switch (type) {

@@ -46,7 +46,6 @@ public class UIMenu : UIElement {
 	}
 
 	public void AddItem (UIMenuItem _item){
-		RectTransform _t = GetComponent<RectTransform> ();
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
 		items.Add (_item);
@@ -55,28 +54,30 @@ public class UIMenu : UIElement {
 	}
 
     public void OrderMenu (MenuOrientation orientation = MenuOrientation.Vertical, float _spacing = 0){
-        StartCoroutine(OrderMenuDelayed(orientation, _spacing));  
-    }
-    IEnumerator OrderMenuDelayed (MenuOrientation orientation = MenuOrientation.Vertical, float _spacing = 0){ 
-        yield return new WaitForEndOfFrame();
-        bool isVertical = orientation == MenuOrientation.Vertical;
-        Vector2 itemSize = GetMaxSizeDelta(orientation);
-        print(itemSize.x+ "  "+ itemSize.y);
-        panel.sizeDelta = new Vector2(itemSize.x * 1.2f * (isVertical ? 1 : items.Count), itemSize.y * 1.2f * (!isVertical ? 1 : items.Count));
-        if (_spacing <= 0) {
-            _spacing = isVertical ? itemSize.y * .2f : itemSize.x * .2f;
-        }
-        spacing = _spacing;
-        for (int i = 0; i < items.Count; i++) {
-            var _rect = items[i].GetComponent<RectTransform>();
-            _rect.anchorMin = new Vector2(.5f, (isVertical ? .5f : .5f));//in case we need to change this for horiz
-            _rect.anchorMax = new Vector2(.5f, (isVertical ? .5f : .5f));
+		bool isVertical = orientation == MenuOrientation.Vertical;
+		Vector2 itemSize = GetMaxSizeDelta(orientation);
 
-            items[i].GetComponent<UIButton>().SetMenuSize(itemSize);
-            items[i].GetComponent<RectTransform>().localPosition = new Vector2((isVertical ? 0 : (-((_panel.sizeDelta.x - itemSize.x) * .5f) + (i * (spacing + itemSize.x)))), (!isVertical ? 0 : (((_panel.sizeDelta.y - itemSize.y) * .5f) - (i * (spacing + itemSize.y)))));//-(i * (itemSize.y + spacing))
-        }
-        this.SetAnchor(currentAnchor);
-	}
+		panel.sizeDelta = new Vector2(itemSize.x * 1.2f * (isVertical ? 1 : items.Count), itemSize.y * 1.2f * (!isVertical ? 1 : items.Count));
+		if (_spacing <= 0) {
+			_spacing = isVertical ? itemSize.y * .2f : itemSize.x * .2f;
+		}
+		spacing = _spacing;
+		for (var i = 0; i < items.Count; i ++) {
+			var item = items[i];
+
+			var _rect = item.GetComponent<RectTransform>();
+			_rect.anchorMin = new Vector2(.5f, (isVertical ? .5f : .5f));//in case we need to change this for horiz
+			_rect.anchorMax = new Vector2(.5f, (isVertical ? .5f : .5f));
+
+			var button = item.GetComponent<UIButton>();
+			if (button != null) {
+				button.SetMenuSize(itemSize);
+			}
+			item.GetComponent<RectTransform>().localPosition = new Vector2((isVertical ? 0 : (-((_panel.sizeDelta.x - itemSize.x) * .5f) + (i * (spacing + itemSize.x)))), (!isVertical ? 0 : (((_panel.sizeDelta.y - itemSize.y) * .5f) - (i * (spacing + itemSize.y)))));//-(i * (itemSize.y + spacing))
+		}
+
+		this.SetAnchor(currentAnchor);
+    }
 
     Vector2 GetMaxSizeDelta (MenuOrientation orientation) {
         bool isVertical = orientation == MenuOrientation.Vertical;
