@@ -89,7 +89,7 @@ public class UIMenu : UIElement {
                 vec = i.GetComponent<RectTransform>().sizeDelta;
             }
         }
-        return vec;
+        return vec * 1.01f;
     }
 
 	public void Reset () {
