@@ -103,6 +103,21 @@ public class UIMenu : UIElement {
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
     }
+    public void SetButtonFillColors(Color _color, ButtonColorType type = ButtonColorType.Normal){
+        foreach (UIButton b in items) {
+            b.SetFillColor(_color, type);
+        }
+    }
+    public void SetButtonBorderColors(Color _color){
+        foreach (UIButton b in items) {
+            b.SetBorderColor(_color);
+        }
+    }
+    public void SetButtonTextColors (Color _color){
+        foreach (UIButton b in items) {
+            b.SetTextColor(_color);
+        }
+    }
 
 }
 
