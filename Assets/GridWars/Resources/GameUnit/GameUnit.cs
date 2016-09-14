@@ -266,10 +266,6 @@ public class GameUnit : NetworkObject {
 		base.ServerAndClientInit();
 
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
-
-		if (shouldFadeIn) {
-			gameObject.AddComponent<BrightFadeIn>();
-		}
 	}
 
 	public override void ServerJoinedGame() {
@@ -318,6 +314,10 @@ public class GameUnit : NetworkObject {
 		}
 
 		PlayBirthSound();
+
+		if (shouldFadeIn) {
+			gameObject.AddComponent<BrightFadeIn>();
+		}
 	}
 
 	public override void ServerFixedUpdate(){
