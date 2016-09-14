@@ -33,6 +33,8 @@ public class UIButton : UIMenuItem {
             return GetComponent<RectTransform>();
         }
     }
+    [HideInInspector]
+    public Vector2 menuSize = Vector2.zero;
 
     void Awake () {
 		if (GetComponentInChildren<Text> () == null) {
@@ -65,7 +67,10 @@ public class UIButton : UIMenuItem {
         StartCoroutine(SizeButtonToFit());
       //  rectTransform.sizeDelta = new Vector2(textComponent.rectTransform.sizeDelta.x + 10f, rectTransform.sizeDelta.y);
     }
-
+    public void SetMenuSize (Vector2 size){
+        menuSize = size;
+        rectTransform.sizeDelta = menuSize;
+    }
     public void SetFillColor (Color _color, ButtonColorType type = ButtonColorType.Normal){
         ColorBlock c = GetComponent<Button>().colors;
         switch (type) {
