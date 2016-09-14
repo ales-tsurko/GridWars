@@ -22,6 +22,7 @@ public class App : MonoBehaviour {
 	private List <GameObject> _destroyQueue;
 	public bool debug = false;
 	public List <Soundtrack> soundtracks;
+	public Prefs prefs;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -39,6 +40,8 @@ public class App : MonoBehaviour {
 	// --- Game Loop -------------------
 
 	public void Start() {
+		prefs = new Prefs();
+
 		timerCenter = new AssemblyCSharp.TimerCenter();
 		stepCache = new AssemblyCSharp.StepCache();
 		_destroyQueue = new List<GameObject>();
