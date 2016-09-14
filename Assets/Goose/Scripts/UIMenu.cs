@@ -70,7 +70,7 @@ public class UIMenu : UIElement {
             var _rect = items[i].GetComponent<RectTransform>();
             _rect.anchorMin = new Vector2(.5f, (isVertical ? .5f : .5f));//in case we need to change this for horiz
             _rect.anchorMax = new Vector2(.5f, (isVertical ? .5f : .5f));
-            if (items[i] == null) {
+            if (items[i] == null || items[i].GetComponent<UIButton>() == null) {
                 continue;
             }
             items[i].GetComponent<UIButton>().SetMenuSize(itemSize);

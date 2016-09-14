@@ -69,8 +69,8 @@ public class CameraController : MonoBehaviour {
 			cam.position = originalPositions [i].position;
 			cam.rotation = originalPositions [i].rotation;
 			float mod = 0;
-			#if !UNITY_EDITOR
-            thisScreenRes = lastScreenRes = GetMainGameViewSize();
+			#if UNITY_EDITOR
+                thisScreenRes = lastScreenRes = GetMainGameViewSize();
 			#endif
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
@@ -125,7 +125,9 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
-
+        if (cam == null) {
+            return;
+        }
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
@@ -156,7 +158,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	public void NextPosition () {
-		print ("Next Called");
+		//print ("Next Called");
 		actionMode = mouseLook.enabled = false;
 		cam.parent = null;
 		pos++;
@@ -173,7 +175,13 @@ public class CameraController : MonoBehaviour {
 	}
 
 	public void ResetCamera () {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 		NextPosition ();
 	}
+    void OnDestroy (){
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 
 }
