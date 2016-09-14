@@ -121,13 +121,13 @@ public class Network : Bolt.GlobalEventListener {
 
 	void ShowMainMenu(UIMenuItem item = null) {
 		ResetMenu();
-
+        menu.SetAnchor(MenuAnchor.MiddleCenter);
 		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
-
+       
 		menu.Show();
 	}
 

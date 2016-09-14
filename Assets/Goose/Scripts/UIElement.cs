@@ -48,7 +48,7 @@ public class UIElement : MonoBehaviour {
 		SetImageAspect (preserveAspect);
 	}
 
-	public void Show () {
+	public virtual void Show () {
 		gameObject.SetActive (true);
 	}
 
