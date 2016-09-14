@@ -115,9 +115,6 @@ public class CameraController : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.C)) {
 			NextPosition ();
 		}
-		if (Input.GetKeyDown (KeyCode.V)) {
-			InitCamera ();
-		}
 		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
 			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
