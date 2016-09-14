@@ -12,6 +12,22 @@ public class Prefs {
 		}
 	}
 
+	public SerializedTransform cameraPosition {
+		get {
+			var json = PlayerPrefs.GetString("cameraPosition");
+			if (json == null) {
+				return null;
+			}
+			else {
+				return JsonUtility.FromJson<SerializedTransform>(json);
+			}
+		}
+
+		set {
+			PlayerPrefs.SetString("cameraPosition", JsonUtility.ToJson(value));
+		}
+	}
+
 	public Prefs() {
 		keyIconsVisible = true; //TODO: the UI should control this.
 	}
