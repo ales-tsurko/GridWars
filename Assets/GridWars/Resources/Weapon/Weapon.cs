@@ -486,12 +486,12 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
-	public float targetDistance() {
+	public float TargetDistance() {
 		return Vector3.Distance(owner.transform.position, TargetLeadPosition());
 	}
 	
 	public bool TargetInRange() {
-		return (range == -1) || (targetDistance() < range);
+		return (range == -1) || (TargetDistance() < range);
 	}
 
 	public bool IsAimed() {

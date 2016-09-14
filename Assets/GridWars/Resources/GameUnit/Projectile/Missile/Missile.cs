@@ -45,9 +45,7 @@ public class Missile : Projectile {
 			// simple thrust
 			rigidBody().AddForce(transform.forward * thrust);
 		}
-
-//		rigidBody().AddForce(transform.forward * thrust*2f);
-
+			
 	}
 
 	Vector3 TargetVelocity() {
