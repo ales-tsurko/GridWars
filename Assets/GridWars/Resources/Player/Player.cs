@@ -108,7 +108,6 @@ public class Player : MonoBehaviour {
 		return playerNumber == otherPlayer.playerNumber;
 	}
 
-
 	public virtual bool IsEnemyOf(Player otherPlayer) {
 		if (otherPlayer == null) {
 			return false;
@@ -116,7 +115,7 @@ public class Player : MonoBehaviour {
 		return playerNumber != otherPlayer.playerNumber;
 	}
 
-	public List<Player> enemies {
+	public List<Player> enemyPlayers {
 		get {
 			return Battlefield.current.players.FindAll(p => p.playerNumber != playerNumber);
 		}
@@ -124,12 +123,22 @@ public class Player : MonoBehaviour {
 
 	public virtual List<GameObject> EnemyObjects() {
 		var enemyObjects = new List<GameObject>();
-		foreach(var enemy in enemies) {
-			foreach (var unit in enemy.units) {
+		foreach(var enemyPlayer in enemyPlayers) {
+			foreach (var unit in enemyPlayer.units) {
 				enemyObjects.Add(unit.gameObject);
 			}
 		}
 		return enemyObjects;
+	}
+
+	public List <GameUnit> UnitsTargetingObj(GameObject targetObj) {
+		var unitsTargeting = new List<GameUnit>();
+		foreach(var unit in units) {
+			if (unit.target == targetObj) {
+				unitsTargeting.Add(unit);
+			}
+		}
+		return unitsTargeting;
 	}
 		
 	// --- Networking ---------------------------------------

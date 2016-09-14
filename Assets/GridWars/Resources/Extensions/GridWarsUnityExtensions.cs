@@ -8,6 +8,14 @@ public static class GridWarsUnityExtensions {
 		return self.GetComponent<GameUnit>();
 	}
 
+	// List
+
+	public static T PickRandom<T>(this IList<T> list)
+	{
+		int i = (int)Mathf.Floor(list.Count * UnityEngine.Random.value);
+		return list[i];
+	}
+
 	// Rendering
 
 	public static void EachRenderer(this GameObject self, Action<MeshRenderer> f) {

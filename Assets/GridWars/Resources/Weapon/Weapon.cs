@@ -244,6 +244,15 @@ public class Weapon : MonoBehaviour {
 	}
 	*/
 
+	public virtual GameObject NewTargetPick() { // unused
+		List <GameObject> targets = TargetableEnemyObjsWithWeapons().ToList<GameObject>();
+		var bestTarget = ClosestOfObjects(targets);
+		if (owner.GameUnit().player.UnitsTargetingObj(bestTarget).Count > 3) {
+			// what if the target has a lot of HP? maybe they should all target it
+			bestTarget = targets.PickRandom();
+		}
+		return bestTarget;
+	}
 
 	public virtual IEnumerable<GameObject> TargetableEnemyObjects() { 
 		var ownerUnit = owner.GameUnit();
@@ -255,16 +264,16 @@ public class Weapon : MonoBehaviour {
 		return ClosestOfObjects(TargetableEnemyObjects());
 	}
 
-	public virtual IEnumerable <GameObject> TargetableEnemyObjectWithWeapons() {
+	public virtual IEnumerable <GameObject> TargetableEnemyObjsWithWeapons() {
 		return TargetableEnemyObjects().Where(obj => obj.GameUnit() != null && obj.GameUnit().HasWeapons());
 	}
 
 
 	public virtual GameObject ClosestTargetableEnemyObjectWithWeapon() {
-		return ClosestOfObjects(TargetableEnemyObjectWithWeapons());
+		return ClosestOfObjects(TargetableEnemyObjsWithWeapons());
 	}
 
-	public virtual GameObject ClosestTargetableEnemyVehicles() {
+	public virtual GameObject ClosestTargetableEnemyVehicle() {
 		return ClosestOfObjects(App.shared.stepCache.AllVehicleObjects());
 	}
 

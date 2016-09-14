@@ -31,16 +31,20 @@ public class Vehicle : GameUnit  {
 
 
 	virtual public float AvailableThrust() {
-		//if (ForwardSpeed() < maxSpeed) {
-			/*
+		/*
+		if (ForwardSpeed() < maxSpeed) {
 			float r = damageThrustAdjustment;
 			float entropy = (1 - UnityEngine.Random.value * 0.1f);
 			return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
-			*/
 			return thrust;
-	//	}
+		}
 
-		//return 0f;
+		return 0f;
+		*/
+
+		float r = damageThrustAdjustment;
+		float entropy = (1 - UnityEngine.Random.value * 0.1f);
+		return thrust * ((1.0f - r) + (hpRatio * r)) * entropy;
 	}
 
 
@@ -100,7 +104,7 @@ public class Vehicle : GameUnit  {
 		// - not us
 
 		List <GameObject> vehicles = new List<GameObject>(App.shared.stepCache.AllVehicleObjects());
-		vehicles.AddRange(App.shared.stepCache.AllWreckageObjects());
+		//vehicles.AddRange(App.shared.stepCache.AllWreckageObjects()); // wreckage no longer has collisions with units
 		vehicles.Remove(gameObject);
 
 		nearestObsticle = ClosestOfObjects(vehicles);
