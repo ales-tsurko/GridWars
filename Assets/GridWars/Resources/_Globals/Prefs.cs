@@ -27,6 +27,16 @@ public class Prefs {
 			PlayerPrefs.SetString("cameraPosition", JsonUtility.ToJson(value));
 		}
 	}
+   
+    public int camPosition {
+        get {
+            return PlayerPrefs.GetInt("camPosition", 0);
+        }
+
+        set {
+            PlayerPrefs.SetInt("camPosition", value);
+        }
+    }
 
 	public Prefs() {
 		keyIconsVisible = true; //TODO: the UI should control this.

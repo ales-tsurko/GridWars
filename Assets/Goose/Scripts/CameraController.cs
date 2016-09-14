@@ -18,8 +18,8 @@ public class CameraController : MonoBehaviour {
 		public Quaternion rotation;
 	}
 	public List<OriginalPosition> originalPositions = new List<OriginalPosition>();
-
-	int pos;
+    [HideInInspector]
+	public int pos;
 	public bool moving;
 	public float moveSpeed;
 	Vector3 startPos;
@@ -45,7 +45,7 @@ public class CameraController : MonoBehaviour {
 	}
 	IEnumerator WaitForTowers () {
 		Tower[] towers = FindObjectsOfType<Tower> ();
-		while (towers.Length == 0) {
+        while (towers.Length == 0 || App.shared == null) {
 			towers = FindObjectsOfType<Tower> ();
 			yield return null;
 		}
@@ -70,7 +70,7 @@ public class CameraController : MonoBehaviour {
 			cam.rotation = originalPositions [i].rotation;
 			float mod = 0;
 			#if !UNITY_EDITOR
-				mod = i == 0 ? 0f : 0;
+            thisScreenRes = lastScreenRes = GetMainGameViewSize();
 			#endif
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
@@ -82,14 +82,15 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
+
 		cam.position = positions [0].position;
 		cam.rotation = positions [0].rotation;
-		pos = -1;
+        pos = App.shared.prefs.camPosition - 1;
 		NextPosition ();
 		initComplete = true;
 	}
-
-	Vector2 lastScreenRes;
+    [HideInInspector]
+    Vector2 lastScreenRes, thisScreenRes;
 	public static Vector2 GetMainGameViewSize()
 	{
 		System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
@@ -104,10 +105,10 @@ public class CameraController : MonoBehaviour {
 		}
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
-			Vector2 thisScreenRes = GetMainGameViewSize();
+			thisScreenRes = GetMainGameViewSize();
 			if (thisScreenRes != lastScreenRes){
 				lastScreenRes = thisScreenRes;
-				InitCamera();
+				//InitCamera();
 				return;
 			}
 		}
@@ -155,7 +156,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	public void NextPosition () {
-		//print ("Next Called");
+		print ("Next Called");
 		actionMode = mouseLook.enabled = false;
 		cam.parent = null;
 		pos++;
@@ -167,7 +168,8 @@ public class CameraController : MonoBehaviour {
 		//print (Time.timeScale);
 		startTime = Time.time;
 		moving = true;
-
+        App.shared.prefs.camPosition = pos;
+       
 	}
 
 	public void ResetCamera () {
