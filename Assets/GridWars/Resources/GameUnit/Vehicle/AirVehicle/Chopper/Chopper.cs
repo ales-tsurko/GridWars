@@ -31,16 +31,21 @@ public class Chopper : AirVehicle {
 		cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
 
 		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
-
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
 
-		//Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.5f);
+		AddStartingBoost();
+
+		Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.75f);
+	}
+
+	private void AddStartingBoost() {
 		//rigidBody().velocity = new Vector3(0, 4f, 0f);
 		_t.position = new Vector3(_t.position.x, _t.position.y*2, _t.position.z);
+		//_t.position = new Vector3(_t.position.x, cruiseHeight*0.7f, _t.position.z);
 
 		Vector3 e = _t.eulerAngles;
-		e.x = 20f;
+		e.x = 15f;
 		_t.eulerAngles = e; //new Vector3(e.x, e.y, e.z);
 	}
 
@@ -53,8 +58,23 @@ public class Chopper : AirVehicle {
 		return null;
 	}
 
+	public float TargetXZDistance() {
+		Vector3 p1 = transform.position;
+		p1.y = 0f;
+
+		Vector3 p2 = target.transform.position;
+		p2.y = 0f;
+
+		return Vector3.Distance(p1, p2);
+	}
+
 	public float UpDesire() { // 0.0 to 1.0
-		float diff = cruiseHeight - y ();
+		float ch = cruiseHeight;
+		if (target == null) {
+			ch = 0f;
+		}
+
+		float diff = ch - y ();
 		return Mathf.Clamp(SmoothValue(diff)/2, 0f, 1f);
 	}
 
@@ -67,7 +87,7 @@ public class Chopper : AirVehicle {
 			// don't tilt forward until we're roughly facing the target
 			float angleDiff = Mathf.Abs(YAngleToTarget());
 			if (angleDiff < 30) {
-				float diff = targetDistance() - standOffDistance;
+				float diff = TargetDistance() - standOffDistance;
 				return Mathf.Clamp(diff, 0f, 1f);
 			}
 		}
@@ -134,7 +154,7 @@ public class Chopper : AirVehicle {
 		float speed = ForwardSpeed();
 		float desiredSpeed = ForwardDesire() * 4f;
 		float speedDiff = desiredSpeed - speed;
-		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust); //*1.1f;
+		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust) * 1f;
 
 		Vector3 frontForce = rotorUp * ((upThrust + f) / 2);
 		Vector3 backForce  = rotorUp * ((upThrust - f) / 2);
@@ -163,11 +183,15 @@ public class Chopper : AirVehicle {
 			ApplyRotorThrust();
 		}
 
-		if (rigidBody().velocity.magnitude > 14f) {
-			Die();
-		}
+		DieIfOverAccelerated();
 
 		RemoveIfOutOfBounds();
+	}
+
+	private void DieIfOverAccelerated() {
+		if (rigidBody().velocity.magnitude > 20f) {
+			Die();
+		}
 	}
 
 	public override void ServerAndClientFixedUpdate () {

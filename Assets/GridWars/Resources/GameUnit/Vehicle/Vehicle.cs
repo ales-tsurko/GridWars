@@ -168,6 +168,10 @@ public class Vehicle : GameUnit  {
 	public float SmoothValue(float v) {
 		return Mathf.Sign(v) * Mathf.Sqrt(Mathf.Abs(v));
 	}
+
+	public float SharpenValue(float v) {
+		return Mathf.Sign(v) * v * v;
+	}
 		
 	public Vector3 LocalVelocity() {
 		return transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity);

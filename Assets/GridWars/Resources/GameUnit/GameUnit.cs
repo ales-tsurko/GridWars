@@ -436,7 +436,7 @@ public class GameUnit : NetworkObject {
 			return true;
 		}
 
-		return target && (targetDistance() < standOffDistance);
+		return target && (TargetDistance() < standOffDistance);
 	}
 		
 	public virtual List<GameObject> activeGameObjects() {
@@ -639,7 +639,7 @@ public class GameUnit : NetworkObject {
 		return angle;
 	}
 
-	public float targetDistance() {
+	public float TargetDistance() {
 		return Vector3.Distance(transform.position, target.transform.position);
 	}
 
