@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public static class UI {
 
 	const string DIR = "UI/";
-	const string BUTTON = DIR + "Button";
+	const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
 	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
@@ -38,16 +38,27 @@ public static class UI {
 		button.SetText(title, allcaps);
 		return button;
 	}
+    static UIButton ButtonPrefab(string title, System.Action<UIMenuItem> action){
+        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(BUTTONPREFAB));
+        AssignToCanvas(go);
+        UIButton _button = go.GetComponent<UIButton>();
+        _button.text = title;
+        //_button.SizeToFit();
+        _button.SetAction(action);
+        return _button;
+    }
 
-	public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonTextOnly, string skin = "Default", bool animated = true, bool allCaps = true){
-		switch (type) {
-		case MenuItemType.ButtonRound:
-		case MenuItemType.ButtonSquare:
-		case MenuItemType.ButtonTextOnly:
-			return Button (title, action, type, skin, animated, allCaps);
-		}
+    public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
+        switch (type) {
+            case MenuItemType.ButtonRound:
+            case MenuItemType.ButtonSquare:
+            case MenuItemType.ButtonTextOnly:
+                return Button(title, action, type, skin, animated, allCaps);
+            case MenuItemType.ButtonPrefab:
+                return ButtonPrefab(title, action);   
+        }
 		return null;
-	}
+    }
 
 	public static UIMenu Menu (string title = "", string skin = "Default"){
 		UIMenu _menu = new GameObject ().AddComponent<UIMenu> ();
@@ -132,6 +143,6 @@ public static class UI {
 	}
 }
 
-public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly}
+public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly, ButtonPrefab}
 public enum UIFont {None, Army, EuroStile, LGS}
 public class UIMenuItem : UIElement {}
