@@ -110,8 +110,8 @@ public class Tower : GroundBuilding {
 
 		player.Paint(gameObject);
 		//player.Paint(iconObject);
-
-		Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
+        attemptQueueUnitKeyCode = (iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber).GetKey();
+		//Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
 
         keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
 

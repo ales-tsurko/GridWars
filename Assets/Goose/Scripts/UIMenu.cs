@@ -61,7 +61,6 @@ public class UIMenu : UIElement {
         yield return new WaitForEndOfFrame();
         bool isVertical = orientation == MenuOrientation.Vertical;
         Vector2 itemSize = GetMaxSizeDelta(orientation);
-        print(itemSize.x+ "  "+ itemSize.y);
         panel.sizeDelta = new Vector2(itemSize.x * 1.2f * (isVertical ? 1 : items.Count), itemSize.y * 1.2f * (!isVertical ? 1 : items.Count));
         if (_spacing <= 0) {
             _spacing = isVertical ? itemSize.y * .2f : itemSize.x * .2f;
@@ -71,7 +70,9 @@ public class UIMenu : UIElement {
             var _rect = items[i].GetComponent<RectTransform>();
             _rect.anchorMin = new Vector2(.5f, (isVertical ? .5f : .5f));//in case we need to change this for horiz
             _rect.anchorMax = new Vector2(.5f, (isVertical ? .5f : .5f));
-
+            if (items[i] == null) {
+                continue;
+            }
             items[i].GetComponent<UIButton>().SetMenuSize(itemSize);
             items[i].GetComponent<RectTransform>().localPosition = new Vector2((isVertical ? 0 : (-((_panel.sizeDelta.x - itemSize.x) * .5f) + (i * (spacing + itemSize.x)))), (!isVertical ? 0 : (((_panel.sizeDelta.y - itemSize.y) * .5f) - (i * (spacing + itemSize.y)))));//-(i * (itemSize.y + spacing))
         }
@@ -99,6 +100,10 @@ public class UIMenu : UIElement {
 		items = new List<UIMenuItem> ();
 	}
 
+    public void SetBackground(Color _color, float alpha = 1){
+        backgroundColor = new Color(_color.r, _color.g, _color.b, alpha);
+    }
+
 	public override Text SetText (string s, bool allcaps = false, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
 		Text textObj = null;
 		RectTransform _t = GetComponent<RectTransform> ();
@@ -114,6 +119,7 @@ public class UIMenu : UIElement {
 		gameObject.name = s;
 		return textObj;
 	}
+   
     public override void Show () {
         base.Show();
         RectTransform t = GetComponent<RectTransform>();
@@ -122,6 +128,7 @@ public class UIMenu : UIElement {
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
     }
+  
     public void SetButtonFillColors(Color _color, ButtonColorType type = ButtonColorType.Normal){
         foreach (UIButton b in items) {
             b.SetFillColor(_color, type);
@@ -137,7 +144,6 @@ public class UIMenu : UIElement {
             b.SetTextColor(_color);
         }
     }
-
 }
 
 public enum MenuAnchor {MiddleCenter, TopCenter};

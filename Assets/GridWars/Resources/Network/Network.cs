@@ -74,6 +74,7 @@ public class Network : Bolt.GlobalEventListener {
 		menu = UI.Menu();
 
 		ShowMainMenu();
+
 	}
 
 	void Update() {
@@ -117,19 +118,31 @@ public class Network : Bolt.GlobalEventListener {
 
 	void ResetMenu() {
 		menu.Reset();
+        menu = UI.Menu();
 	}
 
 	void ShowMainMenu(UIMenuItem item = null) {
 		ResetMenu();
-        menu.SetAnchor(MenuAnchor.MiddleCenter);
+        //menu.SetAnchor(MenuAnchor.TopCenter);
+
 		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
-		menu.AddItem(UI.MenuItem("Quit", Quit));
-       
-		menu.Show();
+        menu.AddItem(UI.MenuItem("Quit", Quit));
+        menu.Show();
 	}
+
+    void ShowInGameMenu(UIMenuItem item = null){
+        ResetMenu();
+        menu.AddItem(UI.MenuItem("Concede", Concede));
+        menu.AddItem(UI.MenuItem("Toggle Hotkeys", ToggleHotkeys));
+        menu.AddItem(UI.MenuItem("Change Camera", ChangeCam));
+        menu.SetOrientation(MenuOrientation.Horizontal);
+        menu.SetAnchor(MenuAnchor.TopCenter);
+        menu.SetBackground(Color.black, 0);
+        menu.Show();
+    }
 
 	void SharedScreenPvpClicked(UIMenuItem item) {
 		new PvpShared().Start();
@@ -260,9 +273,7 @@ public class Network : Bolt.GlobalEventListener {
 	public void StartGame() {
 		indicator.Hide();
 		ResetMenu();
-		menu.AddItem(UI.MenuItem("Concede", Concede));
-		menu.AddItem(UI.MenuItem("Cancel", HideMenu));
-		menu.Hide();
+        ShowInGameMenu();
 
 		Battlefield.current.StartGame();
 	}
@@ -270,6 +281,15 @@ public class Network : Bolt.GlobalEventListener {
 	void Concede(UIMenuItem item) {
 		LeaveGame();
 	}
+    void ToggleHotkeys(UIMenuItem item){
+        Tower[] ts = FindObjectsOfType<Tower>();
+        foreach (Tower t in ts) {
+            t.keyIcon.SetActive(!t.keyIcon.gameObject.activeInHierarchy);
+        }
+    }
+    void ChangeCam(UIMenuItem UIMenuItem){
+        CameraController.instance.NextPosition();
+    }
 
 	public void RestartBolt() {
 		if (!isRestarting) {

@@ -112,7 +112,7 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 		#endif
-		if (Input.GetKeyDown (KeyCode.C)) {
+        if (Input.GetKeyDown (Keys.CHANGECAM.GetKey())) {
 			NextPosition ();
 		}
 		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
@@ -154,7 +154,7 @@ public class CameraController : MonoBehaviour {
 		moving = true;
 	}
 
-	void NextPosition () {
+	public void NextPosition () {
 		//print ("Next Called");
 		actionMode = mouseLook.enabled = false;
 		cam.parent = null;
