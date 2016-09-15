@@ -26,6 +26,7 @@ public class Battlefield : MonoBehaviour {
 		Network.shared.enabled = true;
 
 		CameraController.instance.enabled = true;
+		SetupTiles();
 	}
 
 	public void StartGame() {
@@ -109,6 +110,21 @@ public class Battlefield : MonoBehaviour {
 				_bgAudioSource = gameObject.AddComponent<AudioSource>();
 			}
 			return _bgAudioSource;
+		}
+	}
+
+	void SetupTiles() {
+		GameObject tilePrefab = Resources.Load<GameObject> ("FX/Prefabs/Tile");
+
+		//Vector3 size = tilePrefab.GetComponent<Renderer>().bounds.size;
+		float r = 5;
+		int maxX = 15;
+		int maxZ = 30;
+		for (int x = -maxX; x < maxX+1; x ++) {
+			for (int z = -maxZ; z < maxZ+1; z ++) {
+				GameObject tile = Instantiate(tilePrefab);
+				tile.transform.position = new Vector3(x*r, 0, z*r);
+			}
 		}
 	}
 }

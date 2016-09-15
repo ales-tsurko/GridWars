@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Tower : GroundBuilding {
 
@@ -269,6 +270,9 @@ public class Tower : GroundBuilding {
 
 	ReleaseZone unobstructedReleaseZone {
 		get {
+			var shuffledZones = releaseZones.OrderBy(a => UnityEngine.Random.value);
+
+			/*
 			for (int i = 0; i < releaseZones.Count; i ++) {
 				var rz = releaseZones.PickRandom();
 
@@ -276,8 +280,9 @@ public class Tower : GroundBuilding {
 					return rz;
 				}
 			}
+			*/
 
-			foreach (var rz in releaseZones) {
+			foreach (var rz in shuffledZones) {
 				if (!rz.isObstructed) {
 					return rz;
 				}
