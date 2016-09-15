@@ -165,7 +165,7 @@ public class Chopper : AirVehicle {
 		float r = Random.value;
 		float t = TotalUpThrust();
 		Object_rotDY(mainRotor, 20f + t*r); //Mathf.Abs(upThrust*5.0f) + 20f);
-		Object_rotDY (tailRotor, 20f+ 20f*r);
+		Object_rotDX (tailRotor, 20f+ 20f*r);
 	}
 
 	public override void ServerFixedUpdate () {

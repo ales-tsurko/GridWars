@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BrightFadeInGeneric : MonoBehaviour {
 
 	public float period = 0.3f;
+	public bool useEase = true;
 
 	AssemblyCSharp.Timer timer;
 	ParticleSystem ps;
@@ -16,11 +17,13 @@ public class BrightFadeInGeneric : MonoBehaviour {
 		SetupMaterialColors();
 	}
 
-	void OnEnable() {
+	public void OnEnable() {
 		GameObject g = gameObject;
 		//print(g);
 		StartTimer();
-		//ShowStartValue();
+		if (materialColors != null) {
+			ShowStartValue();
+		}
 	}
 
 	void OnDisable() {
@@ -82,14 +85,14 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	Color ValueForColor(Color realColor, float t) {
-		/*
-		float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
-		float g = EaseInOutSine(t, startColor.g, realColor.g - startColor.g, 1); 
-		float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
-		Color color = new Color(r, g, b);
-		*/
-		Color color =  Color.Lerp(startColor, realColor, t);
-		return color;
+		if (useEase) {
+			float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
+			float g = EaseInOutSine(t, startColor.g, realColor.g - startColor.g, 1); 
+			float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
+			return new Color(r, g, b);
+		}
+			
+		return Color.Lerp(startColor, realColor, t);
 	}
 
 	void OnDestroy() {

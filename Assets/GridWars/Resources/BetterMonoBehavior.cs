@@ -51,6 +51,10 @@ public class BetterMonoBehaviour : MonoBehaviour {
 		_t.eulerAngles = new Vector3(v, e.y, e.z);
 	}
 
+	public virtual void Object_rotDX(GameObject obj, float dx) {
+		var e = obj.transform.eulerAngles;
+		obj.transform.eulerAngles = new Vector3(e.x + dx, e.y, e.z);
+	}
 
 	public virtual void Object_rotDY(GameObject obj, float dy) {
 		var e = obj.transform.eulerAngles;

@@ -85,7 +85,7 @@ public class GameUnit : NetworkObject {
 
 	//FX
 
-	protected bool shouldFadeIn = true;
+	public float fadeInPeriod = 0.3f;
 	protected bool isPlayerPainted = true;
 
 	public float hpRatio {
@@ -315,8 +315,9 @@ public class GameUnit : NetworkObject {
 
 		PlayBirthSound();
 
-		if (shouldFadeIn) {
-			gameObject.AddComponent<BrightFadeIn>();
+		if (fadeInPeriod != 0f) {
+			BrightFadeIn comp = gameObject.AddComponent<BrightFadeIn>();
+			comp.period = fadeInPeriod;
 		}
 	}
 

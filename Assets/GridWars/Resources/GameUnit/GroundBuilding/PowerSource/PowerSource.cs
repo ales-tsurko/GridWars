@@ -107,14 +107,29 @@ public class PowerSource : GroundBuilding {
 		// doesn't need to pick targets
 	}
 
+	public int lastActiveSegmentCount = 0;
+
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		var activeSegmentCount = segmentCount*power/maxPower;
+		int activeSegmentCount = (int)(segmentCount*power/maxPower);
 
 		for (var i = 0; i < segmentCount; i ++) {
 			segments[i].SetActive((i + 1) <= activeSegmentCount);
 		}
+
+		if ((activeSegmentCount != lastActiveSegmentCount) && (activeSegmentCount == segmentCount)) {
+			for (var i = 0; i < segmentCount; i ++) {
+				var segment =segments[i];
+				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
+				if (fader == null) {
+					segment.AddComponent<BrightFadeIn>();
+				}
+				fader.OnEnable();
+			}
+		}
+
+		lastActiveSegmentCount = activeSegmentCount;
 	}
 
 	void OnDrawGizmos() {
