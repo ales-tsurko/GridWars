@@ -73,6 +73,10 @@ public class BrightFadeInGeneric : MonoBehaviour {
 			t = timer.RatioDone();
 		}
 		UpdateForValue(t);
+
+		if (Mathf.Approximately(t, 1)) {
+			DestroyThisComponent();
+		}
 	}
 
 	void UpdateForValue(float t) {
