@@ -118,6 +118,8 @@ public class PowerSource : GroundBuilding {
 			segments[i].SetActive((i + 1) <= activeSegmentCount);
 		}
 
+		// pulse segments if power is full
+
 		if ((activeSegmentCount != lastActiveSegmentCount) && (activeSegmentCount == segmentCount)) {
 			for (var i = 0; i < segmentCount; i ++) {
 				var segment =segments[i];
