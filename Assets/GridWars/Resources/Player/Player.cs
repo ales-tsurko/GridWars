@@ -10,6 +10,7 @@ public class Player : MonoBehaviour {
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
 	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
+	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
 
 	//public List<GameObject> ownedObjects;
 

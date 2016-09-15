@@ -269,6 +269,14 @@ public class Tower : GroundBuilding {
 
 	ReleaseZone unobstructedReleaseZone {
 		get {
+			for (int i = 0; i < releaseZones.Count; i ++) {
+				var rz = releaseZones.PickRandom();
+
+				if (!rz.isObstructed) {
+					return rz;
+				}
+			}
+
 			foreach (var rz in releaseZones) {
 				if (!rz.isObstructed) {
 					return rz;
