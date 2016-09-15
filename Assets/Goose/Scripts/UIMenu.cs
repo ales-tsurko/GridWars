@@ -57,21 +57,40 @@ public class UIMenu : UIElement {
 
 		bool isVertical = orientation == MenuOrientation.Vertical;
 		Vector2 itemSize = GetMaxSizeDelta(orientation);
-		panel.sizeDelta = new Vector2(itemSize.x * 1.2f * (isVertical ? 1 : items.Count), itemSize.y * 1.2f * (!isVertical ? 1 : items.Count));
-		if (_spacing <= 0) {
-			_spacing = isVertical ? itemSize.y * .2f : itemSize.x * .2f;
-		}
-		spacing = _spacing;
+
+		var spacing = new Vector2(itemSize.x * .2f, itemSize.y * .2f);
+		var hItemCount = isVertical ? 1 : items.Count;
+		var vItemCount = isVertical ? items.Count : 1;
+
+		panel.sizeDelta = new Vector2(
+			itemSize.x*hItemCount + spacing.x*(hItemCount + 1),
+			itemSize.y*vItemCount + spacing.y*(vItemCount + 1)
+		);
+
 		for (int i = 0; i < items.Count; i++) {
-			var _rect = items[i].GetComponent<RectTransform>();
-			_rect.anchorMin = new Vector2(.5f, (isVertical ? .5f : .5f));//in case we need to change this for horiz
-			_rect.anchorMax = new Vector2(.5f, (isVertical ? .5f : .5f));
-			if (items[i] == null || items[i].GetComponent<UIButton>() == null) {
-				continue;
+			var item = items[i];
+
+			if (item != null && item.GetComponent<UIButton>() != null) {
+				item.GetComponent<UIButton>().SetMenuSize(itemSize);
+				var rt = item.GetComponent<RectTransform>();
+				rt.anchorMin = new Vector2(0.5f, 1f);
+				rt.anchorMax = new Vector2(0.5f, 1f);
+
+				Vector2 localPosition;
+				if (isVertical) {
+					localPosition.x = 0f;
+					localPosition.y = -(itemSize.y/2 + i*(itemSize.y + spacing.y) - panel.sizeDelta.y/2);
+				}
+				else {
+					rt.anchorMin = new Vector2(0f, 0.5f);
+					rt.anchorMax = new Vector2(0f, 0.5f);
+					localPosition.x = spacing.x + itemSize.x/2 + i*(itemSize.x + spacing.x) - panel.sizeDelta.x/2;
+					localPosition.y = 0;
+				}
+				item.GetComponent<RectTransform>().localPosition = localPosition;
 			}
-			items[i].GetComponent<UIButton>().SetMenuSize(itemSize);
-			items[i].GetComponent<RectTransform>().localPosition = new Vector2((isVertical ? 0 : (-((_panel.sizeDelta.x - itemSize.x) * .5f) + (i * (spacing + itemSize.x)))), (!isVertical ? 0 : (((_panel.sizeDelta.y - itemSize.y) * .5f) - (i * (spacing + itemSize.y)))));//-(i * (itemSize.y + spacing))
 		}
+
 		this.SetAnchor(currentAnchor);
     }
 
@@ -157,7 +176,7 @@ public static class UIMenuExtension {
             case MenuAnchor.TopCenter:
                 _t.anchorMin = new Vector2(.5f, 1);
                 _t.anchorMax = new Vector2(.5f, 1);
-                _t.pivot = new Vector2(0, 0);
+                _t.pivot = new Vector2(0.5f, 0.5f);
                 _t.localScale = Vector3.one;
                 _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y*.5f);
                 break;
