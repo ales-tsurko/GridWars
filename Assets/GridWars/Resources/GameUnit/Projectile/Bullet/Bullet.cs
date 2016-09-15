@@ -7,9 +7,13 @@ public class Bullet : Projectile {
 
 	public float muzzleImpulse; // define in prefab inspector
 
+	override public Vector3 ImpusleOnWeapon() {
+		return - transform.forward * muzzleImpulse;
+
+	}
+
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
-
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
 	}
 		

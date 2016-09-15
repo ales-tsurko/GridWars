@@ -14,6 +14,14 @@ public class Projectile : GameUnit {
 
 	[HideInInspector]
 
+	virtual public Vector3 ImpusleOnWeapon() {
+		// for subclasses to override if needed
+		return new Vector3(0, 0, 0);
+	}
+
+	public Vector3 MuzzleKickForce() {
+		return - rigidBody().mass * rigidBody().velocity;
+	}
 
 	public void copyVelocityFrom(GameObject obj) {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;

@@ -618,6 +618,8 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 
+		owner.GameUnit().rigidBody().AddForce(projectile.ImpusleOnWeapon());
+
 		return projectile;
 	}
 
