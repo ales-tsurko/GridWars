@@ -157,7 +157,6 @@ public class Tower : GroundBuilding {
 
 	public void ShowHud() {
 		if (hudIsHidden) {
-			keyIcon.SetActive(true);
 			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
 				renderer.enabled = true;
 			}

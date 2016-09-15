@@ -281,12 +281,11 @@ public class Network : Bolt.GlobalEventListener {
 	void Concede(UIMenuItem item) {
 		LeaveGame();
 	}
+
     void ToggleHotkeys(UIMenuItem item){
-        Tower[] ts = FindObjectsOfType<Tower>();
-        foreach (Tower t in ts) {
-            t.keyIcon.SetActive(!t.keyIcon.gameObject.activeInHierarchy);
-        }
+		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
     }
+
     void ChangeCam(UIMenuItem UIMenuItem){
         CameraController.instance.NextPosition();
     }
