@@ -747,6 +747,18 @@ public class GameUnit : NetworkObject {
 				explosion.player = player;
 				explosion.transform.position = _t.position;
 				explosion.transform.rotation = _t.rotation;
+				var rb = rigidBody(); 
+				var erb = explosion.GetComponent<Rigidbody>(); 
+				if (erb != null && rb != null) {
+
+					erb.velocity = rb.velocity;
+					erb.drag = rb.drag;
+
+					erb.angularVelocity = rb.angularVelocity;
+					erb.angularDrag = rb.angularDrag;
+
+					erb.mass = rb.mass;
+				}
 			}
 		}
 	}
