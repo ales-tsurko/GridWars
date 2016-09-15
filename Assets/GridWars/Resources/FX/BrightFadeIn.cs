@@ -28,7 +28,6 @@ public class BrightFadeIn : MonoBehaviour {
 	}
 
 	void Update (){
-		/*
 		 float t = timer.RatioDone();
 
 		float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
@@ -36,8 +35,7 @@ public class BrightFadeIn : MonoBehaviour {
 		float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
 		Color color = new Color(r, g, b);
 
-		*/
-		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
+//		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
 		gameObject.Paint(color, "Unit");
 	}
 

@@ -7,6 +7,10 @@ public class Player : MonoBehaviour {
 	public float separation = 0.9f;
 	public Material unitMaterial;
 
+	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
+
+	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
+
 	//public List<GameObject> ownedObjects;
 
 	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
@@ -91,9 +95,6 @@ public class Player : MonoBehaviour {
 		return resourcesPath + resourceName;
 	}
 
-	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
-
-	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
 
 	public virtual bool IsDead() {
 		return units.Count == 0;

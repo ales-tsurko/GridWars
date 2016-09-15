@@ -7,10 +7,9 @@ public class Chopper : AirVehicle {
 	public float cruiseHeight;
 	public float thrustHeight = 2f;
 
+	public GameObject mainRotorFixed; // used to apply thrust - normal rotor spins
 	public GameObject mainRotor;
 	public GameObject tailRotor;
-
-	public Transform mainRotorTransform; // set in start
 
 	[HideInInspector]
 	public bool usesSoundtrack = true;
@@ -18,8 +17,6 @@ public class Chopper : AirVehicle {
 
 	public override void ServerAndClientJoinedGame() {
 		base.ServerAndClientJoinedGame();
-		mainRotor = _t.FindDeepChild("mainRotor").gameObject;
-		tailRotor = _t.FindDeepChild("tailRotor").gameObject;
 		UpdateSoundtrack();
 		gameObject.TurnOffShadows(); // apply to prefab?
 	}
@@ -30,7 +27,6 @@ public class Chopper : AirVehicle {
 
 		cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
 
-		mainRotorTransform = mainRotor.transform; //_t.FindDeepChild("mainRotorCenter");
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
 
@@ -105,22 +101,19 @@ public class Chopper : AirVehicle {
 		float upThrust = TotalUpThrust()/2f;
 
 		float offset = 1f;
-		Vector3 thrustPointLeft  = mainRotorTransform.position - mainRotorTransform.right * offset;
-		Vector3 thrustPointRight = mainRotorTransform.position + mainRotorTransform.right * offset;
+		Vector3 thrustPointLeft  = mainRotorFixed.transform.position - mainRotorFixed.transform.right * offset;
+		Vector3 thrustPointRight = mainRotorFixed.transform.position + mainRotorFixed.transform.right * offset;
 
 		float f = TiltRightDesire();
 
-		Vector3 rotorUp = mainRotorTransform.up;
+		Vector3 rotorUp = mainRotorFixed.transform.up;
 		Vector3 leftForce  = rotorUp * ((upThrust - f) / 2);
 		Vector3 rightForce = rotorUp * ((upThrust + f) / 2);
 
 		rigidBody().AddForceAtPosition(leftForce,  thrustPointLeft);
 		rigidBody().AddForceAtPosition(rightForce, thrustPointRight);
 
-		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
-
-
-		//Debug.DrawLine(mainRotorTransform.position, mainRotorTransform.position + (mainRotorTransform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
+		//Debug.DrawLine(mainRotorFixed.transform.position, mainRotorFixed.transform.position + (mainRotorFixed.transform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
 		//Debug.DrawLine(thrustPointLeft, thrustPointLeft + leftForce , Color.black); 
 		//Debug.DrawLine(thrustPointRight, thrustPointRight + rightForce , Color.black); 
 	}
@@ -147,10 +140,10 @@ public class Chopper : AirVehicle {
 		// forward/backward control ---------------------------------------------------
 
 		float offset = 1f;
-		Vector3 mainRotorThrustPointBack  = mainRotorTransform.position + mainRotorTransform.forward * offset;
-		Vector3 mainRotorThrustPointFront = mainRotorTransform.position - mainRotorTransform.forward * offset;
+		Vector3 mainRotorThrustPointBack  = mainRotorFixed.transform.position + mainRotorFixed.transform.forward * offset;
+		Vector3 mainRotorThrustPointFront = mainRotorFixed.transform.position - mainRotorFixed.transform.forward * offset;
 
-		Vector3 rotorUp = mainRotorTransform.up;
+		Vector3 rotorUp = mainRotorFixed.transform.up;
 		float speed = ForwardSpeed();
 		float desiredSpeed = ForwardDesire() * 4f;
 		float speedDiff = desiredSpeed - speed;
