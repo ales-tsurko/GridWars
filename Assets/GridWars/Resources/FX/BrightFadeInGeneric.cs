@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BrightFadeInGeneric : MonoBehaviour {
 
 	public float period = 0.3f;
+	public float variance = 0.0f;
 	public bool useEase = true;
 
 	AssemblyCSharp.Timer timer;
@@ -40,7 +41,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 			
 		timer = App.shared.timerCenter.NewTimer();
 		timer.action = DestroyThisComponent;
-		timer.SetTimeout(period);
+		timer.SetTimeout(period + variance * UnityEngine.Random.value);
 		timer.Start();
 	}
 
@@ -67,7 +68,10 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void Update () {
-		float t = timer.RatioDone();
+		float t = 0; 
+		if (timer != null) {
+			t = timer.RatioDone();
+		}
 		UpdateForValue(t);
 	}
 

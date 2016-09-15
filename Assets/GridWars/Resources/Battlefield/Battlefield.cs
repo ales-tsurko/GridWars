@@ -33,6 +33,11 @@ public class Battlefield : MonoBehaviour {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
+		/*
+		foreach (GameObject tile in tiles) {
+			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
+		}
+		*/
 	}
 
 	void FixedUpdate () {
@@ -113,7 +118,11 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	List <GameObject> tiles;
+
 	void SetupTiles() {
+		tiles = new List<GameObject>();
+
 		GameObject tilePrefab = Resources.Load<GameObject> ("FX/Prefabs/Tile");
 
 		//Vector3 size = tilePrefab.GetComponent<Renderer>().bounds.size;
@@ -128,6 +137,7 @@ public class Battlefield : MonoBehaviour {
 				float v = (float)Mathf.Abs(x)/(float)maxX;
 				//tile.PaintDarken(1f - v*v*v*v);
 				//}
+				tiles.Add(tile);
 			}
 		}
 	}

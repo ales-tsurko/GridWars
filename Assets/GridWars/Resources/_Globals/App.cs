@@ -39,10 +39,14 @@ public class App : MonoBehaviour {
 
 	// --- Game Loop -------------------
 
+	public void Awake() {
+		timerCenter = new AssemblyCSharp.TimerCenter();
+
+	}
+
 	public void Start() {
 		prefs = new Prefs();
 
-		timerCenter = new AssemblyCSharp.TimerCenter();
 		stepCache = new AssemblyCSharp.StepCache();
 		_destroyQueue = new List<GameObject>();
 		soundtracks = new List<Soundtrack>();

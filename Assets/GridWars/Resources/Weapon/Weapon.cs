@@ -181,6 +181,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
+
+		// remove target if it's destroyed
 		if (target != null && target.IsDestroyed()) {
 			target = null;
 		}
@@ -188,12 +190,8 @@ public class Weapon : MonoBehaviour {
 		// unless we can shoot now at our current target,
 		// see if there's one that's closer to target
 
-		// prioritize targets with weapons
-		// prioritize targets with weapons - especially those that can target us
-
 		if (!CanTargetObj(target)|| !TargetInRange()) {
-			//bool isTargetable = owner.GameUnit().isTargetable;
-			//var oldTarget = target;
+			// prioritize targets with weapons
 
 			GameObject newTarget = ClosestTargetableEnemyObjectWithWeapon();
 
