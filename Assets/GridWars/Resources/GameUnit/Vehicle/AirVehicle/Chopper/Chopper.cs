@@ -10,7 +10,7 @@ public class Chopper : AirVehicle {
 	public GameObject mainRotor;
 	public GameObject tailRotor;
 
-	Transform mainRotorTransform; // set in start
+	public Transform mainRotorTransform; // set in start
 
 	[HideInInspector]
 	public bool usesSoundtrack = true;
@@ -30,7 +30,7 @@ public class Chopper : AirVehicle {
 
 		cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
 
-		mainRotorTransform = _t.FindDeepChild("mainRotorCenter");
+		mainRotorTransform = mainRotor.transform; //_t.FindDeepChild("mainRotorCenter");
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
 
