@@ -44,6 +44,17 @@ public static class GridWarsUnityExtensions {
 		});
 	}
 
+	public static void PaintDarken(this GameObject self, float v) {
+		self.EachMaterial(m => {
+			Color c = m.color;
+			float r = c.r * v;
+			float g = c.g * v;
+			float b = c.b * v;
+			m.SetColor("_Color", new Color(r, g, b, 1f));
+			//m.SetColor("_Color", new Color(c.r, c.g, c.b, v));
+		});
+	}
+
 	public static void DeepRemoveScripts(this GameObject self) {
 		foreach (var script in self.GetComponentsInChildren<MonoBehaviour>()) {
 			script.enabled = false;

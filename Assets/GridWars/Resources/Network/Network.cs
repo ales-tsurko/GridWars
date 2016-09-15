@@ -303,7 +303,7 @@ public class Network : Bolt.GlobalEventListener {
             return;
         }
 		ResetMenu();
-        menu.AddItem(UI.ActivityIndicator("Returning to Main Menu"));
+        menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
 		menu.Show();
 
 		didLeaveGame = true;

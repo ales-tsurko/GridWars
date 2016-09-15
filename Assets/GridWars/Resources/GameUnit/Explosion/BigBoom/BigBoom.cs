@@ -77,7 +77,7 @@ public class BigBoom : Explosion {
 				//float maxDamage = 1f;
 				//float damage = maxDamage / (1f + dist);
 				if (unit.IsOfType(typeof(Vehicle))) {
-					unit.ApplyDamage(4f * (1 - DoneRatio()));
+					unit.ApplyDamage(8f * (1 - DoneRatio()));
 				} else {
 					unit.ApplyDamage(0.4f);
 				}

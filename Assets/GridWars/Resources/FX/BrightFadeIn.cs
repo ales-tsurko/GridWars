@@ -20,7 +20,8 @@ public class BrightFadeIn : MonoBehaviour {
 		timer.action = DestroyThisComponent;
 		timer.SetTimeout(period);
 		timer.Start();
-		realColor = gameObject.GameUnit().player.color;
+		GameObject g = gameObject;
+		realColor = g.GameUnit().player.color;
 	}
 
 	void DestroyThisComponent() {
