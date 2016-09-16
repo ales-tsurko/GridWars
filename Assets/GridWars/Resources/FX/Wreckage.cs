@@ -18,6 +18,9 @@ using System.Collections;
 	private float sinkStartTime;
 	private float sinkDoneTime;
 
+	public AudioClip deathSound;
+	private AudioSource audioSource;
+
 	static public void SetupLayerCollisions() {
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
@@ -33,6 +36,11 @@ using System.Collections;
 
 		if (Physics.GetIgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"))) {
 			Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
+		}
+
+		if (deathSound != null) {
+			audioSource = gameObject.AddComponent<AudioSource>();
+			audioSource.PlayOneShot(deathSound);
 		}
 	}
 
@@ -68,7 +76,9 @@ using System.Collections;
 		SetY( - ratio * deathHeight );
 
 		if (Time.time > sinkDoneTime) {
-			AddToDestroyQueue();
+			if (audioSource == null || !audioSource.isPlaying) {
+				AddToDestroyQueue();
+			}
 		}
 	}
 
