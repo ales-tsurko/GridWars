@@ -92,16 +92,32 @@ public class Network : Bolt.GlobalEventListener {
 				networkDelegate.BoltShutdownCompleted();
 			}
 		}
-
-		if (Input.GetKeyDown(KeyCode.Escape) && indicator.isHidden) {
+            
+        GetInput();
+		
+        /*if (Input.GetKeyDown(KeyCode.Escape) && indicator.isHidden) {
 			ToggleMenu();
-		}
+		}*/ //Hides Top Menu
 	}
 
 	//Menus 
 
 	UIMenu menu;
 	UIActivityIndicator indicator;
+    /// <summary>
+    /// Move this to wherever game management is handled in the future
+    /// </summary>
+    void GetInput () {
+        if (Input.GetKeyDown(Keys.CHANGECAM.GetKey())){
+            CameraController.instance.NextPosition();
+        }
+        if (Input.GetKeyDown(Keys.CONCEDE.GetKey())) {
+            Concede(new UIMenuItem());
+        }
+        if (Input.GetKeyDown(Keys.TOGGLEKEYS.GetKey())){
+            ToggleHotkeys(new UIMenuItem());
+        }
+    }
 
 	void HideMenu(UIMenuItem item) {
 		menu.Hide();
@@ -135,9 +151,9 @@ public class Network : Bolt.GlobalEventListener {
 
     void ShowInGameMenu(UIMenuItem item = null){
         ResetMenu();
-        menu.AddItem(UI.MenuItem("Concede", Concede));
-        menu.AddItem(UI.MenuItem("Toggle Hotkeys", ToggleHotkeys));
-        menu.AddItem(UI.MenuItem("Change Camera", ChangeCam));
+        menu.AddItem(UI.MenuItem("Concede (" + Keys.CONCEDE.GetKey().ToString() + ")", Concede));
+        menu.AddItem(UI.MenuItem("Toggle Hotkeys (" + Keys.TOGGLEKEYS.GetKey().ToString() + ")", ToggleHotkeys));
+        menu.AddItem(UI.MenuItem("Change Camera (" + Keys.CHANGECAM.GetKey().ToString() + ")", ChangeCam));
         menu.SetOrientation(MenuOrientation.Horizontal);
         menu.SetAnchor(MenuAnchor.TopCenter);
         menu.SetBackground(Color.black, 0);
@@ -281,9 +297,13 @@ public class Network : Bolt.GlobalEventListener {
 	void Concede(UIMenuItem item) {
 		LeaveGame();
 	}
-
+      
     void ToggleHotkeys(UIMenuItem item){
-		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
+        App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
+        Array.ForEach<Tower>(FindObjectsOfType<Tower>(), (Tower _tower) => {
+            _tower.SetKeysPref(App.shared.prefs.keyIconsVisible);
+            });
+		
     }
 
     void ChangeCam(UIMenuItem UIMenuItem){

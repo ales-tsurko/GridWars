@@ -119,7 +119,7 @@ public class Tower : GroundBuilding {
 		if (playerNumber == 2) {
 			keyIcon.transform.Rotate(new Vector3(0, 0, 180));
 		}
-
+        SetKeysPref(App.shared.prefs.keyIconsVisible);
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 	}
@@ -137,36 +137,36 @@ public class Tower : GroundBuilding {
 
 		if (canQueueUnit) {
 			//Paint();
-			ShowHud();
-			keyIcon.SetActive((attemptQueueUnitKeyCode != KeyCode.None) && App.shared.prefs.keyIconsVisible);
+			ShowHud(true);
+			//keyIcon.SetActive((attemptQueueUnitKeyCode != KeyCode.None) && App.shared.prefs.keyIconsVisible);
 
 		}
 		else {
 			//PaintAsDisabled();
-			HideHud();
-			keyIcon.SetActive(false);
+            ShowHud(false);
 		}
 	}
 
 	// HUD
 
 	GameObject iconObject;
-	bool hudIsHidden = false;
-
+	bool hudIsDisplayed = false;
+    bool showKeysPref = true;
 	public GameObject keyIcon;
+    public void SetKeysPref (bool pref) {
+        print("Setting " + pref);
+        showKeysPref = pref;
+    }
 
-
-	public void ShowHud() {
-		if (hudIsHidden) {
-			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-				renderer.enabled = true;
-			}
-			hudIsHidden = false;
-		}
-
+    public void ShowHud(bool b = true) {
+        hudIsDisplayed = b;
+        foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
+            renderer.enabled = hudIsDisplayed;
+        }
+        keyIcon.SetActive(hudIsDisplayed && attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && showKeysPref);
 	}
 
-	public void HideHud() {
+	/*public void HideHud() {
 		if (!hudIsHidden) {
 			keyIcon.SetActive(false);
 			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
@@ -174,7 +174,7 @@ public class Tower : GroundBuilding {
 			}
 			hudIsHidden = true;
 		}
-	}
+	}*/
 
 
 	public override void Think() {

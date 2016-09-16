@@ -24,7 +24,7 @@ public static class Keys {
 		{ "MobileSAM1", KeyCode.K },
 		{ "MobileSAM2", KeyCode.I },
         { CONCEDE, KeyCode.Escape},
-        { TOGGLEKEYS, KeyCode.K},
+        { TOGGLEKEYS, KeyCode.H},
         { CHANGECAM, KeyCode.C}
 
 	};
