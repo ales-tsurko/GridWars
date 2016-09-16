@@ -19,6 +19,7 @@ using System.Collections;
 	private float sinkDoneTime;
 
 	public AudioClip deathSound;
+	public float deathSoundVolume = 1f;
 	private AudioSource audioSource;
 
 	static public void SetupLayerCollisions() {
@@ -40,7 +41,7 @@ using System.Collections;
 
 		if (deathSound != null) {
 			audioSource = gameObject.AddComponent<AudioSource>();
-			audioSource.PlayOneShot(deathSound);
+			audioSource.PlayOneShot(deathSound, deathSoundVolume);
 		}
 	}
 
