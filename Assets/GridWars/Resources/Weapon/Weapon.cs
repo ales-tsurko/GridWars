@@ -381,7 +381,6 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void ApplyAngleLimits() {
-		/*
 		if (turretObjX) {
 			Vector3 e = turretObjX.transform.localEulerAngles;
 			float newX = ClampAngle(e.x, turretMinX, turretMaxX);
@@ -393,7 +392,6 @@ public class Weapon : MonoBehaviour {
 			float newY = ClampAngle(e.y, turretMinY, turretMaxY);
 			turretObjY.transform.localEulerAngles = new Vector3(e.x, newY, e.z);
 		}
-		*/
 	}
 
 	public void AimOnXAxis() {
