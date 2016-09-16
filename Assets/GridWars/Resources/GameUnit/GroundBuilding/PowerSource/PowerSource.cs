@@ -109,10 +109,14 @@ public class PowerSource : GroundBuilding {
 
 	public int lastActiveSegmentCount = 0;
 
+	public int ActiveSegmentCount() {
+		return (int)(segmentCount * power / maxPower);
+	}
+
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		int activeSegmentCount = (int)(segmentCount*power/maxPower);
+		int activeSegmentCount = ActiveSegmentCount();
 
 		for (var i = 0; i < segmentCount; i ++) {
 			segments[i].SetActive((i + 1) <= activeSegmentCount);
@@ -120,18 +124,26 @@ public class PowerSource : GroundBuilding {
 
 		// pulse segments if power is full
 
-		if ((activeSegmentCount != lastActiveSegmentCount) && (activeSegmentCount == segmentCount)) {
-			for (var i = 0; i < segmentCount; i ++) {
-				var segment =segments[i];
-				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
-				if (fader == null) {
-					segment.AddComponent<BrightFadeInGeneric>();
-				}
-				fader.OnEnable();
-			}
+		if ((activeSegmentCount != lastActiveSegmentCount) && 
+			(activeSegmentCount == segmentCount)) {
+			ShowFull();
 		}
 
 		lastActiveSegmentCount = activeSegmentCount;
+	}
+
+	void ShowFull() {
+		for (var i = 0; i < segmentCount; i ++) {
+			var segment = segments[i];
+
+			BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
+			if (fader == null) {
+				segment.AddComponent<BrightFadeInGeneric>();
+			}
+
+			fader.OnEnable();
+		}
+		PlaySoundNamed("fullpower", 0.25f);
 	}
 
 	void OnDrawGizmos() {
@@ -146,4 +158,5 @@ public class PowerSource : GroundBuilding {
 	public override void ApplyDamage(float damage) {
 		// can't be damaged
 	}
+
 }

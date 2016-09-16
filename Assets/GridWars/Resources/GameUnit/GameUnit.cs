@@ -180,6 +180,10 @@ public class GameUnit : NetworkObject {
 		return Resources.Load<AudioClip>(soundPath);
 	}
 
+	public void PlaySoundNamed(string name, float volume) {
+		audioSource.PlayOneShot(SoundNamed(name), volume);
+	}
+
 	// ------------------------------------------------------------
 
 	public static GameUnit Load(System.Type type) {
