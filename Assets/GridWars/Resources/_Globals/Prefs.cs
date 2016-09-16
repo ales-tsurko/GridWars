@@ -4,7 +4,7 @@ using System.Collections;
 public class Prefs {
 	public bool keyIconsVisible {
 		get {
-			return GetBool("keyIconsVisible");
+			return false; //GetBool("keyIconsVisible");
 		}
 
 		set {

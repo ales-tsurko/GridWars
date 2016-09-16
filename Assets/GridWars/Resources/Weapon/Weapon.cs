@@ -336,8 +336,8 @@ public class Weapon : MonoBehaviour {
 		return targetPos;
 	}
 
-	public float XAngleToTarget() {
-		if (target) {
+	public float XAngleToTarget() {  // returns 0 if no target
+		if (target != null) {
 			//Transform t = turretObjX.transform;
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
@@ -356,10 +356,10 @@ public class Weapon : MonoBehaviour {
 			return angle;
 		}
 
-		return 0;
+		return AngleBetweenOnAxis(transform.forward, owner.transform.forward, transform.right);
 	}
 
-	public float YAngleToTarget() {
+	public float YAngleToTarget() { // returns 0 if no target
 		if (target) {
 			//Transform t = turretObjY.transform;
 			Transform t = transform;
@@ -374,11 +374,10 @@ public class Weapon : MonoBehaviour {
 				//Debug.DrawLine (t.position, t.position + targetDir * r, Color.yellow); // targetDir
 			}
 
-
 			return angle;
 		}
 
-		return 0;
+		return AngleBetweenOnAxis(transform.forward, owner.transform.forward, transform.up);
 	}
 
 	public void ApplyAngleLimits() {
@@ -398,26 +397,32 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public void AimOnXAxis() {
-		float angle = XAngleToTarget();
-		//float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
-		float dx = angle * aimRateX; // hack for now
+		if (canRotateX()) {
+			float angle = XAngleToTarget(); 
 
-		Transform tt = turretObjX.transform;
-		var e = tt.eulerAngles;
-		float newX = e.x + dx;
-		tt.eulerAngles = new Vector3(newX, e.y, e.z);
+			//float dx = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateX; // hack for now
+			float dx = angle * aimRateX; // hack for now
+
+			Transform tt = turretObjX.transform;
+			var e = tt.eulerAngles;
+			float newX = e.x + dx;
+			tt.eulerAngles = new Vector3(newX, e.y, e.z);
+		}
 	}
 
 	public void AimOnYAxis() {
-		float angle = YAngleToTarget();
-		//float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateY; // hack for now
-		float dy = angle * aimRateY; // hack for now
+		if (canRotateY()) {
+			float angle = YAngleToTarget();
 
-		Transform tt = turretObjY.transform;
-		var e = tt.eulerAngles;
-		float newY = e.y + dy;
+			//float dy = Mathf.Sign(angle) * Mathf.Sqrt(Mathf.Abs(angle)) * aimRateY; // hack for now
+			float dy = angle * aimRateY; // hack for now
 
-		tt.eulerAngles = new Vector3(e.x, newY, e.z);
+			Transform tt = turretObjY.transform;
+			var e = tt.eulerAngles;
+			float newY = e.y + dy;
+
+			tt.eulerAngles = new Vector3(e.x, newY, e.z);
+		}
 	}
 
 	public bool canRotateX() {
@@ -434,34 +439,27 @@ public class Weapon : MonoBehaviour {
 
 	// --- Aiming and deciding to fire ------------------
 
-	public bool AimIfAble() { 
-		
-		if (target) {
+	public void AimIfAble() { 
+					
+		//if (canRotateX()) {
+			AimOnXAxis();
+		//}
+
+		//if (canRotateY()) {
+			AimOnYAxis();
+		//}
+
+		ApplyAngleLimits();
 			
-			if (canRotateX()) {
-				AimOnXAxis();
-			}
-
-			if (canRotateY()) {
-				AimOnYAxis();
-			}
-
-			ApplyAngleLimits();
-
+		if (target != null) {
 			ShowDebugAimLine();
-			/*
-			ShowDebugTargetLine();
-			*/
-
-			return true;
+			//ShowDebugTargetLine();
 		}
-
-		return false;
 	}
 
 	public bool ChooseToFire() {
 		float r = Random.value;
-		return r < chanceOfFire*fireThrottle.period;
+		return r < chanceOfFire * fireThrottle.period;
 	}
 
 	public bool ShouldFire() {

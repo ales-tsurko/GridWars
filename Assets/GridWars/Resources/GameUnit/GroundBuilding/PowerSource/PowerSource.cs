@@ -125,7 +125,7 @@ public class PowerSource : GroundBuilding {
 				var segment =segments[i];
 				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
 				if (fader == null) {
-					segment.AddComponent<BrightFadeIn>();
+					segment.AddComponent<BrightFadeInGeneric>();
 				}
 				fader.OnEnable();
 			}
