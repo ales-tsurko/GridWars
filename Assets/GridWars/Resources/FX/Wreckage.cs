@@ -41,6 +41,7 @@ using System.Collections;
 
 		if (deathSound != null) {
 			audioSource = gameObject.AddComponent<AudioSource>();
+			audioSource.pitch = 1f - 0.2f * (UnityEngine.Random.value);
 			audioSource.PlayOneShot(deathSound, deathSoundVolume);
 		}
 	}
