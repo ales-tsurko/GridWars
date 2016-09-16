@@ -157,4 +157,41 @@ public static class GridWarsUnityExtensions {
 		}
 		return s;
 	}
+
+	//Colors
+
+	public static Color ToP1Green(this Color self) {
+		self.r = 65f/255;
+		self.g = 255f/255;
+		self.b = 0f/255;
+		return self;
+	}
+
+	public static Color ToP3Amber(this Color self) {
+		self.r = 255f/255;
+		self.g = 168f/255;
+		self.b = 0f/255;
+		return self;
+	}
+
+	public static Color ToP11Blue(this Color self) {
+		self.r = 0f/255;
+		self.g = 102f/255;
+		self.b = 255f/255;
+		return self;
+	}
+
+	public static Color ToCyan(this Color self) {
+		self.r = 0f/255;
+		self.g = 255f/255;
+		self.b = 255f/255;
+		return self;
+	}
+
+	public static Color ToMagenta(this Color self) {
+		self.r = 255f/255;
+		self.g = 0f/255;
+		self.b = 255f/255;
+		return self;
+	}
 }
