@@ -39,7 +39,7 @@ public class Prefs {
     }
 
 	public Prefs() {
-		keyIconsVisible = true; //TODO: the UI should control this.
+		keyIconsVisible = false; //TODO: the UI should control this.
 	}
 
 	bool GetBool(string name) {
