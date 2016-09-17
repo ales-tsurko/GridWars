@@ -28,7 +28,7 @@ public class FPSDisplay : MonoBehaviour
 
 			if (fps < 40) {
 				//msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " FPS";
-				msg += Mathf.Round(fps) + " FPS";
+				//msg += Mathf.Round(fps) + " FPS";
 				//msg += ", " + GameObjectCount() + " objs";
 			}
 
