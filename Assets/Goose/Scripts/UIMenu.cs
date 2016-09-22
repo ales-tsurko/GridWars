@@ -70,25 +70,43 @@ public class UIMenu : UIElement {
 		for (int i = 0; i < items.Count; i++) {
 			var item = items[i];
 
-			if (item != null && item.GetComponent<UIButton>() != null) {
-				item.GetComponent<UIButton>().SetMenuSize(itemSize);
-				var rt = item.GetComponent<RectTransform>();
-				rt.anchorMin = new Vector2(0.5f, 1f);
-				rt.anchorMax = new Vector2(0.5f, 1f);
+            if (item != null && item.GetComponent<UIButton>() != null) {
+                item.GetComponent<UIButton>().SetMenuSize(itemSize);
+                var rt = item.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 1f);
+                rt.anchorMax = new Vector2(0.5f, 1f);
 
-				Vector2 localPosition;
-				if (isVertical) {
-					localPosition.x = 0f;
-					localPosition.y = -(itemSize.y/2 + i*(itemSize.y + spacing.y) - panel.sizeDelta.y/2);
-				}
-				else {
-					rt.anchorMin = new Vector2(0f, 0.5f);
-					rt.anchorMax = new Vector2(0f, 0.5f);
-					localPosition.x = spacing.x + itemSize.x/2 + i*(itemSize.x + spacing.x) - panel.sizeDelta.x/2;
-					localPosition.y = 0;
-				}
-				item.GetComponent<RectTransform>().localPosition = localPosition;
-			}
+                Vector2 localPosition;
+                if (isVertical) {
+                    localPosition.x = 0f;
+                    localPosition.y = -(itemSize.y / 2 + i * (itemSize.y + spacing.y) - panel.sizeDelta.y / 2);
+                }
+                else {
+                    rt.anchorMin = new Vector2(0f, 0.5f);
+                    rt.anchorMax = new Vector2(0f, 0.5f);
+                    localPosition.x = spacing.x + itemSize.x / 2 + i * (itemSize.x + spacing.x) - panel.sizeDelta.x / 2;
+                    localPosition.y = 0;
+                }
+                item.GetComponent<RectTransform>().localPosition = localPosition;
+            }
+            else if (item != null) {
+                var rt = item.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 1f);
+                rt.anchorMax = new Vector2(0.5f, 1f);
+
+                Vector2 localPosition;
+                if (isVertical) {
+                    localPosition.x = 0f;
+                    localPosition.y = -(itemSize.y / 2 + i * (itemSize.y + spacing.y) - panel.sizeDelta.y / 2);
+                }
+                else {
+                    rt.anchorMin = new Vector2(0f, 0.5f);
+                    rt.anchorMax = new Vector2(0f, 0.5f);
+                    localPosition.x = spacing.x + itemSize.x / 2 + i * (itemSize.x + spacing.x) - panel.sizeDelta.x / 2;
+                    localPosition.y = 0;
+                }
+                item.GetComponent<RectTransform>().localPosition = localPosition;
+            }
 		}
 
 		this.SetAnchor(currentAnchor);
