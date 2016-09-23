@@ -108,13 +108,13 @@ public class Network : Bolt.GlobalEventListener {
     /// Move this to wherever game management is handled in the future
     /// </summary>
     void GetInput () {
-        if (Input.GetKeyDown(Keys.CHANGECAM.GetKey())){
+        if (Keys.CHANGECAM.Pressed()){
             CameraController.instance.NextPosition();
         }
-        if (Input.GetKeyDown(Keys.CONCEDE.GetKey())) {
+        if (Keys.CONCEDE.Pressed()) {
             Concede(new UIMenuItem());
         }
-        if (Input.GetKeyDown(Keys.TOGGLEKEYS.GetKey())){
+        if (Keys.TOGGLEKEYS.Pressed()){
             ToggleHotkeys(new UIMenuItem());
         }
     }

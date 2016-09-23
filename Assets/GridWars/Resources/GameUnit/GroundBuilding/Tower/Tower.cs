@@ -10,6 +10,7 @@ public class Tower : GroundBuilding {
 	//public Mesh theMesh;
 	[HideInInspector]
 	public KeyCode attemptQueueUnitKeyCode = KeyCode.None;
+    public string unitKeyMap = "None";
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -111,7 +112,8 @@ public class Tower : GroundBuilding {
 
 		player.Paint(gameObject);
 		//player.Paint(iconObject);
-        attemptQueueUnitKeyCode = (iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber).GetKey();
+        unitKeyMap = iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber;
+        attemptQueueUnitKeyCode = unitKeyMap.GetKey();
 		//Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
 
         keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
@@ -234,9 +236,10 @@ public class Tower : GroundBuilding {
 				SendAttemptQueueUnit();
 			}
 		}
-
-		//if (!npcModeOn && Input.GetKeyDown(attemptQueueUnitKeyCode)) {
-		if (!npcModeOn && Input.GetKeyDown(attemptQueueUnitKeyCode)) {
+        if (unitKeyMap == "None") {
+            return;
+        }
+        if (!npcModeOn && unitKeyMap.Pressed()) {
 			SendAttemptQueueUnit();
 		}
 	}
