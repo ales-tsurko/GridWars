@@ -127,6 +127,8 @@ public class UIMenu : UIElement {
     }
 
 	public void Reset () {
+        Destroy(gameObject);
+        return;
 		foreach (Transform child in transform) {
 			Destroy (child.gameObject);
 		}

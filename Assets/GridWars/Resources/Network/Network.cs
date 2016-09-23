@@ -71,7 +71,7 @@ public class Network : Bolt.GlobalEventListener {
 
 		indicator = UI.ActivityIndicator("Loading\n");
 
-		menu = UI.Menu();
+		//menu = UI.Menu();
 
 		ShowMainMenu();
 
@@ -133,11 +133,14 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	void ResetMenu() {
-		menu.Reset();
+        if (menu != null) {
+            menu.Reset();
+        }
         menu = UI.Menu();
 	}
 
 	void ShowMainMenu(UIMenuItem item = null) {
+        
 		ResetMenu();
         //menu.SetAnchor(MenuAnchor.TopCenter);
 

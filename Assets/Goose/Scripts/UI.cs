@@ -122,7 +122,6 @@ public static class UI {
 		go.transform.SetParent (MainCanvas ().transform);
 		go.transform.localPosition = Vector3.zero;
 		go.transform.localScale = Vector3.one;
-      
 	}
 
 	public static RectTransform CreateTextObj (this RectTransform _parent, UIFont _font = DEFAULTFONT){
