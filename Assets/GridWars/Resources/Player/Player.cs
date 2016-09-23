@@ -9,7 +9,17 @@ public class Player : MonoBehaviour {
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
-	Color[] colors = new Color[]{ new Color(95f/255, 95f/255, 56f/255), new Color(180f/255, 157f/255, 128f/255) };
+	/*
+	Color[] colors = new Color[]{ 
+		new Color(95f/255, 95f/255, 56f/255), 
+		new Color(180f/255, 157f/255, 128f/255) 
+	};
+	*/
+
+	Color[] colors = new Color[]{ 
+		Color.yellow, 
+		Color.blue
+	};
 	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
 
 	//public List<GameObject> ownedObjects;
@@ -61,7 +71,7 @@ public class Player : MonoBehaviour {
 	void Start() {
 		unitMaterial = new Material(Resources.Load("Materials/Unit") as Material);
 		unitMaterial.color = color;
-			
+		unitMaterial.SetFloat("_Glossiness", 0.35f);
 		//ownedObjects = new List<GameObject>();
 
 		gameObject.transform.parent = battlefield.transform;
