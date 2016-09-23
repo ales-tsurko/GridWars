@@ -45,6 +45,7 @@ public class PvpServer : DefaultNetworkDelegate {
 
 	void RequestSessions() {
 		App.shared.Log("RequestSessions", this);
+		CancelTimer();
 		Bolt.Zeus.RequestSessionList();
 	}
 
@@ -63,9 +64,12 @@ public class PvpServer : DefaultNetworkDelegate {
 			}
 		}
 
-		requestSessionsTimer = App.shared.timerCenter.NewTimer();
-		requestSessionsTimer.timeout = 1f;
-		requestSessionsTimer.action = RequestSessions;
+		if (requestSessionsTimer == null) {
+			requestSessionsTimer = App.shared.timerCenter.NewTimer();
+			requestSessionsTimer.timeout = 1f;
+			requestSessionsTimer.action = RequestSessions;
+			requestSessionsTimer.Start();
+		}
 	}
 
 	public override void ConnectRequest(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
