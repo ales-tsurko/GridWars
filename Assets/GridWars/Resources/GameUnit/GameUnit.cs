@@ -144,15 +144,24 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
+	private float lastCameraDistance = 0f;
+
 	public void UpdateSpatialSounds() {
 		AudioSource a = _runningAudioSource;
 		if (a != null) {
 			Vector3 cp = Camera.main.transform.position;
 			float d = Vector3.Distance(cp, _t.position);
 			float dr = (Mathf.Clamp(d, a.minDistance, a.maxDistance) - a.minDistance) / a.maxDistance;
-			float minVolume = 0.1f;
+			float minVolume = 0.04f;
 			float maxVolume = 1f;
 			a.volume = minVolume + (maxVolume - minVolume) * (1f - dr);
+			if (lastCameraDistance != 0f) {
+				float v = Mathf.Abs(d - lastCameraDistance);
+				float speedOfSound = 10f;
+				float p = speedOfSound / Math.Abs(speedOfSound - Mathf.Clamp(v, 0, 1));
+				_runningAudioSource.pitch = p;
+			}
+			lastCameraDistance = d;
 		}
 	}
 
