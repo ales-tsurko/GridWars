@@ -104,6 +104,59 @@ public class GameUnit : NetworkObject {
 		gameObject.DeepRemoveScripts();
 	}
 
+	// --- Running Sound ------------------------------------------
+
+	AudioSource _runningAudioSource;
+	protected AudioSource runningAudioSource {
+		get {
+			if (_runningAudioSource == null) {
+				_runningAudioSource = gameObject.AddComponent<AudioSource>();
+				_runningAudioSource.loop = true;
+				_runningAudioSource.spatialize = true;
+				//_runningAudioSource.volume = 0.1f;
+
+				_runningAudioSource.maxDistance = 20f;
+				_runningAudioSource.minDistance = 1f;
+
+				//_runningAudioSource.minVolume = 1f;
+				_runningAudioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+			}
+			return _runningAudioSource;
+		}
+	}
+
+	public AudioClip runningSound {
+		get {
+			return SoundNamed("running");
+		}
+	}
+
+	protected void PlayRunningSound() {
+		if ((runningSound != null) && (!runningAudioSource.isPlaying)) {
+			runningAudioSource.clip = runningSound;
+			runningAudioSource.Play(0);
+		}
+	}
+
+	public void SetRunningSoundPitch(float p) {
+		if (runningSound != null) {
+			runningAudioSource.pitch = p;
+		}
+	}
+
+	public void UpdateSpatialSounds() {
+		AudioSource a = _runningAudioSource;
+		if (a != null) {
+			Vector3 cp = Camera.main.transform.position;
+			float d = Vector3.Distance(cp, _t.position);
+			float dr = (Mathf.Clamp(d, a.minDistance, a.maxDistance) - a.minDistance) / a.maxDistance;
+			float minVolume = 0.1f;
+			float maxVolume = 1f;
+			a.volume = minVolume + (maxVolume - minVolume) * (1f - dr);
+		}
+	}
+
+
 	// --- Sounds ------------------------------------------
 
 	AudioSource _audioSource;
@@ -270,6 +323,8 @@ public class GameUnit : NetworkObject {
 		base.ServerAndClientInit();
 
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
+
+		PlayRunningSound();
 	}
 
 	public override void ServerJoinedGame() {
@@ -355,6 +410,7 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientFixedUpdate() {
 		base.ServerAndClientFixedUpdate();
+		UpdateSpatialSounds();
 	}
 
 	public override void ServerUpdate() {
