@@ -8,7 +8,6 @@ public static class UI {
 
 	const string DIR = "UI/";
 	const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
-	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.LGS;
@@ -91,20 +90,21 @@ public static class UI {
 		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
 	}
+
+	static Canvas _mainCanvas;
+
 	/// <summary>
 	/// Returns the Canvas or creates one if null
 	/// </summary>
 	/// <returns>The canvas.</returns>
 	public static Canvas MainCanvas () {
-		GameObject go = GameObject.Find (CANVAS);
-		if (go == null) {
-			go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
+		if (_mainCanvas == null) {
+			var go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
 			if (go == null) {
 				Canvas canvas;
-				go = new GameObject ();
+				go = new GameObject (); 
 				canvas = go.AddComponent<Canvas> ();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-				canvas.name = CANVAS;
 				//var scaler = canvas.gameObject.AddComponent<CanvasScaler> ();
 				var raycaster = canvas.gameObject.AddComponent<GraphicRaycaster> ();
 				raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
@@ -112,10 +112,11 @@ public static class UI {
 				eventSystem.gameObject.AddComponent<StandaloneInputModule> ();
 				return canvas;
 			}
+
+			_mainCanvas = go.GetComponent<Canvas>();
 		}
 
-		go.name = CANVAS;
-		return go.GetComponent<Canvas> ();
+		return _mainCanvas;
 	}
 
 	static void AssignToCanvas (GameObject go){
