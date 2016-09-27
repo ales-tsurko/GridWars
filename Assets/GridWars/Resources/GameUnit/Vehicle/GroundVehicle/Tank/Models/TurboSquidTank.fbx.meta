@@ -1,29 +1,57 @@
 fileFormatVersion: 2
-guid: 79eea8afdaae344cdac2bd0d5bab70ff
-timeCreated: 1474590222
+guid: 9b7c89a54669149fab076626e86aacce
+timeCreated: 1474999096
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Object007
-    100002: Tank_Hull
-    100004: Tank_M_Skirt
-    100006: Tank_Turret
-    100008: //RootNode
-    400000: Object007
-    400002: Tank_Hull
-    400004: Tank_M_Skirt
-    400006: Tank_Turret
-    400008: //RootNode
-    2300000: Tank_Hull
-    2300002: Tank_M_Skirt
-    2300004: Tank_Turret
-    3300000: Tank_Hull
-    3300002: Tank_M_Skirt
-    3300004: Tank_Turret
+    100000: group
+    100002: Object007
+    100004: pasted__polySurface1
+    100006: pasted__Tank_Turret
+    100008: pasted__transform1
+    100010: polySurface1
+    100012: polySurface2
+    100014: polySurface4
+    100016: polySurface6
+    100018: Tank_Hull
+    100020: Tank_M_Skirt
+    100022: Tank_Turret
+    100024: transform1
+    100026: transform2
+    100028: transform3
+    100030: //RootNode
+    400000: group
+    400002: Object007
+    400004: pasted__polySurface1
+    400006: pasted__Tank_Turret
+    400008: pasted__transform1
+    400010: polySurface1
+    400012: polySurface2
+    400014: polySurface4
+    400016: polySurface6
+    400018: Tank_Hull
+    400020: Tank_M_Skirt
+    400022: Tank_Turret
+    400024: transform1
+    400026: transform2
+    400028: transform3
+    400030: //RootNode
+    2300000: pasted__polySurface1
+    2300002: polySurface1
+    2300004: polySurface6
+    2300006: Tank_Hull
+    2300008: Tank_M_Skirt
+    3300000: pasted__polySurface1
+    3300002: polySurface1
+    3300004: polySurface6
+    3300006: Tank_Hull
+    3300008: Tank_M_Skirt
     4300000: Tank_Hull
-    4300002: Tank_Turret
-    4300004: Tank_M_Skirt
+    4300002: polySurface1
+    4300004: polySurface6
+    4300006: Tank_M_Skirt
+    4300008: pasted__polySurface1
     9500000: //RootNode
   materials:
     importMaterials: 1
