@@ -71,8 +71,6 @@ public class Network : Bolt.GlobalEventListener {
 
 		indicator = UI.ActivityIndicator("Loading\n");
 
-		//menu = UI.Menu();
-
 		ShowMainMenu();
 
 	}
