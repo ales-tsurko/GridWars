@@ -32,7 +32,9 @@ public class Chopper : AirVehicle {
 
 		AddStartingBoost();
 
-		Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.75f);
+		if (Minigun()) {
+			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.75f);
+		}
 	}
 
 	private void AddStartingBoost() {
@@ -164,8 +166,14 @@ public class Chopper : AirVehicle {
 		// rotors don't look right except at certain speeds, so hard wire this
 		float r = Random.value;
 		float t = TotalUpThrust();
-		Object_rotDY(mainRotor, 20f + t*r); //Mathf.Abs(upThrust*5.0f) + 20f);
-		Object_rotDX (tailRotor, 20f+ 20f*r);
+
+		if (mainRotor != null) {
+			Object_rotDY(mainRotor, 20f + t*r); //Mathf.Abs(upThrust*5.0f) + 20f);
+		}
+
+		if (tailRotor != null) {
+			Object_rotDX(tailRotor, 20f + 20f * r);
+		}
 	}
 
 	public override void ServerFixedUpdate () {
