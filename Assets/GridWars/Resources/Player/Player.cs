@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
 	*/
 
 	Color[] colors = new Color[]{ 
-		Color.yellow, 
+		Color.red, 
 		Color.blue
 	};
 	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
