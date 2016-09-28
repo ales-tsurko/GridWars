@@ -3,16 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Chopper : AirVehicle {
+public class ChopperConventional : AirVehicle {
 	public float cruiseHeight;
 	public float thrustHeight = 2f;
 
 	public GameObject mainRotorFixed; // used to apply thrust - normal rotor spins
 	public GameObject mainRotor;
 	public GameObject tailRotor;
-
-	public GameObject leftJet;
-	public GameObject rightJet;
 
 	[HideInInspector]
 	public bool usesSoundtrack = true;
@@ -133,13 +130,10 @@ public class Chopper : AirVehicle {
 		return upThrust;
 	}
 
-	private float newForwardThrust;
-
 	public void  ApplyRotorThrust() {
 		// points around top rotor to apply force
 		// a difference between the force applied to these 
 		// causes chopper to tilt and then move forward or back
-
 
 		float upThrust = TotalUpThrust();
 
@@ -163,32 +157,12 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForceAtPosition(frontForce, mainRotorThrustPointFront);
 		rigidBody().AddForceAtPosition(backForce,  mainRotorThrustPointBack);
 
-		newForwardThrust = f;
 	
 		//Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
 		//Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
 	}
 
 	public void SpinRotors() {
-
-
-		// position jets
-
-		//float a = -90f + newForwardThrust*45f; // jets pushing straight up
-		//float shipRx = rotX();
-		float speed = ForwardSpeed();
-
-		/*
-		float xr = Object_rotX(leftJet);
-		xr += newForwardThrust*10f;
-		xr = Mathf.Clamp(xr, (-80f) - 45f, (-80f) + 45f);
-		*/
-
-		float xr = (- 90f) + speed * 10f;
-		Object_setRotX(leftJet, xr);
-		Object_setRotX(rightJet, xr);
-
-
 		// rotors don't look right except at certain speeds, so hard wire this
 		float r = Random.value;
 		float t = TotalUpThrust();
