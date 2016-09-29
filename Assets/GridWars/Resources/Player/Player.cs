@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
+	public static string primaryColorMaterialName = "PrimaryColor";
+	public static string secondaryColorMaterialName = "SecondaryColor";
+
 	public Battlefield battlefield;
 	public Fortress fortress;
 	public float separation = 0.9f;
-	public Material unitMaterial;
+	public Material primaryMaterial;
+	public Material secondaryMaterial;
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
@@ -16,10 +20,16 @@ public class Player : MonoBehaviour {
 	};
 	*/
 
-	Color[] colors = new Color[]{ 
+	Color[] primaryColors = new Color[]{ 
 		Color.red, 
 		Color.blue
 	};
+
+	Color[] secondaryColors = new Color[]{ 
+		new Color(120f/255, 120f/255, 120f/255),
+		new Color(200f/255, 200f/255, 200f/255)
+	};
+
 	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
 
 	//public List<GameObject> ownedObjects;
@@ -36,9 +46,15 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public Color color {
+	public Color primaryColor {
 		get {
-			return colors[playerNumber - 1];
+			return primaryColors[playerNumber - 1];
+		}
+	}
+
+	public Color secondaryColor {
+		get {
+			return secondaryColors[playerNumber - 1];
 		}
 	}
 
@@ -69,9 +85,12 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start() {
-		unitMaterial = new Material(Resources.Load("Materials/Unit") as Material);
-		unitMaterial.color = color;
-		unitMaterial.SetFloat("_Glossiness", 0.35f);
+		primaryMaterial = new Material(Resources.Load("Materials/" + primaryColorMaterialName) as Material);
+		primaryMaterial.color = primaryColor;
+
+		secondaryMaterial = new Material(Resources.Load("Materials/" + secondaryColorMaterialName) as Material);
+		secondaryMaterial.color = secondaryColor;
+		//primaryMaterial.SetFloat("_Glossiness", 0.35f);
 		//ownedObjects = new List<GameObject>();
 
 		gameObject.transform.parent = battlefield.transform;
@@ -90,8 +109,11 @@ public class Player : MonoBehaviour {
 
 	public void Paint(GameObject gameObject) {
 		gameObject.EachRenderer(r => {
-			if (r.material.name.StartsWith("Unit")) {
-				r.material = unitMaterial;
+			if (r.material.name == "PrimaryColor") {
+				r.material = primaryMaterial;
+			}
+			else if (r.material.name == "SecondaryColor") {
+				r.material = secondaryMaterial;
 			}
 		});
 	}
