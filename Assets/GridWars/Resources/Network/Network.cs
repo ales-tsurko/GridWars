@@ -191,7 +191,6 @@ public class Network : Bolt.GlobalEventListener {
 	void CancelInternetPvpClicked(UIMenuItem item) {
 		networkDelegate.Cancel();
 		LeaveGame();
-		menu.Hide();
 	}
 
 	void Quit(UIMenuItem item) {

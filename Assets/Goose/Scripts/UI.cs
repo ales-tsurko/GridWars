@@ -114,6 +114,8 @@ public static class UI {
 			}
 
 			_mainCanvas = go.GetComponent<Canvas>();
+
+			go.name = "Canvas";
 		}
 
 		return _mainCanvas;
