@@ -109,10 +109,10 @@ public class Player : MonoBehaviour {
 
 	public void Paint(GameObject gameObject) {
 		gameObject.EachRenderer(r => {
-			if (r.material.name == "PrimaryColor") {
+			if (r.material.name.StartsWith("PrimaryColor")) {
 				r.material = primaryMaterial;
 			}
-			else if (r.material.name == "SecondaryColor") {
+			else if (r.material.name.StartsWith("SecondaryColor")) {
 				r.material = secondaryMaterial;
 			}
 		});
