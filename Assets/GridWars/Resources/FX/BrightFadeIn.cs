@@ -9,7 +9,8 @@ public class BrightFadeIn : MonoBehaviour {
 	ParticleSystem ps;
 
 	private Color startColor = Color.white;
-	private Color realColor;
+	private Color primaryColor;
+	private Color secondaryColor;
 
 	void Start () {
 		ps = GetComponent<ParticleSystem> ();
@@ -21,7 +22,8 @@ public class BrightFadeIn : MonoBehaviour {
 		timer.SetTimeout(period);
 		timer.Start();
 		GameObject g = gameObject;
-		realColor = g.GameUnit().player.color;
+		primaryColor = g.GameUnit().player.primaryColor;
+		secondaryColor = g.GameUnit().player.secondaryColor;
 	}
 
 	void DestroyThisComponent() {
@@ -29,22 +31,27 @@ public class BrightFadeIn : MonoBehaviour {
 	}
 
 	void Update (){
-		 float t = timer.RatioDone();
+		UpdateColor(primaryColor, Player.primaryColorMaterialName);
+		UpdateColor(secondaryColor, Player.secondaryColorMaterialName);
+	}
 
-		float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
-		float g = EaseInOutSine(t, startColor.g, realColor.g - startColor.g, 1); 
-		float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
+	void UpdateColor(Color finalColor, string materialName) {
+		float t = timer.RatioDone();
+
+		float r = EaseInOutSine(t, startColor.r, finalColor.r - startColor.r, 1); 
+		float g = EaseInOutSine(t, startColor.g, finalColor.g - startColor.g, 1); 
+		float b = EaseInOutSine(t, startColor.b, finalColor.b - startColor.b, 1); 
 		Color color = new Color(r, g, b);
 
-//		Color color =  Color.Lerp(startColor, realColor, timer.RatioDone());
-		gameObject.Paint(color, "Unit");
+		gameObject.Paint(color, materialName);
 	}
 
 	void OnDestroy() {
 		if (timer != null) { //in case start is never called.
 			timer.Cancel();
 		}
-		gameObject.Paint(realColor, "Unit");
+		gameObject.Paint(primaryColor, Player.primaryColorMaterialName);
+		gameObject.Paint(secondaryColor, Player.secondaryColorMaterialName);
 	}
 
 	float EaseInOutSine(float time, float startValue, float changeInValue, float duration) {

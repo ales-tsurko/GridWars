@@ -58,6 +58,7 @@ public class PvpServer : DefaultNetworkDelegate {
 				if (otherToken.gameId != serverToken.gameId && !otherToken.isFull && otherToken.gameTime < serverToken.gameTime) {
 					App.shared.Log("Found Higher Priority Game.  Restarting as client.", this);
 					startClient = true;
+					CancelTimer();
 					Network.shared.RestartBolt();
 					return;
 				}

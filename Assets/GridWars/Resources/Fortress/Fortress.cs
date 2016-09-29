@@ -26,12 +26,14 @@ public class Fortress : MonoBehaviour {
 	}
 
 	static System.Type[] unitTypes = new System.Type[] {
+		//*
 		typeof(Chopper),
 		typeof(Tanker),
 		typeof(Tank),
-		//typeof(Jeep),
-		//typeof(BigTank),
 		typeof(MobileSAM)
+		//*/
+
+		//typeof(Tank)
 	};
 
 	private GameObject placement = null;

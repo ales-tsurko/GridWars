@@ -1,0 +1,164 @@
+fileFormatVersion: 2
+guid: 4702cdda2594e476db7b5abf08a39ac6
+timeCreated: 1475103918
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BackPlate
+    100002: CenterConsole
+    100004: FrontEnd
+    100006: FrontPlates
+    100008: Horns
+    100010: MainFrame
+    100012: RearEnd
+    100014: SideShield
+    100016: //RootNode
+    100018: Tanker
+    100020: transform1
+    100022: transform10
+    100024: transform11
+    100026: transform12
+    100028: transform13
+    100030: transform14
+    100032: transform15
+    100034: transform18
+    100036: transform19
+    100038: transform2
+    100040: transform23
+    100042: transform24
+    100044: transform3
+    100046: transform4
+    100048: transform5
+    100050: transform6
+    100052: transform7
+    100054: transform8
+    100056: transform9
+    100058: Treads
+    100060: TreadShield
+    400000: BackPlate
+    400002: CenterConsole
+    400004: FrontEnd
+    400006: FrontPlates
+    400008: Horns
+    400010: MainFrame
+    400012: RearEnd
+    400014: SideShield
+    400016: //RootNode
+    400018: Tanker
+    400020: transform1
+    400022: transform10
+    400024: transform11
+    400026: transform12
+    400028: transform13
+    400030: transform14
+    400032: transform15
+    400034: transform18
+    400036: transform19
+    400038: transform2
+    400040: transform23
+    400042: transform24
+    400044: transform3
+    400046: transform4
+    400048: transform5
+    400050: transform6
+    400052: transform7
+    400054: transform8
+    400056: transform9
+    400058: Treads
+    400060: TreadShield
+    2300000: BackPlate
+    2300002: CenterConsole
+    2300004: FrontEnd
+    2300006: FrontPlates
+    2300008: Horns
+    2300010: MainFrame
+    2300012: RearEnd
+    2300014: SideShield
+    2300016: Treads
+    2300018: TreadShield
+    3300000: BackPlate
+    3300002: CenterConsole
+    3300004: FrontEnd
+    3300006: FrontPlates
+    3300008: Horns
+    3300010: MainFrame
+    3300012: RearEnd
+    3300014: SideShield
+    3300016: Treads
+    3300018: TreadShield
+    4300000: TreadShield
+    4300002: FrontPlates
+    4300004: Horns
+    4300006: Treads
+    4300008: CenterConsole
+    4300010: RearEnd
+    4300012: BackPlate
+    4300014: SideShield
+    4300016: FrontEnd
+    4300018: MainFrame
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

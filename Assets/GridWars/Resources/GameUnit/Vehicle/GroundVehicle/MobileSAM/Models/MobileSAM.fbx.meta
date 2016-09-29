@@ -1,0 +1,217 @@
+fileFormatVersion: 2
+guid: 64ab655d2d66c49ea823ebabdaa1a669
+timeCreated: 1475096847
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Antenna
+    100002: BarrelHousingPanels
+    100004: BarrelHousingSupports
+    100006: Electronics
+    100008: Frame
+    100010: FrontBarrel
+    100012: FrontBarrelHousing
+    100014: FrontGun
+    100016: Hull
+    100018: //RootNode
+    100020: Radio
+    100022: RearBarrel
+    100024: RearBarrelHousing
+    100026: RearGadget
+    100028: RearGun
+    100030: SideGadgets
+    100032: transform1
+    100034: transform10
+    100036: transform11
+    100038: transform12
+    100040: transform13
+    100042: transform14
+    100044: transform15
+    100046: transform16
+    100048: transform17
+    100050: transform18
+    100052: transform19
+    100054: transform2
+    100056: transform20
+    100058: transform21
+    100060: transform22
+    100062: transform23
+    100064: transform24
+    100066: transform25
+    100068: transform26
+    100070: transform27
+    100072: transform28
+    100074: transform29
+    100076: transform3
+    100078: transform4
+    100080: transform5
+    100082: transform6
+    100084: transform7
+    100086: transform8
+    100088: transform9
+    100090: Treads
+    100092: Turret
+    100094: TurretBase
+    100096: TurretGadgets
+    100098: TurretPlate
+    400000: Antenna
+    400002: BarrelHousingPanels
+    400004: BarrelHousingSupports
+    400006: Electronics
+    400008: Frame
+    400010: FrontBarrel
+    400012: FrontBarrelHousing
+    400014: FrontGun
+    400016: Hull
+    400018: //RootNode
+    400020: Radio
+    400022: RearBarrel
+    400024: RearBarrelHousing
+    400026: RearGadget
+    400028: RearGun
+    400030: SideGadgets
+    400032: transform1
+    400034: transform10
+    400036: transform11
+    400038: transform12
+    400040: transform13
+    400042: transform14
+    400044: transform15
+    400046: transform16
+    400048: transform17
+    400050: transform18
+    400052: transform19
+    400054: transform2
+    400056: transform20
+    400058: transform21
+    400060: transform22
+    400062: transform23
+    400064: transform24
+    400066: transform25
+    400068: transform26
+    400070: transform27
+    400072: transform28
+    400074: transform29
+    400076: transform3
+    400078: transform4
+    400080: transform5
+    400082: transform6
+    400084: transform7
+    400086: transform8
+    400088: transform9
+    400090: Treads
+    400092: Turret
+    400094: TurretBase
+    400096: TurretGadgets
+    400098: TurretPlate
+    2300000: Antenna
+    2300002: BarrelHousingPanels
+    2300004: BarrelHousingSupports
+    2300006: Electronics
+    2300008: Frame
+    2300010: FrontBarrel
+    2300012: FrontBarrelHousing
+    2300014: RearBarrel
+    2300016: RearBarrelHousing
+    2300018: RearGadget
+    2300020: SideGadgets
+    2300022: Treads
+    2300024: TurretBase
+    2300026: TurretGadgets
+    2300028: TurretPlate
+    3300000: Antenna
+    3300002: BarrelHousingPanels
+    3300004: BarrelHousingSupports
+    3300006: Electronics
+    3300008: Frame
+    3300010: FrontBarrel
+    3300012: FrontBarrelHousing
+    3300014: RearBarrel
+    3300016: RearBarrelHousing
+    3300018: RearGadget
+    3300020: SideGadgets
+    3300022: Treads
+    3300024: TurretBase
+    3300026: TurretGadgets
+    3300028: TurretPlate
+    4300000: BarrelHousingSupports
+    4300002: TurretGadgets
+    4300004: TurretBase
+    4300006: Electronics
+    4300008: Antenna
+    4300010: BarrelHousingPanels
+    4300012: RearBarrelHousing
+    4300014: RearBarrel
+    4300016: FrontBarrel
+    4300018: FrontBarrelHousing
+    4300020: Treads
+    4300022: TurretPlate
+    4300024: Frame
+    4300026: RearGadget
+    4300028: SideGadgets
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

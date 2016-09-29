@@ -110,10 +110,10 @@ public class Network : Bolt.GlobalEventListener {
             CameraController.instance.NextPosition();
         }
         if (Keys.CONCEDE.Pressed()) {
-            Concede(new UIMenuItem());
+            Concede();
         }
         if (Keys.TOGGLEKEYS.Pressed()){
-            ToggleHotkeys(new UIMenuItem());
+            ToggleHotkeys();
         }
     }
 
@@ -191,7 +191,6 @@ public class Network : Bolt.GlobalEventListener {
 	void CancelInternetPvpClicked(UIMenuItem item) {
 		networkDelegate.Cancel();
 		LeaveGame();
-		menu.Hide();
 	}
 
 	void Quit(UIMenuItem item) {
@@ -295,11 +294,25 @@ public class Network : Bolt.GlobalEventListener {
 		Battlefield.current.StartGame();
 	}
 
-	void Concede(UIMenuItem item) {
+	void Concede(UIMenuItem item = null) {
+		ResetMenu();
+		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
+		menu.AddItem(UI.MenuItem("Cancel", CancelConcede));
+		menu.SetOrientation(MenuOrientation.Horizontal);
+		menu.SetAnchor(MenuAnchor.TopCenter);
+		menu.SetBackground(Color.black, 0);
+		menu.Show();
+	}
+
+	void ReallyConcede(UIMenuItem item = null) {
 		LeaveGame();
 	}
+
+	void CancelConcede(UIMenuItem item = null) {
+		ShowInGameMenu();
+	}
       
-    void ToggleHotkeys(UIMenuItem item){
+    void ToggleHotkeys(UIMenuItem item = null){
         App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
         Array.ForEach<Tower>(FindObjectsOfType<Tower>(), (Tower _tower) => {
             _tower.SetKeysPref(App.shared.prefs.keyIconsVisible);
@@ -332,5 +345,31 @@ public class Network : Bolt.GlobalEventListener {
 		if (restartBolt) {
 			RestartBolt();
 		}
+	}
+
+	public void DeclareVictor(Player player) {
+		ResetMenu();
+		menu.SetBackground(Color.black, 0);
+		var title = "";
+		if (player.isLocal) {
+			if (networkDelegate.localPlayers.Count > 1) {
+				title = "Player " + player.playerNumber + " is Victorious!";
+			}
+			else {
+				title = "Victory!";
+			}
+		}
+		else {
+			title = "Defeat!";
+		}
+
+		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
+		menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
+
+		menu.Show();
+	}
+
+	void LeaveGame(UIMenuItem item) {
+		LeaveGame();
 	}
 }
