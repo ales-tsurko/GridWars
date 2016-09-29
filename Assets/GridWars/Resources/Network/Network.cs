@@ -346,4 +346,30 @@ public class Network : Bolt.GlobalEventListener {
 			RestartBolt();
 		}
 	}
+
+	public void DeclareVictor(Player player) {
+		ResetMenu();
+		menu.SetBackground(Color.black, 0);
+		var title = "";
+		if (player.isLocal) {
+			if (networkDelegate.localPlayers.Count > 1) {
+				title = "Player " + player.playerNumber + " is Victorious!";
+			}
+			else {
+				title = "Victory!";
+			}
+		}
+		else {
+			title = "Defeat!";
+		}
+
+		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
+		menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
+
+		menu.Show();
+	}
+
+	void LeaveGame(UIMenuItem item) {
+		LeaveGame();
+	}
 }

@@ -45,7 +45,8 @@ public class Battlefield : MonoBehaviour {
 
 		if (livingPlayers().Count == 1) {
 			print("Game Over Man");
-			Network.shared.LeaveGame();
+			Network.shared.DeclareVictor(livingPlayers()[0]);
+			enabled = false;
 		}
 	}
 

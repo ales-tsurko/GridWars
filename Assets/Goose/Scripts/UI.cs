@@ -26,12 +26,13 @@ public static class UI {
 		if (image == null) {
 			image = button.GetComponent<Image> ();
 		}
-		if (type != MenuItemType.ButtonTextOnly) {
+		if (type == MenuItemType.ButtonTextOnly) {
+			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
+				imageComponent.enabled = false;
+			}
+		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
 			image.overrideSprite = sprite;
-		} else {
-			image.overrideSprite = null;
-			image.color = new Color (1f, 1f, 1f, 0f);
 		}
 		button.SetAction(action);
 		button.SetText(title, allcaps);
