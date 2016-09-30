@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using AssemblyCSharp;
 
 public class PvpServer : DefaultNetworkDelegate {
+	public string gameId;
+
 	ServerToken serverToken;
-	Timer requestSessionsTimer;
-	bool startClient = false;
 
 	public override List<Player> localPlayers {
 		get {
@@ -29,9 +29,7 @@ public class PvpServer : DefaultNetworkDelegate {
 
 		App.shared.Log("Setting Host Info.", this);
 		serverToken = new ServerToken();
-		serverToken.gameId = UnityEngine.Random.value;
-		serverToken.gameTime = System.DateTime.UtcNow.Ticks;
-		serverToken.isFull = false;
+		serverToken.gameId = gameId;
 		BoltNetwork.SetHostInfo("GridWars", serverToken);
 
 		Bolt.Zeus.Connect(UdpKit.UdpEndPoint.Parse(Network.shared.zeusEndpoint));
@@ -40,37 +38,6 @@ public class PvpServer : DefaultNetworkDelegate {
 
 	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
 		base.ZeusConnected(endpoint);
-		RequestSessions();
-	}
-
-	void RequestSessions() {
-		App.shared.Log("RequestSessions", this);
-		CancelTimer();
-		Bolt.Zeus.RequestSessionList();
-	}
-
-	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
-		base.SessionListUpdated(sessionList);
-
-		foreach (var session in sessionList) {
-			if (session.Value.HostName == "GridWars") {
-				var otherToken = session.Value.GetProtocolToken() as ServerToken;
-				if (otherToken.gameId != serverToken.gameId && !otherToken.isFull && otherToken.gameTime < serverToken.gameTime) {
-					App.shared.Log("Found Higher Priority Game.  Restarting as client.", this);
-					startClient = true;
-					CancelTimer();
-					Network.shared.RestartBolt();
-					return;
-				}
-			}
-		}
-
-		if (requestSessionsTimer == null) {
-			requestSessionsTimer = App.shared.timerCenter.NewTimer();
-			requestSessionsTimer.timeout = 1f;
-			requestSessionsTimer.action = RequestSessions;
-			requestSessionsTimer.Start();
-		}
 	}
 
 	public override void ConnectRequest(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
@@ -93,11 +60,9 @@ public class PvpServer : DefaultNetworkDelegate {
 		}
 		else {
 			App.shared.Log("Client Connected.", this);
-			serverToken.isFull = true;
 			BoltNetwork.SetHostInfo("GridWars", serverToken);
 			this.connection = connection;
 			Network.shared.StartGame();
-			CancelTimer();
 		}
 	}
 
@@ -109,26 +74,9 @@ public class PvpServer : DefaultNetworkDelegate {
 		}
 	}
 
-	public override void BoltShutdownCompleted() {
-		base.BoltShutdownCompleted();
-		CancelTimer();
-		if (startClient) {
-			startClient = false;
-			new PvpClient().Start();
-		}
-	}
-
-	void CancelTimer() {
-		if (requestSessionsTimer != null) {
-			requestSessionsTimer.Cancel();
-			requestSessionsTimer = null;
-		}
-	}
-
 	public override void Cancel() {
 		base.Cancel();
 
 		Network.shared.LeaveGame();
-		startClient = false;
 	}
 }

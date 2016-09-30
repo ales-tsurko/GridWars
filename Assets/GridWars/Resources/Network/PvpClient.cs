@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using AssemblyCSharp;
 
 public class PvpClient : DefaultNetworkDelegate {
-	bool startServer = false;
-	int processSessionsListCount = 0;
-	Timer requestSessionListTimer;
+	public string gameId;
+
+	int attempts = 0;
+	Timer attemptTimer;
+	bool firstSessionListUpdate; //Bolt has a bug where it calls SessionListUpdated twice.
 
 	public override List<Player> localPlayers {
 		get {
@@ -35,41 +37,40 @@ public class PvpClient : DefaultNetworkDelegate {
 
 	void RequestSessionList() {
 		App.shared.Log("RequestSessionList", this);
+		firstSessionListUpdate = true;
 		Bolt.Zeus.RequestSessionList();
 	}
 
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
+		if (firstSessionListUpdate) {
+			firstSessionListUpdate = false;
+			return;
+		}
 		base.SessionListUpdated(sessionList);
 
-		ProcessSessionsList();
-	}
+		attempts ++;
 
-	void ProcessSessionsList() {
-		processSessionsListCount ++;
-		if (processSessionsListCount == 1) { //TODO HACK: Bolt has a bug where first SessionListUpdated is always empty.
-			requestSessionListTimer = App.shared.timerCenter.NewTimer();
-			requestSessionListTimer.timeout = 1f;
-			requestSessionListTimer.action = ProcessSessionsList;
-			requestSessionListTimer.Start();
+		if (attemptTimer != null) {
+			attemptTimer.Cancel();
 		}
-		else if (processSessionsListCount == 2) {
-			requestSessionListTimer.Cancel();
 
-			foreach (var session in BoltNetwork.SessionList) {
-				if (session.Value.HostName == "GridWars") {
-					var token = session.Value.GetProtocolToken() as ServerToken;
-					if (!token.isFull) {
-						App.shared.Log("Connecting To Game: " + token.gameId, this);
-						BoltNetwork.Connect(session.Value);
-						return;
-					}
+		foreach (var session in sessionList) {
+			if (session.Value.HostName == "GridWars") {
+				var token = session.Value.GetProtocolToken() as ServerToken;
+				if (token.gameId == gameId) {
+					App.shared.Log("Connecting To Game: " + token.gameId, this);
+					BoltNetwork.Connect(session.Value);
+					return;
 				}
 			}
-
-			App.shared.Log("No games found.  Restarting as server.", this);
-			startServer = true; //Restart as server
-			Network.shared.RestartBolt();
 		}
+
+		attemptTimer = App.shared.timerCenter.NewTimer();
+		attemptTimer.action = RequestSessionList;
+		attemptTimer.timeout = 0.25f;
+		attemptTimer.Start();
+
+		//RequestSessionList();
 	}
 
 	public override void Connected(BoltConnection connection) {
@@ -86,25 +87,12 @@ public class PvpClient : DefaultNetworkDelegate {
 		Network.shared.LeaveGame(false);
 	}
 
-	public override void BoltShutdownCompleted() {
-		base.BoltShutdownCompleted();
-
-		if (requestSessionListTimer != null) {
-			requestSessionListTimer.Cancel();
-			requestSessionListTimer = null;
-		}
-
-		if (startServer) {
-			App.shared.Log("new PvpServer().Start()", this);
-			startServer = false;
-			new PvpServer().Start();
-		}
-	}
-
 	public override void Cancel() {
 		base.Cancel();
 
+		attemptTimer.Cancel();
+		attemptTimer = null;
+
 		Network.shared.LeaveGame();
-		startServer = false;
 	}
 }

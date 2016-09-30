@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using AssemblyCSharp;
 using System.Net.NetworkInformation;
+using SocketIO;
 
 public class Network : Bolt.GlobalEventListener {
 	// public interface
@@ -71,8 +72,11 @@ public class Network : Bolt.GlobalEventListener {
 
 		indicator = UI.ActivityIndicator("Loading\n");
 
-		ShowMainMenu();
+		matchmaker = new Matchmaker();
+		matchmaker.network = this;
+		matchmaker.Init();
 
+		ShowMainMenu();
 	}
 
 	void Update() {
@@ -184,12 +188,16 @@ public class Network : Bolt.GlobalEventListener {
 		menu.AddItem(UI.MenuItem("Cancel", CancelInternetPvpClicked));
 		menu.Show();
 
-		new PvpClient().Start();
+		//new PvpClient().Start();
 		//new PvpServer().Start();
+		matchmaker.Start();
 	}
 
 	void CancelInternetPvpClicked(UIMenuItem item) {
-		networkDelegate.Cancel();
+		if (networkDelegate != null) {
+			networkDelegate.Cancel();
+		}
+		matchmaker.Cancel();
 		LeaveGame();
 	}
 
@@ -221,6 +229,27 @@ public class Network : Bolt.GlobalEventListener {
 		}
 	}
 	*/
+
+	//Matchmaker
+
+	public Matchmaker matchmaker;
+
+	void StartMatchmaker() {
+		matchmaker.Start();
+	}
+
+	public void HostGame(string gameId) {
+		var pvpServer = new PvpServer();
+		pvpServer.gameId = gameId;
+		pvpServer.Start();
+	}
+
+	public void JoinGame(string gameId) {
+		var pvpClient = new PvpClient();
+		pvpClient.gameId = gameId;
+		pvpClient.Start();
+	}
+
 
 	//Bolt
 
@@ -290,6 +319,8 @@ public class Network : Bolt.GlobalEventListener {
 		indicator.Hide();
 		ResetMenu();
         ShowInGameMenu();
+
+		matchmaker.Disconnect();
 
 		Battlefield.current.StartGame();
 	}
