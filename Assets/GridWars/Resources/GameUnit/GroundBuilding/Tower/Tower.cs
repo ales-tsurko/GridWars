@@ -147,12 +147,13 @@ public class Tower : GroundBuilding {
 			//PaintAsDisabled();
             ShowHud(false);
 		}
+
+		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && showKeysPref);
 	}
 
 	// HUD
 
 	GameObject iconObject;
-	bool hudIsDisplayed = false;
     bool showKeysPref = true;
 	public GameObject keyIcon;
     public void SetKeysPref (bool pref) {
@@ -161,11 +162,9 @@ public class Tower : GroundBuilding {
     }
 
     public void ShowHud(bool b = true) {
-        hudIsDisplayed = b;
         foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-            renderer.enabled = hudIsDisplayed;
+            renderer.enabled = b;
         }
-        keyIcon.SetActive(hudIsDisplayed && attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && showKeysPref);
 	}
 
 	/*public void HideHud() {
