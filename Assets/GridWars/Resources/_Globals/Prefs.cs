@@ -38,6 +38,15 @@ public class Prefs {
         }
     }
 
+    public static string GetKeyMappings () {
+        return PlayerPrefs.GetString("keyMappings", "empty");
+    }
+
+    public static void SetKeyMappings (string s) {
+        PlayerPrefs.SetString("keyMappings", s);
+
+    }
+
 	public Prefs() {
 		keyIconsVisible = false; //TODO: the UI should control this.
 	}

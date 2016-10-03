@@ -6,4 +6,7 @@ using UnityEngine.UI;
 public class UIButtonRemapKey : UIButton {
     public string code;
     public KeyCode keyKey, joyKey;
+    public void OnClick () {
+        Keys.RemapKey(this);
+    }
 }

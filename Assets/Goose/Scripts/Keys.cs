@@ -126,15 +126,14 @@ public static class Keys {
             if (k.playerNum != currentRemapPlayerNum) {
                 continue;
             }
-            remapMenu.AddItem(UI.ButtonPrefabKeyMap(RemapKey, k));
+            remapMenu.AddItem(UI.ButtonPrefabKeyMap(k));
         }
-        remapMenu.AddItem(UI.ButtonPrefabKeyMap(SetDefaults, null, true, "Reset to Defaults"));
-        remapMenu.AddItem(UI.ButtonPrefabKeyMap(CloseMenu, null, true, "Close"));
+        remapMenu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Reset to Defaults"));
+        remapMenu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Close"));
         remapMenu.Show();
     }
 
-    public static void RemapKey(UIMenuItem item){
-        UIButtonRemapKey remapKey = item.GetComponent<UIButtonRemapKey>();
+    public static void RemapKey(UIButtonRemapKey remapKey){
         UIPopup popup = UI.Popup("Press a Key or Joystick Button to map to \n\n" + remapKey.code);
         ReadRemapKeyInput read = popup.gameObject.AddComponent<ReadRemapKeyInput>();
         read.data = remapKey;

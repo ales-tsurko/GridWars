@@ -205,4 +205,8 @@ public static class UIMenuExtension {
     public static void SetOrientation (this UIMenu _menu, MenuOrientation orientation){
         _menu.OrderMenu(orientation);
     }
+
+    public static void Destroy (this UIMenu _menu){
+        Destroy(_menu);
+    }
 }

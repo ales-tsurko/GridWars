@@ -31,7 +31,7 @@ public class UIElement : MonoBehaviour {
 	}
 
 	public System.Object data;
-	public System.Action<UIMenuItem> action;
+	public System.Action action;
 	/// <summary>
 	/// Sets the position of the Button
 	/// </summary>
@@ -75,9 +75,10 @@ public class UIElement : MonoBehaviour {
 	/// Sets the method to call OnClick
 	/// </summary>
 	/// <param name="action">Method without parens</param>
-	public void SetAction (System.Action<UIMenuItem> _action){
-		action = _action;
-	}
+	
+    public void SetAction (System.Action _action){
+        action = _action;
+    }
 
 }
 
