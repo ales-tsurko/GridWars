@@ -173,7 +173,7 @@ public class Player : MonoBehaviour {
 	// --- Networking ---------------------------------------
 
 	public void TakeControlOf(GameUnit gameUnit) {
-		if (isLocal) {
+		if (isLocal || (App.shared.network.connection == null)) {
 			//take control as server
 			gameUnit.entity.TakeControl();
 		}
