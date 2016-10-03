@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
 public class UIElement : MonoBehaviour {
-
+    public string itemData;
 	public bool isHidden {
 		get {
 			return !gameObject.activeInHierarchy;
@@ -31,7 +31,7 @@ public class UIElement : MonoBehaviour {
 	}
 
 	public System.Object data;
-	public System.Action action;
+	public System.Action<UIMenuItem> action;
 	/// <summary>
 	/// Sets the position of the Button
 	/// </summary>
@@ -56,10 +56,6 @@ public class UIElement : MonoBehaviour {
 		gameObject.SetActive (false);
 	}
 
-	public void Destroy() {
-		Destroy(gameObject);
-	}
-
 	public void SetImageAspect (bool b){ 
 		if (GetComponent<Image> () == null) {
 			return;
@@ -73,12 +69,21 @@ public class UIElement : MonoBehaviour {
 		GetComponent<Image> ().type = type;
 	}
 
+   
+
 	/// <summary>
 	/// Sets the method to call OnClick
 	/// </summary>
 	/// <param name="action">Method without parens</param>
-	public void SetAction (System.Action _action){
+	public void SetAction (System.Action<UIMenuItem> _action){
 		action = _action;
 	}
 
+}
+
+public static class UIElementExtension {
+    public static UIMenuItem SetData (this UIMenuItem element, string _data){
+        element.itemData = _data;
+        return element;
+    }
 }

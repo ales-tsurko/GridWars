@@ -8,11 +8,14 @@ public static class UI {
 
 	const string DIR = "UI/";
 	const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
+    const string KEYMAPBUTTONPREFAB = DIR + "Buttons/KeyMapButton";
+    const string POPUP = DIR + "Popups/PopupDefault";
+	const string CANVAS = "Canvas";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.LGS;
 
-	static UIButton Button (string title, System.Action action, MenuItemType type, string skin, bool animated, bool allcaps){
+	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -26,19 +29,18 @@ public static class UI {
 		if (image == null) {
 			image = button.GetComponent<Image> ();
 		}
-		if (type == MenuItemType.ButtonTextOnly) {
-			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
-				imageComponent.enabled = false;
-			}
-		} else {
+		if (type != MenuItemType.ButtonTextOnly) {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
 			image.overrideSprite = sprite;
+		} else {
+			image.overrideSprite = null;
+			image.color = new Color (1f, 1f, 1f, 0f);
 		}
 		button.SetAction(action);
 		button.SetText(title, allcaps);
 		return button;
 	}
-    static UIButton ButtonPrefab(string title, System.Action action){
+    static UIButton ButtonPrefab(string title, System.Action<UIMenuItem> action){
         GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(BUTTONPREFAB));
         AssignToCanvas(go);
         UIButton _button = go.GetComponent<UIButton>();
@@ -48,7 +50,35 @@ public static class UI {
         return _button;
     }
 
-    public static UIMenuItem MenuItem (string title = "Button", System.Action action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
+    public static UIMenuItem ButtonPrefabKeyMap(System.Action<UIMenuItem>action, KeyData _keyData, bool utilKey = false, string utilText = ""){
+        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(KEYMAPBUTTONPREFAB));
+        AssignToCanvas(go);
+        UIButtonRemapKey _button = go.GetComponent<UIButtonRemapKey>();
+        if (_keyData != null) {
+            _button.joyKey = _keyData.code.GetButton();
+            _button.keyKey = _keyData.key;
+            _button.code = _keyData.code;
+        }
+        if (utilKey) {
+            _button.text = utilText;
+        } else {
+            _button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
+        }
+        _button.SetAction(action);
+        return _button;
+    }
+
+    public static UIPopup Popup(string title = ""){
+        GameObject go = (GameObject)MonoBehaviour.Instantiate(Resources.Load<GameObject>(POPUP));
+        UIPopup p = go.GetComponent<UIPopup>();
+        p.SetText(title);
+        AssignToCanvas (go);
+        RectTransform t = go.GetComponent<RectTransform>();
+        t.sizeDelta = Vector2.zero;
+        return p;
+    }
+
+    public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:
             case MenuItemType.ButtonSquare:
@@ -91,21 +121,20 @@ public static class UI {
 		//Debug.Log (FONTDIR + _font.ToString ());
 		return Resources.Load<Font> (FONTDIR + _font.ToString ());
 	}
-
-	static Canvas _mainCanvas;
-
 	/// <summary>
 	/// Returns the Canvas or creates one if null
 	/// </summary>
 	/// <returns>The canvas.</returns>
 	public static Canvas MainCanvas () {
-		if (_mainCanvas == null) {
-			var go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
+		GameObject go = GameObject.Find (CANVAS);
+		if (go == null) {
+			go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
 			if (go == null) {
 				Canvas canvas;
-				go = new GameObject (); 
+				go = new GameObject ();
 				canvas = go.AddComponent<Canvas> ();
 				canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+				canvas.name = CANVAS;
 				//var scaler = canvas.gameObject.AddComponent<CanvasScaler> ();
 				var raycaster = canvas.gameObject.AddComponent<GraphicRaycaster> ();
 				raycaster.blockingObjects = GraphicRaycaster.BlockingObjects.None;
@@ -113,13 +142,10 @@ public static class UI {
 				eventSystem.gameObject.AddComponent<StandaloneInputModule> ();
 				return canvas;
 			}
-
-			_mainCanvas = go.GetComponent<Canvas>();
-
-			go.name = "Canvas";
 		}
 
-		return _mainCanvas;
+		go.name = CANVAS;
+		return go.GetComponent<Canvas> ();
 	}
 
 	static void AssignToCanvas (GameObject go){
@@ -149,4 +175,5 @@ public static class UI {
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly, ButtonPrefab}
 public enum UIFont {None, Army, EuroStile, LGS}
+[System.Serializable]
 public class UIMenuItem : UIElement {}
