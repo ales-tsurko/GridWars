@@ -120,7 +120,7 @@ public class PlayingGameState : NetworkDelegateState {
 	}
 
 	void ChangeCam() {
-		CameraController.instance.NextPosition();
+		App.shared.cameraController.NextPosition();
 	}
 
 	void ShowLostConnection() {

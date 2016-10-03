@@ -50,7 +50,6 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 		App.shared.debug = true;
 
-		CameraController.instance.enabled = true;
 		//SetupTiles();
 
 		players = new List<Player>();
@@ -59,6 +58,8 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void StartGame() {
+		App.shared.cameraController.InitCamera();
+
 		foreach (var player in players) {
 			player.StartGame();
 		}
