@@ -110,9 +110,8 @@ public class Tower : GroundBuilding {
 		iconObject.transform.SetParent(transform);
 		iconObject.transform.localPosition = new Vector3(0f, iconPlacement.transform.position.y, 0f);
 		iconObject.transform.localRotation = Quaternion.identity;
+		player.Paint(iconObject);
 
-		player.Paint(gameObject);
-		//player.Paint(iconObject);
         unitKeyMap = iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber;
         attemptQueueUnitKeyCode = unitKeyMap.GetKey();
 		//Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
