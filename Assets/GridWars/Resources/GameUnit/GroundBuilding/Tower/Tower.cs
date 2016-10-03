@@ -65,6 +65,7 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 
+		prefs = App.shared.prefs; //perf opt
 		//hitPoints = 1f;
 	}
 
@@ -121,7 +122,6 @@ public class Tower : GroundBuilding {
 		if (playerNumber == 2) {
 			keyIcon.transform.Rotate(new Vector3(0, 0, 180));
 		}
-        SetKeysPref(App.shared.prefs.keyIconsVisible);
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 	}
@@ -148,18 +148,14 @@ public class Tower : GroundBuilding {
             ShowHud(false);
 		}
 
-		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && showKeysPref);
+		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
 	}
 
 	// HUD
 
 	GameObject iconObject;
-    bool showKeysPref = true;
 	public GameObject keyIcon;
-    public void SetKeysPref (bool pref) {
-        print("Setting " + pref);
-        showKeysPref = pref;
-    }
+	Prefs prefs;
 
     public void ShowHud(bool b = true) {
         foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {

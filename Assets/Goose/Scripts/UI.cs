@@ -12,7 +12,7 @@ public static class UI {
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.LGS;
 
-	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
+	static UIButton Button (string title, System.Action action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -38,7 +38,7 @@ public static class UI {
 		button.SetText(title, allcaps);
 		return button;
 	}
-    static UIButton ButtonPrefab(string title, System.Action<UIMenuItem> action){
+    static UIButton ButtonPrefab(string title, System.Action action){
         GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(BUTTONPREFAB));
         AssignToCanvas(go);
         UIButton _button = go.GetComponent<UIButton>();
@@ -48,7 +48,7 @@ public static class UI {
         return _button;
     }
 
-    public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
+    public static UIMenuItem MenuItem (string title = "Button", System.Action action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:
             case MenuItemType.ButtonSquare:
