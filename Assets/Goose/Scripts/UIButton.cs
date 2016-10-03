@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
+[System.Serializable]
 public class UIButton : UIMenuItem {
 
 	UnityEvent method;
@@ -56,9 +57,7 @@ public class UIButton : UIMenuItem {
 	}
 		
 	public void OnClick (){
-		if (action != null) {
-			action.Invoke();
-		}
+		action.Invoke (this);
 	}
 
     public void Update () {
