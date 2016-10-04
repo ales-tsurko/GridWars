@@ -43,6 +43,10 @@ public class UIElement : MonoBehaviour {
 		transform.localPosition = new Vector3 (x * w / 2f, h * y / 2f, 0);
 	}
 
+    public void Destroy() {
+        Destroy(gameObject);
+    }
+
 	public void SetSize (float x, float y, bool preserveAspect = true){
 		GetComponent<RectTransform> ().sizeDelta = new Vector2 (x, y);
 		SetImageAspect (preserveAspect);

@@ -50,7 +50,7 @@ public static class UI {
         return _button;
     }
 
-    public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = ""){
+    public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
         GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(KEYMAPBUTTONPREFAB));
         AssignToCanvas(go);
         UIButtonRemapKey _button = go.GetComponent<UIButtonRemapKey>();
@@ -64,7 +64,11 @@ public static class UI {
         } else {
             _button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
         }
-        _button.SetAction(_button.OnClick);
+        if (action == null) {
+            _button.SetAction(_button.OnClick);
+        } else {
+            _button.SetAction(action);
+        }
         return _button;
     }
 

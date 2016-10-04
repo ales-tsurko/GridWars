@@ -52,17 +52,18 @@ public class Battlefield : MonoBehaviour {
 
 		CameraController.instance.enabled = true;
 		//SetupTiles();
-
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
 	}
 
 	public void StartGame() {
+        print("StartGame");
 		foreach (var player in players) {
 			player.StartGame();
 		}
-		/*
+        print("DoneStartGame");
+        /*
 		foreach (GameObject tile in tiles) {
 			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
 		}

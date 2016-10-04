@@ -10,6 +10,7 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
+        menu.AddItem(UI.MenuItem("Options", OptionsClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 	}
@@ -39,6 +40,10 @@ public class MainMenuState : AppState {
 
 		TransitionTo(new WaitForBoltState());
 	}
+
+    void OptionsClicked() {
+        TransitionTo(new OptionsMenuState());
+    }
 
 	void Quit() {
 		Application.Quit();

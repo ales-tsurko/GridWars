@@ -127,8 +127,8 @@ public class UIMenu : UIElement {
     }
 
 	public void Reset () {
-        Destroy(gameObject);
-        return;
+       // Destroy(gameObject);
+       // return;
 		foreach (Transform child in transform) {
 			Destroy (child.gameObject);
 		}
@@ -205,8 +205,5 @@ public static class UIMenuExtension {
     public static void SetOrientation (this UIMenu _menu, MenuOrientation orientation){
         _menu.OrderMenu(orientation);
     }
-
-    public static void Destroy (this UIMenu _menu){
-        Destroy(_menu);
-    }
+        
 }

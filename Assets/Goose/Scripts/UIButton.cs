@@ -57,7 +57,9 @@ public class UIButton : UIMenuItem {
 	}
 		
 	public void OnClick (){
-        action.Invoke();
+        if (action != null) {
+            action.Invoke();
+        }
 	}
 
     public void Update () {

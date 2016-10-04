@@ -9,33 +9,43 @@ public static class Keys {
     public const string CHANGECAM = "Change Camera View";
     public const string CONCEDE = "Concede Match";
     public const string TOGGLEKEYS = "Toggle Display of Hotkeys";
-    public static List<KeyData> keyData;
-    public static List<KeyData> joyData;
-   
-    private static List<KeyData> _defaultKeyData;
-    public static List<KeyData> defaultKeyData {
+
+    private static List<KeyData> _keyData;
+    public static List<KeyData> keyData {
         get {
-            if (_defaultKeyData == null) {
-                _defaultKeyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").keyData;
+            if (_keyData == null) {
+                LoadKeyMappings();
             }
-            return _defaultKeyData;
+            return _keyData;
+        }
+        set {
+            _keyData = new List<KeyData>();
+            foreach (KeyData k in value) {
+                _keyData.Add(k);
+            }
         }
     }
 
-    private static List<KeyData> _defaultJoyData;
-    public static List<KeyData> defaultJoyData {
+    private static List<KeyData> _joyData;
+    public static List<KeyData> joyData {
         get {
-            if (_defaultJoyData == null) {
-                _defaultJoyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").joyData;
+            if (_joyData == null) {
+                LoadKeyMappings();
             }
-            return _defaultJoyData;
+            return _joyData;
+        }
+        set {
+            _joyData = new List<KeyData>();
+            foreach (KeyData k in value) {
+                _joyData.Add(k);
+            }
         }
     }
+   
+    public static List<KeyData> defaultKeyData;
+    public static List<KeyData> defaultJoyData;
 
     public static KeyCode GetKey (this string _string){
-        if (keyData == null) {
-            LoadKeyMappings();
-        }
         foreach (KeyData k in keyData) {
             if (k.code == _string) {
                 return k.key;
@@ -45,9 +55,6 @@ public static class Keys {
     }
 
     public static KeyCode GetButton (this string _string){
-        if (joyData == null) {
-            LoadKeyMappings();
-        }
         foreach (KeyData j in joyData) {
             if (j.code == _string) {
                 return j.key;
@@ -94,16 +101,17 @@ public static class Keys {
         save.keyData = Keys.keyData;
         save.joyData = Keys.joyData;
         string saveString = JsonMapper.ToJson(save);
-        //Debug.Log(saveString);
+        Debug.Log("Keys Saved");
         Prefs.SetKeyMappings(saveString);
     }
 
     public static void LoadKeyMappings(bool resetToDefault = false) {
         string s = Prefs.GetKeyMappings();
         if (resetToDefault || s == "empty" || string.IsNullOrEmpty(s) || s == "{}") {
-            //Debug.Log(s + "  getting defaults");
-            keyData = defaultKeyData;
-            joyData = defaultJoyData;
+            List<KeyData> _defaultKeyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").keyData;
+            List<KeyData> _defaultJoyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").joyData;
+            keyData = _defaultKeyData;
+            joyData = _defaultJoyData;
             SaveKeyMappings();
         } else {
             KeySaveData data = JsonMapper.ToObject<KeySaveData>(s);
@@ -114,24 +122,6 @@ public static class Keys {
 
     static UIMenu remapMenu;
     public static int currentRemapPlayerNum;
-    public static void OpenRemapKeys(UIMenuItem item){
-        if (item != null) {
-            currentRemapPlayerNum = Convert.ToInt32(item.itemData);
-        }
-        if (remapMenu != null) {
-            remapMenu.Reset();
-        }
-        remapMenu = UI.Menu();
-        foreach(KeyData k in keyData) {
-            if (k.playerNum != currentRemapPlayerNum) {
-                continue;
-            }
-            remapMenu.AddItem(UI.ButtonPrefabKeyMap(k));
-        }
-        remapMenu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Reset to Defaults"));
-        remapMenu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Close"));
-        remapMenu.Show();
-    }
 
     public static void RemapKey(UIButtonRemapKey remapKey){
         UIPopup popup = UI.Popup("Press a Key or Joystick Button to map to \n\n" + remapKey.code);
@@ -139,13 +129,8 @@ public static class Keys {
         read.data = remapKey;
     }
 
-    public static void SetDefaults(UIMenuItem item) {
+    public static void SetDefaults() {
         LoadKeyMappings(true);
-        OpenRemapKeys(null);
-    }
-
-    public static void CloseMenu(UIMenuItem item) {
-        remapMenu.Reset();
     }
 
     public static void InitKeyMappings() {
@@ -176,7 +161,7 @@ public class ReadRemapKeyInput : MonoBehaviour {
             }
             if (Input.GetKeyDown(kcode)) {
                 Keys.SetNewInput(data.code, kcode);
-                Keys.OpenRemapKeys(null);
+                App.shared.state.EnterFrom(null);
                 Destroy(gameObject);
                 return;
             }
