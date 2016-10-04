@@ -47,10 +47,6 @@ public class Prefs {
 
     }
 
-	public Prefs() {
-		keyIconsVisible = false; //TODO: the UI should control this.
-	}
-
 	bool GetBool(string name) {
 		return PlayerPrefs.GetInt(name) == 1;
 	}

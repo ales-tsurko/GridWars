@@ -14,7 +14,7 @@ public class RemapMenuState : AppState {
             menu.AddItem(UI.ButtonPrefabKeyMap(k));
         }
         menu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Reset to Defaults", ResetToDefaults));
-        menu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Close", CloseMenu));
+        menu.AddItem(UI.ButtonPrefabKeyMap(null, true, "Back", CloseMenu));
         menu.Show();
     }
 
@@ -26,5 +26,4 @@ public class RemapMenuState : AppState {
     void CloseMenu() {
         TransitionTo(new OptionsMenuState());
     }
-        
 }

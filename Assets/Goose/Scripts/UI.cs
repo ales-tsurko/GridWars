@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public static class UI {
 
 	const string DIR = "UI/";
-	const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
+	public const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
     const string KEYMAPBUTTONPREFAB = DIR + "Buttons/KeyMapButton";
     const string POPUP = DIR + "Popups/PopupDefault";
 	const string SKINDIR = DIR + "Skins/";
@@ -41,14 +41,12 @@ public static class UI {
 		button.SetText(title, allcaps);
 		return button;
 	}
+
     static UIButton ButtonPrefab(string title, System.Action  action){
-        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(BUTTONPREFAB));
-        AssignToCanvas(go);
-        UIButton _button = go.GetComponent<UIButton>();
-        _button.text = title;
-        //_button.SizeToFit();
-        _button.SetAction(action);
-        return _button;
+		var button = UIButton.Instantiate();
+		button.text = title;
+		button.action = action;
+		return button;
     }
 
     public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
@@ -74,13 +72,9 @@ public static class UI {
     }
 
     public static UIPopup Popup(string title = ""){
-        GameObject go = (GameObject)MonoBehaviour.Instantiate(Resources.Load<GameObject>(POPUP));
-        UIPopup p = go.GetComponent<UIPopup>();
-        p.SetText(title);
-        AssignToCanvas (go);
-        RectTransform t = go.GetComponent<RectTransform>();
-        t.sizeDelta = Vector2.zero;
-        return p;
+		var popup = UIPopup.Instantiate();
+		popup.SetText(title);
+        return popup;
     }
 
     public static UIMenuItem MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
@@ -88,7 +82,9 @@ public static class UI {
             case MenuItemType.ButtonRound:
             case MenuItemType.ButtonSquare:
             case MenuItemType.ButtonTextOnly:
-                return Button(title, action, type, skin, animated, allCaps);
+				var button = ButtonPrefab(title, null);
+				button.isOutlined = false;
+				return button;
             case MenuItemType.ButtonPrefab:
                 return ButtonPrefab(title, action);   
         }
@@ -106,6 +102,10 @@ public static class UI {
 	}
 
 	public static UIActivityIndicator ActivityIndicator (string text = "", string skin = "Default"){
+		var indicator = UIActivityIndicator.Instantiate();
+		indicator.SetText(text);
+		return indicator;
+		/*
 		skin += "/";
 		GameObject go = new GameObject ();
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator> ();
@@ -120,6 +120,7 @@ public static class UI {
 		indicator.Hide ();
 		indicator.name = "ActivityIndicator";
 		return indicator;
+		*/
 	}
 		
 	public static Font GetFont (UIFont _font) {
@@ -157,7 +158,7 @@ public static class UI {
 		return _mainCanvas;
 	}
 
-	static void AssignToCanvas (GameObject go){
+	public static void AssignToCanvas (GameObject go){
 		go.transform.SetParent (MainCanvas ().transform);
 		go.transform.localPosition = Vector3.zero;
 		go.transform.localScale = Vector3.one;

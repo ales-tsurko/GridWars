@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UIMenu : UIElement {
 	Image image;
 
-	public Vector2 itemSpacing = new Vector2(30f, 30f);
+	public Vector2 itemSpacing = new Vector2(18f, 18f); //TODO: match with font size?
 
 	public List<UIMenuItem> items = new List<UIMenuItem> ();
 	public float spacing;

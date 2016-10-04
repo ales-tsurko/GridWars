@@ -13,6 +13,20 @@ public class UIElement : MonoBehaviour {
 
 	public bool matchesNeighborSize = true;
 
+	bool _isOutlined;
+	public bool isOutlined {
+		get {
+			return _isOutlined;
+		}
+
+		set {
+			_isOutlined = value;
+			foreach (var imageComponent in gameObject.GetComponentsInChildren<Image>()) {
+				imageComponent.enabled = value;
+			}
+		}
+	}
+
 	/// <summary>
 	/// Sets the text of the GameButton
 	/// </summary>

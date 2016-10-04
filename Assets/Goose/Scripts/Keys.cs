@@ -124,9 +124,12 @@ public static class Keys {
     public static int currentRemapPlayerNum;
 
     public static void RemapKey(UIButtonRemapKey remapKey){
-        UIPopup popup = UI.Popup("Press a Key or Joystick Button to map to \n\n" + remapKey.code);
-        ReadRemapKeyInput read = popup.gameObject.AddComponent<ReadRemapKeyInput>();
-        read.data = remapKey;
+		App.shared.ResetMenu();
+		var indicator = UI.ActivityIndicator("Press a Key or Joystick Button to map to " + remapKey.code);
+		var read = indicator.gameObject.AddComponent<ReadRemapKeyInput>();
+		read.data = remapKey;
+		App.shared.menu.AddItem(indicator);
+		App.shared.menu.Show();
     }
 
     public static void SetDefaults() {
