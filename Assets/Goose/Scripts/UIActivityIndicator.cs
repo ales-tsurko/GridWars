@@ -13,6 +13,10 @@ public class UIActivityIndicator : UIMenuItem {
 		return base.SetText(prefix);
 	}
 
+	void Awake() {
+		matchesNeighborSize = false;
+	}
+
 	public override void Show() {
 		base.Show();
 

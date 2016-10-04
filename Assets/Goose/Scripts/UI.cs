@@ -30,6 +30,7 @@ public static class UI {
 			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
 				imageComponent.enabled = false;
 			}
+			button.matchesNeighborSize = false;
 		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
 			image.overrideSprite = sprite;
