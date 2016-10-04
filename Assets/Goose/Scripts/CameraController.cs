@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour {
 			var gamePosition = new SerializedTransform(transform);
 			gamePositions.Add(gamePosition);
 
-			if (App.shared.battlefield.PlayerNumbered(2).isLocal) {
+			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
 				Vector3 mirrorAxis;
 				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
 					mirrorAxis = new Vector3(1, 1, -1);
