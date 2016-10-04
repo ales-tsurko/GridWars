@@ -29,6 +29,7 @@ public class App : MonoBehaviour {
 	public Matchmaker matchmaker;
 	public Network network;
 	public Battlefield battlefield;
+	public CameraController cameraController;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -78,6 +79,9 @@ public class App : MonoBehaviour {
 		mainMenuState.EnterFrom(null);
 
 		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
+
+		cameraController = GameObject.FindObjectOfType<CameraController>();
+		cameraController.enabled = true;
 	}
 
 	public void FixedUpdate() {

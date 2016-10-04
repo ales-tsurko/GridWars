@@ -15,7 +15,7 @@ public static class UI {
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.LGS;
 
-	static UIButton Button (string title, System.Action  action, MenuItemType type, string skin, bool animated, bool allcaps){
+	static UIButton Button (string title, System.Action action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -29,12 +29,14 @@ public static class UI {
 		if (image == null) {
 			image = button.GetComponent<Image> ();
 		}
-		if (type != MenuItemType.ButtonTextOnly) {
+		if (type == MenuItemType.ButtonTextOnly) {
+			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
+				imageComponent.enabled = false;
+			}
+			button.matchesNeighborSize = false;
+		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
 			image.overrideSprite = sprite;
-		} else {
-			image.overrideSprite = null;
-			image.color = new Color (1f, 1f, 1f, 0f);
 		}
 		button.SetAction(action);
 		button.SetText(title, allcaps);

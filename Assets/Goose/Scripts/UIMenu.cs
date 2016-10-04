@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class UIMenu : UIElement {
 	Image image;
 
+	public Vector2 itemSpacing = new Vector2(30f, 30f);
+
 	public List<UIMenuItem> items = new List<UIMenuItem> ();
 	public float spacing;
     private RectTransform _panel;
@@ -56,58 +58,58 @@ public class UIMenu : UIElement {
     public void OrderMenu (MenuOrientation orientation = MenuOrientation.Vertical, float _spacing = 0){
 
 		bool isVertical = orientation == MenuOrientation.Vertical;
-		Vector2 itemSize = GetMaxSizeDelta(orientation);
+		Vector2 pivot;
+		Vector2 layoutDirection;
 
-		var spacing = new Vector2(itemSize.x * .2f, itemSize.y * .2f);
-		var hItemCount = isVertical ? 1 : items.Count;
-		var vItemCount = isVertical ? items.Count : 1;
-
-		panel.sizeDelta = new Vector2(
-			itemSize.x*hItemCount + spacing.x*(hItemCount + 1),
-			itemSize.y*vItemCount + spacing.y*(vItemCount + 1)
-		);
-
-		for (int i = 0; i < items.Count; i++) {
-			var item = items[i];
-
-            if (item != null && item.GetComponent<UIButton>() != null) {
-                item.GetComponent<UIButton>().SetMenuSize(itemSize);
-                var rt = item.GetComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0.5f, 1f);
-                rt.anchorMax = new Vector2(0.5f, 1f);
-
-                Vector2 localPosition;
-                if (isVertical) {
-                    localPosition.x = 0f;
-                    localPosition.y = -(itemSize.y / 2 + i * (itemSize.y + spacing.y) - panel.sizeDelta.y / 2);
-                }
-                else {
-                    rt.anchorMin = new Vector2(0f, 0.5f);
-                    rt.anchorMax = new Vector2(0f, 0.5f);
-                    localPosition.x = spacing.x + itemSize.x / 2 + i * (itemSize.x + spacing.x) - panel.sizeDelta.x / 2;
-                    localPosition.y = 0;
-                }
-                item.GetComponent<RectTransform>().localPosition = localPosition;
-            }
-            else if (item != null) {
-                var rt = item.GetComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0.5f, 1f);
-                rt.anchorMax = new Vector2(0.5f, 1f);
-
-                Vector2 localPosition;
-                if (isVertical) {
-                    localPosition.x = 0f;
-                    localPosition.y = -(itemSize.y / 2 + i * (itemSize.y + spacing.y) - panel.sizeDelta.y / 2);
-                }
-                else {
-                    rt.anchorMin = new Vector2(0f, 0.5f);
-                    rt.anchorMax = new Vector2(0f, 0.5f);
-                    localPosition.x = spacing.x + itemSize.x / 2 + i * (itemSize.x + spacing.x) - panel.sizeDelta.x / 2;
-                    localPosition.y = 0;
-                }
-                item.GetComponent<RectTransform>().localPosition = localPosition;
-            }
+		if (isVertical) {
+			//x = 0 is center
+			pivot = new Vector2(0.5f, 1f);
+			layoutDirection = new Vector2(0f, -1f);
 		}
+		else {
+			//y = 0 is center
+			pivot = new Vector2(0f, 0.5f);
+			layoutDirection = new Vector2(1f, 0f);
+		}
+
+		//size items equally
+		var sizeEquallyItems = items.FindAll(item => item.matchesNeighborSize);
+		var maxX = 0f;
+		var maxY = 0f;
+		foreach (var item in sizeEquallyItems) {
+			var transform = item.GetComponent<RectTransform>();
+			maxX = Mathf.Max(maxX, transform.sizeDelta.x);
+			maxY = Mathf.Max(maxY, transform.sizeDelta.y);
+		}
+
+		foreach (var item in sizeEquallyItems) {
+			item.GetComponent<RectTransform>().sizeDelta = new Vector2(maxX, maxY);
+		}
+
+		//determine panel size
+		var nextPosition = Vector2.zero;
+		maxX = 0f;
+		maxY = 0f;
+		foreach (var item in items) {
+			var transform = item.GetComponent<RectTransform>();
+
+			//*
+			transform.anchorMin = pivot;
+			transform.anchorMax = pivot;
+			transform.pivot = pivot;
+
+			transform.anchoredPosition = nextPosition;
+			//*/
+
+			maxX = Mathf.Max(maxX, transform.sizeDelta.x);
+			maxY = Mathf.Max(maxY, transform.sizeDelta.y);
+
+			nextPosition += Vector2.Scale(transform.sizeDelta + itemSpacing, layoutDirection);
+		}
+
+		nextPosition -= Vector2.Scale(itemSpacing, layoutDirection);
+
+		panel.sizeDelta = new Vector2(Mathf.Max(maxX, Mathf.Abs(nextPosition.x)), Mathf.Max(maxY, Mathf.Abs(nextPosition.y)));
 
 		this.SetAnchor(currentAnchor);
     }
@@ -194,11 +196,11 @@ public static class UIMenuExtension {
                 _t.localPosition = new Vector3(0f, 0f, 0f);
                 break;
             case MenuAnchor.TopCenter:
-                _t.anchorMin = new Vector2(.5f, 1);
-                _t.anchorMax = new Vector2(.5f, 1);
-                _t.pivot = new Vector2(0.5f, 0.5f);
+				_t.anchorMin = new Vector2(.5f, 1);
+				_t.anchorMax = new Vector2(.5f, 1);
+				_t.pivot = new Vector2(0.5f, 0.5f);
                 _t.localScale = Vector3.one;
-                _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y*.5f);
+                _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
                 break;
         }
     }

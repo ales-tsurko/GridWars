@@ -2,22 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 public class CameraController : MonoBehaviour {
-	private static CameraController _instance;
-	public static CameraController instance {
-		get {
-			if (_instance == null) {
-				_instance = GameObject.FindObjectOfType<CameraController> ();
-			}
-			return _instance;
-		}
-	}
 	public List<Transform> positions = new List<Transform>();
-	[System.Serializable]
-	public class OriginalPosition {
-		public Vector3 position;
-		public Quaternion rotation;
-	}
-	public List<OriginalPosition> originalPositions = new List<OriginalPosition>();
+
+	public List<SerializedTransform> gamePositions = new List<SerializedTransform>();
     [HideInInspector]
 	public int pos;
 	public bool moving;
@@ -33,12 +20,8 @@ public class CameraController : MonoBehaviour {
 	bool initComplete = false;
 	void Start () {
 		initComplete = false;
-		foreach (Transform pos in positions) {
-			originalPositions.Add (new OriginalPosition () { position = pos.position, rotation = pos.rotation });
-		}
 		mouseLook = cam.GetComponent<MouseLook> ();
 		//DontDestroyOnLoad (gameObject);
-		InitCamera ();
 	}
 	public void InitCamera () {
 		StartCoroutine (WaitForTowers ());
@@ -62,12 +45,29 @@ public class CameraController : MonoBehaviour {
 	}
 	public void InitCamera (Transform _base){
 		if (_base == null) {
-			Debug.LogError ("Tower is null, can't init camera positions");
-			return;
+			throw new System.Exception("Tower is null, can't init camera positions");
 		}
-		for (int i = 0; i < positions.Count; i++) {
-			cam.position = originalPositions [i].position;
-			cam.rotation = originalPositions [i].rotation;
+		gamePositions = new List<SerializedTransform>();
+		foreach (var transform in positions) {
+			var gamePosition = new SerializedTransform(transform);
+			gamePositions.Add(gamePosition);
+
+			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
+				Vector3 mirrorAxis;
+				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
+					mirrorAxis = new Vector3(1, 1, -1);
+				}
+				else {
+					mirrorAxis = new Vector3(-1, 1, 1);
+				}
+
+				gamePosition.position = Vector3.Scale(gamePosition.position, mirrorAxis);
+				gamePosition.rotation = Quaternion.Euler(gamePosition.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
+			}
+
+			cam.position = gamePosition.position;
+			cam.rotation = gamePosition.rotation;
+
 			float mod = 0;
 			#if UNITY_EDITOR
                 thisScreenRes = lastScreenRes = GetMainGameViewSize();
@@ -75,7 +75,7 @@ public class CameraController : MonoBehaviour {
 			while (true) {
 				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
 				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f +mod && screenPoint.x < .9f-mod && screenPoint.y > 0.1f+mod && screenPoint.y < .9f-mod) {
-					positions [i].position = cam.position;
+					gamePosition.position = cam.position;
 					break;
 				} else {
 					cam.transform.position -= cam.transform.forward;
@@ -83,8 +83,8 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 
-		cam.position = positions [0].position;
-		cam.rotation = positions [0].rotation;
+		cam.position = gamePositions[0].position;
+		cam.rotation = gamePositions[0].rotation;
         pos = App.shared.prefs.camPosition - 1;
 		NextPosition ();
 		initComplete = true;
@@ -160,9 +160,9 @@ public class CameraController : MonoBehaviour {
 		actionMode = mouseLook.enabled = false;
 		cam.parent = null;
 		pos++;
-		Transform newTarget = positions [pos % positions.Count];
-		targetPos = newTarget.position;
-		targetRot = newTarget.rotation;
+		var transform = gamePositions[pos % gamePositions.Count];
+		targetPos = transform.position;
+		targetRot = transform.rotation;
 		startPos = cam.position;
 		startRot = cam.rotation;
 		//print (Time.timeScale);

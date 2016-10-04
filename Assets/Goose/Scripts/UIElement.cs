@@ -11,6 +11,8 @@ public class UIElement : MonoBehaviour {
 		}
 	}
 
+	public bool matchesNeighborSize = true;
+
 	/// <summary>
 	/// Sets the text of the GameButton
 	/// </summary>

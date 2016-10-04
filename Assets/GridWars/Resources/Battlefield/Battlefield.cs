@@ -50,7 +50,6 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 		App.shared.debug = true;
 
-		CameraController.instance.enabled = true;
 		//SetupTiles();
 		players = new List<Player>();
 		AddPlayer();
@@ -58,11 +57,12 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void StartGame() {
-        print("StartGame");
+		App.shared.cameraController.InitCamera();
+
 		foreach (var player in players) {
 			player.StartGame();
 		}
-        print("DoneStartGame");
+        
         /*
 		foreach (GameObject tile in tiles) {
 			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
