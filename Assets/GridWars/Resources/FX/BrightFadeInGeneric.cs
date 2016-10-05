@@ -16,6 +16,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 
 	void Start () {
 		SetupMaterialColors();
+		Update();
 	}
 
 	public void OnEnable() {

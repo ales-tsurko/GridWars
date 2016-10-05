@@ -385,7 +385,8 @@ public class GameUnit : NetworkObject {
 		PlayRunningSound();
 
 		if (fadeInPeriod != 0f) {
-			BrightFadeIn comp = gameObject.AddComponent<BrightFadeIn>();
+			//BrightFadeIn comp = gameObject.AddComponent<BrightFadeIn>();
+			BrightFadeInGeneric comp = gameObject.AddComponent<BrightFadeInGeneric>();
 			comp.period = fadeInPeriod;
 		}
 	}
@@ -657,6 +658,11 @@ public class GameUnit : NetworkObject {
 
 		if (target == null) {
 			target = DefaultTarget();
+			/*
+			if (target == null) {
+				target = Camera.main.gameObject;
+			}
+			*/
 		} 
 	}
 
