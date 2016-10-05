@@ -140,6 +140,8 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
 		menu.Show();
 
+		app.battlefield.Reset();
+
 		network.ShutdownBolt();
 	}
 }

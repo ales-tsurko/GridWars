@@ -50,7 +50,10 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 		App.shared.debug = true;
 
-		//SetupTiles();
+		AddPlayers();
+	}
+
+	void AddPlayers() {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
@@ -76,11 +79,16 @@ public class Battlefield : MonoBehaviour {
 		players.Add(player);
 		player.gameObject.name = "Player " + player.playerNumber;
 	}
-
-	/*
-	public void Reset() {
 		
-		App.shared.timerCenter.isPaused = true;
+	public void Reset() {
+		Destroy(player1);
+		Destroy(player2);
+
+		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
+			if (entity.hasControl) {
+				BoltNetwork.Destroy(entity);
+			}
+		}
 
 		var preservedGameObjectNames = new List<string>(new string[]{
 			"Main Camera",
@@ -93,7 +101,8 @@ public class Battlefield : MonoBehaviour {
 			"Network",
 			"App",
 			"BoltControl",
-			"BoltBehaviours"
+			"BoltBehaviours",
+			"SocketIO"
 		});
 
 		var objs = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
@@ -103,7 +112,9 @@ public class Battlefield : MonoBehaviour {
 				Destroy(obj);
 			}
 		}
-	}*/
+
+		AddPlayers();
+	}
 
 	public virtual List<GameObject> activeGameObjects() {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));
