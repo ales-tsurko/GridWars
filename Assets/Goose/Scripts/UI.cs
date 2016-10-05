@@ -7,12 +7,14 @@ using UnityEngine.Events;
 public static class UI {
 
 	const string DIR = "UI/";
-	const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
+	public const string BUTTONPREFAB = DIR + "Buttons/DefaultButton";
+    const string KEYMAPBUTTONPREFAB = DIR + "Buttons/KeyMapButton";
+    const string POPUP = DIR + "Popups/PopupDefault";
 	const string SKINDIR = DIR + "Skins/";
 	const string FONTDIR = DIR + "Fonts/";
 	public const UIFont DEFAULTFONT = UIFont.LGS;
 
-	static UIButton Button (string title, System.Action<UIMenuItem> action, MenuItemType type, string skin, bool animated, bool allcaps){
+	static UIButton Button (string title, System.Action action, MenuItemType type, string skin, bool animated, bool allcaps){
 		skin += "/";
 		GameObject go;
 		if (animated) {
@@ -30,6 +32,7 @@ public static class UI {
 			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
 				imageComponent.enabled = false;
 			}
+			button.matchesNeighborSize = false;
 		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
 			image.overrideSprite = sprite;
@@ -38,22 +41,50 @@ public static class UI {
 		button.SetText(title, allcaps);
 		return button;
 	}
-    static UIButton ButtonPrefab(string title, System.Action<UIMenuItem> action){
-        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(BUTTONPREFAB));
+
+    static UIButton ButtonPrefab(string title, System.Action  action){
+		var button = UIButton.Instantiate();
+		button.text = title;
+		button.action = action;
+		return button;
+    }
+
+    public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
+        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(KEYMAPBUTTONPREFAB));
         AssignToCanvas(go);
-        UIButton _button = go.GetComponent<UIButton>();
-        _button.text = title;
-        //_button.SizeToFit();
-        _button.SetAction(action);
+        UIButtonRemapKey _button = go.GetComponent<UIButtonRemapKey>();
+        if (_keyData != null) {
+            _button.joyKey = _keyData.code.GetButton();
+            _button.keyKey = _keyData.key;
+            _button.code = _keyData.code;
+        }
+        if (utilKey) {
+            _button.text = utilText;
+        } else {
+            _button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
+        }
+        if (action == null) {
+            _button.SetAction(_button.OnClick);
+        } else {
+            _button.SetAction(action);
+        }
         return _button;
     }
 
-    public static UIMenuItem MenuItem (string title = "Button", System.Action<UIMenuItem> action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
+    public static UIPopup Popup(string title = ""){
+		var popup = UIPopup.Instantiate();
+		popup.SetText(title);
+        return popup;
+    }
+
+    public static UIMenuItem MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:
             case MenuItemType.ButtonSquare:
             case MenuItemType.ButtonTextOnly:
-                return Button(title, action, type, skin, animated, allCaps);
+				var button = ButtonPrefab(title, null);
+				button.isOutlined = false;
+				return button;
             case MenuItemType.ButtonPrefab:
                 return ButtonPrefab(title, action);   
         }
@@ -71,6 +102,10 @@ public static class UI {
 	}
 
 	public static UIActivityIndicator ActivityIndicator (string text = "", string skin = "Default"){
+		var indicator = UIActivityIndicator.Instantiate();
+		indicator.SetText(text);
+		return indicator;
+		/*
 		skin += "/";
 		GameObject go = new GameObject ();
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator> ();
@@ -85,6 +120,7 @@ public static class UI {
 		indicator.Hide ();
 		indicator.name = "ActivityIndicator";
 		return indicator;
+		*/
 	}
 		
 	public static Font GetFont (UIFont _font) {
@@ -122,7 +158,7 @@ public static class UI {
 		return _mainCanvas;
 	}
 
-	static void AssignToCanvas (GameObject go){
+	public static void AssignToCanvas (GameObject go){
 		go.transform.SetParent (MainCanvas ().transform);
 		go.transform.localPosition = Vector3.zero;
 		go.transform.localScale = Vector3.one;
@@ -149,4 +185,5 @@ public static class UI {
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly, ButtonPrefab}
 public enum UIFont {None, Army, EuroStile, LGS}
+[System.Serializable]
 public class UIMenuItem : UIElement {}

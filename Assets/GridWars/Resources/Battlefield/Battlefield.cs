@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 public class Battlefield : MonoBehaviour {
-	public static Battlefield current {
+	public static Battlefield current { //TODO: get rid of this
 		get {
-			return GameObject.Find("Battlefield").GetComponent<Battlefield>();
+			return App.shared.battlefield;
 		}
 	}
 
@@ -20,34 +20,54 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	public Player player1 {
+		get {
+			return PlayerNumbered(1);
+		}
+	}
+
+	public Player player2 {
+		get {
+			return PlayerNumbered(2);
+		}
+	}
+
+	public List<Player>localPlayers {
+		get {
+			return players.FindAll(p => p.isLocal);
+		}
+	}
+
+	public List <Player> livingPlayers {
+		get {
+			return players.FindAll(p => !p.IsDead());
+		}
+	}
+
 	void Start() {
 		Application.runInBackground = true;
 
-		Network.shared.enabled = true;
+		App.shared.enabled = true; //Load App so Start gets called
+		App.shared.debug = true;
 
-		CameraController.instance.enabled = true;
 		//SetupTiles();
-	}
-
-	public void StartGame() {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
-		/*
+	}
+
+	public void StartGame() {
+		App.shared.cameraController.InitCamera();
+
+		foreach (var player in players) {
+			player.StartGame();
+		}
+        
+        /*
 		foreach (GameObject tile in tiles) {
 			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
 		}
 		*/
-	}
-
-	void FixedUpdate () {
-		//print("livingPlayers().Count = " + livingPlayers().Count);
-
-		if (livingPlayers().Count == 1) {
-			print("Game Over Man");
-			Network.shared.DeclareVictor(livingPlayers()[0]);
-			enabled = false;
-		}
 	}
 
 	void AddPlayer() {
@@ -57,18 +77,7 @@ public class Battlefield : MonoBehaviour {
 		player.gameObject.name = "Player " + player.playerNumber;
 	}
 
-	List <Player> livingPlayers() {
-		List <Player> results = new List<Player>();
-
-		foreach (Player player in players) {
-			if (!player.IsDead()) {
-				results.Add(player);
-			}
-		}
-
-		return results;
-	}
-
+	/*
 	public void Reset() {
 		
 		App.shared.timerCenter.isPaused = true;
@@ -94,7 +103,7 @@ public class Battlefield : MonoBehaviour {
 				Destroy(obj);
 			}
 		}
-	}
+	}*/
 
 	public virtual List<GameObject> activeGameObjects() {
 		GameObject[] objs = (GameObject[])UnityEngine.Object.FindObjectsOfType(typeof(GameObject));

@@ -4,10 +4,26 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
 public class UIElement : MonoBehaviour {
-
+    public string itemData;
 	public bool isHidden {
 		get {
 			return !gameObject.activeInHierarchy;
+		}
+	}
+
+	public bool matchesNeighborSize = true;
+
+	bool _isOutlined;
+	public bool isOutlined {
+		get {
+			return _isOutlined;
+		}
+
+		set {
+			_isOutlined = value;
+			foreach (var imageComponent in gameObject.GetComponentsInChildren<Image>()) {
+				imageComponent.enabled = value;
+			}
 		}
 	}
 
@@ -31,7 +47,7 @@ public class UIElement : MonoBehaviour {
 	}
 
 	public System.Object data;
-	public System.Action<UIMenuItem> action;
+	public System.Action action;
 	/// <summary>
 	/// Sets the position of the Button
 	/// </summary>
@@ -42,6 +58,10 @@ public class UIElement : MonoBehaviour {
 		float h = Screen.height;
 		transform.localPosition = new Vector3 (x * w / 2f, h * y / 2f, 0);
 	}
+
+    public void Destroy() {
+        Destroy(gameObject);
+    }
 
 	public void SetSize (float x, float y, bool preserveAspect = true){
 		GetComponent<RectTransform> ().sizeDelta = new Vector2 (x, y);
@@ -69,12 +89,22 @@ public class UIElement : MonoBehaviour {
 		GetComponent<Image> ().type = type;
 	}
 
+   
+
 	/// <summary>
 	/// Sets the method to call OnClick
 	/// </summary>
 	/// <param name="action">Method without parens</param>
-	public void SetAction (System.Action<UIMenuItem> _action){
-		action = _action;
-	}
+	
+    public void SetAction (System.Action _action){
+        action = _action;
+    }
 
+}
+
+public static class UIElementExtension {
+    public static UIMenuItem SetData (this UIMenuItem element, string _data){
+        element.itemData = _data;
+        return element;
+    }
 }

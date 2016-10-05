@@ -8,9 +8,22 @@ public class UIActivityIndicator : UIMenuItem {
 	int dotCount = 0;
 	float showTime = 0f;
 
+	public static UIActivityIndicator Instantiate() {
+		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
+		UI.AssignToCanvas(go);
+		Destroy(go.GetComponent<UIButton>());
+		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator>();
+		return indicator;
+	}
+
 	public Text SetText(string text) {
 		prefix = text + "\n";
 		return base.SetText(prefix);
+	}
+
+	void Awake() {
+		matchesNeighborSize = false;
+		isOutlined = false;
 	}
 
 	public override void Show() {

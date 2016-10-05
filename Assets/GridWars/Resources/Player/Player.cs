@@ -36,11 +36,7 @@ public class Player : MonoBehaviour {
 
 	//public List<GameObject> ownedObjects;
 
-	public BoltConnection connection { //TODO: set these as players connect via create game / start game separation
-		get {
-			return Network.shared.ConnectionForPlayer(this);
-		}
-	}
+	public BoltConnection connection;
 
 	public int playerNumber {
 		get {
@@ -70,15 +66,11 @@ public class Player : MonoBehaviour {
 
 	public bool npcModeOn;
 
-	public bool isLocal {
-		get {
-			return Network.shared.localPlayers.Contains(this);
-		}
-	}
+	public bool isLocal;
 
 	public int localNumber {
 		get {
-			return Network.shared.localPlayers.IndexOf(this) + 1;
+			return App.shared.battlefield.localPlayers.IndexOf(this) + 1;
 		}
 	}
 
@@ -100,7 +92,9 @@ public class Player : MonoBehaviour {
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
 
 		//gameObject.tag = "Player" + playerNumber;
+	}
 
+	public void StartGame() {
 		fortress = this.CreateChild<Fortress>();
 		fortress.player = this;
 		fortress.transform.localPosition = Vector3.zero;
@@ -180,13 +174,13 @@ public class Player : MonoBehaviour {
 	// --- Networking ---------------------------------------
 
 	public void TakeControlOf(GameUnit gameUnit) {
-		if (connection) {
-			//give control to client
-			gameUnit.entity.AssignControl(connection);
-		}
-		else {
+		if (isLocal || (App.shared.network.connection == null)) {
 			//take control as server
 			gameUnit.entity.TakeControl();
+		}
+		else {
+			//give control to client
+			gameUnit.entity.AssignControl(App.shared.network.connection);
 		}
 	}
 }

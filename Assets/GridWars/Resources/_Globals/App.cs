@@ -23,6 +23,13 @@ public class App : MonoBehaviour {
 	public bool debug = false;
 	public List <Soundtrack> soundtracks;
 	public Prefs prefs;
+	public AppState state;
+	public UIMenu menu;
+
+	public Matchmaker matchmaker;
+	public Network network;
+	public Battlefield battlefield;
+	public CameraController cameraController;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -45,6 +52,8 @@ public class App : MonoBehaviour {
 	}
 
 	public void Start() {
+		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
+
 		prefs = new Prefs();
 
 		stepCache = new AssemblyCSharp.StepCache();
@@ -58,12 +67,38 @@ public class App : MonoBehaviour {
 
 		SoundtrackNamed("Wagner_Ride_of_the_Valkyries"); // preload
 
+		matchmaker = new Matchmaker();
+
+		network = new GameObject().AddComponent<Network>();
+		network.gameObject.name = "Network";
+
+		menu = UI.Menu();
+
+		var mainMenuState = new MainMenuState();
+		this.state = mainMenuState;
+		mainMenuState.EnterFrom(null);
+
+		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
+
+		cameraController = GameObject.FindObjectOfType<CameraController>();
+		cameraController.enabled = true;
 	}
 
 	public void FixedUpdate() {
 		timerCenter.Step();
 		stepCache.Step();
 		timeCounter++;
+	}
+
+	void Update() {
+		state.Update();
+	}
+
+	// --- Menu --------------------
+
+	public void ResetMenu() {
+		menu.Destroy();
+		menu = UI.Menu();
 	}
 
 	// --- Finding Paths --------------------
@@ -159,9 +194,14 @@ public class App : MonoBehaviour {
 		Destroy(obj);
 	}
 
-	public void Log(object message, UnityEngine.Object context = null) {
+	public void Log(object message, object context = null) {
 		if (debug) {
-			Debug.Log(message, context);
+			var msg = "";
+			if (context != null) {
+				msg += context.GetType() + ": ";
+			}
+			msg += message.ToString();
+			Debug.Log(msg);
 		}
 	}
 

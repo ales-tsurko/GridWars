@@ -5,7 +5,15 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
+[System.Serializable]
 public class UIButton : UIMenuItem {
+
+	public static UIButton Instantiate() {
+		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
+		UI.AssignToCanvas(go);
+		UIButton button = go.GetComponent<UIButton>();
+		return button;
+	}
 
 	UnityEvent method;
 	
@@ -56,7 +64,9 @@ public class UIButton : UIMenuItem {
 	}
 		
 	public void OnClick (){
-		action.Invoke (this);
+        if (action != null) {
+            action.Invoke();
+        }
 	}
 
     public void Update () {
@@ -64,12 +74,6 @@ public class UIButton : UIMenuItem {
     }
 
     public void SizeToFit() {
-		//textComponent.
-		//var settings = textComponent.GetGenerationSettings(new Vector2(float.MaxValue, float.MaxValue));
-		//var settings = textComponent.GetGenerationSettings(new Vector2(1920f, 1080f));
-		//var settings = textComponent.GetGenerationSettings(textComponent.rect);
-		//var w = textComponent.cachedTextGenerator.GetPreferredWidth(textComponent.text, settings);
-		//var h = textComponent.cachedTextGenerator.GetPreferredHeight(textComponent.text, settings);
 		var w = textComponent.preferredWidth;
 		var h = textComponent.fontSize;
 
