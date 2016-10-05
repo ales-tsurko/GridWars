@@ -183,7 +183,7 @@ public class UIMenu : UIElement {
     }
 }
 
-public enum MenuAnchor {MiddleCenter, TopCenter};
+public enum MenuAnchor {MiddleCenter, TopCenter, TopLeft};
 public enum MenuOrientation {Vertical, Horizontal};
 public static class UIMenuExtension {
     public static void SetAnchor (this UIMenu _menu, MenuAnchor anchor){
@@ -202,6 +202,13 @@ public static class UIMenuExtension {
                 _t.localScale = Vector3.one;
                 _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
                 break;
+			case MenuAnchor.TopLeft:
+				_t.anchorMin = new Vector2(0f, 1);
+				_t.anchorMax = new Vector2(0f, 1);
+				_t.pivot = new Vector2(0f, 0.5f);
+				_t.localScale = Vector3.one;
+				_t.anchoredPosition = new Vector2(_menu.itemSpacing.x, -_t.sizeDelta.y);
+				break;
         }
     }
     public static void SetOrientation (this UIMenu _menu, MenuOrientation orientation){

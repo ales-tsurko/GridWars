@@ -92,7 +92,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.AddItem(UI.MenuItem("Toggle Hotkeys (" + Keys.TOGGLEKEYS.GetKey().ToString() + ")", ToggleHotkeys));
 		menu.AddItem(UI.MenuItem("Change Camera (" + Keys.CHANGECAM.GetKey().ToString() + ")", ChangeCam));
 		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(MenuAnchor.TopCenter);
+		menu.SetAnchor(MenuAnchor.TopLeft);
 		menu.SetBackground(Color.black, 0);
 		menu.Show();
 	}
@@ -102,7 +102,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
 		menu.AddItem(UI.MenuItem("Cancel", CancelConcede));
 		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(MenuAnchor.TopCenter);
+		menu.SetAnchor(MenuAnchor.TopLeft);
 		menu.SetBackground(Color.black, 0);
 		menu.Show();
 	}
