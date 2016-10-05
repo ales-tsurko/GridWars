@@ -66,7 +66,10 @@ public class Tower : GroundBuilding {
 		base.ServerAndClientInit();
 
 		prefs = App.shared.prefs; //perf opt
-		//hitPoints = 1f;
+
+		if (App.shared.testEndOfGameMode) {
+			hitPoints = 1f;
+		}
 
 		keyIcon.SetActive(false);
 	}

@@ -26,14 +26,10 @@ public class Fortress : MonoBehaviour {
 	}
 
 	static System.Type[] unitTypes = new System.Type[] {
-		//*
 		typeof(Chopper),
 		typeof(Tanker),
 		typeof(Tank),
 		typeof(MobileSAM)
-		//*/
-
-		//typeof(Tank)
 	};
 
 	private GameObject placement = null;
@@ -48,6 +44,12 @@ public class Fortress : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (App.shared.testEndOfGameMode) {
+			unitTypes = new System.Type[] {
+				typeof(Tank)
+			};
+		}
+
 		if (BoltNetwork.isServer) {
 			CreatePlacement();
 			PlacePowerSource();

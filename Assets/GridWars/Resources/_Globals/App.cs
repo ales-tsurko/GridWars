@@ -33,6 +33,8 @@ public class App : MonoBehaviour {
 
 	private bool _isProcessingDestroyQueue = false;
 
+	public bool testEndOfGameMode = false;
+
 	public static App shared {
 		get {
 			if (_shared == null) {

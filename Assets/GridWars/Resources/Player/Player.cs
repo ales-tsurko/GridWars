@@ -8,7 +8,6 @@ public class Player : MonoBehaviour {
 	public Battlefield battlefield;
 	public Fortress fortress;
 	public float separation = 0.9f;
-	//public float separation = 0.35f;
 	public Material primaryMaterial;
 	public Material secondaryMaterial;
 
@@ -79,6 +78,10 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start() {
+		if (App.shared.testEndOfGameMode) {
+			separation = 0.35f;
+		}
+
 		primaryMaterial = new Material(Resources.Load("Materials/" + primaryColorMaterialName) as Material);
 		primaryMaterial.color = primaryColor;
 
