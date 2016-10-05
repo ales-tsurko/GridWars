@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
 
 	Color[] primaryColors = new Color[]{ 
 		Color.red, 
+		//Color.gray, 
 		Color.blue
 	};
 
