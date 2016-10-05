@@ -16,6 +16,8 @@ public class Outliner : MonoBehaviour {
 	public bool enabled = true;
 
 	void Awake() {
+		return; //TODO
+
 		if (!enabled) {
 			return;
 		}
