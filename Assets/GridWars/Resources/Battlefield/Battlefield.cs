@@ -79,15 +79,16 @@ public class Battlefield : MonoBehaviour {
 		players.Add(player);
 		player.gameObject.name = "Player " + player.playerNumber;
 	}
-		
+
 	public void Reset() {
-		Destroy(player1);
-		Destroy(player2);
+		App.shared.stepCache.Reset();
+		App.shared.timerCenter.CancelAllTimers();
+
+		Destroy(player1.gameObject);
+		Destroy(player2.gameObject);
 
 		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
-			if (entity.hasControl) {
-				BoltNetwork.Destroy(entity);
-			}
+			BoltNetwork.Destroy(entity);
 		}
 
 		var preservedGameObjectNames = new List<string>(new string[]{

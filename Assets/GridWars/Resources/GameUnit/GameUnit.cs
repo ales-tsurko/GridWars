@@ -268,6 +268,8 @@ public class GameUnit : NetworkObject {
 		base.Awake();
 		launchDirection = Vector3.forward;
 		isTargetable = true;
+
+		SetVisibleAndEnabled(false);
 	}
 
 	//Networking
@@ -292,7 +294,7 @@ public class GameUnit : NetworkObject {
 	}
 
 	void IsInGameChanged() {
-		//Debug.Log(this + " ExistsInWorldChanged: " + state.existsInWorld);
+		//Debug.Log("IsInGameChanged: " + this);
 		if (isInGame) {
 			SetVisibleAndEnabled(true);
 		}
@@ -322,10 +324,6 @@ public class GameUnit : NetworkObject {
 		if (shouldDestroyColliderOnClient) {
 			Destroy(GetComponent<Collider>());
 		}
-
-		if (!isInGame) {
-			SetVisibleAndEnabled(false);
-		}
 	}
 
 	public override void ServerAndClientInit() {
@@ -333,7 +331,9 @@ public class GameUnit : NetworkObject {
 
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
 
-		PlayRunningSound();
+		if (isInGame) {
+			SetVisibleAndEnabled(true);
+		}
 	}
 
 	public override void ServerJoinedGame() {
@@ -382,6 +382,7 @@ public class GameUnit : NetworkObject {
 		}
 
 		PlayBirthSound();
+		PlayRunningSound();
 
 		if (fadeInPeriod != 0f) {
 			BrightFadeIn comp = gameObject.AddComponent<BrightFadeIn>();
@@ -469,7 +470,7 @@ public class GameUnit : NetworkObject {
 	void SetVisibleAndEnabled(bool visibleAndEnabled) {
 		//Debug.Log(this + " SetVisibleAndEnabled: " + visibleAndEnabled);
 		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
-			if (script.GetType() != typeof(BoltEntity)) {
+			if (script.GetType() != typeof(BoltEntity) && !script.inheritsFrom(typeof(NetworkedGameUnit))) {
 				script.enabled = visibleAndEnabled;
 			}
 		}

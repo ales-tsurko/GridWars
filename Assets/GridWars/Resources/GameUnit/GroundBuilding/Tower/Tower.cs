@@ -67,6 +67,8 @@ public class Tower : GroundBuilding {
 
 		prefs = App.shared.prefs; //perf opt
 		//hitPoints = 1f;
+
+		keyIcon.SetActive(false);
 	}
 
 	public override void ServerJoinedGame() {

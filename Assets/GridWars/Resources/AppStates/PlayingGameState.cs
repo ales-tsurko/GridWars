@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class PlayingGameState : NetworkDelegateState {
 	//AppState
@@ -10,6 +10,8 @@ public class PlayingGameState : NetworkDelegateState {
 		base.EnterFrom(state);
 
 		network.networkDelegate = this;
+		matchmaker.matchmakerDelegate = null;
+		matchmaker.Disconnect();
 
 		ShowInGameMenu();
 
@@ -73,7 +75,8 @@ public class PlayingGameState : NetworkDelegateState {
 		base.BoltShutdownCompleted();
 
 		network.networkDelegate = null;
-		UnityEngine.SceneManagement.SceneManager.LoadScene("BattleField");
+
+		TransitionTo(new MainMenuState());
 	}
 
 	public override void Disconnected(BoltConnection connection) {
@@ -132,6 +135,8 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.AddItem(UI.ActivityIndicator("Lost Connection.  Returning to Main Menu"));
 		menu.Show();
 
+		app.battlefield.Reset();
+
 		network.ShutdownBolt();
 	}
 
@@ -142,6 +147,11 @@ public class PlayingGameState : NetworkDelegateState {
 
 		app.battlefield.Reset();
 
-		network.ShutdownBolt();
+		if (BoltNetwork.isRunning) {
+			network.ShutdownBolt();
+		}
+		else {
+			BoltShutdownCompleted();
+		}
 	}
 }

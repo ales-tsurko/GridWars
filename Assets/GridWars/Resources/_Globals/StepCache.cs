@@ -15,12 +15,18 @@ namespace AssemblyCSharp {
 		public StepCache() {
 			typeCache = new Dictionary<string, GameObject[]>(); 
 			_allVehicles = new List<Vehicle>();
+			Reset();
 		}
 
-		public void Step() {
+		public void Reset() {
 			typeCache.Clear(); 
 			_activeGameObjects = null;
 			_allWreckageObjects = null;
+			_allVehicles.Clear();
+		}
+
+		public void Step() {
+			Reset();
 		}
 
 		/*
