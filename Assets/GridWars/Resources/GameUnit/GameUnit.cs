@@ -268,8 +268,6 @@ public class GameUnit : NetworkObject {
 		base.Awake();
 		launchDirection = Vector3.forward;
 		isTargetable = true;
-
-		SetVisibleAndEnabled(false);
 	}
 
 	//Networking
@@ -331,9 +329,8 @@ public class GameUnit : NetworkObject {
 
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
 
-		if (isInGame) {
-			SetVisibleAndEnabled(true);
-		}
+
+		SetVisibleAndEnabled(isInGame);
 	}
 
 	public override void ServerJoinedGame() {
