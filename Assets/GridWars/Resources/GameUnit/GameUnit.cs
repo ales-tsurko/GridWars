@@ -55,9 +55,11 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
+	public bool wasDestroyed;
+
 	public bool isInGame {
 		get {
-			return gameUnitState.isInGame;
+			return !wasDestroyed && gameUnitState.isInGame;
 		}
 
 		set {
@@ -813,6 +815,7 @@ public class GameUnit : NetworkObject {
 	}
 
 	virtual public void DestroySelf() {
+		wasDestroyed = true;
 		BoltNetwork.Destroy(gameObject);
 	}
 

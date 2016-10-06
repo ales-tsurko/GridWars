@@ -91,6 +91,7 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void HardReset() {
+		//Debug.Log("HardReset");
 		SoftReset();
 
 		foreach(var player in players) {
@@ -109,6 +110,10 @@ public class Battlefield : MonoBehaviour {
 
 	void DestroyEntities() {
 		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
+			var gameUnit = entity.gameObject.GameUnit();
+			if (gameUnit != null) {
+				gameUnit.wasDestroyed = true;
+			}
 			BoltNetwork.Destroy(entity.gameObject);
 		}
 	}
