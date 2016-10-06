@@ -21,7 +21,7 @@ public class Chopper : AirVehicle {
 	public override void ServerAndClientJoinedGame() {
 		base.ServerAndClientJoinedGame();
 		UpdateSoundtrack();
-		gameObject.TurnOffShadows(); // apply to prefab?
+		//gameObject.TurnOffShadows(); // apply to prefab?
 	}
 
 	public override void ServerJoinedGame () {

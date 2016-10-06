@@ -29,7 +29,8 @@ public class Player : MonoBehaviour {
 	};
 
 	Color[] secondaryColors = new Color[]{ 
-		new Color(167f/255, 167f/255, 167f/255),
+		//new Color(120f/255, 120f/255, 120f/255),
+		new Color(181f/255, 181f/255, 0f/255),
 		new Color(181f/255, 181f/255, 0f/255)
 	};
 
