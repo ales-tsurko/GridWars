@@ -21,14 +21,16 @@ public class Player : MonoBehaviour {
 	*/
 
 	Color[] primaryColors = new Color[]{ 
-		Color.red, 
+		//Color.red, 
 		//Color.gray, 
-		Color.blue
+		//Color.blue
+		new Color(81f/255, 0f/255, 0f/255),
+		new Color(22f/255, 22f/255, 191f/255)
 	};
 
 	Color[] secondaryColors = new Color[]{ 
-		new Color(120f/255, 120f/255, 120f/255),
-		new Color(200f/255, 200f/255, 200f/255)
+		new Color(167f/255, 167f/255, 167f/255),
+		new Color(181f/255, 181f/255, 0f/255)
 	};
 
 	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
