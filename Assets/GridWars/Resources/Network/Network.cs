@@ -26,8 +26,10 @@ public class Network : Bolt.GlobalEventListener {
 
 		isShuttingDown = true;
 		connection = null;
-		BoltLauncher.Shutdown();
 		StartShutdownTimer();
+		if (BoltNetwork.isRunning) {
+			BoltLauncher.Shutdown();
+		}
 	}
 
 	void CheckForShutdown() {

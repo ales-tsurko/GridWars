@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 
 public class PlayingGameState : NetworkDelegateState {
+	bool didHardReset = false;
+
 	//AppState
 
 	public override void EnterFrom(AppState state) {
@@ -27,6 +29,10 @@ public class PlayingGameState : NetworkDelegateState {
 
 	public override void Update() {
 		base.Update();
+
+		if (didHardReset) {
+			return;
+		}
 
 		if (battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
 			var state = new PostGameState();
@@ -83,7 +89,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.Show();
 
 		app.battlefield.HardReset();
-
+		didHardReset = true;
 		network.ShutdownBolt();
 	}
 

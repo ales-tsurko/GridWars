@@ -62,9 +62,8 @@ public class PowerSource : GroundBuilding {
 		}
 	}
 
-	public override void ClientInit() {
-		base.ServerAndClientInit();
-
+	public override void ClientJoinedGame() {
+		base.ClientJoinedGame();
 		//need to setup here so its available to other objects.  Server sets it when creating fortress
 		player.fortress.powerSource = this;
 	}
