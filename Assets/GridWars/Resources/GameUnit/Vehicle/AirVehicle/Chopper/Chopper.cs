@@ -221,10 +221,12 @@ public class Chopper : AirVehicle {
 		}
 	}
 
+	/* We no longer have rotors
 	public override void ServerAndClientFixedUpdate () {
 		base.ServerAndClientFixedUpdate();
 		SpinRotors();
 	}
+	*/
 
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
