@@ -13,6 +13,11 @@ public interface MatchmakerDelegate {
 public class Matchmaker {
 	public Network network;
 	public MatchmakerDelegate matchmakerDelegate;
+	public bool isConnected {
+		get {
+			return socket.IsConnected;
+		}
+	}
 
 	public Matchmaker() {
 		socket = GameObject.Find("SocketIO").GetComponent<SocketIOComponent>();

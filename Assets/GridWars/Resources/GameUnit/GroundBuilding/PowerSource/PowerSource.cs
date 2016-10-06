@@ -56,7 +56,10 @@ public class PowerSource : GroundBuilding {
 		base.ServerInit();
 		isTargetable = false;
 		power = 0f;
-		//power = maxPower;
+
+		if (App.shared.testEndOfGameMode) {
+			power = maxPower;
+		}
 	}
 
 	public override void ClientInit() {
@@ -91,6 +94,8 @@ public class PowerSource : GroundBuilding {
 			segment.SetActive(false);
 			segments.Add(segment);
 		}
+
+		App.shared.battlefield.canCheckGameOver = true;
 	}
 
 	public override void ServerFixedUpdate() {

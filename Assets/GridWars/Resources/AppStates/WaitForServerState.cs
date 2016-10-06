@@ -61,12 +61,6 @@ public class WaitForServerState : BoltRendezvousState {
 		attemptTimer.Start();
 	}
 
-	public override void Connected(BoltConnection connection) {
-		battlefield.PlayerNumbered(2).isLocal = true;
-
-		base.Connected(connection);
-	}
-
 	public override void Cancel() {
 		base.Cancel();
 

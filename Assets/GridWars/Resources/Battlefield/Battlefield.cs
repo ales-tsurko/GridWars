@@ -38,11 +38,21 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	public Player localPlayer {
+		get {
+			return localPlayers[0];
+		}
+	}
+
 	public List <Player> livingPlayers {
 		get {
 			return players.FindAll(p => !p.IsDead());
 		}
 	}
+
+	public bool isInternetPVP;
+
+	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
 	void Start() {
 		Application.runInBackground = true;
@@ -80,17 +90,30 @@ public class Battlefield : MonoBehaviour {
 		player.gameObject.name = "Player " + player.playerNumber;
 	}
 
-	public void Reset() {
-		App.shared.stepCache.Reset();
-		App.shared.timerCenter.CancelAllTimers();
+	public void HardReset() {
+		SoftReset();
 
-		Destroy(player1.gameObject);
-		Destroy(player2.gameObject);
-
-		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
-			BoltNetwork.Destroy(entity);
+		foreach(var player in players) {
+			Destroy(player.gameObject);
 		}
 
+		AddPlayers();
+	}
+
+	public void SoftReset() {
+		App.shared.timerCenter.CancelAllTimers();
+		App.shared.stepCache.Reset();
+		DestroyEntities();
+		DestroyChaff();
+	}
+
+	void DestroyEntities() {
+		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
+			BoltNetwork.Destroy(entity.gameObject);
+		}
+	}
+
+	void DestroyChaff() {
 		var preservedGameObjectNames = new List<string>(new string[]{
 			"Main Camera",
 			"Canvas",
@@ -113,8 +136,6 @@ public class Battlefield : MonoBehaviour {
 				Destroy(obj);
 			}
 		}
-
-		AddPlayers();
 	}
 
 	public virtual List<GameObject> activeGameObjects() {

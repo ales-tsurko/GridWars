@@ -42,4 +42,16 @@ public class NetworkDelegateState : AppState, NetworkDelegate {
 	public virtual void Disconnected(BoltConnection connection) {
 		app.Log("Disconnected", this);
 	}
+
+	public virtual void ReceivedRematchRequest() {
+		app.Log("ReceivedRematchRequest", this);
+	}
+
+	public virtual void ReceivedConcede() {
+		app.Log("ReceivedConcede", this);
+	}
+
+	public virtual void ReceivedAcceptRematch() {
+		app.Log("ReceivedAcceptRematch", this);
+	}
 }

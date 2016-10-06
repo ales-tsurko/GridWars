@@ -31,10 +31,4 @@ public class WaitForClientState : BoltRendezvousState {
 
 		BoltNetwork.Accept(endpoint);
 	}
-
-	public override void Connected(BoltConnection connection) {
-		battlefield.PlayerNumbered(1).isLocal = true;
-
-		base.Connected(connection);
-	}
 }

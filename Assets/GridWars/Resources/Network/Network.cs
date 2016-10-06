@@ -111,4 +111,28 @@ public class Network : Bolt.GlobalEventListener {
 		base.BoltStartFailed();
 		networkDelegate.BoltStartFailed();
 	}
+
+	public override void OnEvent(RequestRematchEvent evnt) {
+		base.OnEvent(evnt);
+
+		if (!evnt.FromSelf) {
+			networkDelegate.ReceivedRematchRequest();
+		}
+	}
+
+	public override void OnEvent(ConcedeEvent evnt) {
+		base.OnEvent(evnt);
+
+		if (!evnt.FromSelf) {
+			networkDelegate.ReceivedConcede();
+		}
+	}
+
+	public override void OnEvent(AcceptRematchEvent evnt) {
+		base.OnEvent(evnt);
+
+		if (!evnt.FromSelf) {
+			networkDelegate.ReceivedAcceptRematch();
+		}
+	}
 }

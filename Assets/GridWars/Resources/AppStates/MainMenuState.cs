@@ -5,6 +5,8 @@ public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		battlefield.isInternetPVP = false;
+
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
@@ -16,6 +18,8 @@ public class MainMenuState : AppState {
 	}
 	
 	void InternetPvpClicked() {
+		battlefield.isInternetPVP = true;
+
 		TransitionTo(new MatchmakerState());
 	}
 

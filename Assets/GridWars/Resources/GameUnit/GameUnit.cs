@@ -467,7 +467,7 @@ public class GameUnit : NetworkObject {
 
 	public virtual void QueuePlayerCommands(){}
 
-	void SetVisibleAndEnabled(bool visibleAndEnabled) {
+	public void SetVisibleAndEnabled(bool visibleAndEnabled) {
 		//Debug.Log(this + " SetVisibleAndEnabled: " + visibleAndEnabled);
 		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
 			if (script.GetType() != typeof(BoltEntity) && !script.inheritsFrom(typeof(NetworkedGameUnit))) {
@@ -796,13 +796,17 @@ public class GameUnit : NetworkObject {
 
 			//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
 
-			var timer = App.shared.timerCenter.NewTimer();
-			timer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
-			timer.action = DestroySelf;
-			timer.Start();
-
-			isInGame = false;
+			RemoveFromGame();
 		}
+	}
+
+	public virtual void RemoveFromGame() {
+		var timer = App.shared.timerCenter.NewTimer();
+		timer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
+		timer.action = DestroySelf;
+		timer.Start();
+
+		isInGame = false;
 	}
 
 	virtual public void DestroySelf() {

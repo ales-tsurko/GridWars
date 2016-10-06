@@ -35,8 +35,6 @@ public class Player : MonoBehaviour {
 
 	//public List<GameObject> ownedObjects;
 
-	public BoltConnection connection;
-
 	public int playerNumber {
 		get {
 			return battlefield.players.IndexOf(this) + 1;
@@ -73,10 +71,6 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void Awake() {
-		units = new List<GameUnit>();
-	}
-
 	void Start() {
 		if (App.shared.testEndOfGameMode) {
 			separation = 0.35f;
@@ -98,10 +92,16 @@ public class Player : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		fortress = this.CreateChild<Fortress>();
-		fortress.player = this;
-		fortress.transform.localPosition = Vector3.zero;
-		fortress.transform.localRotation = Quaternion.identity;
+		if (fortress == null) { //fortress will exist for rematches
+			fortress = this.CreateChild<Fortress>();
+			fortress.player = this;
+			fortress.transform.localPosition = Vector3.zero;
+			fortress.transform.localRotation = Quaternion.identity;
+		}
+
+		units = new List<GameUnit>();
+
+		fortress.StartGame();
 	}
 
 	//Painting
@@ -151,6 +151,12 @@ public class Player : MonoBehaviour {
 	public List<Player> enemyPlayers {
 		get {
 			return Battlefield.current.players.FindAll(p => p.playerNumber != playerNumber);
+		}
+	}
+
+	public Player opponent {
+		get {
+			return enemyPlayers[0];
 		}
 	}
 

@@ -74,16 +74,16 @@ public class App : MonoBehaviour {
 		network = new GameObject().AddComponent<Network>();
 		network.gameObject.name = "Network";
 
+		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
+
+		cameraController = GameObject.FindObjectOfType<CameraController>();
+		cameraController.enabled = true;
+
 		menu = UI.Menu();
 
 		var mainMenuState = new MainMenuState();
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
-
-		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
-
-		cameraController = GameObject.FindObjectOfType<CameraController>();
-		cameraController.enabled = true;
 	}
 
 	public void FixedUpdate() {

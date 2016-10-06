@@ -4,16 +4,23 @@ using System.Collections.Generic;
 public class PlayingGameState : NetworkDelegateState {
 	//AppState
 
-	bool didDetectEndOfGame;
-
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		battlefield.canCheckGameOver = false;
+
 		network.networkDelegate = this;
 		matchmaker.matchmakerDelegate = null;
-		matchmaker.Disconnect();
+		if (matchmaker.isConnected) {
+			matchmaker.Disconnect();
+		}
 
 		ShowInGameMenu();
+
+		if (battlefield.isInternetPVP) {
+			battlefield.PlayerNumbered(1).isLocal = BoltNetwork.isServer;
+			battlefield.PlayerNumbered(2).isLocal = BoltNetwork.isClient;
+		}
 
 		Battlefield.current.StartGame();
 	}
@@ -21,34 +28,10 @@ public class PlayingGameState : NetworkDelegateState {
 	public override void Update() {
 		base.Update();
 
-		if (didDetectEndOfGame) {
-			return;
-		}
-
-		if (battlefield.livingPlayers.Count == 1) {
-			var player = battlefield.livingPlayers[0];
-
-			app.ResetMenu();
-			menu.SetBackground(Color.black, 0);
-			var title = "";
-			if (battlefield.localPlayers.Count == 1) {
-				if (player.isLocal) {
-					title = "Victory!";
-				}
-				else {
-					title = "Defeat!";
-				}
-			}
-			else {
-				title = "Player " + player.playerNumber + " is Victorious!";
-			}
-
-			menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
-			menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
-
-			menu.Show();
-
-			didDetectEndOfGame = true;
+		if (battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
+			var state = new PostGameState();
+			state.victoriousPlayer = battlefield.livingPlayers[0];
+			TransitionTo(state);
 		}
 		else {
 			if (Keys.CHANGECAM.Pressed()){
@@ -85,6 +68,25 @@ public class PlayingGameState : NetworkDelegateState {
 		ShowLostConnection();
 	}
 
+	public override void ReceivedConcede() {
+		base.ReceivedConcede();
+
+		var state = new PostGameState();
+		state.victoriousPlayer = battlefield.localPlayer;
+
+		TransitionTo(state);
+	}
+
+	void ShowLostConnection() {
+		app.ResetMenu();
+		menu.AddItem(UI.ActivityIndicator("Lost Connection.  Returning to Main Menu"));
+		menu.Show();
+
+		app.battlefield.HardReset();
+
+		network.ShutdownBolt();
+	}
+
 	// Menu
 
 	void ShowInGameMenu() {
@@ -100,6 +102,8 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.Show();
 	}
 
+	// Concede
+
 	void Concede() {
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
@@ -111,47 +115,28 @@ public class PlayingGameState : NetworkDelegateState {
 	}
 
 	void ReallyConcede() {
-		LeaveGame();
+		var state = new PostGameState();
+		state.victoriousPlayer = battlefield.localPlayer.opponent;
+
+		ConcedeEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
+
+		TransitionTo(state);
 	}
 
 	void CancelConcede() {
 		ShowInGameMenu();
 	}
 
+	// Hotkeys
+
 	void ToggleHotkeys() {
 		app.prefs.keyIconsVisible = !app.prefs.keyIconsVisible;
 	}
 
+
+	//Camera
+
 	void ChangeCam() {
 		App.shared.cameraController.NextPosition();
-	}
-
-	void ShowLostConnection() {
-		if (didDetectEndOfGame) {
-			return;
-		}
-
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("Lost Connection.  Returning to Main Menu"));
-		menu.Show();
-
-		app.battlefield.Reset();
-
-		network.ShutdownBolt();
-	}
-
-	void LeaveGame() {
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
-		menu.Show();
-
-		app.battlefield.Reset();
-
-		if (BoltNetwork.isRunning) {
-			network.ShutdownBolt();
-		}
-		else {
-			BoltShutdownCompleted();
-		}
 	}
 }

@@ -43,7 +43,7 @@ public class Fortress : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	public void StartGame () {
 		if (App.shared.testEndOfGameMode) {
 			unitTypes = new System.Type[] {
 				typeof(Tank)
@@ -54,7 +54,6 @@ public class Fortress : MonoBehaviour {
 			CreatePlacement();
 			PlacePowerSource();
 			PlaceUnitTowers();
-			//PlacePointDefenseTowers();
 			Destroy(placement);
 		}
 	}
