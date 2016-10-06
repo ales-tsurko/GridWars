@@ -12,7 +12,9 @@ public class MatchmakerState : AppState, MatchmakerDelegate {
 		menu.Show();
 
 		matchmaker.matchmakerDelegate = this;
-		matchmaker.Start();
+		if (!matchmaker.isConnected) {
+			matchmaker.Start();
+		}
 	}
 
 	public void MatchmakerDisconnected() {
