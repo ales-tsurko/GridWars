@@ -76,7 +76,7 @@ public class Chopper : AirVehicle {
 		}
 
 		float diff = ch - y ();
-		return Mathf.Clamp(SmoothValue(diff)/2, 0f, 1f);
+		return Mathf.Clamp(SmoothValue(SmoothValue(diff))/2, 0f, 1f);
 	}
 
 	public float ForwardDesire() { // 0.0 to 1.0 
@@ -169,7 +169,7 @@ public class Chopper : AirVehicle {
 		//Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
 	}
 
-	public void SpinRotors() {
+	public void PositionJets() {
 
 
 		// position jets
@@ -184,7 +184,7 @@ public class Chopper : AirVehicle {
 		xr = Mathf.Clamp(xr, (-80f) - 45f, (-80f) + 45f);
 		*/
 
-		float xr = (- 90f) + speed * 10f;
+		float xr = (- 90f) + Mathf.Clamp(speed, 0f, 90f) * 10f;
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
 
@@ -221,12 +221,10 @@ public class Chopper : AirVehicle {
 		}
 	}
 
-	/* We no longer have rotors
 	public override void ServerAndClientFixedUpdate () {
 		base.ServerAndClientFixedUpdate();
-		SpinRotors();
+		PositionJets();
 	}
-	*/
 
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
