@@ -432,7 +432,10 @@ public class GameUnit : NetworkObject {
 
 		QueuePlayerCommands();
 
-
+		if (smokeDamage != null) {
+			float max = 50f;
+			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
+		}
 	}
 
 	public override void ServerLeftGame() {
@@ -757,10 +760,6 @@ public class GameUnit : NetworkObject {
 		}
 
 		hitPoints -= damage;
-		if (smokeDamage != null) {
-			float max = 50f;
-			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
-		}
 		if (hitPoints <= 0) {
 			Die();
 		}
