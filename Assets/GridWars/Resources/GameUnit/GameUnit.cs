@@ -447,7 +447,9 @@ public class GameUnit : NetworkObject {
 		base.ServerAndClientLeftGame();
 		if (player != null) {
 			if (shouldAddToPlayerUnits) {
-				player.units.Remove(this);
+				if (player != null) { //Player will be null after a Battlefield reset but inits might not be gone yet.
+					player.units.Remove(this);
+				}
 			}
 		}
 		ShowFxExplosion();
