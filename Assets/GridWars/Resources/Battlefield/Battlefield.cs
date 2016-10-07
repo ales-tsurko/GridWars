@@ -77,6 +77,8 @@ public class Battlefield : MonoBehaviour {
 	public void StartGame() {
 		App.shared.cameraController.InitCamera();
 
+		SetupLayers();
+
 		foreach (var player in players) {
 			player.StartGame();
 		}
@@ -86,6 +88,11 @@ public class Battlefield : MonoBehaviour {
 			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
 		}
 		*/
+	}
+
+	public void SetupLayers() {
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Projectile"), false);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("Projectile"), true);
 	}
 
 	void AddPlayer() {
