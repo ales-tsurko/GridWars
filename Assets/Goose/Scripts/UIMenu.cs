@@ -198,6 +198,7 @@ public class UIMenu : UIElement {
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
 			selectedItem = item;
+			lastSelectionTime = Time.time;
 		}
 	}
 
@@ -239,6 +240,9 @@ public class UIMenu : UIElement {
         }
     }
 
+	public float controllerPeriod = 0.25f;
+	float lastSelectionTime = 0f;
+
 	void Update() {
 		if (canNavigate) {
 			/* Unity calls OnClick for selected items when return is pressed by default
@@ -253,6 +257,21 @@ public class UIMenu : UIElement {
 
 			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
 				SelectPreviousItem();
+			}
+
+			var controllerDirection = Input.GetAxis("Vertical");
+
+			if (Time.time > lastSelectionTime + controllerPeriod) {
+				if (controllerDirection < 0) {
+					SelectNextItem();
+				}
+				else if (controllerDirection > 0) {
+					SelectPreviousItem();
+				}
+			}
+				
+			if (Input.GetKeyDown(KeyCode.Joystick1Button1)) {
+				selectedItem.OnClick();				
 			}
 		}
 	}
