@@ -13,28 +13,34 @@ public class PostGameState : NetworkDelegateState {
 
 		network.networkDelegate = this;
 
-		app.ResetMenu();
-		menu.SetBackground(Color.black, 0);
-		var title = "";
-		if (battlefield.localPlayers.Count == 1) {
-			if (victoriousPlayer.isLocal) {
-				title = "Victory!";
-			}
-			else {
-				title = "Defeat!";
-			}
+		if (battlefield.localPlayer == null) {
+			//AIvAI
+			LeaveGame();
 		}
 		else {
-			title = "Player " + victoriousPlayer.playerNumber + " is Victorious!";
-		}
+			app.ResetMenu();
+			menu.SetBackground(Color.black, 0);
+			var title = "";
+			if (battlefield.localPlayers.Count == 1) {
+				if (victoriousPlayer.isLocal) {
+					title = "Victory!";
+				}
+				else {
+					title = "Defeat!";
+				}
+			}
+			else {
+				title = "Player " + victoriousPlayer.playerNumber + " is Victorious!";
+			}
 
-		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
-		if (battlefield.isInternetPVP) {
-			menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
-		}
-		menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
+			menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
+			if (battlefield.isInternetPVP) {
+				menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
+			}
+			menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
 
-		menu.Show();
+			menu.Show();
+		}
 	}
 
 	// Network
