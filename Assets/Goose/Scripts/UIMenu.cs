@@ -47,6 +47,8 @@ public class UIMenu : UIElement {
 		}
 	}
 
+	public AudioSource audioSource;
+
 	public void Init() {
 		image = gameObject.AddComponent<Image>();
 		image.color = Color.black;
@@ -175,6 +177,10 @@ public class UIMenu : UIElement {
         t.anchorMax = new Vector2(1, 1);
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
+
+		if (audioSource == null) {
+			audioSource = gameObject.AddComponent<AudioSource>();
+		}
 
 		if (canNavigate) {
 			SelectNextItem();
