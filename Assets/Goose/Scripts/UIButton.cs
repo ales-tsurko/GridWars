@@ -65,7 +65,10 @@ public class UIButton : UIElement {
 	public UIMenu menu;
 
 	public AudioClip selectClip;
+	public float selectClipVolume;
+
 	public AudioClip clickClip;
+	public float clickClipVolume;
 
 	public void Select() {
 		buttonComponent.Select();
@@ -92,7 +95,7 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
         if (action != null) {
-			menu.audioSource.PlayOneShot(clickClip);
+			menu.audioSource.PlayOneShot(clickClip, clickClipVolume);
             action.Invoke();
         }
 	}
@@ -102,7 +105,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnSelected() {
-		menu.audioSource.PlayOneShot(selectClip);
+		menu.audioSource.PlayOneShot(selectClip, selectClipVolume);
 		isSelected = true;
 	}
 
