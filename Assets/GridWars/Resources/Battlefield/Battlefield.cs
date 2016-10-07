@@ -40,7 +40,12 @@ public class Battlefield : MonoBehaviour {
 
 	public Player localPlayer {
 		get {
-			return localPlayers[0];
+			if (localPlayers.Count > 0) {
+				return localPlayers[0];
+			}
+			else {
+				return null;
+			}
 		}
 	}
 

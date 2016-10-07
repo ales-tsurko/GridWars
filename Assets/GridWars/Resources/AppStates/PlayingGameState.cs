@@ -103,9 +103,23 @@ public class PlayingGameState : NetworkDelegateState {
 	void ShowInGameMenu() {
 		app.ResetMenu();
 
-		//TODO: something different for shared screen
-		menu.AddItem(UI.MenuItem("Concede (" + Keys.CONCEDE.GetKey().ToString() + ")", Concede));
-		menu.AddItem(UI.MenuItem("Toggle Hotkeys (" + Keys.TOGGLEKEYS.GetKey().ToString() + ")", ToggleHotkeys));
+		string concedeLabel;
+
+		//TODO: detect which player conceded in shared screen pvp
+		if (battlefield.localPlayer == null) { //AIvAI
+			concedeLabel = "Quit";
+		}
+		else {
+			concedeLabel = "Concede";
+		}
+
+		menu.AddItem(UI.MenuItem(concedeLabel + " (" + Keys.CONCEDE.GetKey().ToString() + ")", Concede));
+
+		if (battlefield.localPlayer != null) {
+			menu.AddItem(UI.MenuItem("Toggle Hotkeys (" + Keys.TOGGLEKEYS.GetKey().ToString() + ")", ToggleHotkeys));
+		}
+
+
 		menu.AddItem(UI.MenuItem("Change Camera (" + Keys.CHANGECAM.GetKey().ToString() + ")", ChangeCam));
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(MenuAnchor.TopLeft);
@@ -128,7 +142,10 @@ public class PlayingGameState : NetworkDelegateState {
 
 	void ReallyConcede() {
 		var state = new PostGameState();
-		state.victoriousPlayer = battlefield.localPlayer.opponent;
+
+		if (battlefield.localPlayer != null) {
+			state.victoriousPlayer = battlefield.localPlayer.opponent;
+		}
 
 		ConcedeEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
 

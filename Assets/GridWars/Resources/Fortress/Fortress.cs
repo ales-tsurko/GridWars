@@ -45,9 +45,11 @@ public class Fortress : MonoBehaviour {
 	// Use this for initialization
 	public void StartGame () {
 		if (App.shared.testEndOfGameMode) {
+			//*
 			unitTypes = new System.Type[] {
 				typeof(Tank)
 			};
+			//*/
 		}
 
 		if (BoltNetwork.isServer) {
