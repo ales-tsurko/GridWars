@@ -178,10 +178,6 @@ public class UIMenu : UIElement {
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
 
-		if (audioSource == null) {
-			audioSource = gameObject.AddComponent<AudioSource>();
-		}
-
 		if (canNavigate) {
 			SelectNextItem();
 		}
