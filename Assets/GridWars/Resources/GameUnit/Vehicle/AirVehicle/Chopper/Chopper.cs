@@ -18,7 +18,6 @@ public class Chopper : AirVehicle {
 	public float maxForwardSpeed;
 
 	[HideInInspector]
-	//public bool usesSoundtrack = false;
 	float damageRotation;
 
 	/*
@@ -33,7 +32,7 @@ public class Chopper : AirVehicle {
 		base.ServerJoinedGame();
 		isRunning = true;
 
-		//cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
+		cruiseHeight += Random.Range(-1.0f, 1.0f);
 
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
@@ -66,9 +65,11 @@ public class Chopper : AirVehicle {
 	public float UpDesire() { // 0.0 to 1.0
 		float ch = cruiseHeight;
 
+		/*
 		if (target == null) {
 			ch = 0f;
 		}
+		*/
 
 		float diff = ( ch - y() ) / ch; 
 
