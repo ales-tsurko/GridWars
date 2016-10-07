@@ -8,7 +8,6 @@ public class Missile : Projectile {
 	public bool isSeeking = true;
 
 	public override void ServerJoinedGame () {
-		thrust = 10f;
 		base.ServerJoinedGame();
 	}
 
@@ -30,7 +29,8 @@ public class Missile : Projectile {
 			float rightAngle = AngleBetweenOnAxis(_t.forward, targetDir, _t.right);
 			rightAngle = Mathf.Clamp(rightAngle, -3f, 3f);
 
-			float aThrust = thrust / 100.0f;
+			//float aThrust = thrust / 100.0f;
+			float aThrust = thrust / 2.0f;
 			/*
 			rigidBody().AddForce(transform.up * upAngle * aThrust);
 			rigidBody().AddForce(transform.right * rightAngle * aThrust);
