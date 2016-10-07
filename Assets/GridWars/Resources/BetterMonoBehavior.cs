@@ -51,13 +51,10 @@ public class BetterMonoBehaviour : MonoBehaviour {
 		_t.eulerAngles = new Vector3(v, e.y, e.z);
 	}
 
+	// rot x
 
 	public virtual float Object_rotX(GameObject obj) {
 		return obj.transform.eulerAngles.x;
-	}
-
-	public virtual float Object_rotY(GameObject obj) {
-		return obj.transform.eulerAngles.y;
 	}
 
 	public virtual void Object_setRotX(GameObject obj, float a) {
@@ -65,11 +62,29 @@ public class BetterMonoBehaviour : MonoBehaviour {
 		obj.transform.eulerAngles = new Vector3(a, e.y, e.z);
 	}
 
+	// rot y
+
+	public virtual float Object_rotY(GameObject obj) {
+		return obj.transform.eulerAngles.y;
+	}
+
 	public virtual void Object_setRotY(GameObject obj, float a) {
 		var e = obj.transform.eulerAngles;
 		obj.transform.eulerAngles = new Vector3(e.x, a, e.z);
 	}
 
+	// rot z
+
+	public virtual float Object_rotZ(GameObject obj) {
+		return obj.transform.eulerAngles.z;
+	}
+
+	public virtual void Object_setRotZ(GameObject obj, float z) {
+		var e = obj.transform.eulerAngles;
+		obj.transform.eulerAngles = new Vector3(e.x, e.y, z);
+	}
+
+	// rot dx
 
 	public virtual void Object_rotDX(GameObject obj, float dx) {
 		var e = obj.transform.eulerAngles;

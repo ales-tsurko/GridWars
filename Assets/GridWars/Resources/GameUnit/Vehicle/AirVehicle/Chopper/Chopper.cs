@@ -18,7 +18,7 @@ public class Chopper : AirVehicle {
 	public float maxForwardSpeed;
 
 	[HideInInspector]
-	float damageRotation;
+	//float damageRotation;
 
 	/*
 	public override void ServerAndClientJoinedGame() {
@@ -34,12 +34,12 @@ public class Chopper : AirVehicle {
 
 		cruiseHeight += Random.Range(-1.0f, 1.0f);
 
-		damageRotation = (Random.value - 0.5f) * 10f;
+		//damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
 
 		if (Minigun()) {
 			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.6f);
-			Minigun().damageAdjustments.Add(typeof(Tower), 0.25f);
+			Minigun().damageAdjustments.Add(typeof(Tower), 0.4f);
 		}
 	}
 
@@ -116,21 +116,28 @@ public class Chopper : AirVehicle {
 		return upThrust;
 	}
 
+	//private float lastSpeed;
+
 	public void PositionJets() {
 		float speed = ForwardSpeed();
+		//float acceleration = speed - lastSpeed;
 
-		float xr = (- 90f) + Mathf.Clamp(speed, 0f, 90f) * 10f;
+		//float xr = (- 90f) + Mathf.Clamp((speed + acceleration * 10f) * 10f , -90f, 90f);
+		float xr = (- 90f) + Mathf.Clamp(speed * 10f , -90f, 90f);
+
 		xr = Convert180to360(xr);
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
+
+		//lastSpeed = speed;
 	}
 
-
+	/*
 	public void ApplyJetThrustNew() {
 
 		float thrust = TotalUpThrust();
 		Vector3 ud = _t.transform.up * UpDesire();
-		Vector3 fd = _t.transform.forward *ForwardDesire();
+		Vector3 fd = _t.transform.forward * ForwardDesire();
 
 		Vector3 dir = (ud + fd).normalized;
 		float angle = AngleBetweenOnAxis(_t.forward, dir, _t.right);
@@ -147,6 +154,7 @@ public class Chopper : AirVehicle {
 		Debug.DrawLine(leftJet.transform.position, leftJet.transform.position + leftJet.transform.forward * thrust, Color.yellow); 
 		Debug.DrawLine(leftJet.transform.position, leftJet.transform.position + leftJet.transform.forward * thrust, Color.yellow); 
 	}
+	*/
 
 	public void ApplyJetThrust() {
 /*
@@ -160,6 +168,15 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForce(_t.forward * ForwardDesire() * thrust);
 
 		PositionJets();
+
+
+		float rotZ = Object_rotZ(gameObject);
+		rotZ = Convert360to180(rotZ);
+		rotZ *= 0.9f;
+		rotZ = Convert180to360(rotZ);
+
+		Object_setRotZ(gameObject, rotZ);
+
 	}
 
 	public override void ServerFixedUpdate () {
