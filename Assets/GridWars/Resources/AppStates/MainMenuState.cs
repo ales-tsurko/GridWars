@@ -15,6 +15,9 @@ public class MainMenuState : AppState {
         menu.AddItem(UI.MenuItem("Options", OptionsClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
+
+		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
+
 	}
 	
 	void InternetPvpClicked() {

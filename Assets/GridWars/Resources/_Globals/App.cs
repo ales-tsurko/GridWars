@@ -133,11 +133,34 @@ public class App : MonoBehaviour {
 	}
 
 	public AudioClip SoundNamedForUnitType(string name, System.Type type) {
-			string path = ResourcePathForUnitType(type);
-			string soundPath = path + "/Sounds/" + name;
-			return Resources.Load<AudioClip>(soundPath);
+		string path = ResourcePathForUnitType(type);
+		string soundPath = path + "/Sounds/" + name;
+		return Resources.Load<AudioClip>(soundPath);
 	}
 
+	// --- global audio ----
+
+	AudioSource _audioSource;
+	protected AudioSource audioSource {
+		get {
+			if (_audioSource == null) {
+				_audioSource = gameObject.AddComponent<AudioSource>();
+				_audioSource.loop = false;
+				_audioSource.spatialize = false;
+			}
+			return _audioSource;
+		}
+	}
+		
+	protected void PlayOneShot(AudioClip clip, float volume) {
+		audioSource.PlayOneShot(clip, volume);
+	}
+
+	public void PlayAppSoundNamed(string soundName) {
+		string soundPath = "Sounds/" + soundName;
+		AudioClip clip = Resources.Load<AudioClip>(soundPath);
+		PlayOneShot(clip, 1f);
+	}
 
 	// --- Destroying Objects -----------
 

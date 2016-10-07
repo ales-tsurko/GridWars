@@ -25,6 +25,11 @@ public class PlayingGameState : NetworkDelegateState {
 		}
 
 		Battlefield.current.StartGame();
+
+		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
+
+		App.shared.PlayAppSoundNamed("GameStart");
+
 	}
 
 	public override void Update() {
