@@ -13,16 +13,21 @@ public class Chopper : AirVehicle {
 
 	public GameObject leftJet;
 	public GameObject rightJet;
+	public GameObject rearJet;
+
+	public float maxForwardSpeed;
 
 	[HideInInspector]
-	public bool usesSoundtrack = true;
-	public float damageRotation;
+	//public bool usesSoundtrack = false;
+	float damageRotation;
 
+	/*
 	public override void ServerAndClientJoinedGame() {
 		base.ServerAndClientJoinedGame();
-		UpdateSoundtrack();
+		//UpdateSoundtrack();
 		//gameObject.TurnOffShadows(); // apply to prefab?
 	}
+	*/
 
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
@@ -33,21 +38,10 @@ public class Chopper : AirVehicle {
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
 
-		AddStartingBoost();
-
 		if (Minigun()) {
 			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.75f);
+			Minigun().damageAdjustments.Add(typeof(Tower), 0.25f);
 		}
-	}
-
-	private void AddStartingBoost() {
-		//rigidBody().velocity = new Vector3(0, 4f, 0f);
-		_t.position = new Vector3(_t.position.x, _t.position.y*2, _t.position.z);
-		//_t.position = new Vector3(_t.position.x, cruiseHeight*0.7f, _t.position.z);
-
-		Vector3 e = _t.eulerAngles;
-		e.x = 15f;
-		_t.eulerAngles = e; //new Vector3(e.x, e.y, e.z);
 	}
 
 	public Weapon Minigun() {
@@ -71,60 +65,48 @@ public class Chopper : AirVehicle {
 
 	public float UpDesire() { // 0.0 to 1.0
 		float ch = cruiseHeight;
+
 		if (target == null) {
 			ch = 0f;
 		}
 
-		float diff = ch - y ();
-		return Mathf.Clamp(SmoothValue(SmoothValue(diff))/2, 0f, 1f);
+		float diff = ( ch - y() ) / ch; 
+
+		//diff = SmoothValue(diff);
+
+		return Mathf.Clamp(diff, -1f, 1f);
 	}
 
 	public float ForwardDesire() { // 0.0 to 1.0 
 		if (!target) {
 			return 0f;
-		}
-			
-		if (!IsInStandoffRange()) {
-			// don't tilt forward until we're roughly facing the target
-			float angleDiff = Mathf.Abs(YAngleToTarget());
-			if (angleDiff < 30) {
-				float diff = TargetDistance() - standOffDistance;
-				return Mathf.Clamp(diff, 0f, 1f);
-			}
-		}
+		} 
 
-		return 0f;
+		float s = ForwardSpeed();
+		//float angleDiff = Mathf.Abs(YAngleToTarget());
+		float diff = (TargetDistance() - (standOffDistance + s))/standOffDistance;
+		float v = diff;
+		//v *= 1f - (Mathf.Clamp(angleDiff, 0f, 30f) / 30f);
+		v = SmoothValue(v);
+		v = Mathf.Clamp(v, 0f, 1f);
+
+
+		//Debug.DrawLine(_t.position, _t.position + _t.up * v * 10f, Color.yellow); 
+		//Debug.DrawLine(_t.position, _t.position + (target.transform.position - _t.position).normalized * (TargetDistance() - standOffDistance), Color.yellow); 
+
+		return v;
+
 	}
 
 	public float TiltRightDesire() { // -1.0 to 1.0
 		Vector3 worldUp = new Vector3(0, 1, 0);
 		float a = AngleBetweenOnAxis(_t.up, worldUp, _t.forward); // left is positive angle
-		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/5f;
+		//return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/5f;
+		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/3f;
 	}
 
-	public void  ApplyRotorLRThrust() { // z tilt control ------------------------------------------------------
-		float upThrust = TotalUpThrust()/2f;
-
-		float offset = 1f;
-		Vector3 thrustPointLeft  = mainRotorFixed.transform.position - mainRotorFixed.transform.right * offset;
-		Vector3 thrustPointRight = mainRotorFixed.transform.position + mainRotorFixed.transform.right * offset;
-
-		float f = TiltRightDesire();
-
-		Vector3 rotorUp = mainRotorFixed.transform.up;
-		Vector3 leftForce  = rotorUp * ((upThrust - f) / 2);
-		Vector3 rightForce = rotorUp * ((upThrust + f) / 2);
-
-		rigidBody().AddForceAtPosition(leftForce,  thrustPointLeft);
-		rigidBody().AddForceAtPosition(rightForce, thrustPointRight);
-
-		//Debug.DrawLine(mainRotorFixed.transform.position, mainRotorFixed.transform.position + (mainRotorFixed.transform.up * transform.rotation.eulerAngles.z / 10f), Color.blue); 
-		//Debug.DrawLine(thrustPointLeft, thrustPointLeft + leftForce , Color.black); 
-		//Debug.DrawLine(thrustPointRight, thrustPointRight + rightForce , Color.black); 
-	}
-				
 	public float TotalUpThrust() {
-		float upThrust = thrust * UpDesire(); // * 1.5f;
+		float upThrust = thrust * UpDesire(); 
 
 		if (IsHeavilyDamaged()) {
 			upThrust *= Random.value;
@@ -133,73 +115,50 @@ public class Chopper : AirVehicle {
 		return upThrust;
 	}
 
-	private float newForwardThrust;
-
-	public void  ApplyRotorThrust() {
-		// points around top rotor to apply force
-		// a difference between the force applied to these 
-		// causes chopper to tilt and then move forward or back
-
-
-		float upThrust = TotalUpThrust();
-
-		ApplyRotorLRThrust();
-
-		// forward/backward control ---------------------------------------------------
-
-		float offset = 1f;
-		Vector3 mainRotorThrustPointBack  = mainRotorFixed.transform.position + mainRotorFixed.transform.forward * offset;
-		Vector3 mainRotorThrustPointFront = mainRotorFixed.transform.position - mainRotorFixed.transform.forward * offset;
-
-		Vector3 rotorUp = mainRotorFixed.transform.up;
-		float speed = ForwardSpeed();
-		float desiredSpeed = ForwardDesire() * 4f;
-		float speedDiff = desiredSpeed - speed;
-		float f = Mathf.Clamp(speedDiff, -upThrust, upThrust) * 1f;
-
-		Vector3 frontForce = rotorUp * ((upThrust + f) / 2);
-		Vector3 backForce  = rotorUp * ((upThrust - f) / 2);
-
-		rigidBody().AddForceAtPosition(frontForce, mainRotorThrustPointFront);
-		rigidBody().AddForceAtPosition(backForce,  mainRotorThrustPointBack);
-
-		newForwardThrust = f;
-	
-		//Debug.DrawLine(mainRotorThrustPointFront, mainRotorThrustPointFront + frontForce * 2.0f, Color.yellow); 
-		//Debug.DrawLine(mainRotorThrustPointBack,  mainRotorThrustPointBack  + backForce  * 2.0f, Color.blue); 
-	}
-
 	public void PositionJets() {
-
-
-		// position jets
-
-		//float a = -90f + newForwardThrust*45f; // jets pushing straight up
-		//float shipRx = rotX();
 		float speed = ForwardSpeed();
-
-		/*
-		float xr = Object_rotX(leftJet);
-		xr += newForwardThrust*10f;
-		xr = Mathf.Clamp(xr, (-80f) - 45f, (-80f) + 45f);
-		*/
 
 		float xr = (- 90f) + Mathf.Clamp(speed, 0f, 90f) * 10f;
+		xr = Convert180to360(xr);
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
+	}
 
 
-		// rotors don't look right except at certain speeds, so hard wire this
-		float r = Random.value;
-		float t = TotalUpThrust();
+	public void ApplyJetThrustNew() {
 
-		if (mainRotor != null) {
-			Object_rotDY(mainRotor, 20f + t*r); //Mathf.Abs(upThrust*5.0f) + 20f);
-		}
+		float thrust = TotalUpThrust();
+		Vector3 ud = _t.transform.up * UpDesire();
+		Vector3 fd = _t.transform.forward *ForwardDesire();
 
-		if (tailRotor != null) {
-			Object_rotDX(tailRotor, 20f + 20f * r);
-		}
+		Vector3 dir = (ud + fd).normalized;
+		float angle = AngleBetweenOnAxis(_t.forward, dir, _t.right);
+
+		//angle = angle;
+		//angle = -90f;
+		Object_setRotX(leftJet, angle);
+		Object_setRotX(rightJet, angle);
+
+		Vector3 mainForce = dir * thrust;
+		rigidBody().AddForceAtPosition(mainForce, _t.transform.position);
+
+
+		Debug.DrawLine(leftJet.transform.position, leftJet.transform.position + leftJet.transform.forward * thrust, Color.yellow); 
+		Debug.DrawLine(leftJet.transform.position, leftJet.transform.position + leftJet.transform.forward * thrust, Color.yellow); 
+	}
+
+	public void ApplyJetThrust() {
+/*
+		Vector3 leftForce  = leftJet.transform.forward  * (thrust / 2f);
+		Vector3 rightForce = rightJet.transform.forward * (thrust / 2f);
+			
+		rigidBody().AddForceAtPosition(leftForce,  leftJet.transform.position);
+		rigidBody().AddForceAtPosition(rightForce, rightJet.transform.position);
+		*/
+		rigidBody().AddForce(_t.up * TotalUpThrust());
+		rigidBody().AddForce(_t.forward * ForwardDesire() * thrust);
+
+		PositionJets();
 	}
 
 	public override void ServerFixedUpdate () {
@@ -207,24 +166,18 @@ public class Chopper : AirVehicle {
 		if (isRunning) {
 			PickTarget();
 			SteerTowardsTarget();
-			ApplyRotorThrust();
+			ApplyJetThrust();
 		}
-
-		DieIfOverAccelerated();
-
+			
 		RemoveIfOutOfBounds();
 	}
-
-	private void DieIfOverAccelerated() {
-		if (rigidBody().velocity.magnitude > 20f) {
-			Die();
-		}
-	}
-
+		
+	/*
 	public override void ServerAndClientFixedUpdate () {
 		base.ServerAndClientFixedUpdate();
 		PositionJets();
 	}
+	*/
 
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
@@ -243,10 +196,12 @@ public class Chopper : AirVehicle {
 
 	// Soundtrack ----------------------------------------
 
+	/*
 	override public void ServerAndClientLeftGame(){
 		base.ServerAndClientLeftGame();
 		UpdateSoundtrack();
 	}
+	*/
 
 	public int PlayerChopperCount() {
 		var choppers = player.units.Where(unit => unit.IsOfType(typeof(Chopper))).ToList<GameUnit>();
@@ -255,22 +210,5 @@ public class Chopper : AirVehicle {
 
 	public Soundtrack Soundtrack() {
 		return App.shared.SoundtrackNamed("Wagner_Ride_of_the_Valkyries");
-	}
-
-	public void UpdateSoundtrack() {
-		if (usesSoundtrack) {
-			float count = (float)PlayerChopperCount();
-
-			float threshold = 4f;
-
-			if (count > 4) {
-				Soundtrack().Play();
-				Soundtrack().SetTargetVolume(1f);
-			}
-
-			if (count < 4) {
-				Soundtrack().SetTargetVolume(count / threshold);
-			}
-		}
 	}
 }
