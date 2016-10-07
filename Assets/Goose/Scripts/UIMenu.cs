@@ -235,9 +235,11 @@ public class UIMenu : UIElement {
 
 	void Update() {
 		if (canNavigate) {
+			/* Unity calls OnClick for selected items when return is pressed by default
 			if (Input.GetKeyDown(KeyCode.Return)) {
 				selectedItem.OnClick();
 			}
+			*/
 
 			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
 				SelectNextItem();
