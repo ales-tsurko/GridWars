@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
@@ -64,12 +65,6 @@ public class UIButton : UIElement {
 
 	public UIMenu menu;
 
-	public AudioClip selectClip;
-	public float selectClipVolume;
-
-	public AudioClip clickClip;
-	public float clickClipVolume;
-
 	public void Select() {
 		buttonComponent.Select();
 	}
@@ -91,11 +86,28 @@ public class UIButton : UIElement {
 
 	void Start () {
 		GetComponent<Button>().onClick.AddListener(OnClick);
+
+		var eventTrigger = gameObject.AddComponent<EventTrigger>();
+
+		var entry = new EventTrigger.Entry();
+		entry.eventID = EventTriggerType.Select;
+		entry.callback.AddListener(data => OnSelected());
+		eventTrigger.triggers.Add(entry);
+
+		entry = new EventTrigger.Entry();
+		entry.eventID = EventTriggerType.Deselect;
+		entry.callback.AddListener(data => OnDeselected());
+		eventTrigger.triggers.Add(entry);
+
+		entry = new EventTrigger.Entry();
+		entry.eventID = EventTriggerType.PointerEnter;
+		entry.callback.AddListener(data => OnPointerEnter());
+		eventTrigger.triggers.Add(entry);
 	}
 		
 	public void OnClick (){
         if (action != null) {
-			menu.audioSource.PlayOneShot(clickClip, clickClipVolume);
+			App.shared.PlayAppSoundNamed("MenuItemClicked");
             action.Invoke();
         }
 	}
@@ -105,7 +117,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnSelected() {
-		menu.audioSource.PlayOneShot(selectClip, selectClipVolume);
+		App.shared.PlayAppSoundNamed("MenuItemSelected");
 		isSelected = true;
 	}
 
