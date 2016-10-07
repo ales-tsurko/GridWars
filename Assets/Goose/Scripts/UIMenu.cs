@@ -7,7 +7,7 @@ public class UIMenu : UIElement {
 
 	public Vector2 itemSpacing = new Vector2(18f, 18f); //TODO: match with font size?
 
-	public List<UIMenuItem> items = new List<UIMenuItem> ();
+	public List<UIButton> items = new List<UIButton> ();
 	public float spacing;
     private RectTransform _panel;
     [HideInInspector]
@@ -26,6 +26,16 @@ public class UIMenu : UIElement {
             return _panel;
         }
     }
+
+	public UIButton selectedItem;
+
+	public bool isNavigable = true;
+
+	bool canNavigate {
+		get {
+			return isNavigable && selectableItems.Count > 0;
+		}
+	}
 
 	public Color backgroundColor {
 		get {
@@ -47,11 +57,12 @@ public class UIMenu : UIElement {
 		t.offsetMax = new Vector2(0, 0);
 	}
 
-	public void AddItem (UIMenuItem _item){
+	public void AddItem (UIButton _item){
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
 		items.Add (_item);
 		_item.Show ();
+		_item.menu = this;
 		OrderMenu ();
 	}
 
@@ -119,7 +130,7 @@ public class UIMenu : UIElement {
 
         float maxSize = 0;
         Vector2 vec = new Vector2();
-        foreach (UIMenuItem i in items) {
+        foreach (UIButton i in items) {
             if ((isVertical ? i.GetComponent<RectTransform>().sizeDelta.x : i.GetComponent<RectTransform>().sizeDelta.y)  > maxSize) {
                 maxSize = (isVertical ? i.GetComponent<RectTransform>().sizeDelta.x : i.GetComponent<RectTransform>().sizeDelta.y);
                 vec = i.GetComponent<RectTransform>().sizeDelta;
@@ -134,7 +145,7 @@ public class UIMenu : UIElement {
 		foreach (Transform child in transform) {
 			Destroy (child.gameObject);
 		}
-		items = new List<UIMenuItem> ();
+		items = new List<UIButton> ();
 	}
 
     public void SetBackground(Color _color, float alpha = 1){
@@ -164,7 +175,47 @@ public class UIMenu : UIElement {
         t.anchorMax = new Vector2(1, 1);
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
+
+		if (canNavigate) {
+			SelectNextItem();
+		}
     }
+
+	public List<UIButton>selectableItems {
+		get {
+			return items.FindAll(item => item.isInteractible);
+		}
+	}
+
+	public void SelectItem(UIButton item) {
+		if (item != null) {
+			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+			item.Select();
+			selectedItem = item;
+		}
+	}
+
+	public int selectedItemIndex {
+		get {
+			return selectableItems.IndexOf(selectedItem);
+		}
+	}
+
+	public void SelectNextItem() {
+		var nextIndex = selectedItemIndex + 1;
+		if (nextIndex >= selectableItems.Count) {
+			nextIndex = 0;
+		}
+		SelectItem(selectableItems[nextIndex]);
+	}
+
+	public void SelectPreviousItem() {
+		var previousIndex = selectedItemIndex - 1;
+		if (previousIndex < 0) {
+			previousIndex = selectableItems.Count - 1;
+		}
+		SelectItem(selectableItems[previousIndex]);
+	}
   
     public void SetButtonFillColors(Color _color, ButtonColorType type = ButtonColorType.Normal){
         foreach (UIButton b in items) {
@@ -181,6 +232,22 @@ public class UIMenu : UIElement {
             b.SetTextColor(_color);
         }
     }
+
+	void Update() {
+		if (canNavigate) {
+			if (Input.GetKeyDown(KeyCode.Return)) {
+				selectedItem.OnClick();
+			}
+
+			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
+				SelectNextItem();
+			}
+
+			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+				SelectPreviousItem();
+			}
+		}
+	}
 }
 
 public enum MenuAnchor {MiddleCenter, TopCenter, TopLeft};

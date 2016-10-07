@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
 [System.Serializable]
-public class UIButton : UIMenuItem {
+public class UIButton : UIElement {
 
 	public static UIButton Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
@@ -36,7 +36,7 @@ public class UIButton : UIMenuItem {
         }
     }
 
-	public bool interactable {
+	public bool isInteractible {
 		get {
 			return buttonComponent.interactable;
 		}
@@ -62,6 +62,14 @@ public class UIButton : UIMenuItem {
     [HideInInspector]
     public Vector2 menuSize = Vector2.zero;
 
+	public UIMenu menu;
+
+	public void Select() {
+		buttonComponent.Select();
+	}
+
+	public bool isSelected;
+
     void Awake () {
 		if (GetComponentInChildren<Text> () == null) {
 			UI.CreateTextObj (GetComponent<RectTransform>(), UIFont.Army);
@@ -85,9 +93,17 @@ public class UIButton : UIMenuItem {
         }
 	}
 
-    public void Update () {
-       
-    }
+	public void OnPointerEnter() {
+		menu.SelectItem(this);
+	}
+
+	public void OnSelected() {
+		isSelected = true;
+	}
+
+	public void OnDeselected() {
+		isSelected = false;
+	}
 
     public void SizeToFit() {
 		var w = textComponent.preferredWidth;

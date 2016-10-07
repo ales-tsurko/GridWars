@@ -89,7 +89,7 @@ public class UIElement : MonoBehaviour {
 }
 
 public static class UIElementExtension {
-    public static UIMenuItem SetData (this UIMenuItem element, string _data){
+    public static UIButton SetData (this UIButton element, string _data){
         element.itemData = _data;
         return element;
     }

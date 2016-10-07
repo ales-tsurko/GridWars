@@ -18,7 +18,7 @@ public class UIActivityIndicator : UIButton {
 
 	void Awake() {
 		matchesNeighborSize = false;
-		interactable = false;
+		isInteractible = false;
 	}
 
 	public override string text {

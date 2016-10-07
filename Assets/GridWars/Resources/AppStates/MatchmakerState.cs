@@ -39,7 +39,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate {
 		TransitionTo(s);
 	}
 
-	UIMenuItem cancelItem;
+	UIButton cancelItem;
 
 	void Cancel() {
 		Disconnect();

@@ -105,6 +105,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(MenuAnchor.TopLeft);
 		menu.SetBackground(Color.black, 0);
+		menu.isNavigable = false;
 		menu.Show();
 	}
 

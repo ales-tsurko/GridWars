@@ -29,7 +29,7 @@ public static class UI {
 			image = button.GetComponent<Image> ();
 		}
 		if (type == MenuItemType.ButtonTextOnly) {
-			button.interactable = false;
+			button.isInteractible = false;
 			button.matchesNeighborSize = false;
 		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
@@ -40,14 +40,14 @@ public static class UI {
 		return button;
 	}
 
-    static UIButton ButtonPrefab(string title, System.Action  action){
+	static UIButton ButtonPrefab(string title, System.Action  action){
 		var button = UIButton.Instantiate();
 		button.text = title;
 		button.action = action;
 		return button;
     }
 
-    public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
+    public static UIButton ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
 		var _button = UIButtonRemapKey.Instantiate();
 
         if (_keyData != null) {
@@ -75,13 +75,13 @@ public static class UI {
         return popup;
     }
 
-    public static UIMenuItem MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
+    public static UIButton MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:
             case MenuItemType.ButtonSquare:
             case MenuItemType.ButtonTextOnly:
 				var button = ButtonPrefab(title, null);
-				button.interactable = false;
+				button.isInteractible = false;
 				return button;
             case MenuItemType.ButtonPrefab:
 			button = ButtonPrefab(title, action);
