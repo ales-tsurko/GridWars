@@ -33,7 +33,7 @@ public class Chopper : AirVehicle {
 		base.ServerJoinedGame();
 		isRunning = true;
 
-		cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
+		//cruiseHeight = 9f + Random.Range(-1.0f, 1.0f);
 
 		damageRotation = (Random.value - 0.5f) * 10f;
 		SetAllowFriendlyFire(false);
