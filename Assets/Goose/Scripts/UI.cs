@@ -29,9 +29,7 @@ public static class UI {
 			image = button.GetComponent<Image> ();
 		}
 		if (type == MenuItemType.ButtonTextOnly) {
-			foreach (var imageComponent in go.GetComponentsInChildren<Image>()) {
-				imageComponent.enabled = false;
-			}
+			button.interactable = false;
 			button.matchesNeighborSize = false;
 		} else {
 			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
@@ -50,24 +48,24 @@ public static class UI {
     }
 
     public static UIMenuItem ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
-        GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(KEYMAPBUTTONPREFAB));
-        AssignToCanvas(go);
-        UIButtonRemapKey _button = go.GetComponent<UIButtonRemapKey>();
+		var _button = UIButtonRemapKey.Instantiate();
+
         if (_keyData != null) {
             _button.joyKey = _keyData.code.GetButton();
             _button.keyKey = _keyData.key;
             _button.code = _keyData.code;
         }
         if (utilKey) {
-            _button.text = utilText;
+			_button.text = utilText;
         } else {
-            _button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
+			_button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
         }
         if (action == null) {
-            _button.SetAction(_button.OnClick);
+			_button.action = _button.OnClick;
         } else {
-            _button.SetAction(action);
+			_button.action = action;
         }
+
         return _button;
     }
 
@@ -83,10 +81,11 @@ public static class UI {
             case MenuItemType.ButtonSquare:
             case MenuItemType.ButtonTextOnly:
 				var button = ButtonPrefab(title, null);
-				button.isOutlined = false;
+				button.interactable = false;
 				return button;
             case MenuItemType.ButtonPrefab:
-                return ButtonPrefab(title, action);   
+			button = ButtonPrefab(title, action);
+			return button;
         }
 		return null;
     }
@@ -97,13 +96,13 @@ public static class UI {
 		_menu.Init();
 		AssignToCanvas (_menu.gameObject);
 		//add graphic options here re skins
-		_menu.SetText(title);
+		//_menu.SetText(title);
 		return _menu;
 	}
 
 	public static UIActivityIndicator ActivityIndicator (string text = "", string skin = "Default"){
 		var indicator = UIActivityIndicator.Instantiate();
-		indicator.SetText(text);
+		indicator.text = text;
 		return indicator;
 		/*
 		skin += "/";
@@ -185,5 +184,3 @@ public static class UI {
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly, ButtonPrefab}
 public enum UIFont {None, Army, EuroStile, LGS}
-[System.Serializable]
-public class UIMenuItem : UIElement {}

@@ -181,6 +181,13 @@ public static class GridWarsUnityExtensions {
 		return self;
 	}
 
+	public static Color ToTronTerminalBlue(this Color self) {
+		self.r = 88f/255;
+		self.g = 144f/255;
+		self.b = 251f/255;
+		return self;
+	}
+
 	public static Color ToCyan(this Color self) {
 		self.r = 0f/255;
 		self.g = 255f/255;

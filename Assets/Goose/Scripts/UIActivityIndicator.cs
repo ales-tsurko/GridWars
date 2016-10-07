@@ -2,13 +2,13 @@
 using System.Collections;
 using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
-public class UIActivityIndicator : UIMenuItem {
+public class UIActivityIndicator : UIButton {
 	string prefix;
 	int maxDots = 10;
 	int dotCount = 0;
 	float showTime = 0f;
 
-	public static UIActivityIndicator Instantiate() {
+	public static new UIActivityIndicator Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
 		Destroy(go.GetComponent<UIButton>());
@@ -16,14 +16,20 @@ public class UIActivityIndicator : UIMenuItem {
 		return indicator;
 	}
 
-	public Text SetText(string text) {
-		prefix = text + "\n";
-		return base.SetText(prefix);
-	}
-
 	void Awake() {
 		matchesNeighborSize = false;
-		isOutlined = false;
+		interactable = false;
+	}
+
+	public override string text {
+		get {
+			return base.text;
+		}
+
+		set {
+			prefix = value + "\n";
+			base.text = prefix;
+		}
 	}
 
 	public override void Show() {
@@ -32,7 +38,7 @@ public class UIActivityIndicator : UIMenuItem {
 		showTime = Time.time;
 	}
 
-	void Update () {
+	new void Update () {
 		var newDotCount = Mathf.FloorToInt(Time.time - showTime) % (maxDots + 1);
 
 		if (dotCount != newDotCount) {
@@ -52,6 +58,7 @@ public class UIActivityIndicator : UIMenuItem {
 		}
 
 		transform.GetComponentInChildren<Text>().text = prefix + suffix;
+		SizeToFit();
 	}
 
 }
