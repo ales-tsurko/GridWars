@@ -16,7 +16,7 @@ public class Soundtrack : MonoBehaviour {
 	}
 
 	public string ResourcePath() {
-		return  "Music/" + trackName;
+		return  "Sounds/" + trackName;
 	}
 
 	public void SetTrackName(string aTrackName) {
