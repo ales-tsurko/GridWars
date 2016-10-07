@@ -173,6 +173,19 @@ public class Vehicle : GameUnit  {
 		return Mathf.Sign(v) * Mathf.Sqrt(Mathf.Abs(v));
 	}
 
+	public float SmoothValue2(float v) {
+		return Mathf.Sign(v) * Mathf.Pow(Mathf.Abs(v), -2);
+	}
+
+	public float SmoothValue3(float v) {
+		return Mathf.Sign(v) * Mathf.Pow(Mathf.Abs(v), -3);
+	}
+
+	public float SmoothValue4(float v) {
+		return Mathf.Sign(v) * Mathf.Pow(Mathf.Abs(v), -4);
+	}
+
+
 	public float SharpenValue(float v) {
 		return Mathf.Sign(v) * v * v;
 	}

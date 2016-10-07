@@ -10,7 +10,7 @@ public class GroundVehicle : Vehicle {
 		SteerTowardsTarget ();
 
 		// Drive!
-		if (WheelsAreTouchingGround () && !IsInStandoffRange()) {
+		if (target != null && WheelsAreTouchingGround () && !IsInStandoffRange()) {
 			rigidBody ().AddForce (_t.forward * AvailableThrust());
 		}
 

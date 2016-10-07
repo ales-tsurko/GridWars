@@ -100,6 +100,20 @@ public class BetterMonoBehaviour : MonoBehaviour {
 		_t.eulerAngles = new Vector3(e.x, e.y, v);
 	}
 
+	public float Convert360to180(float angle) {
+		if (angle > 180) {
+			angle -= 360;
+		}
+		return angle;
+	}
+
+	public float Convert180to360(float angle) {
+		if (angle < 0) {
+			angle += 360;
+		}
+		return angle;
+	}
+
 	// ------------------------------------
 
 	public static float AngleBetweenOnAxis(Vector3 v1, Vector3 v2, Vector3 n)
