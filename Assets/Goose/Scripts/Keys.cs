@@ -9,7 +9,7 @@ public static class Keys {
     public const string CHANGECAM = "Change Camera View";
     public const string CONCEDE = "Concede Match";
     public const string TOGGLEKEYS = "Toggle Display of Hotkeys";
-
+    public const string EXITFPS = "ExitFPS";
     private static List<KeyData> _keyData;
     public static List<KeyData> keyData {
         get {
