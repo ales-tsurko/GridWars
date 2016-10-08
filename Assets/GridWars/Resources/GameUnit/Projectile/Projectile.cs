@@ -14,6 +14,11 @@ public class Projectile : GameUnit {
 
 	[HideInInspector]
 
+	static public void SetupLayerCollisions() {
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Default"), LayerMask.NameToLayer("Projectile"), false);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("Projectile"), true);
+	}
+
 	virtual public Vector3 ImpusleOnWeapon() {
 		// for subclasses to override if needed
 		return new Vector3(0, 0, 0);

@@ -66,6 +66,7 @@ public class App : MonoBehaviour {
 		QualitySettings.vSyncCount = 0;
 
 		Wreckage.SetupLayerCollisions();
+		Projectile.SetupLayerCollisions();
 
 		SoundtrackNamed("Wagner_Ride_of_the_Valkyries"); // preload
 
