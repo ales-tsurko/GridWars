@@ -80,4 +80,13 @@ public class Tanker : GroundVehicle {
 		return true;
 	}
 
+	public override List<System.Type> CountersTypes() {
+		List<System.Type> counters = base.CountersTypes();
+		counters.Add(typeof(MobileSAM));
+		counters.Add(typeof(Tank));
+		counters.Add(typeof(Tanker));
+		counters.Add(typeof(Chopper));
+		return counters;
+	}
+
 }

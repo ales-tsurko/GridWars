@@ -231,7 +231,15 @@ public class Tower : GroundBuilding {
 		base.QueuePlayerCommands();
 
 		if (npcModeOn) {
-			if (Random.value < 0.001*4) {
+			foreach(var counterType in iconUnit.CountersTypes()) {
+				int count = player.EnemyObjectsOfType(counterType).Count;
+
+				if (Random.value < 0.001*4*count) {
+					SendAttemptQueueUnit();
+				}
+			}
+		
+			if (player.powerSource.isAtMax() && Random.value < 0.001*4) {
 				SendAttemptQueueUnit();
 			}
 		}

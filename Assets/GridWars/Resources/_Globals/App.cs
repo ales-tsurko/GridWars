@@ -153,14 +153,18 @@ public class App : MonoBehaviour {
 		}
 	}
 		
-	protected void PlayOneShot(AudioClip clip, float volume) {
+	public void PlayOneShot(AudioClip clip, float volume) {
 		audioSource.PlayOneShot(clip, volume);
 	}
 
 	public void PlayAppSoundNamed(string soundName) {
+		PlayAppSoundNamedWithVolume(soundName, 1f);
+	}
+
+	public void PlayAppSoundNamedWithVolume(string soundName, float v) {
 		string soundPath = "Sounds/" + soundName;
 		AudioClip clip = Resources.Load<AudioClip>(soundPath);
-		PlayOneShot(clip, 1f);
+		PlayOneShot(clip, v);
 	}
 
 	// --- Destroying Objects -----------

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Player : MonoBehaviour {
 	public static string primaryColorMaterialName = "PrimaryColor";
@@ -157,6 +158,10 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public Player Enemy() {
+		return enemyPlayers[0];
+	}
+
 	public Player opponent {
 		get {
 			return enemyPlayers[0];
@@ -171,6 +176,11 @@ public class Player : MonoBehaviour {
 			}
 		}
 		return enemyObjects;
+	}
+		
+	public virtual List<GameUnit> EnemyObjectsOfType(System.Type aType) {
+		List <GameUnit> units = Enemy().units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
+		return units;
 	}
 
 	public List <GameUnit> UnitsTargetingObj(GameObject targetObj) {
