@@ -180,6 +180,13 @@ public class Tower : GroundBuilding {
 		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
 	}
 
+	public override void ServerAndClientLeftGame(){
+		base.ServerAndClientLeftGame();
+		if (player != null) {
+			player.fortress.towers.Remove(this);
+		}
+	}
+
 	// HUD
 
 	GameObject iconObject;
