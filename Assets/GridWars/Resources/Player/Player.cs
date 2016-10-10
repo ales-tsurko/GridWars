@@ -205,4 +205,39 @@ public class Player : MonoBehaviour {
 			gameUnit.entity.AssignControl(App.shared.network.connection);
 		}
 	}
+
+	public void FixedUpdate () {
+		//base.ServerFixedUpdate(); 
+
+		if (npcModeOn && BoltNetwork.isServer) {
+			foreach (var tower in fortress.towers) {
+				if (tower != null) {
+					tower.NpcStep();
+				}
+			}
+		}
+
+		/*
+		if (npcModeOn) {
+			if (player.powerSource.PowerRatio() > .3) {
+
+				float a = CountOfEnemyUnitsWeCanCounter();
+				float b = CountOfEnemyUnitsThatCounterUs();
+
+				//float desireToRelease = a * a / (1 + b);
+				float cost = gameUnit.powerCost / player.powerSource.maxPower;
+				float desireToRelease = 2f * (1.5f * a - b) / cost;
+
+				if (Random.value < 0.001 * desireToRelease) {
+					SendAttemptQueueUnit();
+				} else if (player.powerSource.IsAtMax()) {
+					if (Random.value < 0.001 * 2) {
+						SendAttemptQueueUnit();
+					}
+				}
+			} 
+		}
+
+		*/
+	}
 }

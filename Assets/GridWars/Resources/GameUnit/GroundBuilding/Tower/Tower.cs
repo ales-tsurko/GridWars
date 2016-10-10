@@ -133,6 +133,15 @@ public class Tower : GroundBuilding {
 	public override void ServerFixedUpdate () {
 		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.
 
+		//NpcStep();
+
+		if (queueSize > 0) {
+			ReleaseUnits();
+		}
+
+	}
+
+	public void NpcStep () {
 		if (npcModeOn) {
 			if (player.powerSource.PowerRatio() > .3) {
 				
@@ -151,10 +160,6 @@ public class Tower : GroundBuilding {
 					}
 				}
 			} 
-		}
-
-		if (queueSize > 0) {
-			ReleaseUnits();
 		}
 	}
 

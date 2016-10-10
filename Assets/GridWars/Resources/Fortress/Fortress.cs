@@ -91,7 +91,7 @@ public class Fortress : MonoBehaviour {
 			tower.unitPrefabPath = App.shared.PrefabPathForUnitType(unitType);
 			tower.transform.position = placement.transform.position;
 			tower.transform.rotation = placement.transform.rotation;
-
+			towers.Add(tower);
 			towerNum ++;
 		}
 	}
