@@ -210,34 +210,39 @@ public class Player : MonoBehaviour {
 		//base.ServerFixedUpdate(); 
 
 		if (npcModeOn && BoltNetwork.isServer) {
+
+			AI();
+
+		}
+	}
+
+	private void AI() {
+		if (powerSource.PowerRatio() > 0.3f) {
+			
+			Tower bestTower = null;
+			float bestEffectiveness = 0f;
 			foreach (var tower in fortress.towers) {
-				if (tower != null) {
-					tower.NpcStep();
+				float e = tower.EffectivenessEstimate();
+				if (e > bestEffectiveness) {
+					bestTower = tower;
+					bestEffectiveness = e;
 				}
 			}
-		}
 
-		/*
-		if (npcModeOn) {
-			if (player.powerSource.PowerRatio() > .3) {
-
-				float a = CountOfEnemyUnitsWeCanCounter();
-				float b = CountOfEnemyUnitsThatCounterUs();
-
-				//float desireToRelease = a * a / (1 + b);
-				float cost = gameUnit.powerCost / player.powerSource.maxPower;
-				float desireToRelease = 2f * (1.5f * a - b) / cost;
-
-				if (Random.value < 0.001 * desireToRelease) {
-					SendAttemptQueueUnit();
-				} else if (player.powerSource.IsAtMax()) {
-					if (Random.value < 0.001 * 2) {
-						SendAttemptQueueUnit();
-					}
+			if (bestEffectiveness > 0f) {
+				bestTower.SendAttemptQueueUnit();
+			} else if (powerSource.IsAtMax()) {
+				foreach (var tower in fortress.towers) {
+					tower.LaunchWithChance(0.002f);
 				}
-			} 
-		}
+			}
 
-		*/
+		}
+	}
+
+	private void SimpleAI() {
+		foreach (var tower in fortress.towers) {
+			tower.NpcStep();
+		}
 	}
 }

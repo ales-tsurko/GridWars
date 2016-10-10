@@ -141,25 +141,31 @@ public class Tower : GroundBuilding {
 
 	}
 
+	public float EffectivenessEstimate() {
+		float a = CountOfEnemyUnitsWeCanCounter();
+		float b = CountOfEnemyUnitsThatCounterUs();
+
+		//float desireToRelease = a * a / (1 + b);
+		float cost = gameUnit.powerCost / player.powerSource.maxPower;
+		float desireToRelease = 2f * (1.5f * a - b) / cost;
+		return desireToRelease;
+	}
+
 	public void NpcStep () {
 		if (npcModeOn) {
-			if (player.powerSource.PowerRatio() > .3) {
-				
-				float a = CountOfEnemyUnitsWeCanCounter();
-				float b = CountOfEnemyUnitsThatCounterUs();
-
-				//float desireToRelease = a * a / (1 + b);
-				float cost = gameUnit.powerCost / player.powerSource.maxPower;
-				float desireToRelease = 2f * (1.5f * a - b) / cost;
-
-				if (Random.value < 0.001 * desireToRelease) {
+			if (player.powerSource.PowerRatio() > 0.3f) {
+				if (Random.value < 0.001f * EffectivenessEstimate()) {
 					SendAttemptQueueUnit();
 				} else if (player.powerSource.IsAtMax()) {
-					if (Random.value < 0.001 * 2) {
-						SendAttemptQueueUnit();
-					}
+					LaunchWithChance(0.002f);
 				}
 			} 
+		}
+	}
+
+	public void LaunchWithChance(float chance) { // chance out of 1
+		if (Random.value < chance) {
+			SendAttemptQueueUnit();
 		}
 	}
 
@@ -294,7 +300,7 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	void SendAttemptQueueUnit() {
+	public void SendAttemptQueueUnit() {
 		if (entity.hasControl) {
 			AttemptQueueUnitEvent.Create(entity).Send();
 		}
