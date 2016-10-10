@@ -561,6 +561,15 @@ public class GameUnit : NetworkObject {
 		return player.EnemyObjects();
 	}
 
+	public virtual List <GameUnit> EnemyUnits() {
+		var results = new List<GameUnit>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			results.Add(enemy.GameUnit());
+		}
+		return results;
+	}
+
 
 	public virtual List <GameObject> NonAirEnemyVehicles() {
 		var results = new List<GameObject>();

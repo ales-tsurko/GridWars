@@ -227,19 +227,43 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	public int CountOfEnemyUnitsWeCanCounter() {
+		int total = 0;
+
+		foreach(var counterType in iconUnit.CountersTypes()) {
+			int count = player.EnemyObjectsOfType(counterType).Count;
+			total += count;
+		}
+
+		return total;
+	}
+
+	public int CountOfEnemyUnitsThatCounterUs() {
+		int total = 0;
+
+		foreach(GameUnit unit in EnemyUnits()) {
+			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
+				total += 1;
+			}
+		}
+
+		return total;
+	}
+
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
 		if (npcModeOn) {
-			foreach(var counterType in iconUnit.CountersTypes()) {
-				int count = player.EnemyObjectsOfType(counterType).Count;
+			float a = CountOfEnemyUnitsWeCanCounter();
+			float b = CountOfEnemyUnitsThatCounterUs();
 
-				if (Random.value < 0.001*4*count) {
-					SendAttemptQueueUnit();
-				}
-			}
-		
-			if (player.powerSource.isAtMax() && Random.value < 0.001*4) {
+			//float desireToRelease = a * a / (1 + b);
+			float cost = gameUnit.powerCost / player.powerSource.maxPower;
+			float desireToRelease = (3*a - b) / cost;
+
+			if (Random.value < 0.001*2*desireToRelease) {
+				SendAttemptQueueUnit();
+			} else if (player.powerSource.isAtMax() && Random.value < 0.001) {
 				SendAttemptQueueUnit();
 			}
 		}

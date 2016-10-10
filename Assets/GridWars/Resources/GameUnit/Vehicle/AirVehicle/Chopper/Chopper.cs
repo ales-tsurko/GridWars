@@ -241,6 +241,7 @@ public class Chopper : AirVehicle {
 		List<System.Type> counters = base.CountersTypes();
 		counters.Add(typeof(Tank));
 		counters.Add(typeof(Tanker));
+		counters.Add(typeof(Chopper));
 		return counters;
 	}
 }
