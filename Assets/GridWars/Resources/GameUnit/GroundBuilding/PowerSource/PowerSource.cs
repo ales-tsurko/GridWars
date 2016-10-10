@@ -41,8 +41,16 @@ public class PowerSource : GroundBuilding {
 
 	List<GameObject>segments;
 
-	public bool isAtMax() {
+	public bool IsAtMax() {
 		return Mathf.Approximately(power, maxPower);
+	}
+
+	public float PowerRatio() {
+		float p = power / maxPower;
+		if (Mathf.Approximately(p, 1f)) {
+			return 1f;
+		}
+		return p;
 	}
 
 	public override void Awake () {
