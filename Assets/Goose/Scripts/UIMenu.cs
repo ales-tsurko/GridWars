@@ -47,7 +47,7 @@ public class UIMenu : UIElement {
 		}
 	}
 
-	public AudioSource audioSource;
+	//public AudioSource audioSource;
 
 	public void Init() {
 		image = gameObject.AddComponent<Image>();

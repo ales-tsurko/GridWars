@@ -41,6 +41,10 @@ public class PowerSource : GroundBuilding {
 
 	List<GameObject>segments;
 
+	public bool isAtMax() {
+		return Mathf.Approximately(power, maxPower);
+	}
+
 	public override void Awake () {
 		base.Awake();
 		bounds = new Vector3(0f, 1.0f, 2.5f);

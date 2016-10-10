@@ -13,6 +13,8 @@ public class GameUnit : NetworkObject {
 	//public AssemblyCSharp.TimerCenter timerCenterForServer; // use these timers to do mutations
 	//public AssemblyCSharp.TimerCenter timerCenterForClient; // use these timers for fx
 
+	public AudioClip deathSound;
+
 	public Player player {
 		get {
 			if (gameUnitState.playerNumber > 0) {
@@ -167,7 +169,6 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-
 	// --- Sounds ------------------------------------------
 
 	AudioSource _audioSource;
@@ -194,20 +195,12 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	// Death - can't do this because game unit destroys it's audioSource before sound finishes
-	/*
-	public AudioClip deathSound {
-		get {
-			return SoundNamed("death");
-		}
-	}
 
 	protected void PlayDeathSound() {
 		if (deathSound != null) {
-			audioSource.PlayOneShot(deathSound, deathVolume);
+			App.shared.PlayOneShot(deathSound, deathVolume);
 		}
 	}
-	*/
 
 
 	// ----------------------------------------------
@@ -456,7 +449,7 @@ public class GameUnit : NetworkObject {
 			}
 		}
 		ShowFxExplosion();
-		//PlayDeathSound();
+		PlayDeathSound();
 	}
 
 	// Thinking
@@ -566,6 +559,15 @@ public class GameUnit : NetworkObject {
 
 	public virtual List<GameObject> EnemyObjects() {
 		return player.EnemyObjects();
+	}
+
+	public virtual List <GameUnit> EnemyUnits() {
+		var results = new List<GameUnit>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			results.Add(enemy.GameUnit());
+		}
+		return results;
 	}
 
 
@@ -917,4 +919,12 @@ public class GameUnit : NetworkObject {
 		return pos;
 	}
 
+
+	// -------------------------------------
+
+
+	public virtual List<System.Type> CountersTypes() {
+		List<System.Type> counters = new List<System.Type>();
+		return counters;
+	}
 }

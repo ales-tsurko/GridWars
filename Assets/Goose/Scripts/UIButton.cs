@@ -107,7 +107,7 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
         if (action != null) {
-			App.shared.PlayAppSoundNamed("MenuItemClicked");
+			App.shared.PlayAppSoundNamedWithVolume("MenuItemClicked", .5f);
             action.Invoke();
         }
 	}
@@ -117,7 +117,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnSelected() {
-		App.shared.PlayAppSoundNamed("MenuItemSelected");
+		App.shared.PlayAppSoundNamedWithVolume("MenuItemSelected", 0.1f);
 		isSelected = true;
 	}
 

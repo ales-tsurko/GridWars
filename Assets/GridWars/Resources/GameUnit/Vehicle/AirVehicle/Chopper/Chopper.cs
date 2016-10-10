@@ -236,4 +236,12 @@ public class Chopper : AirVehicle {
 	public Soundtrack Soundtrack() {
 		return App.shared.SoundtrackNamed("Wagner_Ride_of_the_Valkyries");
 	}
+
+	public override List<System.Type> CountersTypes() {
+		List<System.Type> counters = base.CountersTypes();
+		counters.Add(typeof(Tank));
+		counters.Add(typeof(Tanker));
+		counters.Add(typeof(Chopper));
+		return counters;
+	}
 }

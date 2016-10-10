@@ -74,6 +74,8 @@ using System.Collections;
 	}
 
 	public void SinkStep() {
+		//Paint();
+
 		float ratio = (Time.time - sinkStartTime) / sinkPeriod;
 		SetY( - ratio * deathHeight );
 
@@ -100,5 +102,21 @@ using System.Collections;
 
 	void OnDestroy() {
 
+	}
+
+	int curColor = 1;
+
+	void Paint() {
+		if (curColor == 1) {
+			curColor = 0;
+		} else {
+			curColor = 1;
+		}
+
+		Color currentColor = new Color(curColor, curColor, curColor);
+
+		gameObject.EachMaterial(mat => {
+			mat.color = currentColor;
+		});
 	}
 }
