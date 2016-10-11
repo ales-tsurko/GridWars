@@ -18,7 +18,7 @@ public class MobileSAM : GroundVehicle {
 	public override void DidChangeVeternLevel() {
 		base.DidChangeVeternLevel();
 
-		if (veteranLevel == 2) {
+		if (veteranLevel == 1) {
 			foreach (Weapon weapon in Weapons()) {
 				weapon.SetCanTargetGround(true);
 			}

@@ -98,7 +98,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		for (var i = 0; i < concurrency; i ++) {
 			var releaseZone = this.CreateChild<ReleaseZone>();
 			releaseZone.size = unitSize;
-			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.0f, 0f);
+			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.05f, 0f);
 
 			releaseZone.transform.Translate(Vector3.Scale(
 				new Vector3(0f, size.y/2 + unitSize.y/2 + unitSpacing, size.z/2 + unitLength/2 + unitSpacing),
@@ -149,7 +149,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 	public void LaunchWithChance(float chance) { // chance out of 1
 		if (Random.value < chance) {
-			SendAttemptQueueUnit();
+			AttemptQueueUnit();
 		}
 	}
 

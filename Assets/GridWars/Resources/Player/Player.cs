@@ -231,11 +231,11 @@ public class Player : MonoBehaviour {
 			}
 
 			if (bestEffectiveness > 0f) {
-				bestTower.SendAttemptQueueUnit();
+				bestTower.AttemptQueueUnit();
 			} else if (powerSource.IsAtMax()) {
 				Tower aTower = fortress.towers.PickRandom();
 				if (aTower) {
-					aTower.SendAttemptQueueUnit();
+					aTower.AttemptQueueUnit();
 				}
 			}
 
