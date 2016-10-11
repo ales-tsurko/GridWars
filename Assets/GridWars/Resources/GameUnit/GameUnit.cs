@@ -540,7 +540,7 @@ public class GameUnit : NetworkObject {
 	public int killCount = 0;
 	public int killsPerVeteranLevel = 3;
 	public int veteranLevel = 0;
-	public int maxVeteranLevel = 0;
+	public int maxVeteranLevel = 2;
 	//public float hitPointRegenRate = 0f;
 
 	public void DidKill(GameUnit otherUnit) {
