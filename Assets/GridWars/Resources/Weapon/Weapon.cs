@@ -491,7 +491,7 @@ public class Weapon : MonoBehaviour {
 						if (TargetInRange()) {
 							if (ChooseToFire()) {
 								//ShowDebugAimLine();
-								IsAimed();
+								//IsAimed();
 								//if ((!usesRayCastAimCheck) || RayCastHitsEnemy()) {
 								if (!RayCastHitsFriend()) {
 									return true;
@@ -535,9 +535,18 @@ public class Weapon : MonoBehaviour {
 			}
 		}
 		*/
-
 		float diff = AimDiff();
-		bool angleDiffOk = diff < aimedAngle;
+		float cutoff = aimedAngle;
+
+		float d = TargetDistance();
+		if (d < 7f) {
+			//cutoff *= 10f/(1 + d);
+			if (RayCastHitsEnemy()) {
+				return true;
+			}
+		}
+
+		bool angleDiffOk = diff < cutoff;
 
 		return angleDiffOk;
 	}
