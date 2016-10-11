@@ -166,7 +166,7 @@ public class Vehicle : GameUnit  {
 	// --- Utility methods -----------------------------------------
 
 	public bool IsHeavilyDamaged() {
-		return (hpRatio < .5);
+		return (hpRatio < .25);
 	}
 
 	public float SmoothValue(float v) {

@@ -64,13 +64,6 @@ public class Chopper : AirVehicle {
 
 	public float UpDesire() { // 0.0 to 1.0
 		float ch = cruiseHeight;
-
-		/*
-		if (target == null) {
-			ch = 0f;
-		}
-		*/
-
 		float diff = ( ch - y() ) / ch; 
 
 		//diff = SmoothValue(diff);
@@ -102,7 +95,6 @@ public class Chopper : AirVehicle {
 	public float TiltRightDesire() { // -1.0 to 1.0
 		Vector3 worldUp = new Vector3(0, 1, 0);
 		float a = AngleBetweenOnAxis(_t.up, worldUp, _t.forward); // left is positive angle
-		//return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/5f;
 		return Mathf.Clamp(a/10.0f, -1.0f, 1.0f)/3f;
 	}
 
@@ -110,7 +102,7 @@ public class Chopper : AirVehicle {
 		float upThrust = thrust * UpDesire(); 
 
 		if (IsHeavilyDamaged()) {
-			upThrust *= Random.value;
+			upThrust *= (1f - UnityEngine.Random.value * 0.3f);
 		}
 
 		return upThrust;
@@ -165,7 +157,7 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForceAtPosition(rightForce, rightJet.transform.position);
 		*/
 		rigidBody().AddForce(_t.up * TotalUpThrust());
-		rigidBody().AddForce(_t.forward * ForwardDesire() * thrust);
+		rigidBody().AddForce(_t.forward * ForwardDesire() * AvailableThrust());
 
 		PositionJets();
 
