@@ -90,7 +90,7 @@ public class PlayingGameState : NetworkDelegateState {
 
 	void ShowLostConnection() {
 		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("Lost Connection.  Returning to Main Menu"));
+		menu.AddItem(UI.ActivityIndicator("Lost Connection. Returning to Main Menu"));
 		menu.Show();
 
 		app.battlefield.HardReset();

@@ -27,7 +27,7 @@ public class UIActivityIndicator : UIButton {
 		}
 
 		set {
-			prefix = value + "\n";
+			prefix = value.ToUpper() + "\n";
 			base.text = prefix;
 		}
 	}
