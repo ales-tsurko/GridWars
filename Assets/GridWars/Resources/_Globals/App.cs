@@ -224,14 +224,17 @@ public class App : MonoBehaviour {
 		Destroy(obj);
 	}
 
-	public void Log(object message, object context = null) {
+	public void Log(object message, object context) {
+		Log(context.GetType() + ": " + message.ToString());
+	}
+
+	public void Log(object message, UnityEngine.Object context) {
+		Log(context.GetType() + "." + context.GetInstanceID() + ": " + message.ToString());
+	}
+
+	public void Log(object message) {
 		if (debug) {
-			var msg = "";
-			if (context != null) {
-				msg += context.GetType() + ": ";
-			}
-			msg += message.ToString();
-			Debug.Log(msg);
+			Debug.Log("@" + Time.frameCount + ": " + message.ToString());
 		}
 	}
 

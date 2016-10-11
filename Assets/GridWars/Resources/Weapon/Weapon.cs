@@ -95,8 +95,7 @@ public class Weapon : MonoBehaviour {
 
 	//MonoBehaviour
 
-	//TODO: move code that isn't needed on client to Attached and check for isServer
-	public void Start () {
+	public void ServerAndClientInit () {
 		//base.Start();
 		Reload();
 

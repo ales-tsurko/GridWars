@@ -287,11 +287,8 @@ public class GameUnit : NetworkObject {
 	}
 
 	void IsInGameChanged() {
-		//Debug.Log("IsInGameChanged: " + this);
-		if (isInGame) {
-			SetVisibleAndEnabled(true);
-		}
-		else {
+		//App.shared.Log("IsInGameChanged: " + isInGame, this);
+		if (!isInGame) {
 			SetVisibleAndEnabled(false);
 			DidLeaveGame();
 		}
@@ -302,6 +299,7 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerInit() {
 		base.ServerInit();
+		//App.shared.Log("ServerInit", this);
 		isInGame = true;
 		hitPoints = maxHitPoints;
 
@@ -324,18 +322,23 @@ public class GameUnit : NetworkObject {
 
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
 
-
-		SetVisibleAndEnabled(isInGame);
+		foreach(var weapon in Weapons()) {
+			weapon.ServerAndClientInit();
+		}
+			
+		SetVisibleAndEnabled(false);
 	}
 
 	public override void ServerJoinedGame() {
 		base.ServerJoinedGame();
 
+		SetVisibleAndEnabled(true);
 		gameUnitState.isInGame = true; //TODO: try to match frame?
 	}
 
 	public override void ClientJoinedGame() {
 		base.ClientJoinedGame();
+		SetVisibleAndEnabled(true);
 	}
 
 	public override void ServerAndClientJoinedGame() {
@@ -369,6 +372,7 @@ public class GameUnit : NetworkObject {
 			}
 
 			if (isPlayerPainted) {
+				//App.shared.Log("player.Paint()", this);
 				player.Paint(gameObject);
 			}
 		}
@@ -466,7 +470,7 @@ public class GameUnit : NetworkObject {
 	public virtual void QueuePlayerCommands(){}
 
 	public void SetVisibleAndEnabled(bool visibleAndEnabled) {
-		//Debug.Log(this + " SetVisibleAndEnabled: " + visibleAndEnabled);
+		//App.shared.Log("SetVisibleAndEnabled(" + visibleAndEnabled + ")", this);
 		foreach (var script in GetComponentsInChildren<MonoBehaviour>()) {
 			if (script.GetType() != typeof(BoltEntity) && !script.inheritsFrom(typeof(NetworkedGameUnit))) {
 				script.enabled = visibleAndEnabled;
@@ -794,6 +798,8 @@ public class GameUnit : NetworkObject {
 		}
 
 		if (isInGame) {
+			//App.shared.Log("Die", this);
+
 			Camera cam = _t.GetComponentInChildren<Camera>();
 			if (cam) {
 				cam.transform.parent = null;

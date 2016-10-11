@@ -186,8 +186,10 @@ public class Tower : GroundBuilding {
 		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
 	}
 
-	public override void ServerAndClientLeftGame(){
-		base.ServerAndClientLeftGame();
+
+	public override void ServerLeftGame() {
+		base.ServerLeftGame();
+
 		if (player != null) {
 			player.fortress.TowerDied(this);
 		}
