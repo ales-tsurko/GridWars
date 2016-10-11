@@ -57,6 +57,11 @@ public class PowerSource : GroundBuilding {
 		return p;
 	}
 
+	public void ShutDown() {
+		generationRate = -7f;
+
+	}
+
 	public override void Awake () {
 		base.Awake();
 		bounds = new Vector3(0f, 1.0f, 2.5f);
@@ -120,7 +125,7 @@ public class PowerSource : GroundBuilding {
 		float r = power / maxPower;
 		rate *= (1 + r / 2);
 
-		power = Mathf.Min(power + Time.fixedDeltaTime * rate, maxPower);
+		power = Mathf.Clamp(power + Time.fixedDeltaTime * rate, 0f, maxPower);
 	}
 
 	public override void Think() {
@@ -150,6 +155,25 @@ public class PowerSource : GroundBuilding {
 		}
 
 		lastActiveSegmentCount = activeSegmentCount;
+
+		if (generationRate < 0f) {
+			ShowShutDown();
+		}
+	}
+
+	void ShowShutDown() {
+		for (var i = 0; i < segmentCount; i ++) {
+			var segment = segments[i];
+
+			if (UnityEngine.Random.value < 0.02f) {
+				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
+				if (fader == null) {
+					segment.AddComponent<BrightFadeInGeneric>();
+				}
+
+				fader.OnEnable();
+			}
+		}
 	}
 
 	void ShowFull() {

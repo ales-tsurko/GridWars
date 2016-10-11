@@ -232,8 +232,9 @@ public class Player : MonoBehaviour {
 			if (bestEffectiveness > 0f) {
 				bestTower.SendAttemptQueueUnit();
 			} else if (powerSource.IsAtMax()) {
-				foreach (var tower in fortress.towers) {
-					tower.LaunchWithChance(0.002f);
+				Tower aTower = fortress.towers.PickRandom();
+				if (aTower) {
+					aTower.SendAttemptQueueUnit();
 				}
 			}
 
