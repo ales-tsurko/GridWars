@@ -247,4 +247,22 @@ public class Player : MonoBehaviour {
 			tower.NpcStep();
 		}
 	}
+
+	// -- Camera --------------------------------
+
+	public Vector3 cameraDirection {
+		get {
+			var vectorToCamera = transform.position - App.shared.cameraController.cam.transform.position;
+			Debug.Log(vectorToCamera);
+			vectorToCamera = Vector3.Scale(
+				vectorToCamera,
+				new Vector3(1, 0, 1)
+			);
+			Debug.Log(vectorToCamera);
+			vectorToCamera = vectorToCamera.normalized;
+			Debug.Log(vectorToCamera);
+
+			return vectorToCamera;
+		}
+	}
 }

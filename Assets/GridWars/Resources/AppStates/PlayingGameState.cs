@@ -17,12 +17,13 @@ public class PlayingGameState : NetworkDelegateState {
 			matchmaker.Disconnect();
 		}
 
-		ShowInGameMenu();
-
+		//do this before ShowInGameMenu
 		if (battlefield.isInternetPVP) {
 			battlefield.PlayerNumbered(1).isLocal = BoltNetwork.isServer;
 			battlefield.PlayerNumbered(2).isLocal = BoltNetwork.isClient;
 		}
+
+		ShowInGameMenu();
 
 		Battlefield.current.StartGame();
 

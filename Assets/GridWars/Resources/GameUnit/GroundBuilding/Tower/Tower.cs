@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
 
-public class Tower : GroundBuilding {
+public class Tower : GroundBuilding, CameraControllerDelegate {
 
 	public GameObject iconPlacement;
 
@@ -78,6 +78,8 @@ public class Tower : GroundBuilding {
 		}
 
 		keyIcon.SetActive(false);
+
+		App.shared.cameraController.cameraControllerDelegates.Add(this);
 	}
 
 	public override void ServerJoinedGame() {
@@ -129,9 +131,7 @@ public class Tower : GroundBuilding {
 
         keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
 
-		if (playerNumber == 2) {
-			keyIcon.transform.Rotate(new Vector3(0, 0, 180));
-		}
+		keyIcon.EachRenderer(r => r.enabled = true);//GameUnit.SetVisibileAndEnabled(true) isn't working for some reason.
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 	}
@@ -156,17 +156,7 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		if (canQueueUnit) {
-			//Paint();
-			ShowHud(true);
-			//keyIcon.SetActive((attemptQueueUnitKeyCode != KeyCode.None) && App.shared.prefs.keyIconsVisible);
-
-		}
-		else {
-			//PaintAsDisabled();
-            ShowHud(false);
-		}
-
+		iconObject.SetActive(canQueueUnit);
 		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
 	}
 
@@ -179,28 +169,23 @@ public class Tower : GroundBuilding {
 		}
 	}
 
+	public override void ServerAndClientLeftGame() {
+		base.ServerAndClientLeftGame();
+
+		App.shared.cameraController.cameraControllerDelegates.Remove(this);
+	}
+
 	// HUD
 
 	GameObject iconObject;
 	public GameObject keyIcon;
 	Prefs prefs;
 
-    public void ShowHud(bool b = true) {
-        foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-            renderer.enabled = b;
-        }
+	// CameraController
+
+	public void CameraControllerBeganTransition() {
+		keyIcon.transform.rotation = Quaternion.Euler(App.shared.cameraController.keyIconRotation.rotation);
 	}
-
-	/*public void HideHud() {
-		if (!hudIsHidden) {
-			keyIcon.SetActive(false);
-			foreach (Renderer renderer in iconObject.GetComponentsInChildren<Renderer>()) {
-				renderer.enabled = false;
-			}
-			hudIsHidden = true;
-		}
-	}*/
-
 
 	public override void Think() {
 		// doesn't need to pick targets

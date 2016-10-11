@@ -18,12 +18,17 @@ public class CameraController : MonoBehaviour {
 	MouseLook mouseLook;
 	bool actionMode;
 	bool initComplete = false;
+	public KeyIconRotation keyIconRotation;
+	public List<CameraControllerDelegate> cameraControllerDelegates;
+
 	void Start () {
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
 		//DontDestroyOnLoad (gameObject);
 	}
 	public void InitCamera () {
+		cameraControllerDelegates = new List<CameraControllerDelegate>();
+
 		StartCoroutine (WaitForTowers ());
 	}
 	IEnumerator WaitForTowers () {
@@ -54,12 +59,16 @@ public class CameraController : MonoBehaviour {
 
 			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
 				Vector3 mirrorAxis;
+				var keyIconRotation = transform.GetComponent<KeyIconRotation>();
+
 				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
 					mirrorAxis = new Vector3(1, 1, -1);
 				}
 				else {
 					mirrorAxis = new Vector3(-1, 1, 1);
 				}
+				
+				keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
 
 				gamePosition.position = Vector3.Scale(gamePosition.position, mirrorAxis);
 				gamePosition.rotation = Quaternion.Euler(gamePosition.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
@@ -130,6 +139,7 @@ public class CameraController : MonoBehaviour {
 			if (actionMode) {
 				mouseLook.enabled = true;
 			}
+
 			moving = false;
 		}
 		//print ("Moving " + Time.time);
@@ -161,6 +171,7 @@ public class CameraController : MonoBehaviour {
 		cam.parent = null;
 		pos++;
 		var transform = gamePositions[pos % gamePositions.Count];
+		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
 		targetPos = transform.position;
 		targetRot = transform.rotation;
 		startPos = cam.position;
@@ -169,6 +180,10 @@ public class CameraController : MonoBehaviour {
 		startTime = Time.time;
 		moving = true;
         App.shared.prefs.camPosition = pos;
+
+		foreach (var cameraControllerDelegate in cameraControllerDelegates) {
+			cameraControllerDelegate.CameraControllerBeganTransition();
+		}
        
 	}
 
@@ -182,4 +197,8 @@ public class CameraController : MonoBehaviour {
         Cursor.visible = true;
     }
 
+}
+
+public interface CameraControllerDelegate {
+	void CameraControllerBeganTransition();
 }
