@@ -32,6 +32,12 @@ public class Projectile : GameUnit {
 		rigidBody().velocity = obj.GetComponent<Rigidbody>().velocity;
 	}
 
+	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
+
+		fadeInPeriod = 0f;
+	}
+
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 		isTargetable = false;

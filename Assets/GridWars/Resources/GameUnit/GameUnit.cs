@@ -332,13 +332,13 @@ public class GameUnit : NetworkObject {
 	public override void ServerJoinedGame() {
 		base.ServerJoinedGame();
 
-		SetVisibleAndEnabled(true);
-		gameUnitState.isInGame = true; //TODO: try to match frame?
+		SetVisibleAndEnabled(true); //Don't do this in ServerAndClientJoinedGame as some classes need it setup here
+		gameUnitState.isInGame = true;
 	}
 
 	public override void ClientJoinedGame() {
 		base.ClientJoinedGame();
-		SetVisibleAndEnabled(true);
+		SetVisibleAndEnabled(true); //Don't do this in ServerAndClientJoinedGame as some classes need it setup here
 	}
 
 	public override void ServerAndClientJoinedGame() {
