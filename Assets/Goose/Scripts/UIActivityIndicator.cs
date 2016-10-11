@@ -38,7 +38,7 @@ public class UIActivityIndicator : UIButton {
 		showTime = Time.time;
 	}
 
-	new void Update () {
+	void Update () {
 		var newDotCount = Mathf.FloorToInt(Time.time - showTime) % (maxDots + 1);
 
 		if (dotCount != newDotCount) {

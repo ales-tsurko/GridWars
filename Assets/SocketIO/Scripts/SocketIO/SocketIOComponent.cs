@@ -398,7 +398,8 @@ namespace SocketIO
 			foreach (Action<SocketIOEvent> handler in this.handlers[ev.name]) {
 				try{
 					handler(ev);
-				} catch(Exception ex){
+				}
+				catch(Exception ex){
 					#if SOCKET_IO_DEBUG
 					debugMethod.Invoke(ex.ToString());
 					#endif

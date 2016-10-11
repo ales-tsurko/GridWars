@@ -13,10 +13,9 @@ public class Outliner : MonoBehaviour {
 	public float pushOutWidth = 0.01f;
 	public Material lineMaterial;
 	public bool replaceMesh = true;
-	public bool enabled = true;
 
 	void Awake() {
-		return; //TODO
+		enabled = false;
 
 		if (!enabled) {
 			return;

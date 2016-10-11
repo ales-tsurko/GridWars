@@ -243,6 +243,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
         if (unitKeyMap == "None") {
             return;
         }
+
         if (!npcModeOn && unitKeyMap.Pressed()) {
 			SendAttemptQueueUnit();
 		}
@@ -332,9 +333,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		//if (aiStyle > .5) {
 		if (true) {
 			e = ( (a - c) / (1 + b) ) / cost;
-		} else {
+		}/* else {
 			e = (1.5f * a - b) / cost;
-		}
+		}*/
 
 		return e;
 	}

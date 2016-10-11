@@ -10,6 +10,7 @@ namespace AssemblyCSharp {
 		List <NNetNode> nodes;
 
 		public NNetLayer() {
+			nodes = new List<NNetNode>();
 		}
 
 		public void SetRandomWeights() {
