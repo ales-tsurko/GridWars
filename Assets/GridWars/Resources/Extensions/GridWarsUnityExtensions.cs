@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class GridWarsUnityExtensions {
 
@@ -9,6 +10,12 @@ public static class GridWarsUnityExtensions {
 	}
 
 	// List
+
+	/*
+	public static IList<T> Shuffled<T>(this IList<T> list) {		
+		return list.OrderBy(a => UnityEngine.Random.value);
+	}
+	*/
 
 	public static T PickRandom<T>(this IList<T> list)
 	{

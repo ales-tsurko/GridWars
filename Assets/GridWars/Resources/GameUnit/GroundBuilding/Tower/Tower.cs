@@ -57,6 +57,12 @@ public class Tower : GroundBuilding {
 
 	// NetworkedGameUnit
 
+	public override void ServerInit() {
+		base.ServerInit();
+		aiStyle = UnityEngine.Random.value;
+	}
+
+
 	public override void ClientInit() {
 		shouldDestroyColliderOnClient = false;
 		base.ClientInit();
@@ -139,28 +145,6 @@ public class Tower : GroundBuilding {
 			ReleaseUnits();
 		}
 
-	}
-
-	public float EffectivenessEstimate() {
-		float a = CountOfEnemyUnitsWeCanCounter();
-		float b = CountOfEnemyUnitsThatCounterUs();
-
-		//float desireToRelease = a * a / (1 + b);
-		float cost = gameUnit.powerCost / player.powerSource.maxPower;
-		float desireToRelease = 2f * (1.5f * a - b) / cost;
-		return desireToRelease;
-	}
-
-	public void NpcStep () {
-		if (npcModeOn) {
-			if (player.powerSource.PowerRatio() > 0.3f) {
-				if (Random.value < 0.001f * EffectivenessEstimate()) {
-					SendAttemptQueueUnit();
-				} else if (player.powerSource.IsAtMax()) {
-					LaunchWithChance(0.002f);
-				}
-			} 
-		}
 	}
 
 	public void LaunchWithChance(float chance) { // chance out of 1
@@ -267,29 +251,6 @@ public class Tower : GroundBuilding {
 		}
 	}
 
-	public int CountOfEnemyUnitsWeCanCounter() {
-		int total = 0;
-
-		foreach(var counterType in iconUnit.CountersTypes()) {
-			int count = player.EnemyObjectsOfType(counterType).Count;
-			total += count;
-		}
-
-		return total;
-	}
-
-	public int CountOfEnemyUnitsThatCounterUs() {
-		int total = 0;
-
-		foreach(GameUnit unit in EnemyUnits()) {
-			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
-				total += 1;
-			}
-		}
-
-		return total;
-	}
-
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
@@ -339,6 +300,69 @@ public class Tower : GroundBuilding {
 				}
 			}
 			return null;
+		}
+	}
+
+	// --- AI ------------------------------
+
+
+	public int CountOfTowerUnits() {
+		return player.FriendlyUnitsOfType(iconUnit.GetType()).Count;
+	}
+
+
+	public int CountOfEnemyUnitsWeCanCounter() {
+		int total = 0;
+
+		foreach(var counterType in iconUnit.CountersTypes()) {
+			int count = player.EnemyUnitsOfType(counterType).Count;
+			total += count;
+		}
+
+		return total;
+	}
+
+	public int CountOfEnemyUnitsThatCounterUs() {
+		int total = 0;
+
+		foreach(GameUnit unit in EnemyUnits()) {
+			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
+				total += 1;
+			}
+		}
+
+		return total;
+	}
+
+	public float aiStyle = 0;
+
+	public float Effectiveness() {
+		float a = CountOfEnemyUnitsWeCanCounter();
+		float b = CountOfEnemyUnitsThatCounterUs();
+		float c = CountOfTowerUnits();
+
+		float cost = gameUnit.powerCost / player.powerSource.maxPower;
+
+		float e = 0;
+		//if (aiStyle > .5) {
+		if (true) {
+			e = ( (a - c) / (1 + b) ) / cost;
+		} else {
+			e = (1.5f * a - b) / cost;
+		}
+
+		return e;
+	}
+
+	public void NpcStep () {
+		if (npcModeOn) {
+			if (player.powerSource.PowerRatio() > 0.3f) {
+				if (Random.value < 0.001f * Effectiveness()) {
+					SendAttemptQueueUnit();
+				} else if (player.powerSource.IsAtMax()) {
+					LaunchWithChance(0.002f);
+				}
+			} 
 		}
 	}
 }

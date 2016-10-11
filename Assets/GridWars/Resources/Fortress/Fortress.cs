@@ -137,6 +137,10 @@ public class Fortress : MonoBehaviour {
 
 	public void TowerDied(Tower tower) {
 		towers.Remove(tower);
-		player.powerSource.MakeMax();
+		if (towers.Count == 0) {
+			player.powerSource.ShutDown();
+		} else {
+			player.powerSource.MakeMax();
+		}
 	}
 }
