@@ -51,6 +51,12 @@ public class Projectile : GameUnit {
 	protected Collision lastCollision;
 
 	public override void OnCollisionEnter(Collision collision) {
+		GameUnit otherUnit = collision.gameObject.GameUnit();
+
+		if (otherUnit && otherUnit.player == player) {
+			return;
+		}
+
 		lastCollision = collision;
 		Explode();
 		ApplyDamageTo(collision.gameObject);
