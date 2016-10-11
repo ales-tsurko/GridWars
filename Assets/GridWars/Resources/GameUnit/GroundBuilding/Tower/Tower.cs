@@ -92,7 +92,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;
 		var unitLength = unitSize.z;
-		var unitSpacing = unitWidth/4;
+		var unitSpacing = unitWidth/6;
 		var launchZoneWidth = concurrency*(unitWidth + unitSpacing) - unitSpacing;
 
 		for (var i = 0; i < concurrency; i ++) {
