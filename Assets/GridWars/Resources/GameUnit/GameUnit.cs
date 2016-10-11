@@ -540,7 +540,7 @@ public class GameUnit : NetworkObject {
 	public int killCount = 0;
 	public int killsPerVeteranLevel = 3;
 	public int veteranLevel = 0;
-	public int maxVeteranLevel = 2;
+	private int maxVeteranLevel = 2;
 	//public float hitPointRegenRate = 0f;
 
 	public void DidKill(GameUnit otherUnit) {
@@ -602,6 +602,8 @@ public class GameUnit : NetworkObject {
 			PaintPrimaryColor(Color.black);
 			PaintSecondaryColor(player.primaryColor);
 		}
+		var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		fader.OnEnable();
 	}
 
 	public void AdjustWeaponsRangeByFactor(float f) {
@@ -622,7 +624,7 @@ public class GameUnit : NetworkObject {
 
 	public void AdjustMaxHitpointsByFactor(float f) {
 		maxHitPoints *= f;
-		hitPoints += maxHitPoints * 0.25f;
+		hitPoints += maxHitPoints * 0.5f; // supcom does 0.25
 		hitPoints = Mathf.Clamp(hitPoints, 0f, maxHitPoints);
 	}
 
