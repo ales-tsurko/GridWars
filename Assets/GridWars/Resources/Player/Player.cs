@@ -178,9 +178,12 @@ public class Player : MonoBehaviour {
 		return enemyObjects;
 	}
 		
-	public virtual List<GameUnit> EnemyObjectsOfType(System.Type aType) {
-		List <GameUnit> units = Enemy().units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
-		return units;
+	public virtual List<GameUnit> FriendlyUnitsOfType(System.Type aType) {
+		return units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
+	}
+
+	public virtual List<GameUnit> EnemyUnitsOfType(System.Type aType) {
+		return Enemy().units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
 	}
 
 	public List <GameUnit> UnitsTargetingObj(GameObject targetObj) {
@@ -210,9 +213,7 @@ public class Player : MonoBehaviour {
 		//base.ServerFixedUpdate(); 
 
 		if (npcModeOn && BoltNetwork.isServer) {
-
 			AI();
-
 		}
 	}
 
@@ -222,7 +223,7 @@ public class Player : MonoBehaviour {
 			Tower bestTower = null;
 			float bestEffectiveness = 0f;
 			foreach (var tower in fortress.towers) {
-				float e = tower.EffectivenessEstimate();
+				float e = tower.Effectiveness();
 				if (e > bestEffectiveness) {
 					bestTower = tower;
 					bestEffectiveness = e;
