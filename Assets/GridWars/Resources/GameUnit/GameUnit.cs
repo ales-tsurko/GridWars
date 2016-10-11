@@ -538,19 +538,19 @@ public class GameUnit : NetworkObject {
 	// --- veterancy ----------------------------
 
 	public int killCount = 0;
+	public int killsPerVeteranLevel = 3;
 	public int veteranLevel = 0;
+	public int maxVeteranLevel = 0;
+	//public float hitPointRegenRate = 0f;
 
 	public void DidKill(GameUnit otherUnit) {
 		killCount++;
 
-		if (killCount == 3) {
-			SetVeteranLevel(1);
+		if (killCount % killsPerVeteranLevel == 0) {
+			if (veteranLevel < maxVeteranLevel) {
+				SetVeteranLevel(veteranLevel + 1);
+			}
 		}
-
-		if (killCount == 6) {
-			SetVeteranLevel(2);
-		}
-
 	}
 
 	public void PaintPrimaryColor(Color c) {
@@ -560,7 +560,6 @@ public class GameUnit : NetworkObject {
 			}
 		});
 	}
-
 
 	public void PaintSecondaryColor(Color c) {
 		gameObject.EachRenderer(r => {
@@ -623,8 +622,8 @@ public class GameUnit : NetworkObject {
 
 	public void AdjustMaxHitpointsByFactor(float f) {
 		maxHitPoints *= f;
-		hitPoints *= f;
-		//hitPoints = Mathf.Clamp(hitPoints, maxHitPoints / 2, maxHitPoints);
+		hitPoints += maxHitPoints * 0.25f;
+		hitPoints = Mathf.Clamp(hitPoints, 0f, maxHitPoints);
 	}
 
 	// -------------------------------------
