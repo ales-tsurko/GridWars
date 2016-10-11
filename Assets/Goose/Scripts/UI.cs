@@ -69,12 +69,6 @@ public static class UI {
         return _button;
     }
 
-    public static UIPopup Popup(string title = ""){
-		var popup = UIPopup.Instantiate();
-		popup.SetText(title);
-        return popup;
-    }
-
     public static UIButton MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:

@@ -187,7 +187,7 @@ public class Battlefield : MonoBehaviour {
 				GameObject tile = Instantiate(tilePrefab);
 				tile.transform.position = new Vector3(x*r, 0, z*r);
 				//if (x > 0) {
-				float v = (float)Mathf.Abs(x)/(float)maxX;
+				//float v = (float)Mathf.Abs(x)/(float)maxX;
 				//tile.PaintDarken(1f - v*v*v*v);
 				//}
 				tiles.Add(tile);

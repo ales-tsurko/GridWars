@@ -573,7 +573,7 @@ public class GameUnit : NetworkObject {
 		if (v != veteranLevel) {
 			veteranLevel = v;
 			ShowVeteranLevel();
-			float s = 1f + veteranLevel * 0.10f;
+			//float s = 1f + veteranLevel * 0.10f;
 			//gameObject.transform.localScale = new Vector3(s, s, s);
 			DidChangeVeternLevel();
 		}
