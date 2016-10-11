@@ -32,6 +32,16 @@ public class Fortress : MonoBehaviour {
 		typeof(MobileSAM)
 	};
 
+	/*
+	static System.Type[] unitTypes = new System.Type[] {
+		typeof(Chopper),
+		typeof(Tank),
+		typeof(MobileSAM),
+		typeof(Tanker)
+	};
+	*/
+
+
 	private GameObject placement = null;
 
 	void CreatePlacement() {
@@ -123,5 +133,10 @@ public class Fortress : MonoBehaviour {
 			gameUnit.tag = "Player" + player.playerNumber;
 			gameUnit.GetComponent<Engineer> ().SwitchState (Engineer.State.Init);
 		}*/
+	}
+
+	public void TowerDied(Tower tower) {
+		towers.Remove(tower);
+		player.powerSource.MakeMax();
 	}
 }

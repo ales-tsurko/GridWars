@@ -189,7 +189,7 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientLeftGame(){
 		base.ServerAndClientLeftGame();
 		if (player != null) {
-			player.fortress.towers.Remove(this);
+			player.fortress.TowerDied(this);
 		}
 	}
 
@@ -330,16 +330,6 @@ public class Tower : GroundBuilding {
 	ReleaseZone unobstructedReleaseZone {
 		get {
 			var shuffledZones = releaseZones.OrderBy(a => UnityEngine.Random.value);
-
-			/*
-			for (int i = 0; i < releaseZones.Count; i ++) {
-				var rz = releaseZones.PickRandom();
-
-				if (!rz.isObstructed) {
-					return rz;
-				}
-			}
-			*/
 
 			foreach (var rz in shuffledZones) {
 				if (!rz.isObstructed) {

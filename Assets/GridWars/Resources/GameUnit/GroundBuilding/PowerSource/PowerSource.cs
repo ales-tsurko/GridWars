@@ -45,6 +45,10 @@ public class PowerSource : GroundBuilding {
 		return Mathf.Approximately(power, maxPower);
 	}
 
+	public void MakeMax() {
+		power = maxPower;
+	}
+
 	public float PowerRatio() {
 		float p = power / maxPower;
 		if (Mathf.Approximately(p, 1f)) {
