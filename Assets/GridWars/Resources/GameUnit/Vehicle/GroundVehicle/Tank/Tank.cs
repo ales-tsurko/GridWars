@@ -12,4 +12,19 @@ public class Tank : GroundVehicle {
 		//counters.Add(typeof(GroundVehicle));
 		return counters;
 	}
+
+	/*
+	public virtual void DidChangeVeternLevel() {
+		
+		if (veteranLevel == 1) {
+			AdjustWeaponsRangeByFactor(1.25f);
+			AdjustMaxHitpointsByFactor(1.5);
+		}
+
+		if (veteranLevel == 2) {
+			AdjustWeaponsRangeByFactor(1.25f);
+			AdjustMaxHitpointsByFactor(1.5);
+		}
+	}
+	*/
 }

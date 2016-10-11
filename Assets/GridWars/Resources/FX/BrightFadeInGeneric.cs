@@ -15,7 +15,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	private Dictionary<Material, Color> materialColors;
 
 	void Start () {
-		SetupMaterialColors();
+		SetupMaterialColorsIfNeeded();
 	}
 
 	public void OnEnable() {
@@ -52,7 +52,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 		}
 	}
 
-	void SetupMaterialColors() {
+	void SetupMaterialColorsIfNeeded() {
 		if (materialColors == null) {
 			materialColors = new Dictionary<Material, Color>();
 
@@ -63,8 +63,8 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void DestroyThisComponent() {
-		Destroy(GetComponent<BrightFadeIn>());
 		UpdateForValue(1f);
+		Destroy(GetComponent(this.GetType()));
 	}
 
 	void Update () {
@@ -80,11 +80,11 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void UpdateForValue(float t) {
-		SetupMaterialColors();
+		SetupMaterialColorsIfNeeded();
 
 		gameObject.EachMaterial(mat => {
 			if (!materialColors.ContainsKey(mat)) {
-				print("wut");
+				print("error - missing start material color");
 			}
 			Color realColor = materialColors[mat];
 			Color currentColor = ValueForColor(realColor, t);

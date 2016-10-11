@@ -12,20 +12,32 @@ public static class GridWarsUnityExtensions {
 	// List
 
 	/*
-	public static IList<T> Shuffled<T>(this IList<T> list) {		
+	public static T IList<T> Shuffled<T>(this IList<T> list) {		
 		return list.OrderBy(a => UnityEngine.Random.value);
 	}
 	*/
 
-	public static T PickRandom<T>(this IList<T> list)
+	public static void AddIfAbsent<T>(this IList<T> self, T v) {
+		if (self.Contains(v) == false) {
+			self.Add(v);
+		}
+	}
+
+	public static T PickRandom<T>(this IList<T> self)
 	{
-		int i = (int)Mathf.Floor(list.Count * UnityEngine.Random.value);
-		return list[i];
+		int i = (int)Mathf.Floor(self.Count * UnityEngine.Random.value);
+		return self[i];
 	}
 
 	// Rendering
 
 	public static void EachRenderer(this GameObject self, Action<MeshRenderer> f) {
+		/*
+		if (self.GameUnit() && self.GameUnit().GetType() == typeof(Tank)) {
+			Debug.Log("paint tank");
+		}
+		*/
+
 		foreach (var renderer in self.GetComponentsInChildren<MeshRenderer>()) {
 			f(renderer);
 		}

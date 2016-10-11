@@ -12,6 +12,8 @@ public class Missile : Projectile {
 	}
 
 	public override void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
+
 		if (isSeeking && target != null) {
 			// control thrust vectoring
 					//Vector3 tpos = TargetLeadPosition();

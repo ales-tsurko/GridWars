@@ -527,6 +527,104 @@ public class GameUnit : NetworkObject {
 	}
 	*/
 
+	public bool IsDead() {
+		return hitPoints <= 0f;
+	}
+
+	// --- veterancy ----------------------------
+
+	public int killCount = 0;
+	public int veteranLevel = 0;
+
+	public void DidKill(GameUnit otherUnit) {
+		killCount++;
+
+		if (killCount == 3) {
+			SetVeteranLevel(1);
+		}
+
+		if (killCount == 6) {
+			SetVeteranLevel(2);
+		}
+
+	}
+
+	public void PaintPrimaryColor(Color c) {
+		gameObject.EachRenderer(r => {
+			if (r.material.name.StartsWith("PrimaryColor")) {
+				r.material.color = c;
+			}
+		});
+	}
+
+
+	public void PaintSecondaryColor(Color c) {
+		gameObject.EachRenderer(r => {
+			if (r.material.name.StartsWith("SecondaryColor")) {
+				r.material.color = c;
+			}
+		});
+	}
+
+	public void SetVeteranLevel(int v) {
+		if (v != veteranLevel) {
+			veteranLevel = v;
+			ShowVeteranLevel();
+			float s = 1f + veteranLevel * 0.10f;
+			//gameObject.transform.localScale = new Vector3(s, s, s);
+			DidChangeVeternLevel();
+		}
+	}
+
+	public virtual void DidChangeVeternLevel() {
+		if (veteranLevel == 1) {
+			AdjustWeaponsRangeByFactor(1.25f);
+			AdjustMaxHitpointsByFactor(1.25f);
+			AdjustWeaponsDamageByFactor(1.25f);
+		}
+
+		if (veteranLevel == 2) {
+			AdjustWeaponsRangeByFactor(1.25f);
+			AdjustMaxHitpointsByFactor(1.25f);
+			AdjustWeaponsDamageByFactor(1.25f);
+		}
+	}
+
+	public void ShowVeteranLevel() {
+		Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.5f);
+		if (veteranLevel == 1) {
+			PaintPrimaryColor(darkPrimaryColor);
+			PaintSecondaryColor(darkPrimaryColor);
+		} else if (veteranLevel == 2) {
+			PaintPrimaryColor(Color.black);
+			PaintSecondaryColor(player.primaryColor);
+		}
+	}
+
+	public void AdjustWeaponsRangeByFactor(float f) {
+		foreach (Weapon w in Weapons()) {
+			w.range *= f;
+			w.rangeMultiplier *= f;
+		}
+		standOffDistance *= f;
+	}
+
+	public void AdjustWeaponsDamageByFactor(float f) {
+		foreach (Weapon w in Weapons()) {
+			w.damageMultiplier *= f;
+		}
+		standOffDistance *= f;
+	}
+
+
+	public void AdjustMaxHitpointsByFactor(float f) {
+		maxHitPoints *= f;
+		hitPoints *= f;
+		//hitPoints = Mathf.Clamp(hitPoints, maxHitPoints / 2, maxHitPoints);
+	}
+
+	// -------------------------------------
+
 	public virtual bool IsFriendOf(GameUnit otherUnit) {
 		if (otherUnit == null) {
 			return false;

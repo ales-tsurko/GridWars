@@ -120,7 +120,7 @@ public class Player : MonoBehaviour {
 			}
 		});
 	}
-
+		
 	string resourcesPath {
 		get {
 			return "Player/" + playerNumber + "/";

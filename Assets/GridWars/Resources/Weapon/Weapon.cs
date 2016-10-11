@@ -42,6 +42,9 @@ public class Weapon : MonoBehaviour {
 	public float targetLeadTime;
 	public bool allowFriendlyFire = true;
 
+	public float damageMultiplier = 1f;
+	public float rangeMultiplier = 1f;
+
 
 	//public bool usesRayCastAimCheck = false;
 
@@ -95,6 +98,32 @@ public class Weapon : MonoBehaviour {
 
 	//MonoBehaviour
 
+	public void SetCanTargetGround(bool b) {
+		canTargetGround = b;
+		UpdateTargetableTypes();
+	}
+
+	public void SetCanTargetAir(bool b) {
+		canTargetAir = b;
+		UpdateTargetableTypes();
+	}
+
+	public void UpdateTargetableTypes() {
+		if (canTargetGround) {
+			targetableTypes.AddIfAbsent(typeof(GroundVehicle));
+			targetableTypes.AddIfAbsent(typeof(GroundBuilding));
+		} else {
+			targetableTypes.Remove(typeof(GroundVehicle));
+			targetableTypes.Remove(typeof(GroundBuilding));
+		}
+
+		if (canTargetAir) {
+			targetableTypes.Add(typeof(AirVehicle));
+		} else {
+			targetableTypes.Remove(typeof(AirVehicle));
+		}
+	}
+
 	//TODO: move code that isn't needed on client to Attached and check for isServer
 	public void Start () {
 		//base.Start();
@@ -116,14 +145,7 @@ public class Weapon : MonoBehaviour {
 
 		targetableTypes = new List<System.Type>();
 
-		if (canTargetGround) {
-			targetableTypes.Add(typeof(GroundVehicle));
-			targetableTypes.Add(typeof(GroundBuilding));
-		}
-
-		if (canTargetAir) {
-			targetableTypes.Add(typeof(AirVehicle));
-		}
+		UpdateTargetableTypes();
 
 		//targetableTypes = new List<System.Type>(){ typeof(GroundVehicle), typeof(GroundBuilding), typeof(AirVehicle) };
 
@@ -598,12 +620,15 @@ public class Weapon : MonoBehaviour {
 			
 		var projectile = prefabProjectile.GetComponent<Projectile>().Instantiate() as Projectile;
 		projectile.player = player;
+		projectile.ownerUnit = owner.GameUnit();
 		projectile.transform.position = transform.position;
 		projectile.transform.rotation = transform.rotation;
 		projectile.copyVelocityFrom(owner);
 		projectile.IgnoreCollisionsWith(owner);
 		projectile.allowFriendlyFire = allowFriendlyFire;
 		projectile.target = target;
+		projectile.damage *= damageMultiplier;
+		projectile.lifeSpan *= rangeMultiplier;
 
 		foreach (KeyValuePair<System.Type, float> kvp in damageAdjustments )
 		{

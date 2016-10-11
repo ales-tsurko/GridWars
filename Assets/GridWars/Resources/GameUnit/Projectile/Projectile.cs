@@ -11,6 +11,9 @@ public class Projectile : GameUnit {
 	public float damageClipVolume;
 	public float damageVarianceRatio;
 	public bool allowFriendlyFire = true;
+	public GameUnit ownerUnit;
+	public float birthTime;
+	public float lifeSpan;
 
 	[HideInInspector]
 
@@ -36,12 +39,24 @@ public class Projectile : GameUnit {
 		base.ServerJoinedGame();
 		isTargetable = false;
 		damage += damageVarianceRatio * (UnityEngine.Random.value*2f - 1f);
+		birthTime = Time.time;
 	}
 
 	public override void ServerAndClientJoinedGame() {
 		isPlayerPainted = false;
 		base.ServerAndClientJoinedGame();
 		PlayBirthSound();
+	}
+
+	public override void ServerFixedUpdate() {
+		//base.ServerFixedUpdate();
+		float age = Time.time - birthTime;
+		if (age > lifeSpan) {
+			Die();
+		} else if (age > 4 || age < 0) {
+			Die();
+			Debug.Log("wut");
+		}
 	}
 
 	public override void Think() {
@@ -78,7 +93,14 @@ public class Projectile : GameUnit {
 
 		if (otherUnit != null ) {
 			if (CanDamageUnit(otherUnit)) {
+				bool wasDead = otherUnit.IsDead();
+					
 				otherUnit.ApplyDamage(damage);
+
+				bool isDead = otherUnit.IsDead();
+				if (wasDead == false && isDead == true) {
+					ownerUnit.DidKill(otherUnit);
+				}
 			}
 		}
 	}

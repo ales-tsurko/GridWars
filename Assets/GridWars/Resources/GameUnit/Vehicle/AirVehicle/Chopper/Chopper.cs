@@ -244,4 +244,15 @@ public class Chopper : AirVehicle {
 		counters.Add(typeof(Chopper));
 		return counters;
 	}
+
+	/*
+	public virtual void DidChangeVeternLevel() {
+		if (veteranLevel == 1) {
+			AdjustWeaponsRangeByFactor(1.25f);
+		}
+		if (veteranLevel == 2) {
+			AdjustWeaponsRangeByFactor(1.25f);
+		}
+	}
+	*/
 }

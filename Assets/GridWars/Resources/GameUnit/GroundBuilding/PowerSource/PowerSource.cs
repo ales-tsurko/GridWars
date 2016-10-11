@@ -168,9 +168,10 @@ public class PowerSource : GroundBuilding {
 			if (UnityEngine.Random.value < 0.02f) {
 				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
 				if (fader == null) {
-					segment.AddComponent<BrightFadeInGeneric>();
+					fader =segment.AddComponent<BrightFadeInGeneric>();
 				}
 
+				//BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
 				fader.OnEnable();
 			}
 		}
@@ -182,7 +183,7 @@ public class PowerSource : GroundBuilding {
 
 			BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
 			if (fader == null) {
-				segment.AddComponent<BrightFadeInGeneric>();
+				fader = segment.AddComponent<BrightFadeInGeneric>();
 			}
 
 			fader.OnEnable();
