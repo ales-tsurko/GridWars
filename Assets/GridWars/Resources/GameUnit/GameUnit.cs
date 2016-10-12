@@ -929,6 +929,11 @@ public class GameUnit : NetworkObject {
 	virtual public void DestroySelf() {
 		wasDestroyed = true;
 		BoltNetwork.Destroy(gameObject);
+
+		foreach (var comp in gameObject.GetComponents<AudioSource>())
+		{
+			Destroy(comp);
+		}
 	}
 
 

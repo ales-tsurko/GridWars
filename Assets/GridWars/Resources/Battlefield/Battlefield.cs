@@ -173,6 +173,7 @@ public class Battlefield : MonoBehaviour {
 
 	List <GameObject> tiles;
 
+	/*
 	void SetupTiles() {
 		tiles = new List<GameObject>();
 
@@ -194,4 +195,5 @@ public class Battlefield : MonoBehaviour {
 			}
 		}
 	}
+	*/
 }
