@@ -225,11 +225,17 @@ public class App : MonoBehaviour {
 	}
 
 	public void Log(object message, object context) {
-		Log(context.GetType() + ": " + message.ToString());
-	}
-
-	public void Log(object message, UnityEngine.Object context) {
-		Log(context.GetType() + "." + context.GetInstanceID() + ": " + message.ToString());
+		if (context == null) {
+			Log(message);
+		}
+		else {
+			if (context.inheritsFrom(typeof(UnityEngine.Object))) {
+				Log(context.GetType() + "." + (context as UnityEngine.Object).GetInstanceID() + ": " + message.ToString());
+			}
+			else {
+				Log(context.GetType() + ": " + message.ToString());
+			}
+		}
 	}
 
 	public void Log(object message) {
