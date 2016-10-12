@@ -247,5 +247,6 @@ public class Chopper : AirVehicle {
 		AdjustWeaponsDamageByFactor(2f);
 		AdjustWeaponsFireRateByFactor(2f);
 		AdjustMaxHitpointsByFactor(2f);
+		AdjustHitPointGenByFactor(2f);
 	}
 }

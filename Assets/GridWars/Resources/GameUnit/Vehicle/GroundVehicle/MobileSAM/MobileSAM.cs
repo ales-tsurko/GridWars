@@ -34,5 +34,6 @@ public class MobileSAM : GroundVehicle {
 		base.UpgradeVeterancy();
 		AdjustWeaponsRangeByFactor(1.5f);
 		AdjustWeaponsFireRateByFactor(1.5f);
+		AdjustHitPointGenByFactor(1.5f);
 	}
 }

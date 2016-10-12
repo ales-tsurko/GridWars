@@ -400,6 +400,9 @@ public class GameUnit : NetworkObject {
 	public override void ServerFixedUpdate(){
 		base.ServerFixedUpdate();
 
+		hitPoints += Time.deltaTime * hitPointRegenRate;
+		hitPoints = Mathf.Clamp(hitPoints, 0, maxHitPoints);
+
 		if (thinkThrottle.isOff) {
 			Think();
 		}
@@ -543,7 +546,7 @@ public class GameUnit : NetworkObject {
 	public int killsPerVeteranLevel = 3;
 	public int veteranLevel = 0;
 	private int maxVeteranLevel = 2;
-	//public float hitPointRegenRate = 0f;
+	public float hitPointRegenRate = 0.3f; // in hp per second
 
 	public void DidKill(GameUnit otherUnit) {
 		killCount++;
@@ -608,6 +611,9 @@ public class GameUnit : NetworkObject {
 		hitPoints = Mathf.Clamp(hitPoints, 0f, maxHitPoints);
 	}
 
+	public void AdjustHitPointGenByFactor(float f) {
+		hitPointRegenRate *= f;
+	}
 	// --- Painting ----
 
 	public void PaintPrimaryColor(Color c) {
