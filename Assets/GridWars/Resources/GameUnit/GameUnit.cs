@@ -581,13 +581,13 @@ public class GameUnit : NetworkObject {
 
 	public virtual void DidChangeVeternLevel() {
 		if (veteranLevel == 1) {
-			AdjustWeaponsRangeByFactor(1.25f);
+			//AdjustWeaponsRangeByFactor(1.25f);
 			AdjustMaxHitpointsByFactor(1.25f);
 			AdjustWeaponsDamageByFactor(1.25f);
 		}
 
 		if (veteranLevel == 2) {
-			AdjustWeaponsRangeByFactor(1.25f);
+			//AdjustWeaponsRangeByFactor(1.25f);
 			AdjustMaxHitpointsByFactor(1.25f);
 			AdjustWeaponsDamageByFactor(1.25f);
 		}
@@ -834,7 +834,7 @@ public class GameUnit : NetworkObject {
 
 	// --- icons --------------------
 
-	void OnDrawGizmos() {
+	public virtual void OnDrawGizmos() {
 		if (target != null) {
 			Gizmos.color = Color.green;
 			//Gizmos.DrawLine (_t.position, target.transform.position);
@@ -1004,6 +1004,7 @@ public class GameUnit : NetworkObject {
 
 	// --- AI eval ------------------------------------------
 
+	/*
 	public float evalPosition(Vector3 pos) {
 		// higher to be closer to targetable objects
 		// diff weights for targets
@@ -1011,6 +1012,7 @@ public class GameUnit : NetworkObject {
 		// lower to be too close to obsticles
 		return 0f;
 	}
+	*/
 
 
 	public Vector3 ExpectedPositionAfterTime(float leadTime) {

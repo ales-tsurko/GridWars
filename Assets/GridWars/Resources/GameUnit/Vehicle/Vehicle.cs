@@ -115,17 +115,19 @@ public class Vehicle : GameUnit  {
 			}
 		}
 
-		/*
-		if (nearestObsticle) {
-			//Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
+		if (nearestObsticle != null) {
+			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
 		}
-		*/
 	}
 
 	public virtual void RotateAwayFromNearestObsticle() {
 		if (nearestObsticle) {
 			float r = (avoidObsticleDistance - DistanceToObj(nearestObsticle)) / avoidObsticleDistance;
-			float desire =  1f - r*r;
+			float desire =  SmoothValue(1f - r*r);
+			desire = SmoothValue(desire);
+			desire = SmoothValue(desire);
+			//desire = SmoothValue(desire);
+			//desire = SmoothValue(desire);
 			//float desire = 1f;
 
 			var otherPos = nearestObsticle.transform.position;
@@ -136,13 +138,24 @@ public class Vehicle : GameUnit  {
 			//Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
 			//Debug.DrawLine(_t.position, _t.position + dir*AvailableRotationThrust, Color.red); // targetDir red
 
-			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * AvailableRotationThrust(), ForceMode.Force);
+			rigidBody().AddTorque(_t.up * (-angleToTarget) * .3f * desire * AvailableRotationThrust(), ForceMode.Force);
 		}
 	}
 
+	#if UNITY_EDITOR
+
+	public override void OnDrawGizmos() {
+		base.OnDrawGizmos();
+		if (nearestObsticle != null) {
+			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 1, false);  
+		}
+	}
+
+	#endif
+
 	public virtual float RotateDesire() { // -1 to 1 - y axis and clockwise?
 		float ya = YAngleToTarget();
-		float d = ya / 180f;
+		float d = 1f; //SmoothValue(ya / 180f);
 		return d;
 	}
 
@@ -265,5 +278,5 @@ public class Vehicle : GameUnit  {
 		}
 		return false;
 	}
-
+		
 }

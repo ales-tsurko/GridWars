@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 public class MobileSAM : GroundVehicle {
 
+	public override void ServerJoinedGame () {
+		base.ServerJoinedGame();
+
+		foreach(Weapon weapon in Weapons()) {
+			weapon.damageAdjustments.Add(typeof(Tower), 0.4f);
+			weapon.damageAdjustments.Add(typeof(Tank), 0.4f);
+		}
+	}
+
 	public override GameObject DefaultTarget() {
 		return ClosestOfObjects(EnemyBuildings());
 	}
