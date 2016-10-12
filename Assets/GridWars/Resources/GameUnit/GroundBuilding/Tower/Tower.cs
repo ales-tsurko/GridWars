@@ -202,6 +202,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	}
 
 	float lastProductionTime = 0f;
+	float lastProductionFrame = 0;
 	//int releaseLocationIndex = 0;
 	int queueSize = 0;
 	List<ReleaseZone> releaseZones;
@@ -259,6 +260,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		queueSize ++;
 		player.powerSource.power -= gameUnit.powerCost;
 		lastProductionTime = Time.time;
+		lastProductionFrame = Time.frameCount;
 	}
 
 	void ReleaseUnits() {
@@ -267,6 +269,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
+			releaseZone.hiddenUnit = unit;
+			unit.releaseZone = releaseZone;
+			//App.shared.Log("unit.releaseZone = releaseZone", this);
 
 			unit.transform.position = releaseZone.transform.position;
 				

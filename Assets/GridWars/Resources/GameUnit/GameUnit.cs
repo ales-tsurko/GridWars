@@ -86,6 +86,7 @@ public class GameUnit : NetworkObject {
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 	public Vector3 launchDirection = Vector3.forward;
+	public ReleaseZone releaseZone;
 
 	//FX
 
@@ -332,8 +333,14 @@ public class GameUnit : NetworkObject {
 	public override void ServerJoinedGame() {
 		base.ServerJoinedGame();
 
+		//App.shared.Log("ServerJoinedGame", this);
+
 		SetVisibleAndEnabled(true); //Don't do this in ServerAndClientJoinedGame as some classes need it setup here
 		gameUnitState.isInGame = true;
+
+		if (releaseZone != null) {
+			releaseZone.hiddenUnit = null;
+		}
 	}
 
 	public override void ClientJoinedGame() {
