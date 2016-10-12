@@ -3,25 +3,45 @@ using System.Collections.Generic;
 
 public class Landscape : MonoBehaviour {
 
-	public float xMax = 500f;
-	public float zMax = 500f;
-	public float heightMax = 50f;
+	private float xMax = 1000f;
+	private float zMax = 1000f;
+	private float heightMax = 40f;
 
 	public Material material;
 
-	void Start() {
-		int max = 50;
-		Rect fieldRect = new Rect(-50, -50, 50, 50);
+	/*
+	bool RectOverlapsRect (Rect rA, Rect rB) {
+		return (rA.x < rB.x+rB.width && rA.x+rA.width > rB.x && rA.y < rB.y+rB.height && rA.y+rA.height > rB.y);
+	}
+	*/
 
-		for (int i = 0; i < max; i++) {
+	void Start() {
+		//Rect fieldRect = new Rect(-50, -50, 100, 100);
+		Rect fieldRect = new Rect(-100, -100, 200, 200);
+
+		for (int i = 0; i < 80; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
-			if (!fieldRect.Overlaps(chunkRect)) {
-				CreateChunk(chunkRect);
+			if (fieldRect.Overlaps(chunkRect) == false) {
+				CreateChunk(chunkRect, 5f);
 			}
 		}
+
+		for (int i = 0; i < 20; i++) {
+			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
+			chunkRect.x = RandNeg(xMax);
+			chunkRect.y = RandNeg(zMax);
+
+			if (fieldRect.Overlaps(chunkRect) == false) {
+				CreateChunk(chunkRect, 50f + Rand(400f));
+			}
+		}
+	}
+
+	bool CoinFlip() {
+		return UnityEngine.Random.value > .5;
 	}
 
 	float RandNeg(float v) {
@@ -41,13 +61,11 @@ public class Landscape : MonoBehaviour {
 
 
 
-	void CreateChunk(Rect chunkRect) {
+	void CreateChunk(Rect chunkRect, float height) {
 		var chunk = new GameObject();
 		chunk.transform.parent = this.transform;
 		chunk.transform.position = new Vector3(chunkRect.x, 0, chunkRect.y);
 		//chunk.transform.eulerAngles = new Vector3(0, new List<float>{ 0 }.PickRandom(), 0);
-
-		float height = Rand(heightMax);
 
 		int max = 3 + (int)Rand(15);
 		for (int i = 0; i < max; i++) {
@@ -58,13 +76,15 @@ public class Landscape : MonoBehaviour {
 			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			cube.transform.parent = chunk.transform;
 
-			cube.transform.localPosition = new Vector3(r.x, height / 4f, r.y);
-			cube.transform.localScale = new Vector3(r.width/2, height/2f, r.height/2);
+			cube.transform.localPosition = new Vector3(r.x + r.width/2, 0, r.y + r.height);
+			cube.transform.localScale = new Vector3(r.width, height, r.height);
+
+			//cube.transform.localPosition = new Vector3(chunkRect.width/2, 0, chunkRect.height/2);
+			//cube.transform.localScale = new Vector3(chunkRect.width, height, chunkRect.height);
 
 			Material m = material;
 			cube.EachRenderer(renderer => renderer.material = m);
 		}
-
 	}
 
 	void Update() {
