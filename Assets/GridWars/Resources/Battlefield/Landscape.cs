@@ -19,7 +19,7 @@ public class Landscape : MonoBehaviour {
 	void Start() {
 		//Rect fieldRect = new Rect(-50, -50, 100, 100);
 		//Rect fieldRect = new Rect(-100, -100, 200, 200);
-		Rect fieldRect = new Rect(-150, -150, 300, 300);
+		Rect fieldRect = new Rect(-120, -120, 240, 240);
 
 		for (int i = 0; i < 80; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
