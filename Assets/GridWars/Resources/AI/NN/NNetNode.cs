@@ -11,7 +11,7 @@ namespace AssemblyCSharp {
 		public float value;
 
 		public NNetNode() {
-
+			inConnections = new List<NNetConnection>();
 		}
 
 		public void AddConnectionFromNode(NNetNode inNode) {
