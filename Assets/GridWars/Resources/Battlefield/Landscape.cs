@@ -8,6 +8,7 @@ public class Landscape : MonoBehaviour {
 	private float heightMax = 40f;
 
 	public Material material;
+	public Material material2;
 
 	/*
 	bool RectOverlapsRect (Rect rA, Rect rB) {
@@ -17,7 +18,8 @@ public class Landscape : MonoBehaviour {
 
 	void Start() {
 		//Rect fieldRect = new Rect(-50, -50, 100, 100);
-		Rect fieldRect = new Rect(-100, -100, 200, 200);
+		//Rect fieldRect = new Rect(-100, -100, 200, 200);
+		Rect fieldRect = new Rect(-150, -150, 300, 300);
 
 		for (int i = 0; i < 80; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
@@ -25,7 +27,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				CreateChunk(chunkRect, 5f);
+				CreateChunk(chunkRect, 5f, material);
 			}
 		}
 
@@ -35,7 +37,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				CreateChunk(chunkRect, 50f + Rand(400f));
+				CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2);
 			}
 		}
 	}
@@ -61,7 +63,7 @@ public class Landscape : MonoBehaviour {
 
 
 
-	void CreateChunk(Rect chunkRect, float height) {
+	void CreateChunk(Rect chunkRect, float height, Material mat) {
 		var chunk = new GameObject();
 		chunk.transform.parent = this.transform;
 		chunk.transform.position = new Vector3(chunkRect.x, 0, chunkRect.y);
@@ -82,8 +84,7 @@ public class Landscape : MonoBehaviour {
 			//cube.transform.localPosition = new Vector3(chunkRect.width/2, 0, chunkRect.height/2);
 			//cube.transform.localScale = new Vector3(chunkRect.width, height, chunkRect.height);
 
-			Material m = material;
-			cube.EachRenderer(renderer => renderer.material = m);
+			cube.EachRenderer(renderer => renderer.material = mat);
 		}
 	}
 
