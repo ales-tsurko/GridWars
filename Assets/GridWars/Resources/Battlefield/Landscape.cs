@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class Landscape : MonoBehaviour {
 
-	public float xMax = 1000f;
-	public float zMax = 1000f;
-	public float heightMax = 500f;
+	public float xMax = 500f;
+	public float zMax = 500f;
+	public float heightMax = 50f;
 
 	public Material material;
 
 	void Start() {
-		int max = 1;
+		int max = 50;
 		Rect fieldRect = new Rect(-50, -50, 50, 50);
 
 		for (int i = 0; i < max; i++) {
@@ -29,9 +29,9 @@ public class Landscape : MonoBehaviour {
 	}
 
 	float Rand(float v) {
-		return UnityEngine.Random.value* v;
+		return UnityEngine.Random.value * v;
 	}
-
+		
 	Rect RandRect(float minW, float maxW, float minH, float maxH) {
 		Rect r = new Rect();
 		r.width = minW + Rand(maxW - minW);
@@ -39,13 +39,17 @@ public class Landscape : MonoBehaviour {
 		return r;
 	}
 
+
+
 	void CreateChunk(Rect chunkRect) {
 		var chunk = new GameObject();
 		chunk.transform.parent = this.transform;
+		chunk.transform.position = new Vector3(chunkRect.x, 0, chunkRect.y);
+		//chunk.transform.eulerAngles = new Vector3(0, new List<float>{ 0 }.PickRandom(), 0);
 
 		float height = Rand(heightMax);
 
-		int max = 10;
+		int max = 3 + (int)Rand(15);
 		for (int i = 0; i < max; i++) {
 			Rect r = RandRect(chunkRect.width *0.1f, chunkRect.width, chunkRect.height *0.1f, chunkRect.height);
 			r.x = Rand(chunkRect.width - r.width);
@@ -54,12 +58,13 @@ public class Landscape : MonoBehaviour {
 			GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			cube.transform.parent = chunk.transform;
 
-			cube.transform.position = new Vector3(r.x, height / 2f, r.y);
-			cube.transform.localScale = new Vector3(r.width/2, height, r.height/2);
+			cube.transform.localPosition = new Vector3(r.x, height / 4f, r.y);
+			cube.transform.localScale = new Vector3(r.width/2, height/2f, r.height/2);
 
 			Material m = material;
 			cube.EachRenderer(renderer => renderer.material = m);
 		}
+
 	}
 
 	void Update() {
