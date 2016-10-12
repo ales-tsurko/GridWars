@@ -8,8 +8,9 @@ public class MobileSAM : GroundVehicle {
 		base.ServerJoinedGame();
 
 		foreach(Weapon weapon in Weapons()) {
-			weapon.damageAdjustments.Add(typeof(Tower), 0.4f);
+			weapon.damageAdjustments.Add(typeof(Tower), 0.2f);
 			weapon.damageAdjustments.Add(typeof(Tank), 0.4f);
+			weapon.SetCanTargetGroundBuildings(true);
 		}
 	}
 
@@ -24,13 +25,14 @@ public class MobileSAM : GroundVehicle {
 		return counters;
 	}
 
-	public override void DidChangeVeternLevel() {
-		base.DidChangeVeternLevel();
+	public override void UpgradeVeterancy() {
+		/*
+		weaponRange *= 1.5;
+		energy.gen *= 1.5;
+		*/
 
-		if (veteranLevel == 1) {
-			foreach (Weapon weapon in Weapons()) {
-				weapon.SetCanTargetGround(true);
-			}
-		}
+		base.UpgradeVeterancy();
+		AdjustWeaponsRangeByFactor(1.5f);
+		AdjustWeaponsFireRateByFactor(1.5f);
 	}
 }

@@ -13,18 +13,17 @@ public class Tank : GroundVehicle {
 		return counters;
 	}
 
-	/*
-	public virtual void DidChangeVeternLevel() {
-		
-		if (veteranLevel == 1) {
-			AdjustWeaponsRangeByFactor(1.25f);
-			AdjustMaxHitpointsByFactor(1.5);
-		}
+	public override void UpgradeVeterancy() {
+		/*
+		weaponDamage *= 1.5;
+		energy.max *= 1.5;
+		health.value += 4;
+		health.max *= 2;
+		*/
+		base.UpgradeVeterancy();
 
-		if (veteranLevel == 2) {
-			AdjustWeaponsRangeByFactor(1.25f);
-			AdjustMaxHitpointsByFactor(1.5);
-		}
+		AdjustWeaponsFireRateByFactor(1.5f);
+		AdjustWeaponsDamageByFactor(1.5f);
+		AdjustMaxHitpointsByFactor(2f);
 	}
-	*/
 }

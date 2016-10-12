@@ -77,9 +77,11 @@ public class Vehicle : GameUnit  {
 
 	public override void ServerFixedUpdate() {
 		base.ServerFixedUpdate();
+		/*
 		if (disableCollisionsOnLaunch) {
-			//EnableVehicleCollisionsIfClear();
+			EnableVehicleCollisionsIfClear();
 		}
+		*/
 	}
 
 	public virtual void SteerTowardsTarget() {
@@ -138,7 +140,7 @@ public class Vehicle : GameUnit  {
 			//Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
 			//Debug.DrawLine(_t.position, _t.position + dir*AvailableRotationThrust, Color.red); // targetDir red
 
-			rigidBody().AddTorque(_t.up * (-angleToTarget) * .3f * desire * AvailableRotationThrust(), ForceMode.Force);
+			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * AvailableRotationThrust(), ForceMode.Force);
 		}
 	}
 
