@@ -14,11 +14,15 @@ public class Missile : Projectile {
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate();
 
+		if (target == null) {
+			showsUnitExplosion = false;
+			Die();
+		}
+
 		if (isSeeking && target != null) {
 			// control thrust vectoring
-					//Vector3 tpos = TargetLeadPosition();
-					Vector3 tpos = target.GameUnit().ColliderCenter();
-
+			//Vector3 tpos = TargetLeadPosition();
+			Vector3 tpos = target.GameUnit().ColliderCenter();
 			Vector3 targetDir = (tpos - _t.position).normalized;
 
 			//rigidBody().AddForce(targetDir * thrust);

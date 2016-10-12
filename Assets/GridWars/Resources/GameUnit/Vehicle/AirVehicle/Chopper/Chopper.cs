@@ -172,15 +172,12 @@ public class Chopper : AirVehicle {
 	}
 
 	public override void ServerFixedUpdate () {
-		base.ServerFixedUpdate();
+		base.ServerFixedUpdate(); // this will call Think/PickTarget, and RemoveIfOutOfBounds
 		if (isRunning) {
-			PickTarget();
 			SteerTowardsTarget();
 			ApplyJetThrust();
 			DieIfOverAccelerated();
-		}
-			
-		RemoveIfOutOfBounds();
+		}			
 	}
 
 	private void DieIfOverAccelerated() {
@@ -237,14 +234,18 @@ public class Chopper : AirVehicle {
 		return counters;
 	}
 
-	/*
-	public virtual void DidChangeVeternLevel() {
-		if (veteranLevel == 1) {
-			AdjustWeaponsRangeByFactor(1.25f);
-		}
-		if (veteranLevel == 2) {
-			AdjustWeaponsRangeByFactor(1.25f);
-		}
-	}
+	public override void UpgradeVeterancy() {
+
+		/*
+	weaponDamage *= 2;
+	energy.max *= 2;
+	health.value += 4;
+	health.gen *= 2;
+	health.max *= 2;
 	*/
+		base.UpgradeVeterancy();
+		AdjustWeaponsDamageByFactor(2f);
+		AdjustWeaponsFireRateByFactor(2f);
+		AdjustMaxHitpointsByFactor(2f);
+	}
 }

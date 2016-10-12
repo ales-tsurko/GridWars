@@ -124,6 +124,22 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
+	public void SetCanTargetGroundVehicles(bool b) {
+		if (b) {
+			targetableTypes.AddIfAbsent(typeof(GroundVehicle));
+		} else {
+			targetableTypes.Remove(typeof(GroundVehicle));
+		}		
+	}
+
+	public void SetCanTargetGroundBuildings(bool b) {
+		if (b) {
+			targetableTypes.AddIfAbsent(typeof(GroundBuilding));
+		} else {
+			targetableTypes.Remove(typeof(GroundBuilding));
+		}		
+	}
+
 	//TODO: move code that isn't needed on client to Attached and check for isServer
 	public void ServerAndClientInit () {
 			//base.Start();

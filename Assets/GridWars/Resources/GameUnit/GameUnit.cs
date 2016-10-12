@@ -15,6 +15,9 @@ public class GameUnit : NetworkObject {
 
 	public AudioClip deathSound;
 
+	[HideInInspector]
+	public bool showsUnitExplosion = true;
+
 	public Player player {
 		get {
 			if (gameUnitState.playerNumber > 0) {
@@ -396,25 +399,17 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerFixedUpdate(){
 		base.ServerFixedUpdate();
-		/*
-		if (player == null) {
-			print ("SimulateOwner null player on " + this);
-		}
-		*/
 
 		if (thinkThrottle.isOff) {
 			Think();
 		}
-
 
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
 				weapon.ServerFixedUpdate();
 			}
 		}
-
-		//Debug.DrawLine( new Vector3(0,0,0), _t.position, Color.white); 
-
+			
 		RemoveIfOutOfBounds ();
 	}
 		
@@ -553,12 +548,67 @@ public class GameUnit : NetworkObject {
 	public void DidKill(GameUnit otherUnit) {
 		killCount++;
 
-		if (killCount % killsPerVeteranLevel == 0) {
+		if ((killCount % killsPerVeteranLevel) == 0) {
 			if (veteranLevel < maxVeteranLevel) {
-				SetVeteranLevel(veteranLevel + 1);
+				UpgradeVeterancy();
 			}
 		}
 	}
+
+	public virtual void UpgradeVeterancy() {
+		veteranLevel++;
+		//AdjustScaleByFactor(1f + veteranLevel * 0.10f);
+		ShowVeteranLevel();
+	}
+
+	public void ShowVeteranLevel() {
+		Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.35f);
+		//Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.white, 0.1f);
+		if (veteranLevel == 1) {
+			PaintPrimaryColor(darkPrimaryColor);
+			PaintSecondaryColor(darkPrimaryColor);
+		} else if (veteranLevel == 2) {
+			PaintPrimaryColor(Color.black);
+			PaintSecondaryColor(player.primaryColor);
+		}
+
+		var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		fader.OnEnable();
+	}
+
+	// --- Vet Upgrading Stats Helpers ---
+
+	public void AdjustScaleByFactor(float s) {
+		gameObject.transform.localScale = new Vector3(s, s, s);
+	}
+
+	public void AdjustWeaponsRangeByFactor(float f) {
+		foreach (Weapon w in Weapons()) {
+			w.range *= f;
+			w.rangeMultiplier *= f;
+		}
+		standOffDistance *= f;
+	}
+
+	public void AdjustWeaponsDamageByFactor(float f) {
+		foreach (Weapon w in Weapons()) {
+			w.damageMultiplier *= f;
+		}
+	}
+
+	public void AdjustWeaponsFireRateByFactor(float f) {
+		foreach (Weapon w in Weapons()) {
+			w.reloadTimeInSeconds *= 1f/f;
+		}
+	}
+
+	public void AdjustMaxHitpointsByFactor(float f) {
+		maxHitPoints *= f;
+		hitPoints += maxHitPoints * 0.5f; // supcom does 0.25
+		hitPoints = Mathf.Clamp(hitPoints, 0f, maxHitPoints);
+	}
+
+	// --- Painting ----
 
 	public void PaintPrimaryColor(Color c) {
 		gameObject.EachRenderer(r => {
@@ -574,65 +624,6 @@ public class GameUnit : NetworkObject {
 				r.material.color = c;
 			}
 		});
-	}
-
-	public void SetVeteranLevel(int v) {
-		if (v != veteranLevel) {
-			veteranLevel = v;
-			ShowVeteranLevel();
-			//float s = 1f + veteranLevel * 0.10f;
-			//gameObject.transform.localScale = new Vector3(s, s, s);
-			DidChangeVeternLevel();
-		}
-	}
-
-	public virtual void DidChangeVeternLevel() {
-		if (veteranLevel == 1) {
-			//AdjustWeaponsRangeByFactor(1.25f);
-			AdjustMaxHitpointsByFactor(1.25f);
-			AdjustWeaponsDamageByFactor(1.25f);
-		}
-
-		if (veteranLevel == 2) {
-			//AdjustWeaponsRangeByFactor(1.25f);
-			AdjustMaxHitpointsByFactor(1.25f);
-			AdjustWeaponsDamageByFactor(1.25f);
-		}
-	}
-
-	public void ShowVeteranLevel() {
-		Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.5f);
-		if (veteranLevel == 1) {
-			PaintPrimaryColor(darkPrimaryColor);
-			PaintSecondaryColor(darkPrimaryColor);
-		} else if (veteranLevel == 2) {
-			PaintPrimaryColor(Color.black);
-			PaintSecondaryColor(player.primaryColor);
-		}
-		var fader = gameObject.AddComponent<BrightFadeInGeneric>();
-		fader.OnEnable();
-	}
-
-	public void AdjustWeaponsRangeByFactor(float f) {
-		foreach (Weapon w in Weapons()) {
-			w.range *= f;
-			w.rangeMultiplier *= f;
-		}
-		standOffDistance *= f;
-	}
-
-	public void AdjustWeaponsDamageByFactor(float f) {
-		foreach (Weapon w in Weapons()) {
-			w.damageMultiplier *= f;
-		}
-		standOffDistance *= f;
-	}
-
-
-	public void AdjustMaxHitpointsByFactor(float f) {
-		maxHitPoints *= f;
-		hitPoints += maxHitPoints * 0.5f; // supcom does 0.25
-		hitPoints = Mathf.Clamp(hitPoints, 0f, maxHitPoints);
 	}
 
 	// -------------------------------------
@@ -936,7 +927,7 @@ public class GameUnit : NetworkObject {
 
 
 	void ShowUnitExplosion() {
-		if (deathExplosionPrefab != null) {
+		if (showsUnitExplosion && deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
 				var explosion = deathExplosionPrefab.GetComponent<GameUnit>().Instantiate();
