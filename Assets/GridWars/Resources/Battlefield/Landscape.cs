@@ -5,7 +5,7 @@ public class Landscape : MonoBehaviour {
 
 	private float xMax = 1000f;
 	private float zMax = 1000f;
-	private float heightMax = 40f;
+	//private float heightMax = 40f;
 
 	public Material material;
 	public Material material2;
