@@ -104,7 +104,7 @@ public class Projectile : GameUnit {
 				otherUnit.ApplyDamage(damage);
 
 				bool isDead = otherUnit.IsDead();
-				if (wasDead == false && isDead == true) {
+				if (wasDead == false && isDead == true && ownerUnit != null) {
 					ownerUnit.DidKill(otherUnit);
 				}
 			}
