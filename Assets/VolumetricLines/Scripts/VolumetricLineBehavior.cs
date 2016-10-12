@@ -248,14 +248,11 @@ namespace VolumetricLines
 			GetComponent<Renderer>().sharedMaterial.SetFloat("_LineScale", transform.GetGlobalUniformScaleForLineWidth());
 			m_updateLineColor = false;
 			m_updateLineWidth = false;
-            LineColor = GetComponentInParent<Bullet>().player.primaryColor * 100;
 		}
 
 		void Update()
 		{
-            
-         
-            if (transform.hasChanged)
+			if (transform.hasChanged)
 			{
 				GetComponent<Renderer>().sharedMaterial.SetFloat("_LineScale", transform.GetGlobalUniformScaleForLineWidth());
 			}
@@ -270,8 +267,7 @@ namespace VolumetricLines
 				m_updateLineWidth = false;
 			}
 		}
-	    
-
+	
 		void OnDrawGizmos()
 		{
 			Gizmos.color = Color.green;

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using VolumetricLines;
 
 
 public class Bullet : Projectile {
@@ -14,7 +15,23 @@ public class Bullet : Projectile {
 
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
+
 		rigidBody().AddForce (transform.forward * muzzleImpulse);
+	}
+
+	public override void ServerAndClientJoinedGame() {
+		base.ServerAndClientJoinedGame();
+
+		var laser = transform.Find("LaserStyle");
+		if (laser != null) {
+			var playerColor = player.primaryColor;
+
+			var material = laser.Find("Head").GetComponent<MeshRenderer>().sharedMaterial;
+			material.color = new Color(playerColor.r, playerColor.g, playerColor.b, material.color.a);
+
+			material = laser.GetComponentInChildren<TrailRenderer>().material;
+			material.SetColor("_TintColor", new Color(playerColor.r, playerColor.g, playerColor.b, material.GetColor("_TintColor").a));
+		}
 	}
 		
 	protected override GameObject CreateExplosion() {
