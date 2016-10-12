@@ -19,14 +19,14 @@ namespace AssemblyCSharp {
 		}
 
 		public void Reset() {
-			typeCache.Clear(); 
-			_activeGameObjects = null;
-			_allWreckageObjects = null;
+			Step();
 			_allVehicles.Clear();
 		}
 
 		public void Step() {
-			Reset();
+			typeCache.Clear(); 
+			_activeGameObjects = null;
+			_allWreckageObjects = null;
 		}
 
 		/*
