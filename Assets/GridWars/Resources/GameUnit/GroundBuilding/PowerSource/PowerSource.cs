@@ -191,15 +191,6 @@ public class PowerSource : GroundBuilding {
 		PlaySoundNamed("fullpower", 0.25f);
 	}
 
-	void OnDrawGizmos() {
-		/*
-		if (player != null) {
-			Gizmos.color = player.color;
-		}
-		Gizmos.DrawCube(transform.position, new Vector3(trackWidth, 1, trackLength));
-		*/
-	}
-
 	public override void ApplyDamage(float damage) {
 		// can't be damaged
 	}

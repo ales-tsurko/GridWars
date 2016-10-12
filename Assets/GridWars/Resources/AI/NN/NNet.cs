@@ -10,7 +10,7 @@ namespace AssemblyCSharp {
 		List<NNetLayer> layers;
 
 		public NNet() {
-			
+			layers = new List<NNetLayer>();
 		}
 
 		public NNetLayer AddLayer() {

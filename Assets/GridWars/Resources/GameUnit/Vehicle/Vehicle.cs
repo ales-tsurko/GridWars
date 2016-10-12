@@ -154,7 +154,7 @@ public class Vehicle : GameUnit  {
 	#endif
 
 	public virtual float RotateDesire() { // -1 to 1 - y axis and clockwise?
-		float ya = YAngleToTarget();
+		//float ya = YAngleToTarget();
 		float d = 1f; //SmoothValue(ya / 180f);
 		return d;
 	}

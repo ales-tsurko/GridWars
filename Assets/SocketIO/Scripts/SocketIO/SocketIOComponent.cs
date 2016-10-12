@@ -307,7 +307,10 @@ namespace SocketIO
 			
 			try {
 				ws.Send(encoder.Encode(packet));
-			} catch(SocketIOException ex) {
+			}
+			#pragma warning disable 0168
+			catch(SocketIOException ex) {
+			#pragma warning restore 0168
 				#if SOCKET_IO_DEBUG
 				debugMethod.Invoke(ex.ToString());
 				#endif
@@ -399,7 +402,9 @@ namespace SocketIO
 				try{
 					handler(ev);
 				}
-				catch(Exception ex){
+				#pragma warning disable 0168
+				catch(Exception ex) {
+				#pragma warning restore 0168
 					#if SOCKET_IO_DEBUG
 					debugMethod.Invoke(ex.ToString());
 					#endif

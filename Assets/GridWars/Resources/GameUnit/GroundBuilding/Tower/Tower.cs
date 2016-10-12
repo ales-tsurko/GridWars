@@ -202,7 +202,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	}
 
 	float lastProductionTime = 0f;
-	float lastProductionFrame = 0;
 	//int releaseLocationIndex = 0;
 	int queueSize = 0;
 	List<ReleaseZone> releaseZones;
@@ -260,7 +259,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		queueSize ++;
 		player.powerSource.power -= gameUnit.powerCost;
 		lastProductionTime = Time.time;
-		lastProductionFrame = Time.frameCount;
 	}
 
 	void ReleaseUnits() {

@@ -19,7 +19,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	public void OnEnable() {
-		GameObject g = gameObject;
+		//GameObject g = gameObject;
 		//print(g);
 		StartTimer();
 		if (materialColors != null) {
@@ -28,7 +28,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void OnDisable() {
-		GameObject g = gameObject;
+		//GameObject g = gameObject;
 		//print(g);
 		CancelTimer();
 		ShowFinalValue();
