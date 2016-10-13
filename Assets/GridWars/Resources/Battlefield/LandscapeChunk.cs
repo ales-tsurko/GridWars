@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class LandscapeChunk : MonoBehaviour {
-	/*
 	public Rect chunkRect;
 	public float height;
 	public Material mat;
@@ -40,5 +39,25 @@ public class LandscapeChunk : MonoBehaviour {
 			cube.EachRenderer(renderer => renderer.material = mat);
 		}
 	}
-	*/
+
+
+	bool CoinFlip() {
+		return UnityEngine.Random.value > .5;
+	}
+
+	float RandNeg(float v) {
+		return 2f * (UnityEngine.Random.value - 0.5f) * v;
+	}
+
+	float Rand(float v) {
+		return UnityEngine.Random.value * v;
+	}
+
+	Rect RandRect(float minW, float maxW, float minH, float maxH) {
+		Rect r = new Rect();
+		r.width = minW + Rand(maxW - minW);
+		r.height = minH + Rand(maxH - minH);
+		return r;
+	}
+
 }

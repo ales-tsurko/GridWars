@@ -141,6 +141,7 @@ public class Fortress : MonoBehaviour {
 			player.powerSource.ShutDown();
 		} else {
 			player.powerSource.MakeMax();
+			player.powerSource.generationRate *= 1.1f;
 		}
 	}
 }
