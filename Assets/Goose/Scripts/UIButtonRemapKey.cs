@@ -15,6 +15,6 @@ public class UIButtonRemapKey : UIButton {
     public string code;
     public KeyCode keyKey, joyKey;
     public new void OnClick () {
-        Keys.RemapKey(this);
+		App.shared.keys.RemapKey(this);
     }
 }

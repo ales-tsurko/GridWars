@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
 
-public class Tower : GroundBuilding, CameraControllerDelegate {
+public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	public GameObject iconPlacement;
 
@@ -134,6 +134,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		keyIcon.EachRenderer(r => r.enabled = true);//GameUnit.SetVisibileAndEnabled(true) isn't working for some reason.
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
+
+		App.shared.keys.AddKeyDelegate(unitKeyMap, this);
 	}
 
 	public override void ServerFixedUpdate () {
@@ -173,6 +175,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		base.ServerAndClientLeftGame();
 
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
+	}
+
+	public override void RemoveFromGame() {
+		base.RemoveFromGame();
+
+		App.shared.keys.RemoveKeyDelegate(unitKeyMap, this);
 	}
 
 	// HUD
@@ -238,15 +246,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
-
-
-        if (unitKeyMap == "None") {
-            return;
-        }
-
-        if (!npcModeOn && unitKeyMap.Pressed()) {
-			SendAttemptQueueUnit();
-		}
 	}
 
 	public void SendAttemptQueueUnit() {
@@ -256,6 +255,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	}
 
 	void QueueUnit() {
+		if (!BoltNetwork.isServer) {
+			throw new System.Exception("Use SendAttemptQueueUnit from the client");
+		}
 		queueSize ++;
 		player.powerSource.power -= gameUnit.powerCost;
 		lastProductionTime = Time.time;
@@ -353,5 +355,17 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 				}
 			} 
 		}
+	}
+
+	// KeyDelegate
+
+	public void KeyPressed() {
+		if (!npcModeOn) {
+			SendAttemptQueueUnit();
+		}
+	}
+
+	public void KeyLongPressed() {
+		//TODO
 	}
 }
