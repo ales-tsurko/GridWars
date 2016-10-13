@@ -4,14 +4,20 @@ using System.Collections.Generic;
 using System;
 using LitJson;
 
-public static class Keys {
+public class Keys {
 
     public const string CHANGECAM = "Change Camera View";
     public const string CONCEDE = "Concede Match";
     public const string TOGGLEKEYS = "Toggle Display of Hotkeys";
     public const string EXITFPS = "ExitFPS";
-    private static List<KeyData> _keyData;
-    public static List<KeyData> keyData {
+
+	public Keys() {
+		keyDelegateMap = new Dictionary<string, List<KeyDelegate>>();
+		keyDownTimeMap = new Dictionary<string, float>();
+	}
+
+    private List<KeyData> _keyData;
+    public List<KeyData> keyData {
         get {
             if (_keyData == null) {
                 LoadKeyMappings();
@@ -26,8 +32,8 @@ public static class Keys {
         }
     }
 
-    private static List<KeyData> _joyData;
-    public static List<KeyData> joyData {
+    private List<KeyData> _joyData;
+    public List<KeyData> joyData {
         get {
             if (_joyData == null) {
                 LoadKeyMappings();
@@ -42,32 +48,10 @@ public static class Keys {
         }
     }
    
-    public static List<KeyData> defaultKeyData;
-    public static List<KeyData> defaultJoyData;
-
-    public static KeyCode GetKey (this string _string){
-        foreach (KeyData k in keyData) {
-            if (k.code == _string) {
-                return k.key;
-            }
-        }
-        return new KeyCode();
-    }
-
-    public static KeyCode GetButton (this string _string){
-        foreach (KeyData j in joyData) {
-            if (j.code == _string) {
-                return j.key;
-            }
-        }
-        return new KeyCode();
-    }
-
-    public static bool Pressed (this string _string){
-        return (Input.GetKeyDown(_string.GetKey()) || Input.GetKeyDown(_string.GetButton()));
-    }
+    public List<KeyData> defaultKeyData;
+    public List<KeyData> defaultJoyData;
         
-    private static void SetNewKey (string _string, KeyCode _keyCode){
+    private void SetNewKey (string _string, KeyCode _keyCode){
         //in future check if k is already mapped and if so, remove - try to make default;
         //Debug.Log (_string + "  "+_keyCode.ToString());
         foreach (KeyData k in keyData) {
@@ -78,7 +62,7 @@ public static class Keys {
         }
     }
 
-    private static void SetNewButton (string _string, KeyCode _keyCode){
+    private void SetNewButton (string _string, KeyCode _keyCode){
         //in future check if k is already mapped and if so, remove - try to make default
         foreach (KeyData j in joyData) {
             if (j.code == _string) {
@@ -87,7 +71,7 @@ public static class Keys {
         }
     }
 
-    public static void SetNewInput (string s, KeyCode k){
+    public void SetNewInput (string s, KeyCode k){
         if (k.ToString().Contains("Joystick")) {
             SetNewButton(s, k);
         } else {
@@ -96,16 +80,16 @@ public static class Keys {
         SaveKeyMappings();
     }
 
-    public static void SaveKeyMappings(){
+    public void SaveKeyMappings(){
         KeySaveData save = new KeySaveData();
-        save.keyData = Keys.keyData;
-        save.joyData = Keys.joyData;
+        save.keyData = keyData;
+        save.joyData = joyData;
         string saveString = JsonMapper.ToJson(save);
         Debug.Log("Keys Saved");
         Prefs.SetKeyMappings(saveString);
     }
 
-    public static void LoadKeyMappings(bool resetToDefault = false) {
+    public void LoadKeyMappings(bool resetToDefault = false) {
         string s = Prefs.GetKeyMappings();
         if (resetToDefault || s == "empty" || string.IsNullOrEmpty(s) || s == "{}") {
             List<KeyData> _defaultKeyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").keyData;
@@ -120,10 +104,10 @@ public static class Keys {
         }
     }
 
-    static UIMenu remapMenu;
-    public static int currentRemapPlayerNum;
+    UIMenu remapMenu;
+    public int currentRemapPlayerNum;
 
-    public static void RemapKey(UIButtonRemapKey remapKey){
+    public void RemapKey(UIButtonRemapKey remapKey){
 		App.shared.ResetMenu();
 		var indicator = UI.ActivityIndicator("Press a Key or Joystick Button to map to " + remapKey.code);
 		var read = indicator.gameObject.AddComponent<ReadRemapKeyInput>();
@@ -132,13 +116,65 @@ public static class Keys {
 		App.shared.menu.Show();
     }
 
-    public static void SetDefaults() {
+    public void SetDefaults() {
         LoadKeyMappings(true);
     }
 
-    public static void InitKeyMappings() {
+    public void InitKeyMappings() {
         LoadKeyMappings();
     }
+
+	//KeyDelegate
+
+	Dictionary<string, List<KeyDelegate>> keyDelegateMap;
+	Dictionary<string, float> keyDownTimeMap;
+	float longPressDuration = 2f;
+
+	List<KeyDelegate> KeyDelegateList(string keyName) {
+		List<KeyDelegate> list;
+
+		if (!keyDelegateMap.ContainsKey(keyName)) {
+			list = new List<KeyDelegate>();
+			keyDelegateMap[keyName] = list;
+		}
+		else {
+			list = keyDelegateMap[keyName];
+		}
+
+		return list;
+	}
+
+	public void AddKeyDelegate(string keyName, KeyDelegate keyDelegate) {
+		var list = KeyDelegateList(keyName);
+		if (!list.Contains(keyDelegate)) {
+			list.Add(keyDelegate);
+		}
+	}
+
+	public void RemoveKeyDelegate(string keyName, KeyDelegate keyDelegate) {
+		KeyDelegateList(keyName).Remove(keyDelegate);
+	}
+
+	public void Update() {
+		foreach (var keyName in keyDelegateMap.Keys) {
+			if (keyName.KeyDown()) {
+				keyDownTimeMap[keyName] = Time.time;
+			}
+
+			if (keyName.KeyUp()) {
+				var isLongPress = Time.time - keyDownTimeMap[keyName] >= longPressDuration;
+
+				foreach (var keyDelegate in new List<KeyDelegate>(KeyDelegateList(keyName))) { //copy in case its modified
+					if (isLongPress) {
+						keyDelegate.KeyLongPressed();
+					}
+					else {
+						keyDelegate.KeyPressed();
+					}
+				}
+			}
+		}
+	}
 
     [System.Serializable]
     public class KeySaveData {
@@ -163,11 +199,44 @@ public class ReadRemapKeyInput : MonoBehaviour {
                 continue;
             }
             if (Input.GetKeyDown(kcode)) {
-                Keys.SetNewInput(data.code, kcode);
+				App.shared.keys.SetNewInput(data.code, kcode);
                 App.shared.state.EnterFrom(null);
                 Destroy(gameObject);
                 return;
             }
         }
     }
+}
+
+public static class KeyCodeExtension {
+	public static KeyCode GetKey (this string _string){
+		foreach (KeyData k in App.shared.keys.keyData) {
+			if (k.code == _string) {
+				return k.key;
+			}
+		}
+		return new KeyCode();
+	}
+
+	public static KeyCode GetButton (this string _string){
+		foreach (KeyData j in App.shared.keys.joyData) {
+			if (j.code == _string) {
+				return j.key;
+			}
+		}
+		return new KeyCode();
+	}
+
+	public static bool KeyDown (this string _string){
+		return (Input.GetKeyDown(_string.GetKey()) || Input.GetKeyDown(_string.GetButton()));
+	}
+
+	public static bool KeyUp (this string _string){
+		return (Input.GetKeyUp(_string.GetKey()) || Input.GetKeyUp(_string.GetButton()));
+	}
+}
+
+public interface KeyDelegate {
+	void KeyPressed();
+	void KeyLongPressed();
 }

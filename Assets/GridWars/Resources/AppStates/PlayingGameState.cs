@@ -46,13 +46,13 @@ public class PlayingGameState : NetworkDelegateState {
 			TransitionTo(state);
 		}
 		else {
-			if (Keys.CHANGECAM.Pressed()){
+			if (Keys.CHANGECAM.KeyDown()){
 				ChangeCam();
 			}
-			if (Keys.CONCEDE.Pressed()) {
+			if (Keys.CONCEDE.KeyDown()) {
 				Concede();
 			}
-			if (Keys.TOGGLEKEYS.Pressed()){
+			if (Keys.TOGGLEKEYS.KeyDown()){
 				ToggleHotkeys();
 			}
 		}

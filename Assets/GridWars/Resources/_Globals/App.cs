@@ -30,6 +30,7 @@ public class App : MonoBehaviour {
 	public Network network;
 	public Battlefield battlefield;
 	public CameraController cameraController;
+	public Keys keys;
 
 	private bool _isProcessingDestroyQueue = false;
 
@@ -80,6 +81,8 @@ public class App : MonoBehaviour {
 		cameraController = GameObject.FindObjectOfType<CameraController>();
 		cameraController.enabled = true;
 
+		keys = new Keys();
+
 		menu = UI.Menu();
 
 		var mainMenuState = new MainMenuState();
@@ -95,6 +98,7 @@ public class App : MonoBehaviour {
 
 	void Update() {
 		state.Update();
+		keys.Update();
 	}
 
 	// --- Menu --------------------
