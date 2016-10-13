@@ -53,18 +53,11 @@ public class CyclePainter : MonoBehaviour {
 		if (Age() > lifeSpan) {
 			Finish();
 		} else {
-			//float t = Mathf.Sqrt(RatioDone());
-			//float t = RatioDone() * RatioDone();
 			float r = RatioDone();
 			r = Mathf.Sqrt(r);
 			r = Mathf.Sqrt(r);
-			// 1 1
-			// 2 3
-			// 3 5
-			// 4 7
 
 			float v = 1f - (Mathf.Cos(r * Mathf.PI * (cycles * 2f - 1f)) + 1f)/2f;
-			//Debug.Log(t + " -> " + v);
 			ShowRatio(v);
 		}
 	}

@@ -9,7 +9,9 @@ public class Landscape : MonoBehaviour {
 
 	public Material material;
 	public Material material2;
+	public Material material3;
 
+	//public Vector3 speed;
 	/*
 	bool RectOverlapsRect (Rect rA, Rect rB) {
 		return (rA.x < rB.x+rB.width && rA.x+rA.width > rB.x && rA.y < rB.y+rB.height && rA.y+rA.height > rB.y);
@@ -21,6 +23,7 @@ public class Landscape : MonoBehaviour {
 		//Rect fieldRect = new Rect(-100, -100, 200, 200);
 		Rect fieldRect = new Rect(-120, -120, 240, 240);
 
+		// ground
 		for (int i = 0; i < 80; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
@@ -31,6 +34,23 @@ public class Landscape : MonoBehaviour {
 			}
 		}
 
+		// clouds
+		for (int i = 0; i < 20; i++) {
+			Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
+			chunkRect.x = RandNeg(xMax);
+			chunkRect.y = RandNeg(zMax);
+
+			if (fieldRect.Overlaps(chunkRect) == false) {
+				var chunk = CreateChunk(chunkRect, 5f, material2);
+				Vector3 p = chunk.transform.position;
+				p.y = 20f + Rand(50f);
+				chunk.transform.position = p;
+			}
+
+
+		}
+
+		// tall buildings
 		for (int i = 0; i < 20; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
@@ -40,6 +60,15 @@ public class Landscape : MonoBehaviour {
 				CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2);
 			}
 		}
+
+		/*
+		var maxSpeed = 0.1f;
+		if (UnityEngine.Random.value > .5) {
+			speed = new Vector3(Rand(maxSpeed), 0, 0);
+		} else {
+			speed = new Vector3(0, 0, Rand(maxSpeed));
+		}
+		*/
 	}
 
 	bool CoinFlip() {
@@ -63,7 +92,7 @@ public class Landscape : MonoBehaviour {
 
 
 
-	void CreateChunk(Rect chunkRect, float height, Material mat) {
+	GameObject CreateChunk(Rect chunkRect, float height, Material mat) {
 		var chunk = new GameObject();
 		chunk.transform.parent = this.transform;
 		chunk.transform.position = new Vector3(chunkRect.x, 0, chunkRect.y);
@@ -86,6 +115,7 @@ public class Landscape : MonoBehaviour {
 
 			cube.EachRenderer(renderer => renderer.material = mat);
 		}
+		return chunk;
 	}
 
 	void Update() {
