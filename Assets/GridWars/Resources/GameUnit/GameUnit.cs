@@ -112,6 +112,15 @@ public class GameUnit : NetworkObject {
 		gameObject.DeepRemoveScripts();
 	}
 
+	// -- vet sound ---------
+
+	public AudioClip vetSound {
+		get {
+			return SoundNamed("vet");
+		}
+	}
+
+
 	// --- Running Sound ------------------------------------------
 
 	AudioSource _runningAudioSource;
@@ -565,6 +574,9 @@ public class GameUnit : NetworkObject {
 	}
 
 	public void ShowVeteranLevel() {
+
+		App.shared.PlayOneShot(vetSound, 1f);
+
 		Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.35f);
 		//Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.white, 0.1f);
 		if (veteranLevel == 1) {
@@ -575,7 +587,8 @@ public class GameUnit : NetworkObject {
 			PaintSecondaryColor(player.primaryColor);
 		}
 
-		var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		//var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		var fader = gameObject.AddComponent<CyclePainter>();
 		fader.OnEnable();
 	}
 
