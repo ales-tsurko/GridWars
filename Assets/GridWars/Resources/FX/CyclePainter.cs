@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class CyclePainter : MonoBehaviour {
 
 	public float startTime;
-	public float lifeSpan = 1.5f; // 1.5f best
-	public float cycles = 1f;
+	public float lifeSpan = 1.5f; // 1.5f is length of vet sound
+	public float cycles = 10f;
 
 	private Color startColor = Color.white;
 	private Dictionary<Material, Color> materialColors = null;
@@ -55,10 +55,16 @@ public class CyclePainter : MonoBehaviour {
 		} else {
 			//float t = Mathf.Sqrt(RatioDone());
 			//float t = RatioDone() * RatioDone();
-			float t = RatioDone();
-			float r = Mathf.Cos(t * (2f / 3f) * 3.14f * cycles);
-			float v = r / 2f + 0.5f;
-			Debug.Log(t + " -> " + v);
+			float r = RatioDone();
+			r = Mathf.Sqrt(r);
+			r = Mathf.Sqrt(r);
+			// 1 1
+			// 2 3
+			// 3 5
+			// 4 7
+
+			float v = 1f - (Mathf.Cos(r * Mathf.PI * (cycles * 2f - 1f)) + 1f)/2f;
+			//Debug.Log(t + " -> " + v);
 			ShowRatio(v);
 		}
 	}
