@@ -24,9 +24,12 @@ public class PostGameState : NetworkDelegateState {
 			if (battlefield.localPlayers.Count == 1) {
 				if (victoriousPlayer.isLocal) {
 					title = "Victory!";
+					App.shared.PlayAppSoundNamed("Victory");
 				}
 				else {
 					title = "Defeat!";
+					App.shared.PlayAppSoundNamed("Defeat");
+
 				}
 			}
 			else {
@@ -120,6 +123,8 @@ public class PostGameState : NetworkDelegateState {
 
 	void RequestRematch() {
 		RequestRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
+
+		//App.shared.PlayAppSoundNamedWithVolume("Rematch", 0.3f); // want to play this until menu is removed
 
 		requestedRematch = true;
 
