@@ -9,7 +9,7 @@ public class Landscape : MonoBehaviour {
 
 	public Material material;
 	public Material material2;
-	public Material material3;
+	public Material cloudMaterial;
 
 	void Start() {
 		//Rect fieldRect = new Rect(-50, -50, 100, 100);
@@ -23,25 +23,25 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 5f, material);
+				var chunk = CreateChunk(chunkRect, 5f, material, 15);
 				chunk.name = "ground";
 			}
 		}
 
 		// clouds
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 40; i++) {
 			//Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 2f, material2);
+				var chunk = CreateChunk(chunkRect, 2f, material2, 7);
 				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
 				p.y = 40f + Rand(50f);
 				chunk.transform.position = p;
-				chunk.AddComponent<Cloud>();
+				chunk.AddComponent<Cloud>().material = cloudMaterial;;
 			}
 
 		}
@@ -53,7 +53,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2);
+				var chunk = CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2, 15);
 				chunk.name = "building";
 			}
 		}
@@ -89,13 +89,13 @@ public class Landscape : MonoBehaviour {
 
 
 
-	GameObject CreateChunk(Rect chunkRect, float height, Material mat) {
+	GameObject CreateChunk(Rect chunkRect, float height, Material mat, int maxCount) {
 		var chunk = new GameObject();
 		chunk.transform.parent = this.transform;
 		chunk.transform.position = new Vector3(chunkRect.x, 0, chunkRect.y);
 		//chunk.transform.eulerAngles = new Vector3(0, new List<float>{ 0 }.PickRandom(), 0);
 
-		int max = 3 + (int)Rand(15);
+		int max = 3 + (int)Rand(maxCount);
 		for (int i = 0; i < max; i++) {
 			Rect r = RandRect(chunkRect.width *0.1f, chunkRect.width, chunkRect.height *0.1f, chunkRect.height);
 			r.x = Rand(chunkRect.width - r.width);
