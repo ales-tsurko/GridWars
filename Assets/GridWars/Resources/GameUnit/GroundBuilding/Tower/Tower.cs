@@ -178,11 +178,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		base.ServerAndClientLeftGame();
 
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
-	}
-
-	public override void RemoveFromGame() {
-		base.RemoveFromGame();
-
 		App.shared.keys.RemoveKeyDelegate(unitKeyMap, this);
 	}
 
