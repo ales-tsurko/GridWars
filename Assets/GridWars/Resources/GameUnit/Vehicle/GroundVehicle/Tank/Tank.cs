@@ -6,9 +6,13 @@ public class Tank : GroundVehicle {
 
 	//NetworkObject
 
+	public override void Awake() {
+		base.Awake();
+		powerCostPerLevel = new float[] { 4.2f, 20f, float.MaxValue };
+	}
+
 	public override void ServerInit() {
 		maxHitPoints = 15f;
-
 		base.ServerInit();
 	}
 

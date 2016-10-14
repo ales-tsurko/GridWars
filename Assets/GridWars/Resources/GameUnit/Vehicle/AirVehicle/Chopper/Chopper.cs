@@ -28,6 +28,11 @@ public class Chopper : AirVehicle {
 	}
 	*/
 
+	public override void Awake() {
+		base.Awake();
+		powerCostPerLevel = new float[] { 5f, 20f, float.MaxValue };
+	}
+
 	public override void ServerInit() {
 		maxHitPoints = 10f;
 		base.ServerInit();

@@ -93,11 +93,15 @@ public class GameUnit : NetworkObject {
 	public bool isStaticUnit = false;
 
 	//tower
-	public float powerCost = 4f;
+	public float[] powerCostPerLevel = new float[] { float.MaxValue, float.MaxValue, float.MaxValue };
 	public float cooldownSeconds = 1f;
 	public float standOffDistance = 20f;
 	public Vector3 launchDirection = Vector3.forward;
 	public ReleaseZone releaseZone;
+
+	public float PowerCost(int veteranLevel) {
+		return powerCostPerLevel[veteranLevel];
+	}
 
 	//FX
 
@@ -580,7 +584,13 @@ public class GameUnit : NetworkObject {
 
 	public int veteranLevel {
 		get {
-			return gameUnitState.veteranLevel;
+			if (serverAndClientJoinedGame) {
+				return gameUnitState.veteranLevel;
+			}
+			else {
+				return 0;
+			}
+
 		}
 
 		set {

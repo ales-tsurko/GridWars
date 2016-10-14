@@ -91,7 +91,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		isStaticUnit = true;
 
 		releaseZones = new List<ReleaseZone>();
-		var concurrency = Mathf.Ceil(player.powerSource.maxPower / unitPrefab.GameUnit().powerCost);
+		var concurrency = Mathf.Ceil(player.powerSource.maxPower / unitPrefab.GameUnit().PowerCost(0));
 		var unitSize = unitPrefab.GetComponent<BoxCollider>().size;
 		var unitWidth = unitSize.x;
 		var unitLength = unitSize.z;
@@ -161,7 +161,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		iconObject.SetActive(canQueueUnit);
+		iconObject.SetActive(CanQueueUnit(0));
 		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
 	}
 
@@ -203,14 +203,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		try {
-			nextUnitVeteranLevel = e.veteranLevel;
-			if (canQueueUnit) {
-				QueueUnit();
-			}
-		}
-		finally {
-			nextUnitVeteranLevel = 0;
+		if (CanQueueUnit(e.veteranLevel)) {
+			QueueUnit(e.veteranLevel);
 		}
 	}
 
@@ -220,10 +214,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	List<ReleaseZone> releaseZones;
 	int nextUnitVeteranLevel; //used for power calculations
 
-	bool canQueueUnit {
-		get {
-			return hasCooledDown && hasEnoughPower;
-		}
+	bool CanQueueUnit(int level) {
+		return hasCooledDown && HasEnoughPower(level);
 	}
 
 	bool hasCooledDown {
@@ -232,18 +224,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	bool hasEnoughPower {
-		get {
-			float powerCost = float.MaxValue;
-			if (nextUnitVeteranLevel == 0) {
-				powerCost = gameUnit.powerCost;
-			}
-			else if (nextUnitVeteranLevel == 1) {
-				powerCost = player.powerSource.maxPower; //TODO: move this to GameUnit
-			}
-
-			return player.powerSource.power >= powerCost;
-		}
+	bool HasEnoughPower(int level) {
+		return player.powerSource.power >= gameUnit.PowerCost(level);
 	}
 
 	GameUnit gameUnit {
@@ -259,9 +241,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	void OnMouseUp() {
-		if (Time.time - mouseDownStart >= App.shared.keys.longPressDuration) {
-			if (!npcModeOn) {
+		if (!npcModeOn) {
+			if (Time.time - mouseDownStart >= App.shared.keys.longPressDuration) {
 				SendAttemptQueueUnit(1);
+			}
+			else {
+				SendAttemptQueueUnit(0);
 			}
 		}
 	}
@@ -271,19 +256,19 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void SendAttemptQueueUnit(int veteranLevel = 0) {
-		if (entity.hasControl) {
+		if (entity.hasControl && CanQueueUnit(veteranLevel)) {
 			var queueEvent = AttemptQueueUnitEvent.Create(entity);
 			queueEvent.veteranLevel = veteranLevel;
 			queueEvent.Send();
 		}
 	}
 
-	void QueueUnit() {
+	void QueueUnit(int veteranLevel) {
 		if (!BoltNetwork.isServer) {
 			throw new System.Exception("Use SendAttemptQueueUnit from the client");
 		}
-		unitWithVeterancyQueue.Add(nextUnitVeteranLevel);
-		player.powerSource.power -= gameUnit.powerCost;
+		unitWithVeterancyQueue.Add(veteranLevel);
+		player.powerSource.power -= gameUnit.PowerCost(veteranLevel);
 		lastProductionTime = Time.time;
 	}
 
@@ -359,7 +344,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		float b = CountOfEnemyUnitsThatCounterUs();
 		float c = CountOfTowerUnits();
 
-		float cost = gameUnit.powerCost / player.powerSource.maxPower;
+		float cost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 
 		float e = 0;
 		//if (aiStyle > .5) {

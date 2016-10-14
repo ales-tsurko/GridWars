@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class MobileSAM : GroundVehicle {
 
+	public override void Awake() {
+		base.Awake();
+		powerCostPerLevel = new float[] { 8f, 20f, float.MaxValue };
+	}
+
 	//NetworkObject
 
 	public override void ServerInit() {

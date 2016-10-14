@@ -6,6 +6,11 @@ using System.Collections.Generic;
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
 
+	public override void Awake() {
+		base.Awake();
+		powerCostPerLevel = new float[] { 15f, float.MaxValue, float.MaxValue };
+	}
+
 	public override void ServerInit() {
 		maxHitPoints = 13f;
 		base.ServerInit();
