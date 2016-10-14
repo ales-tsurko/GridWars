@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 public class Tank : GroundVehicle {
 
+	//NetworkObject
+
+	public override void ServerInit() {
+		maxHitPoints = 15f;
+
+		base.ServerInit();
+	}
+
 	public override List<System.Type> CountersTypes() {
 		List<System.Type> counters = base.CountersTypes();
 		counters.Add(typeof(MobileSAM));

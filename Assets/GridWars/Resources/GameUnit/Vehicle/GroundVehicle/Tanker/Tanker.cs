@@ -5,7 +5,12 @@ using System.Collections.Generic;
 
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
-		
+
+	public override void ServerInit() {
+		maxHitPoints = 13f;
+		base.ServerInit();
+	}
+
 	public override void ServerFixedUpdate() {
 		base.ServerFixedUpdate();
 

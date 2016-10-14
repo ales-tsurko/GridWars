@@ -58,7 +58,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	// NetworkedGameUnit
 
 	public override void ServerInit() {
+		maxHitPoints = 50f;
 		base.ServerInit();
+
 		aiStyle = UnityEngine.Random.value;
 		unitWithVeterancyQueue = new List<int>();
 	}

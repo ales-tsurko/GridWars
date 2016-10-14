@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 public class MobileSAM : GroundVehicle {
 
+	//NetworkObject
+
+	public override void ServerInit() {
+		maxHitPoints = 11f;
+		base.ServerInit();
+	}
+
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 

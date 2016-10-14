@@ -28,6 +28,11 @@ public class Chopper : AirVehicle {
 	}
 	*/
 
+	public override void ServerInit() {
+		maxHitPoints = 10f;
+		base.ServerInit();
+	}
+
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 		isRunning = true;

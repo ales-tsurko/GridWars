@@ -60,6 +60,16 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
+	public float maxHitPoints {
+		get {
+			return gameUnitState.maxHitPoints;
+		}
+
+		set {
+			gameUnitState.maxHitPoints = value;
+		}
+	}
+
 	public bool wasDestroyed;
 
 	public bool isInGame {
@@ -71,8 +81,6 @@ public class GameUnit : NetworkObject {
 			gameUnitState.isInGame = value;
 		}
 	}
-
-	public float maxHitPoints;
 
 
 	[HideInInspector]
@@ -316,6 +324,11 @@ public class GameUnit : NetworkObject {
 		base.ServerInit();
 		//App.shared.Log("ServerInit", this);
 		isInGame = true;
+
+		//this is the only way to set a default due to Bolt constraints.
+		if (maxHitPoints == 0f) {
+			maxHitPoints = 1f;
+		}
 		hitPoints = maxHitPoints;
 
 		thinkThrottle = new Throttle();
