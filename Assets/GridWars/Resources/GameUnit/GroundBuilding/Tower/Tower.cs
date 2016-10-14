@@ -252,9 +252,17 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	public void OnMouseDown() {
-		if (!npcModeOn) {
-			SendAttemptQueueUnit();
+	float mouseDownStart;
+
+	void OnMouseDown() {
+		mouseDownStart = Time.time;
+	}
+
+	void OnMouseUp() {
+		if (Time.time - mouseDownStart >= App.shared.keys.longPressDuration) {
+			if (!npcModeOn) {
+				SendAttemptQueueUnit(1);
+			}
 		}
 	}
 
@@ -385,6 +393,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void KeyLongPressed() {
-		SendAttemptQueueUnit(1);
+		if (!npcModeOn) {
+			SendAttemptQueueUnit(1);
+		}
 	}
 }

@@ -128,7 +128,7 @@ public class Keys {
 
 	Dictionary<string, List<KeyDelegate>> keyDelegateMap;
 	Dictionary<string, float> keyDownTimeMap;
-	float longPressDuration = 1f;
+	public float longPressDuration = 1f;
 
 	List<KeyDelegate> KeyDelegateList(string keyName) {
 		List<KeyDelegate> list;
