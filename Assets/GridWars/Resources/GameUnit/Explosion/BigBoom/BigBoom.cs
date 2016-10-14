@@ -5,7 +5,7 @@ public class BigBoom : Explosion {
 
 	float power = 100000f;
 
-	float maxBlastRadius = 15f; //23f;
+	float maxBlastRadius = 23f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
 	float blastTime = 1f;
@@ -23,7 +23,7 @@ public class BigBoom : Explosion {
 
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate();
-		if (DoneRatio() > 1) {
+		if (Mathf.Approximately(DoneRatio(), 1f)) {
 			Die();
 		} else {
 			ApplyForcesAndDamageStep();
@@ -36,25 +36,24 @@ public class BigBoom : Explosion {
 	}
 
 	public float DoneRatio() {
-		return (Time.time - startTime) / blastTime;
+		return Mathf.Clamp((Time.time - startTime) / blastTime, 0f, 1f);
 	}
 
 	public void UpdateRadius() {
 		float r = minBlastRadius + (maxBlastRadius - minBlastRadius) * DoneRatio();
-//		/transform.localScale = new Vector3(initScale.x * r * 2, 0* initScale.y * r * 2, initScale.z * r * 2);
+		//transform.localScale = new Vector3(initScale.x * r * 2, 0* initScale.y * r * 2, initScale.z * r * 2);
 		transform.localScale = new Vector3(initScale.x * r * 2, 0.1f, initScale.z * r * 2);
 		currentBlastRadius = r;
 		/*
 		Material m = GetComponent<Renderer>().material;
 		Color color = m.color;
 		//color.a = (1f - DoneRatio());
-		GetComponent<Renderer>().enabled = false; //GOOSE'S Change - delete and uncomment above to switch back
+		GetComponent<Renderer>().enabled = false;
 		m.color = color;
 		*/
 	}
 
 	public void ApplyForcesAndDamageStep() {
-			
 		Vector3 explosionPos = transform.position;
 		Collider[] colliders = Physics.OverlapSphere(explosionPos, currentBlastRadius);
 
@@ -71,7 +70,7 @@ public class BigBoom : Explosion {
 				if (rb) {
 					rb.AddExplosionForce(power, explosionPos, currentBlastRadius, 0.2f);
 				}
-
+					
 				// apply damage to unit
 				//float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
 				//float maxDamage = 1f;
@@ -81,7 +80,6 @@ public class BigBoom : Explosion {
 				} else {
 					unit.ApplyDamage(0.4f);
 				}
-					
 			}
 		}
 	}
