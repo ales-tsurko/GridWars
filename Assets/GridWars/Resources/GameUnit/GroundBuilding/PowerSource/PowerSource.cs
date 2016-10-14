@@ -81,6 +81,7 @@ public class PowerSource : GroundBuilding {
 		if (App.shared.testEndOfGameMode) {
 			MakeMax();
 		}
+		MakeMax();
 	}
 
 	public override void ClientJoinedGame() {

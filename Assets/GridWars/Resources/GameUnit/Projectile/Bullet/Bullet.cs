@@ -13,6 +13,10 @@ public class Bullet : Projectile {
 
 	}
 
+	void Start() {
+		rigidBody().AddForce (transform.forward * muzzleImpulse);
+	}
+
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 
@@ -25,12 +29,13 @@ public class Bullet : Projectile {
 		var laser = transform.Find("LaserStyle");
 		if (laser != null) {
 			var playerColor = player.primaryColor;
+			var adjustedColor = playerColor.WithV(1.0f);
 
 			var material = laser.Find("Head").GetComponent<MeshRenderer>().sharedMaterial;
-			material.color = new Color(playerColor.r, playerColor.g, playerColor.b, material.color.a);
+			material.color = new Color(adjustedColor.r, adjustedColor.g, adjustedColor.b, material.color.a);
 
 			material = laser.GetComponentInChildren<TrailRenderer>().material;
-			material.SetColor("_TintColor", new Color(playerColor.r, playerColor.g, playerColor.b, material.GetColor("_TintColor").a));
+			material.SetColor("_TintColor", new Color(adjustedColor.r, adjustedColor.g, adjustedColor.b, material.GetColor("_TintColor").a));
 		}
 	}
 		
