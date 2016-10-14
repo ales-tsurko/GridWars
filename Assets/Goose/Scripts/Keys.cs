@@ -147,12 +147,20 @@ public class Keys {
 	public void AddKeyDelegate(string keyName, KeyDelegate keyDelegate) {
 		var list = KeyDelegateList(keyName);
 		if (!list.Contains(keyDelegate)) {
+			//App.shared.Log("AddKeyDelegate: " + keyName, keyDelegate);
 			list.Add(keyDelegate);
 		}
 	}
 
 	public void RemoveKeyDelegate(string keyName, KeyDelegate keyDelegate) {
+		//App.shared.Log("RemoveKeyDelegate: " + keyName, keyDelegate);
 		KeyDelegateList(keyName).Remove(keyDelegate);
+	}
+
+	public void SoftReset() {
+		//App.shared.Log("SoftReset", this);
+		keyDelegateMap.Clear();
+		keyDownTimeMap.Clear();
 	}
 
 	public void Update() {
@@ -161,16 +169,18 @@ public class Keys {
 				keyDownTimeMap[keyName] = Time.time;
 			}
 
-			if (keyName.KeyUp()) {
-				var isLongPress = Time.time - keyDownTimeMap[keyName] >= longPressDuration;
-
-				foreach (var keyDelegate in new List<KeyDelegate>(KeyDelegateList(keyName))) { //copy in case its modified
-					if (isLongPress) {
+			if (keyDownTimeMap.ContainsKey(keyName)) {
+				if (Time.time - keyDownTimeMap[keyName] >= longPressDuration) {
+					foreach (var keyDelegate in new List<KeyDelegate>(KeyDelegateList(keyName))) { //copy in case its modified
 						keyDelegate.KeyLongPressed();
 					}
-					else {
+					keyDownTimeMap.Remove(keyName);
+				}
+				else if (keyName.KeyUp()) {
+					foreach (var keyDelegate in new List<KeyDelegate>(KeyDelegateList(keyName))) { //copy in case its modified
 						keyDelegate.KeyPressed();
 					}
+					keyDownTimeMap.Remove(keyName);
 				}
 			}
 		}

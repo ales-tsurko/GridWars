@@ -138,7 +138,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
 
-		App.shared.keys.AddKeyDelegate(unitKeyMap, this);
+		if (entity.hasControl) {
+			App.shared.keys.AddKeyDelegate(unitKeyMap, this);
+		}
 	}
 
 	public override void ServerFixedUpdate () {
@@ -174,9 +176,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	public override void ServerAndClientLeftGame() {
-		base.ServerAndClientLeftGame();
-
+	void OnDestroy() {
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
 		App.shared.keys.RemoveKeyDelegate(unitKeyMap, this);
 	}
@@ -237,10 +237,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	void OnMouseUp() {
 		if (!npcModeOn) {
-			if (Time.time - mouseDownStart >= App.shared.keys.longPressDuration) {
-				SendAttemptQueueUnit(1);
-			}
-			else {
+			if (mouseDownStart != 0f) {
+				mouseDownStart = 0f;
 				SendAttemptQueueUnit(0);
 			}
 		}
@@ -248,10 +246,15 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
+
+		if (mouseDownStart > 0f && (Time.time - mouseDownStart >= App.shared.keys.longPressDuration)) {
+			mouseDownStart = 0f;
+			SendAttemptQueueUnit(1);
+		}
 	}
 
 	public void SendAttemptQueueUnit(int veteranLevel = 0) {
-		if (entity.hasControl && CanQueueUnit(veteranLevel)) {
+		if (isInGame && entity.hasControl && CanQueueUnit(veteranLevel)) {
 			var queueEvent = AttemptQueueUnitEvent.Create(entity);
 			queueEvent.veteranLevel = veteranLevel;
 			queueEvent.Send();
