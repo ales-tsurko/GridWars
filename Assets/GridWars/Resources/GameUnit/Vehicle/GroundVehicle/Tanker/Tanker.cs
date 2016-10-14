@@ -25,7 +25,9 @@ public class Tanker : GroundVehicle {
 
 	public override void ServerAndClientInit() {
 		Transform t = transform.Find("CenterConsole");
-		centerConsole = t.gameObject;
+		if (t != null) {
+			centerConsole = t.gameObject;
+		}
 	}
 
 	public override void ServerInit() {
@@ -86,11 +88,12 @@ public class Tanker : GroundVehicle {
 		var x = Time.time;
 
 		float c = (Mathf.Sin(2f * Mathf.PI * x / period) + 1f)/2f;
-			
-		centerConsole.EachMaterial(m => {
-			m.color = new Color(c, c, c);
-		});
 
+		if (centerConsole != null) {
+			centerConsole.EachMaterial(m => {
+				m.color = new Color(c, c, c);
+			});
+		}
 		/*
 
 		//var y = 1 - 2*Mathf.Abs(Mathf.Round(x/period) - x/period); //triangle sawtooth

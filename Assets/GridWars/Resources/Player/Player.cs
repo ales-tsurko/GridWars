@@ -172,7 +172,9 @@ public class Player : MonoBehaviour {
 		var enemyObjects = new List<GameObject>();
 		foreach(var enemyPlayer in enemyPlayers) {
 			foreach (var unit in enemyPlayer.units) {
-				enemyObjects.Add(unit.gameObject);
+				if (unit) {
+					enemyObjects.Add(unit.gameObject);
+				}
 			}
 		}
 		return enemyObjects;
