@@ -39,6 +39,13 @@ public class MatchmakerState : AppState, MatchmakerDelegate {
 		TransitionTo(s);
 	}
 
+	public void MatchmakerReceivedVersion(string version) {
+		app.ResetMenu();
+		menu.AddItem(UI.MenuItem("DOWNLOAD LATEST VERSION TO PLAY ONLINE", null, MenuItemType.ButtonTextOnly));
+		menu.AddItem(UI.MenuItem("OK", Cancel));
+		menu.Show();
+	}
+
 	UIButton cancelItem;
 
 	void Cancel() {
