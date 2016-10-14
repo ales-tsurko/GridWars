@@ -220,4 +220,12 @@ public static class GridWarsUnityExtensions {
 		self.b = 255f/255;
 		return self;
 	}
+
+	public static Bounds BoxBounds(this GameObject self) {
+		BoxCollider bc = self.GetComponent<BoxCollider>();
+		Bounds b = new Bounds();
+		b.center = bc.center;
+		b.extents = bc.extents;
+		return b;
+	}
 }

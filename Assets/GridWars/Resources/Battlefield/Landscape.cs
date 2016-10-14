@@ -11,42 +11,38 @@ public class Landscape : MonoBehaviour {
 	public Material material2;
 	public Material material3;
 
-	//public Vector3 speed;
-	/*
-	bool RectOverlapsRect (Rect rA, Rect rB) {
-		return (rA.x < rB.x+rB.width && rA.x+rA.width > rB.x && rA.y < rB.y+rB.height && rA.y+rA.height > rB.y);
-	}
-	*/
-
 	void Start() {
 		//Rect fieldRect = new Rect(-50, -50, 100, 100);
 		//Rect fieldRect = new Rect(-100, -100, 200, 200);
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 80; i++) {
+		for (int i = 0; i < 20; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				CreateChunk(chunkRect, 5f, material);
+				var chunk = CreateChunk(chunkRect, 5f, material);
+				chunk.name = "ground";
 			}
 		}
 
 		// clouds
-		for (int i = 0; i < 20; i++) {
-			Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
+		for (int i = 0; i < 200; i++) {
+			//Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
+			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 5f, material2);
+				var chunk = CreateChunk(chunkRect, 2f, material2);
+				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
-				p.y = 20f + Rand(50f);
+				p.y = 40f + Rand(50f);
 				chunk.transform.position = p;
+				chunk.AddComponent<Cloud>();
 			}
-
 
 		}
 
@@ -57,7 +53,8 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2);
+				var chunk = CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2);
+				chunk.name = "building";
 			}
 		}
 

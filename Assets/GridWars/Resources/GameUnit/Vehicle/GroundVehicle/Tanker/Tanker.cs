@@ -3,12 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+// GW1 speed tanker mass=50 thrust=1025
+
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
+	GameObject centerConsole;
 
 	public override void Awake() {
 		base.Awake();
 		powerCostPerLevel = new float[] { 15f, float.MaxValue, float.MaxValue };
+
+	}
+
+	/*
+	public GameObject getChildGameObject(GameObject fromGameObject, string withName) {
+		Transform[] ts = fromGameObject.transform.GetComponentsInChildren(typeof(GameObject));
+		foreach (Transform t in ts) if (t.gameObject.name == withName) return t.gameObject;
+		return null;
+	}
+	*/
+
+	public override void ServerAndClientInit() {
+		Transform t = transform.Find("CenterConsole");
+		centerConsole = t.gameObject;
 	}
 
 	public override void ServerInit() {
@@ -23,7 +40,6 @@ public class Tanker : GroundVehicle {
 			Die();
 		}
 	}
-
 
 	public virtual List <GameObject> PossibleDefaultTargets() {
 		return NonAirEnemyVehicles();
@@ -63,27 +79,32 @@ public class Tanker : GroundVehicle {
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		var period = 1;
-		var min = 0.25f;
-		var max = 0.75f;
+		var period = 1f;
+		//var min = 0.25f;
+		//var max = 0.75f;
 		//var value = Mathf.Sin(2*Mathf.PI*Time.time/period);
-
 		var x = Time.time;
 
+		float c = (Mathf.Sin(2f * Mathf.PI * x / period) + 1f)/2f;
+			
+		centerConsole.EachMaterial(m => {
+			m.color = new Color(c, c, c);
+		});
+
+		/*
 
 		//var y = 1 - 2*Mathf.Abs(Mathf.Round(x/period) - x/period); //triangle sawtooth
-		var y = Mathf.Sin(2*Mathf.PI*x/period); //sin
+		var y = Mathf.Sin(2f * Mathf.PI * x / period); 
 
 		var intensity = y*(max - min) + min;
-
-		var color = player.primaryColor*Mathf.LinearToGammaSpace(intensity);
-
-		gameObject.EachMaterial(m => {
+		
+		var c = player.primaryColor * Mathf.LinearToGammaSpace(intensity);
+		centerConsole.EachMaterial(m => {
 			if (m.name.StartsWith(Player.primaryColorMaterialName)) {
-				//Debug.Log(color);
-				m.SetColor("_EmissionColor", color);
+				//m.SetColor("_EmissionColor", c);
 			}
 		});
+		*/
 	}
 
 	override public bool HasWeapons() {
