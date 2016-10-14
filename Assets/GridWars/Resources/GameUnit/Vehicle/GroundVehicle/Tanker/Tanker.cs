@@ -24,6 +24,7 @@ public class Tanker : GroundVehicle {
 	*/
 
 	public override void ServerAndClientInit() {
+		base.ServerAndClientInit();
 		Transform t = transform.Find("CenterConsole");
 		if (t != null) {
 			centerConsole = t.gameObject;

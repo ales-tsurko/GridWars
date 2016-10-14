@@ -3,9 +3,16 @@ using System.Collections;
 
 public class Cloud : MonoBehaviour {
 	Vector3 speed;
+	public Material material;
 
 	void Start () {
 		PickSpeed();
+
+		gameObject.EachRenderer(r => r.receiveShadows = false);
+
+		if (material) {
+			gameObject.EachRenderer(r => r.material = material);
+		}
 	}
 
 	void PickSpeed () {
