@@ -5,7 +5,7 @@ public class BigBoom : Explosion {
 
 	float power = 100000f;
 
-	float maxBlastRadius = 23f;
+	float maxBlastRadius = 15f; //23f;
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
 	float blastTime = 1f;
@@ -14,11 +14,10 @@ public class BigBoom : Explosion {
 
 	public override void ServerAndClientJoinedGame () {
 		base.ServerAndClientJoinedGame();
-		Instantiate (Resources.Load<GameObject> ("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
+		Instantiate (Resources.Load<GameObject>("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
 		currentBlastRadius = minBlastRadius;
 		startTime = Time.time;
 		isTargetable = false;
-		//PlaySound();
 		initScale = transform.localScale;
 	}
 
@@ -45,12 +44,13 @@ public class BigBoom : Explosion {
 //		/transform.localScale = new Vector3(initScale.x * r * 2, 0* initScale.y * r * 2, initScale.z * r * 2);
 		transform.localScale = new Vector3(initScale.x * r * 2, 0.1f, initScale.z * r * 2);
 		currentBlastRadius = r;
-
+		/*
 		Material m = GetComponent<Renderer>().material;
 		Color color = m.color;
 		//color.a = (1f - DoneRatio());
 		GetComponent<Renderer>().enabled = false; //GOOSE'S Change - delete and uncomment above to switch back
 		m.color = color;
+		*/
 	}
 
 	public void ApplyForcesAndDamageStep() {
