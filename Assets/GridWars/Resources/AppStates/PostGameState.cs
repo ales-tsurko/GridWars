@@ -123,6 +123,7 @@ public class PostGameState : NetworkDelegateState {
 
 	void RequestRematch() {
 		RequestRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
+		app.Log("RequestRematchEvent.Send", this);
 
 		//App.shared.PlayAppSoundNamedWithVolume("Rematch", 0.3f); // want to play this until menu is removed
 
@@ -136,6 +137,7 @@ public class PostGameState : NetworkDelegateState {
 
 	void AcceptRematch() {
 		AcceptRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
+		app.Log("AcceptRematchEvent.Send", this);
 
 		if (BoltNetwork.isServer) {
 			battlefield.SoftReset();

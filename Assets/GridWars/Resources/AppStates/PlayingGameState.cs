@@ -148,6 +148,7 @@ public class PlayingGameState : NetworkDelegateState {
 			state.victoriousPlayer = battlefield.localPlayer.opponent;
 		}
 
+		app.Log("ConcedeEvent.Send", this);
 		ConcedeEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
 
 		TransitionTo(state);

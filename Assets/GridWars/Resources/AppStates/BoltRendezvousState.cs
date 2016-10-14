@@ -85,15 +85,11 @@ public class BoltRendezvousState : NetworkDelegateState, MatchmakerDelegate {
 	//Matchmaker
 
 	public void MatchmakerDisconnected() {
-		app.Log("MatchmakerDisconnected", this);
-
 		postBoltShutdownState = new MatchmakerState();
 		network.ShutdownBolt();
 	}
 
 	public void MatchmakerErrored() {
-		app.Log("MatchmakerErrored", this);
-
 		postBoltShutdownState = new MatchmakerState();
 		matchmaker.Disconnect();
 	}

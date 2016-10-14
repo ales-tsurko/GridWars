@@ -38,12 +38,12 @@ public class Matchmaker {
 		}
 
 
-
+		App.shared.Log("Start", this);
 		socket.Connect();
 	}
 
 	public void Disconnect() {
-		App.shared.Log("Matchmaker.Disconnect()", this);
+		App.shared.Log("Disconnect", this);
 		socket.Close();
 	}
 

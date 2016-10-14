@@ -28,6 +28,7 @@ public class Network : Bolt.GlobalEventListener {
 		connection = null;
 		StartShutdownTimer();
 		if (BoltNetwork.isRunning) {
+			App.shared.Log("ShutdownBolt", this);
 			BoltLauncher.Shutdown();
 		}
 	}
@@ -36,6 +37,7 @@ public class Network : Bolt.GlobalEventListener {
 		//Debug.Log("CheckForShutdown: " + BoltNetwork.isRunning + "," + Bolt.Zeus.IsConnected);
 		if (!BoltNetwork.isRunning && !Bolt.Zeus.IsConnected) {
 			isShuttingDown = false;
+			App.shared.Log("BoltShutdownCompleted", this);
 			networkDelegate.BoltShutdownCompleted();
 		}
 		else {
@@ -51,16 +53,20 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public override void BoltStartBegin() {
+		base.BoltStartBegin();
+		App.shared.Log("BoltStartBegin", this);
 		BoltNetwork.RegisterTokenClass<ServerToken>();
 	}
 		
 	public override void BoltStartDone() {
 		base.BoltStartDone();
+		App.shared.Log("BoltStartDone", this);
 		networkDelegate.BoltStartDone();
 	}
 
 	public override void ZeusConnected(UdpKit.UdpEndPoint endpoint) {
 		base.ZeusConnected(endpoint);
+		App.shared.Log("ZeusConnected", this);
 		networkDelegate.ZeusConnected(endpoint);
 	}
 
@@ -78,28 +84,33 @@ public class Network : Bolt.GlobalEventListener {
 		
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
 		base.SessionListUpdated(sessionList);
+		App.shared.Log("SessionListUpdated", this);
 		networkDelegate.SessionListUpdated(sessionList);
 	}
 
 	public override void ConnectRequest(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
 		base.ConnectRequest(endpoint, token);
+		App.shared.Log("ConnectRequest", this);
 		networkDelegate.ConnectRequest(endpoint, token);
 	}
 
 	//Game was full
 	public override void ConnectRefused(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
 		base.ConnectRefused(endpoint, token);
+		App.shared.Log("ConnectRefused", this);
 		networkDelegate.ConnectRefused(endpoint, token);
 	}
 
 	public override void Connected(BoltConnection connection) {
 		base.Connected(connection);
+		App.shared.Log("Connected", this);
 		this.connection = connection;
 		networkDelegate.Connected(connection);
 	}
 
 	public override void Disconnected(BoltConnection connection) {
 		base.Disconnected(connection);
+		App.shared.Log("Disconnected", this);
 		this.connection = null;
 		networkDelegate.Disconnected(connection);
 	}
@@ -111,13 +122,41 @@ public class Network : Bolt.GlobalEventListener {
 
 	public override void BoltStartFailed() {
 		base.BoltStartFailed();
+		App.shared.Log("BoltStartFailed", this);
 		networkDelegate.BoltStartFailed();
+	}
+
+	public override void ConnectAttempt(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
+		base.ConnectAttempt(endpoint, token);
+		App.shared.Log("ConnectAttempt: " + endpoint.Address.ToString(), this);
+	}
+
+	public override void ConnectFailed(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token) {
+		base.ConnectFailed(endpoint, token);
+		App.shared.Log("ConnectFailed: " + endpoint.Address.ToString(), this);
+	}
+
+	public override void PortMappingChanged(Bolt.INatDevice device, Bolt.IPortMapping portMapping) {
+		base.PortMappingChanged(device, portMapping);
+		App.shared.Log("PortMappingChanged", this);
+	}
+
+	public override void SessionConnectFailed(UdpKit.UdpSession session, Bolt.IProtocolToken token) {
+		base.SessionConnectFailed(session, token);
+		App.shared.Log("SessionConnectFailed", this);
+	}
+
+	public override void ZeusNatProbeResult(UdpKit.NatFeatures features) {
+		base.ZeusNatProbeResult(features);
+
+		App.shared.Log("ZeusNatProbeResult: " + features.ToString(), this);
 	}
 
 	public override void OnEvent(RequestRematchEvent evnt) {
 		base.OnEvent(evnt);
 
 		if (!evnt.FromSelf) {
+			App.shared.Log("RequestRematchEvent", this);
 			networkDelegate.ReceivedRematchRequest();
 		}
 	}
@@ -126,6 +165,7 @@ public class Network : Bolt.GlobalEventListener {
 		base.OnEvent(evnt);
 
 		if (!evnt.FromSelf) {
+			App.shared.Log("ConcedeEvent", this);
 			networkDelegate.ReceivedConcede();
 		}
 	}
@@ -134,6 +174,7 @@ public class Network : Bolt.GlobalEventListener {
 		base.OnEvent(evnt);
 
 		if (!evnt.FromSelf) {
+			App.shared.Log("AcceptRematchEvent", this);
 			networkDelegate.ReceivedAcceptRematch();
 		}
 	}
