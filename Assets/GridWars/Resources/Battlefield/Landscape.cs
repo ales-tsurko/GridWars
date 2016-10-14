@@ -17,7 +17,7 @@ public class Landscape : MonoBehaviour {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 80; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
@@ -29,7 +29,7 @@ public class Landscape : MonoBehaviour {
 		}
 
 		// clouds
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 20; i++) {
 			//Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
 			chunkRect.x = RandNeg(xMax);
