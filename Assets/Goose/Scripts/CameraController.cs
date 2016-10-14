@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour {
 	void Start () {
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
+		cameraControllerDelegates = new List<CameraControllerDelegate>();
 		//DontDestroyOnLoad (gameObject);
 	}
 	public void InitCamera () {
