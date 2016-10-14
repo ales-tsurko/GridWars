@@ -310,6 +310,8 @@ public class GameUnit : NetworkObject {
 
 	//NetworkObject
 
+	bool serverAndClientJoinedGame = false;
+
 	public override void ServerInit() {
 		base.ServerInit();
 		//App.shared.Log("ServerInit", this);
@@ -333,7 +335,10 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
 
+		serverAndClientJoinedGame = false;
+
 		gameUnitState.AddCallback("isInGame", IsInGameChanged);
+		gameUnitState.AddCallback("veteranLevel", VeteranLevelChanged);
 
 		foreach(var weapon in Weapons()) {
 			weapon.ServerAndClientInit();
@@ -403,6 +408,12 @@ public class GameUnit : NetworkObject {
 			//BrightFadeIn comp = gameObject.AddComponent<BrightFadeIn>();
 			BrightFadeInGeneric comp = gameObject.AddComponent<BrightFadeInGeneric>();
 			comp.period = fadeInPeriod;
+		}
+
+		serverAndClientJoinedGame = true;
+
+		if (veteranLevel > 0) {
+			ShowVeteranLevel();
 		}
 	}
 
@@ -553,7 +564,18 @@ public class GameUnit : NetworkObject {
 
 	public int killCount = 0;
 	public int killsPerVeteranLevel = 3;
-	public int veteranLevel = 0;
+
+	public int veteranLevel {
+		get {
+			return gameUnitState.veteranLevel;
+		}
+
+		set {
+			gameUnitState.veteranLevel = value;
+		}
+	}
+
+
 	private int maxVeteranLevel = 2;
 	public float hitPointRegenRate = 0.3f; // in hp per second
 
@@ -569,11 +591,18 @@ public class GameUnit : NetworkObject {
 
 	public virtual void UpgradeVeterancy() {
 		veteranLevel++;
-		//AdjustScaleByFactor(1f + veteranLevel * 0.10f);
-		ShowVeteranLevel();
+	}
+
+	void VeteranLevelChanged() {
+		if (veteranLevel != 0) {
+			ShowVeteranLevel();
+		}
 	}
 
 	public void ShowVeteranLevel() {
+		if (!serverAndClientJoinedGame) {
+			return;
+		}
 
 		App.shared.PlayOneShot(vetSound, 1f);
 
@@ -588,6 +617,12 @@ public class GameUnit : NetworkObject {
 		}
 
 		//var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		var brightFade = GetComponent<BrightFadeInGeneric>();
+		if (brightFade != null) {
+			brightFade.enabled = false;
+			Destroy(brightFade);
+		}
+
 		var fader = gameObject.AddComponent<CyclePainter>();
 		fader.OnEnable();
 	}

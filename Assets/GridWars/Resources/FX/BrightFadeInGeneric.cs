@@ -68,6 +68,10 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void Update () {
+		if (!enabled) {
+			return;
+		}
+
 		float t = 0; 
 		if (timer != null) {
 			t = timer.RatioDone();

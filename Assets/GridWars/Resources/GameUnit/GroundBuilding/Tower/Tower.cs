@@ -60,6 +60,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public override void ServerInit() {
 		base.ServerInit();
 		aiStyle = UnityEngine.Random.value;
+		unitWithVeterancyQueue = new List<int>();
 	}
 
 
@@ -110,7 +111,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		tag = "Player" + player.playerNumber;
 
-		entity.AddEventCallback<AttemptQueueUnitEvent>(AttemptQueueUnit);
+		entity.AddEventCallback<AttemptQueueUnitEvent>(ReceiveAttemptQueueUnit);
 	}
 
 	public override void ServerAndClientJoinedGame() {
@@ -143,7 +144,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		//NpcStep();
 
-		if (queueSize > 0) {
+		if (unitWithVeterancyQueue.Count > 0) {
 			ReleaseUnits();
 		}
 
@@ -151,7 +152,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	public void LaunchWithChance(float chance) { // chance out of 1
 		if (Random.value < chance) {
-			AttemptQueueUnit();
+			SendAttemptQueueUnit();
 		}
 	}
 
@@ -199,20 +200,23 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		// doesn't need to pick targets
 	}
 
-	public void AttemptQueueUnit(AttemptQueueUnitEvent e) {
-		AttemptQueueUnit();
-	}
-
-	public void AttemptQueueUnit() {
-		if (canQueueUnit) {
-			QueueUnit();
+	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
+		try {
+			nextUnitVeteranLevel = e.veteranLevel;
+			if (canQueueUnit) {
+				QueueUnit();
+			}
+		}
+		finally {
+			nextUnitVeteranLevel = 0;
 		}
 	}
 
-	float lastProductionTime = 0f;
+	public float lastProductionTime = 0f;
 	//int releaseLocationIndex = 0;
-	int queueSize = 0;
+	List<int>unitWithVeterancyQueue; //value is veterancy
 	List<ReleaseZone> releaseZones;
+	int nextUnitVeteranLevel; //used for power calculations
 
 	bool canQueueUnit {
 		get {
@@ -228,7 +232,15 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	bool hasEnoughPower {
 		get {
-			return player.powerSource.power >= gameUnit.powerCost;
+			float powerCost = float.MaxValue;
+			if (nextUnitVeteranLevel == 0) {
+				powerCost = gameUnit.powerCost;
+			}
+			else if (nextUnitVeteranLevel == 1) {
+				powerCost = player.powerSource.maxPower; //TODO: move this to GameUnit
+			}
+
+			return player.powerSource.power >= powerCost;
 		}
 	}
 
@@ -248,9 +260,11 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		base.QueuePlayerCommands();
 	}
 
-	public void SendAttemptQueueUnit() {
+	public void SendAttemptQueueUnit(int veteranLevel = 0) {
 		if (entity.hasControl) {
-			AttemptQueueUnitEvent.Create(entity).Send();
+			var queueEvent = AttemptQueueUnitEvent.Create(entity);
+			queueEvent.veteranLevel = veteranLevel;
+			queueEvent.Send();
 		}
 	}
 
@@ -258,26 +272,29 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		if (!BoltNetwork.isServer) {
 			throw new System.Exception("Use SendAttemptQueueUnit from the client");
 		}
-		queueSize ++;
+		unitWithVeterancyQueue.Add(nextUnitVeteranLevel);
 		player.powerSource.power -= gameUnit.powerCost;
 		lastProductionTime = Time.time;
 	}
 
 	void ReleaseUnits() {
-		while (queueSize > 0 && unobstructedReleaseZone != null) {
+		while (unitWithVeterancyQueue.Count > 0 && unobstructedReleaseZone != null) {
 			var releaseZone = unobstructedReleaseZone;
 
 			var unit = unitPrefab.GameUnit().Instantiate();
+
 			unit.player = player;
+
 			releaseZone.hiddenUnit = unit;
 			unit.releaseZone = releaseZone;
-			//App.shared.Log("unit.releaseZone = releaseZone", this);
 
 			unit.transform.position = releaseZone.transform.position;
-				
 			unit.transform.rotation = transform.rotation;
 
-			queueSize --;
+			if (unitWithVeterancyQueue[0] == 1) {
+				unit.UpgradeVeterancy();
+			}
+			unitWithVeterancyQueue.RemoveAt(0);
 		}
 	}
 
@@ -366,6 +383,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void KeyLongPressed() {
-		//TODO
+		SendAttemptQueueUnit(1);
 	}
 }

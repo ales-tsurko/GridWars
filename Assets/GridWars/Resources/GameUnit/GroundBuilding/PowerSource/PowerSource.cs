@@ -79,7 +79,7 @@ public class PowerSource : GroundBuilding {
 		power = 0f;
 
 		if (App.shared.testEndOfGameMode) {
-			power = maxPower;
+			MakeMax();
 		}
 	}
 
