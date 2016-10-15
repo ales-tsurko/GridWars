@@ -99,11 +99,17 @@ public class Tanker : GroundVehicle {
 
 		if (target != null) {
 			var period = 1f;
-			float r = period * TargetDistance() / 30f;
+			float dist = TargetDistance();
+			float r = period * dist / 30f;
 			float p = 0.03f + r * r;
 
 			if (p < period) {
 				period = p;
+			}
+
+			float pitchDist = 35f;
+			if (dist < pitchDist) {
+				runningAudioSource.pitch = 1f + 2f * (1f - dist / pitchDist);
 			}
 
 			float c = (Mathf.Sin(2f * Mathf.PI * Time.time / period) + 1f) / 2f;
