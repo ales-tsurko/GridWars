@@ -13,10 +13,6 @@ public class Bullet : Projectile {
 
 	}
 
-	void Start() {
-		rigidBody().AddForce (transform.forward * muzzleImpulse);
-	}
-
 	public override void ServerJoinedGame () {
 		base.ServerJoinedGame();
 
