@@ -32,7 +32,7 @@ public class Tanker : GroundVehicle {
 	}
 
 	public override void ServerInit() {
-		maxHitPoints = 13f;
+		maxHitPoints = 8f;
 		base.ServerInit();
 	}
 

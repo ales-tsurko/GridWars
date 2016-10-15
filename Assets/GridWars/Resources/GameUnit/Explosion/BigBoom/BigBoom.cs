@@ -3,12 +3,12 @@ using System.Collections;
 
 public class BigBoom : Explosion {
 
-	float power = 100000f;
+	float pushPower = 100000f;
 
-	float maxBlastRadius = 23f;
+	float maxBlastRadius = 22f; 
 	float minBlastRadius = 1f;
 	float currentBlastRadius = 0f;
-	float blastTime = 1f;
+	float blastTime = 0.6f;
 	float startTime;
 	Vector3 initScale;
 
@@ -40,9 +40,11 @@ public class BigBoom : Explosion {
 	}
 
 	public void UpdateRadius() {
-		float r = minBlastRadius + (maxBlastRadius - minBlastRadius) * DoneRatio();
-		//transform.localScale = new Vector3(initScale.x * r * 2, 0* initScale.y * r * 2, initScale.z * r * 2);
-		transform.localScale = new Vector3(initScale.x * r * 2, 0.1f, initScale.z * r * 2);
+		float dr = DoneRatio();
+		float r = minBlastRadius + (maxBlastRadius - minBlastRadius) *dr;
+		float vr = minBlastRadius + (maxBlastRadius - minBlastRadius) * dr * dr * 0.6f;
+		transform.localScale = new Vector3(initScale.x * vr * 2f, initScale.y * vr * 2f, initScale.z * vr * 2f);
+		//transform.localScale = new Vector3(initScale.x * r * 2, 0.1f, initScale.z * r * 2);
 		currentBlastRadius = r;
 		/*
 		Material m = GetComponent<Renderer>().material;
@@ -68,17 +70,19 @@ public class BigBoom : Explosion {
 				// apply force to rigid body if it has one
 				Rigidbody rb = hit.GetComponent<Rigidbody>();
 				if (rb) {
-					rb.AddExplosionForce(power, explosionPos, currentBlastRadius, 0.2f);
+					rb.AddExplosionForce(pushPower, explosionPos, currentBlastRadius, 0.2f);
 				}
 					
 				// apply damage to unit
 				//float dist = Vector3.Distance(explosionPos, unit.gameObject.transform.position);
 				//float maxDamage = 1f;
 				//float damage = maxDamage / (1f + dist);
+
+				float a = 3f;
 				if (unit.IsOfType(typeof(Vehicle))) {
-					unit.ApplyDamage(8f * (1 - DoneRatio()));
+					unit.ApplyDamage(a * 8f * (1 - DoneRatio()));
 				} else {
-					unit.ApplyDamage(0.4f);
+					unit.ApplyDamage(a * 0.4f);
 				}
 			}
 		}
