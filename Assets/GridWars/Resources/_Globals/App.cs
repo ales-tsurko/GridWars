@@ -32,6 +32,12 @@ public class App : MonoBehaviour {
 	public CameraController cameraController;
 	public Keys keys;
 
+	public string version {
+		get {
+			return Resources.Load<TextAsset>("version").text;
+		}
+	}
+
 	private bool _isProcessingDestroyQueue = false;
 
 	public bool testEndOfGameMode = false;

@@ -101,4 +101,8 @@ public class BoltRendezvousState : NetworkDelegateState, MatchmakerDelegate {
 	public void MatchmakerReceivedJoin(string gameId) {
 		throw new System.Exception("Unexpected MatchmakerReceivedJoin");
 	}
+
+	public void MatchmakerReceivedVersion(string version) {
+		throw new System.Exception("Unexpected MatchmakerReceivedVersion");
+	}
 }

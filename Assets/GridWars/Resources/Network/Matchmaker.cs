@@ -8,6 +8,7 @@ public interface MatchmakerDelegate {
 	void MatchmakerErrored();
 	void MatchmakerReceivedHost(string gameId);
 	void MatchmakerReceivedJoin(string gameId);
+	void MatchmakerReceivedVersion(string version);
 }
 
 public class Matchmaker {
@@ -27,6 +28,7 @@ public class Matchmaker {
 		socket.On("error", SocketError);
 		socket.On("hostGame", HostGame);
 		socket.On("joinGame", JoinGame);
+		socket.On("version", ReceiveVersion);
 
 		//ws://gw-matchmaker.herokuapp.com/socket.io/?EIO=4&transport=websocket
 		//ws://localhost:8080/socket.io/?EIO=4&transport=websocket
@@ -36,7 +38,6 @@ public class Matchmaker {
 		if (socket.IsConnected) {
 			throw new Exception("Already connected to Matchmaker");
 		}
-
 
 		App.shared.Log("Start", this);
 		socket.Connect();
@@ -53,6 +54,7 @@ public class Matchmaker {
 
 	void SocketConnected(SocketIOEvent e) {
 		App.shared.Log("SocketConnected", this);
+		SendVersion();
 	}
 
 	void SocketDisconnected(SocketIOEvent e) {
@@ -66,6 +68,21 @@ public class Matchmaker {
 		App.shared.Log("SocketError", this);
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerErrored();
+		}
+	}
+
+	void SendVersion() {
+		App.shared.Log("SendVersion: " + App.shared.version, this);
+		var data = new JSONObject();
+		data.AddField("version", App.shared.version);
+		socket.Emit("version", data);
+	}
+
+	void ReceiveVersion(SocketIOEvent e) {
+		var version = e.data.GetField("version").str;
+		App.shared.Log("ReceiveVersion: " + version, this);
+		if (matchmakerDelegate != null) {
+			matchmakerDelegate.MatchmakerReceivedVersion(version);
 		}
 	}
 
