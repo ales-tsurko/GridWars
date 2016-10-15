@@ -118,7 +118,7 @@ public class Vehicle : GameUnit  {
 		}
 
 		if (nearestObsticle != null) {
-			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
+			//Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
 		}
 	}
 
@@ -149,7 +149,7 @@ public class Vehicle : GameUnit  {
 	public override void OnDrawGizmos() {
 		base.OnDrawGizmos();
 		if (nearestObsticle != null) {
-			Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 1, false);  
+			//Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 1, false);  
 		}
 	}
 
