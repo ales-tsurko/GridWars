@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
-	GameObject centerConsole;
 
 	public override void Awake() {
 		base.Awake();
@@ -25,10 +24,20 @@ public class Tanker : GroundVehicle {
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
-		Transform t = transform.Find("CenterConsole");
-		if (t != null) {
-			centerConsole = t.gameObject;
-		}
+		SetupHazardLight();
+	}
+
+	private Color darkLightColor;
+	private GameObject hazardLight;
+
+	public void SetupHazardLight() {
+		gameObject.EachRenderer(r => {
+			if (r.gameObject.name.StartsWith("CenterConsole")) {
+				hazardLight = r.gameObject;
+			}
+		});
+
+		darkLightColor = Color.Lerp(Color.yellow, Color.black, 0.8f);
 	}
 
 	public override void ServerInit() {
@@ -79,36 +88,29 @@ public class Tanker : GroundVehicle {
 		}
 	}
 
+	public void SetHazardLightColor(Color color) {
+		hazardLight.EachMaterial(m => {
+			m.color = color;
+		});
+	}
+
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		var period = 1f;
-		//var min = 0.25f;
-		//var max = 0.75f;
-		//var value = Mathf.Sin(2*Mathf.PI*Time.time/period);
-		var x = Time.time;
+		if (target != null) {
+			var period = 1f;
+			float r = period * TargetDistance() / 30f;
+			float p = 0.03f + r * r;
 
-		float c = (Mathf.Sin(2f * Mathf.PI * x / period) + 1f)/2f;
-
-		if (centerConsole != null) {
-			centerConsole.EachMaterial(m => {
-				m.color = new Color(c, c, c);
-			});
-		}
-		/*
-
-		//var y = 1 - 2*Mathf.Abs(Mathf.Round(x/period) - x/period); //triangle sawtooth
-		var y = Mathf.Sin(2f * Mathf.PI * x / period); 
-
-		var intensity = y*(max - min) + min;
-		
-		var c = player.primaryColor * Mathf.LinearToGammaSpace(intensity);
-		centerConsole.EachMaterial(m => {
-			if (m.name.StartsWith(Player.primaryColorMaterialName)) {
-				//m.SetColor("_EmissionColor", c);
+			if (p < period) {
+				period = p;
 			}
-		});
-		*/
+
+			float c = (Mathf.Sin(2f * Mathf.PI * Time.time / period) + 1f) / 2f;
+			SetHazardLightColor(Color.Lerp(Color.white, darkLightColor, 1f - c * c));
+		} else {
+			SetHazardLightColor(player.secondaryColor);
+		}
 	}
 
 	override public bool HasWeapons() {
