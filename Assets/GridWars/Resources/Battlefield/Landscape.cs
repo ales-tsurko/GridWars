@@ -17,7 +17,7 @@ public class Landscape : MonoBehaviour {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 80; i++) {
+		for (int i = 0; i < 20; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);

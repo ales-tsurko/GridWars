@@ -19,6 +19,7 @@ public class Cloud : MonoBehaviour {
 		bool flip = UnityEngine.Random.value < 0.5f;
 		float sign = UnityEngine.Random.value < 0.5f ? -1f : 1f;
 		float s = sign * UnityEngine.Random.Range(20f, 30f) / 60f;
+		s *= 0.5f;
 
 		if (flip) {
 			speed = new Vector3(s, 0, 0);

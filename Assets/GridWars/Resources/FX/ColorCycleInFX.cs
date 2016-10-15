@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CyclePainter : MonoBehaviour {
+public class ColorCycleInFX : MonoBehaviour {
 
 	public float startTime;
 	public float lifeSpan = 1.5f; // 1.5f is length of vet sound
@@ -22,7 +22,7 @@ public class CyclePainter : MonoBehaviour {
 	void OnDisable() {
 		ShowRealColors();
 	}
-		
+
 	void SetupMaterialColorsIfNeeded() {
 		if (materialColors == null) {
 			materialColors = new Dictionary<Material, Color>();
