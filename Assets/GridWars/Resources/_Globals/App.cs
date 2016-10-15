@@ -13,6 +13,7 @@ using System.Linq;
  */
 
 public class App : MonoBehaviour {
+	//test github push
     [Range(.01f, 5)]
     public float gameSpeed = 1;
 	private static App _shared;
