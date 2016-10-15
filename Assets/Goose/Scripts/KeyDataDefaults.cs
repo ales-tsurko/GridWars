@@ -15,7 +15,7 @@ public class KeyDataDefaults : ScriptableObject {
 		new KeyData(){code = "Tank2", description = "Player 2 Tank", key = KeyCode.R, playerNum = 2},
 		new KeyData(){code = "Tanker2", description = "Player 2 Tanker", key = KeyCode.U, playerNum = 2},
 		new KeyData(){code = "Chopper2", description = "Player 2 Chopper", key = KeyCode.I, playerNum = 2},
-        new KeyData(){code = "ExitFPS", description = "Exit First Person View", key = KeyCode.X, playerNum = 1}
+        new KeyData(){code = "Back", description = "Exit First Person View", key = KeyCode.Escape, playerNum = 1}
     };
 
     public List<KeyData> joyData = new List<KeyData>() {
@@ -30,7 +30,7 @@ public class KeyDataDefaults : ScriptableObject {
         new KeyData(){ code = "Tank2", description = "Player 2 Tank", key = KeyCode.Joystick2Button2, playerNum = 2 },
 		new KeyData(){ code = "Tanker2", description = "Player 2 Tanker", key = KeyCode.Joystick2Button1, playerNum = 2 },
         new KeyData(){ code = "Chopper2", description = "Player 2 Chopper", key = KeyCode.Joystick2Button0, playerNum = 2 },
-        new KeyData(){ code = "ExitFPS", description = "Exit First Person View", key = KeyCode.Joystick1Button13, playerNum = 1}
+        new KeyData(){ code = "Back", description = "Exit First Person View", key = KeyCode.Joystick1Button13, playerNum = 1}
     };
 
 }

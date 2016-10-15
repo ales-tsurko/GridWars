@@ -9,7 +9,7 @@ public class Keys {
     public const string CHANGECAM = "Change Camera View";
     public const string CONCEDE = "Concede Match";
     public const string TOGGLEKEYS = "Toggle Display of Hotkeys";
-    public const string EXITFPS = "ExitFPS";
+    public const string BACK = "Back";
 
 	public Keys() {
 		keyDelegateMap = new Dictionary<string, List<KeyDelegate>>();
