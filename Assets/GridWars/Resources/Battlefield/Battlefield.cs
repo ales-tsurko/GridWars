@@ -116,10 +116,13 @@ public class Battlefield : MonoBehaviour {
 	void DestroyEntities() {
 		foreach (var entity in new List<BoltEntity>(BoltNetwork.entities)) {
 			var gameUnit = entity.gameObject.GameUnit();
-			if (gameUnit != null) {
-				gameUnit.wasDestroyed = true;
+			if (gameUnit == null) {
+				//BoltNetwork.Destroy(entity.gameObject);
+				throw new System.Exception("All entities should be game units!");
 			}
-			BoltNetwork.Destroy(entity.gameObject);
+			else {
+				gameUnit.RemoveFromGame();
+			}
 		}
 	}
 

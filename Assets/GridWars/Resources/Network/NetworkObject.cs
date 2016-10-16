@@ -16,6 +16,7 @@ public class NetworkObject : BetterMonoBehaviour {
 		if (debug) {
 			Debug.Log(this + " ServerAndClientInit");
 		}
+		leftGameCalled = false;
 	}
 
 	public virtual void ServerInit() {
@@ -104,6 +105,8 @@ public class NetworkObject : BetterMonoBehaviour {
 
 	// protected
 
+	protected bool leftGameCalled;
+
 	protected void DidLeaveGame() {
 		ServerAndClientLeftGame();
 		if (BoltNetwork.isServer) {
@@ -111,6 +114,13 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 		else {
 			ClientLeftGame();
+		}
+		leftGameCalled = true;
+	}
+		
+	protected virtual void OnDestroy() {
+		if (!leftGameCalled) {
+			DidLeaveGame();
 		}
 	}
 

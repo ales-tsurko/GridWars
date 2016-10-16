@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using AssemblyCSharp;
 
 public class GameUnit : NetworkObject {
 	public float thrust;
@@ -70,11 +71,9 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	public bool wasDestroyed;
-
 	public bool isInGame {
 		get {
-			return !wasDestroyed && gameUnitState.isInGame;
+			return gameUnitState.isInGame;
 		}
 
 		set {
@@ -118,6 +117,8 @@ public class GameUnit : NetworkObject {
 		isTargetable = false;
 
 		deathExplosionPrefab = null;
+
+		leftGameCalled = true; //otherwise NetworkObject will raise an exception
 
 		Destroy(GetComponent<Collider>());
 		Destroy(GetComponent<Rigidbody>());
@@ -314,8 +315,8 @@ public class GameUnit : NetworkObject {
 	void IsInGameChanged() {
 		//App.shared.Log("IsInGameChanged: " + isInGame, this);
 		if (!isInGame) {
-			SetVisibleAndEnabled(false);
 			DidLeaveGame();
+			SetVisibleAndEnabled(false);
 		}
 	}
 
@@ -488,14 +489,14 @@ public class GameUnit : NetworkObject {
 	public override void ServerAndClientLeftGame(){
 		base.ServerAndClientLeftGame();
 		if (player != null) {
-			if (shouldAddToPlayerUnits) {
-				if (player != null) { //Player will be null after a Battlefield reset but inits might not be gone yet.
-					player.units.Remove(this);
-				}
-			}
+			player.units.Remove(this);
 		}
-		ShowFxExplosion();
-		PlayDeathSound();
+
+		//Don't explode when units are removed at the end of the game
+		if (App.shared.battlefield.livingPlayers.Count == 2) {
+			ShowFxExplosion();
+			PlayDeathSound();
+		}
 	}
 
 	// Thinking
@@ -1005,25 +1006,23 @@ public class GameUnit : NetworkObject {
 				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
 			}
 
-			ShowUnitExplosion();
-
 			//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
 
 			RemoveFromGame();
 		}
 	}
 
+	Timer destroySelfTimer;
 	public virtual void RemoveFromGame() {
-		var timer = App.shared.timerCenter.NewTimer();
-		timer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
-		timer.action = DestroySelf;
-		timer.Start();
+		destroySelfTimer = App.shared.timerCenter.NewTimer();
+		destroySelfTimer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
+		destroySelfTimer.action = DestroySelf;
+		destroySelfTimer.Start();
 
 		isInGame = false;
 	}
 
-	virtual public void DestroySelf() {
-		wasDestroyed = true;
+	public virtual void DestroySelf() {
 		BoltNetwork.Destroy(gameObject);
 
 		foreach (var comp in gameObject.GetComponents<AudioSource>())
@@ -1032,6 +1031,13 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
+	protected override void OnDestroy() {
+		base.OnDestroy();
+
+		if (destroySelfTimer != null) {
+			destroySelfTimer.Cancel();
+		}
+	}
 
 	void ShowUnitExplosion() {
 		if (showsUnitExplosion && deathExplosionPrefab != null) {

@@ -171,12 +171,14 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public override void ServerLeftGame() {
 		base.ServerLeftGame();
 
-		if (player != null) {
+		if (player != null && player.fortress != null) {
 			player.fortress.TowerDied(this);
 		}
 	}
 
-	void OnDestroy() {
+	public override void ServerAndClientLeftGame() {
+		base.ServerAndClientLeftGame();
+
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
 		App.shared.keys.RemoveKeyDelegate(unitKeyMap, this);
 	}

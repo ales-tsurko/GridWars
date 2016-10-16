@@ -76,6 +76,8 @@ public class Player : MonoBehaviour {
 	}
 
 	void Start() {
+		units = new List<GameUnit>();
+
 		if (App.shared.testEndOfGameMode) {
 			separation = 0.35f;
 		}
