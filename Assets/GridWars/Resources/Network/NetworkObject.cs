@@ -117,14 +117,19 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 		leftGameCalled = true;
 	}
-		
+
 	protected virtual void OnDestroy() {
-		if (!leftGameCalled) {
+		if (!leftGameCalled && !isQuitting) {
 			DidLeaveGame();
 		}
 	}
 
 	//MonoBehaviour
+
+	bool isQuitting = false;
+	void OnApplicationQuit() {
+		isQuitting = true;
+	}
 
 	/*
 	protected virtual void FixedUpdate() {

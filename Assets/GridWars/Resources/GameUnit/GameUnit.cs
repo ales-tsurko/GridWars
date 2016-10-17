@@ -490,15 +490,15 @@ public class GameUnit : NetworkObject {
 		base.ServerAndClientLeftGame();
 		if (player != null) {
 			player.units.Remove(this);
+
+			//Don't explode when units are removed at the end of the game
+			if (App.shared.battlefield.livingPlayers.Count == 2) {
+				ShowFxExplosion();
+				PlayDeathSound();
+			}
 		}
 
-		//Don't explode when units are removed at the end of the game
-		if (App.shared.battlefield.livingPlayers.Count == 2) {
-			ShowFxExplosion();
-			PlayDeathSound();
-		}
-
-		ResetCamera();
+		ResetFirstPersonCamera();
 	}
 
 	// Thinking
@@ -1030,14 +1030,14 @@ public class GameUnit : NetworkObject {
 	protected override void OnDestroy() {
 		base.OnDestroy();
 
-		ResetCamera();
+		ResetFirstPersonCamera();
 
 		if (destroySelfTimer != null) {
 			destroySelfTimer.Cancel();
 		}
 	}
 
-	void ResetCamera() {
+	void ResetFirstPersonCamera() {
 		Camera cam = _t.GetComponentInChildren<Camera>();
 		if (cam) {
 			App.shared.cameraController.ResetCamera();
