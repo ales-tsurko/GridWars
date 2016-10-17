@@ -10,6 +10,7 @@ public class AppState {
 
 	public void TransitionTo(AppState state) {
 		App.shared.state = state;
+		this.WillExit();
 		state.EnterFrom(this);
 	}
 
@@ -17,6 +18,9 @@ public class AppState {
 		if (state != null) {
 			Debug.Log("AppState: " + state.name + " > " + this.name);
 		}
+	}
+
+	public virtual void WillExit() {
 	}
 
 	public virtual void Update() {}

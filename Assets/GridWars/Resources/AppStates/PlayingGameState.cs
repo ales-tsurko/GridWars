@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class PlayingGameState : NetworkDelegateState {
 	bool didHardReset = false;
+	List<InGameMenu> inGameMenus;
 
 	//AppState
 
@@ -23,7 +24,7 @@ public class PlayingGameState : NetworkDelegateState {
 			battlefield.PlayerNumbered(2).isLocal = BoltNetwork.isClient;
 		}
 
-		ShowInGameMenu();
+		ShowInGameMenus();
 
 		Battlefield.current.StartGame();
 
@@ -31,6 +32,12 @@ public class PlayingGameState : NetworkDelegateState {
 
 		App.shared.PlayAppSoundNamed("GameStart");
 
+	}
+
+	public override void WillExit() {
+		base.WillExit();
+
+		HideInGameMenus();
 	}
 
 	public override void Update() {
@@ -46,14 +53,8 @@ public class PlayingGameState : NetworkDelegateState {
 			TransitionTo(state);
 		}
 		else {
-			if (Keys.CHANGECAM.KeyDown()){
-				ChangeCam();
-			}
-			if (Keys.CONCEDE.KeyDown()) {
-				Concede();
-			}
-			if (Keys.TOGGLEKEYS.KeyDown()){
-				ToggleHotkeys();
+			foreach (var inGameMenu in inGameMenus) {
+				inGameMenu.ReadInput();
 			}
 		}
 	}
@@ -90,7 +91,7 @@ public class PlayingGameState : NetworkDelegateState {
 	}
 
 	void ShowLostConnection() {
-		app.ResetMenu();
+		HideInGameMenus();
 		menu.AddItem(UI.ActivityIndicator("Lost Connection. Returning to Main Menu"));
 		menu.Show();
 
@@ -101,73 +102,37 @@ public class PlayingGameState : NetworkDelegateState {
 
 	// Menu
 
-	void ShowInGameMenu() {
+	public void HideInGameMenus() {
+		foreach(var inGameMenu in inGameMenus) {
+			inGameMenu.Hide();
+		}
+
+		inGameMenus = new List<InGameMenu>();
+
+		app.ResetMenu(); //TODO: Needed?
+	}
+
+	void ShowInGameMenus() {
 		app.ResetMenu();
 
-		string concedeLabel;
+		inGameMenus = new List<InGameMenu>();
 
-		//TODO: detect which player conceded in shared screen pvp
-		if (battlefield.localPlayer == null) { //AIvAI
-			concedeLabel = "Quit";
+		if (app.battlefield.localPlayers.Count == 0) {
+			AddInGameMenu(null);
 		}
 		else {
-			concedeLabel = "Concede";
+			foreach (var player in app.battlefield.localPlayers) {
+				AddInGameMenu(player);
+			}
 		}
-
-		menu.AddItem(UI.MenuItem(concedeLabel + " (" + Keys.CONCEDE.GetKey().ToString() + ")", Concede));
-
-		if (battlefield.localPlayer != null) {
-			menu.AddItem(UI.MenuItem("Toggle Hotkeys (" + Keys.TOGGLEKEYS.GetKey().ToString() + ")", ToggleHotkeys));
-		}
-
-
-		menu.AddItem(UI.MenuItem("Change Camera (" + Keys.CHANGECAM.GetKey().ToString() + ")", ChangeCam));
-		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(MenuAnchor.TopLeft);
-		menu.SetBackground(Color.black, 0);
-		menu.isNavigable = false;
-		menu.Show();
 	}
 
-	// Concede
+	void AddInGameMenu(Player player) {
+		var inGameMenu = new InGameMenu();
+		inGameMenu.playingGameState = this;
+		inGameMenu.player = player;
+		inGameMenu.Show();
 
-	void Concede() {
-		app.ResetMenu();
-		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
-		menu.AddItem(UI.MenuItem("Cancel", CancelConcede));
-		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(MenuAnchor.TopLeft);
-		menu.SetBackground(Color.black, 0);
-		menu.Show();
-	}
-
-	void ReallyConcede() {
-		var state = new PostGameState();
-
-		if (battlefield.localPlayer != null) {
-			state.victoriousPlayer = battlefield.localPlayer.opponent;
-		}
-
-		app.Log("ConcedeEvent.Send", this);
-		ConcedeEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
-
-		TransitionTo(state);
-	}
-
-	void CancelConcede() {
-		ShowInGameMenu();
-	}
-
-	// Hotkeys
-
-	void ToggleHotkeys() {
-		app.prefs.keyIconsVisible = !app.prefs.keyIconsVisible;
-	}
-
-
-	//Camera
-
-	void ChangeCam() {
-		App.shared.cameraController.NextPosition();
+		inGameMenus.Add(inGameMenu);
 	}
 }

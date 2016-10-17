@@ -129,7 +129,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		player.Paint(iconObject);
 
         unitKeyMap = iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber;
-        attemptQueueUnitKeyCode = unitKeyMap.GetKey();
+        attemptQueueUnitKeyCode = unitKeyMap.GetKeyCode();
 		//Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
 
         keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
