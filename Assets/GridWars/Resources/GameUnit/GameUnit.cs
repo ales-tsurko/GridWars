@@ -497,6 +497,8 @@ public class GameUnit : NetworkObject {
 			ShowFxExplosion();
 			PlayDeathSound();
 		}
+
+		ResetCamera();
 	}
 
 	// Thinking
@@ -1000,12 +1002,6 @@ public class GameUnit : NetworkObject {
 		if (isInGame) {
 			//App.shared.Log("Die", this);
 
-			Camera cam = _t.GetComponentInChildren<Camera>();
-			if (cam) {
-				cam.transform.parent = null;
-				FindObjectOfType<CameraController>().SendMessage("ResetCamera", SendMessageOptions.DontRequireReceiver);
-			}
-
 			//Debug.Log("App.shared.AddToDestroyQueue(gameObject); " + gameObject);
 
 			RemoveFromGame();
@@ -1034,8 +1030,17 @@ public class GameUnit : NetworkObject {
 	protected override void OnDestroy() {
 		base.OnDestroy();
 
+		ResetCamera();
+
 		if (destroySelfTimer != null) {
 			destroySelfTimer.Cancel();
+		}
+	}
+
+	void ResetCamera() {
+		Camera cam = _t.GetComponentInChildren<Camera>();
+		if (cam) {
+			App.shared.cameraController.ResetCamera();
 		}
 	}
 

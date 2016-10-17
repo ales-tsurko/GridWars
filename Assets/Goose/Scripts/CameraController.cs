@@ -32,6 +32,7 @@ public class CameraController : MonoBehaviour {
 
 		StartCoroutine (WaitForTowers ());
 	}
+
 	IEnumerator WaitForTowers () {
 		Tower[] towers = FindObjectsOfType<Tower> ();
         while (towers.Length == 0 || App.shared == null) {
@@ -49,6 +50,7 @@ public class CameraController : MonoBehaviour {
 		}
 		InitCamera (closest.transform);
 	}
+
 	public void InitCamera (Transform _base){
 		if (_base == null) {
 			throw new System.Exception("Tower is null, can't init camera positions");
@@ -96,7 +98,7 @@ public class CameraController : MonoBehaviour {
 		cam.position = gamePositions[0].position;
 		cam.rotation = gamePositions[0].rotation;
         pos = App.shared.prefs.camPosition - 1;
-		NextPosition ();
+		ResetCamera();
 		initComplete = true;
 	}
     [HideInInspector]
@@ -168,7 +170,11 @@ public class CameraController : MonoBehaviour {
 
 	public void NextPosition () {
 		//print ("Next Called");
-		actionMode = mouseLook.enabled = false;
+		actionMode = false;
+		if (mouseLook != null) {
+			mouseLook.enabled = false;
+		}
+
 		cam.parent = null;
 		pos++;
 		var transform = gamePositions[pos % gamePositions.Count];
@@ -189,13 +195,18 @@ public class CameraController : MonoBehaviour {
 	}
 
 	public void ResetCamera () {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-		NextPosition ();
+		UnlockCursor();
+		cam.transform.parent =  null;
+		NextPosition();
 	}
+
+	void UnlockCursor() {
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+	}
+
     void OnDestroy (){
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+		UnlockCursor();
     }
 
 }
