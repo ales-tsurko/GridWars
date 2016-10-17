@@ -39,7 +39,7 @@ public class Landscape : MonoBehaviour {
 				var chunk = CreateChunk(chunkRect, 2f, material2, 7);
 				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
-				p.y = 40f + Rand(50f);
+				p.y = 120f + Rand(50f);
 				chunk.transform.position = p;
 				chunk.AddComponent<Cloud>().material = cloudMaterial;;
 			}
