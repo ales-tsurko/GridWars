@@ -325,6 +325,8 @@ public class GameUnit : NetworkObject {
 
 	bool serverAndClientJoinedGame = false;
 
+	public int instanceId;
+
 	public override void ServerInit() {
 		base.ServerInit();
 		//App.shared.Log("ServerInit", this);
@@ -352,6 +354,8 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
+
+		instanceId = GetInstanceID();
 
 		serverAndClientJoinedGame = false;
 

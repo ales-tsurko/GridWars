@@ -140,7 +140,7 @@ public class Fortress : MonoBehaviour {
 		if (towers.Count == 0) {
 			player.powerSource.ShutDown();
 		} else {
-			player.powerSource.MakeMax();
+			//player.powerSource.MakeMax();
 			player.powerSource.generationRate *= 1.05f;
 		}
 	}

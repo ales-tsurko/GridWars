@@ -75,9 +75,17 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void Start() {
-		units = new List<GameUnit>();
+	public string description {
+		get {
+			return (playerNumber == 1 ? "Red" : "Blue") + "Player";
+		}
+	}
 
+	void Awake() {
+		units = new List<GameUnit>();
+	}
+
+	void Start() {
 		if (App.shared.testEndOfGameMode) {
 			separation = 0.35f;
 		}
