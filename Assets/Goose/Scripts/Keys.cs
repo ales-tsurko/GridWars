@@ -6,9 +6,9 @@ using LitJson;
 
 public class Keys {
 
-    public const string CHANGECAM = "Change Camera View";
-    public const string CONCEDE = "Concede Match";
-    public const string TOGGLEKEYS = "Toggle Display of Hotkeys";
+    public const string CHANGECAM = "Camera";
+    public const string CONCEDE = "Concede";
+    public const string TOGGLEKEYS = "Hotkeys";
     public const string BACK = "Back";
 
 	public Keys() {
@@ -92,8 +92,8 @@ public class Keys {
     public void LoadKeyMappings(bool resetToDefault = false) {
         string s = Prefs.GetKeyMappings();
         if (resetToDefault || s == "empty" || string.IsNullOrEmpty(s) || s == "{}") {
-            List<KeyData> _defaultKeyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").keyData;
-            List<KeyData> _defaultJoyData = Resources.Load<KeyDataDefaults>("Keys/Defaults").joyData;
+			List<KeyData> _defaultKeyData = new KeyDataDefaults().keyData;
+			List<KeyData> _defaultJoyData = new KeyDataDefaults().joyData;
             keyData = _defaultKeyData;
             joyData = _defaultJoyData;
             SaveKeyMappings();
@@ -219,7 +219,7 @@ public class ReadRemapKeyInput : MonoBehaviour {
 }
 
 public static class KeyCodeExtension {
-	public static KeyCode GetKey (this string _string){
+	public static KeyCode GetKeyCode (this string _string){
 		foreach (KeyData k in App.shared.keys.keyData) {
 			if (k.code == _string) {
 				return k.key;
@@ -238,11 +238,11 @@ public static class KeyCodeExtension {
 	}
 
 	public static bool KeyDown (this string _string){
-		return (Input.GetKeyDown(_string.GetKey()) || Input.GetKeyDown(_string.GetButton()));
+		return (Input.GetKeyDown(_string.GetKeyCode()) || Input.GetKeyDown(_string.GetButton()));
 	}
 
 	public static bool KeyUp (this string _string){
-		return (Input.GetKeyUp(_string.GetKey()) || Input.GetKeyUp(_string.GetButton()));
+		return (Input.GetKeyUp(_string.GetKeyCode()) || Input.GetKeyUp(_string.GetButton()));
 	}
 }
 

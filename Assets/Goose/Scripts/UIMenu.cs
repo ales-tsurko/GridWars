@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UIMenu : UIElement {
 	Image image;
 
-	public Vector2 itemSpacing = new Vector2(18f, 18f); //TODO: match with font size?
+	public Vector2 itemSpacing = new Vector2(0f, 18f); //TODO: match with font size?
 
 	public List<UIButton> items = new List<UIButton> ();
 	public float spacing;
@@ -273,7 +273,7 @@ public class UIMenu : UIElement {
 	}
 }
 
-public enum MenuAnchor {MiddleCenter, TopCenter, TopLeft};
+public enum MenuAnchor { MiddleCenter, TopCenter, TopLeft, TopRight };
 public enum MenuOrientation {Vertical, Horizontal};
 public static class UIMenuExtension {
     public static void SetAnchor (this UIMenu _menu, MenuAnchor anchor){
@@ -286,18 +286,25 @@ public static class UIMenuExtension {
                 _t.localPosition = new Vector3(0f, 0f, 0f);
                 break;
             case MenuAnchor.TopCenter:
-				_t.anchorMin = new Vector2(.5f, 1);
-				_t.anchorMax = new Vector2(.5f, 1);
+				_t.anchorMin = new Vector2(.5f, 1f);
+				_t.anchorMax = new Vector2(.5f, 1f);
 				_t.pivot = new Vector2(0.5f, 0.5f);
                 _t.localScale = Vector3.one;
                 _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
                 break;
 			case MenuAnchor.TopLeft:
-				_t.anchorMin = new Vector2(0f, 1);
-				_t.anchorMax = new Vector2(0f, 1);
+				_t.anchorMin = new Vector2(0f, 1f);
+				_t.anchorMax = new Vector2(0f, 1f);
 				_t.pivot = new Vector2(0f, 0.5f);
 				_t.localScale = Vector3.one;
-				_t.anchoredPosition = new Vector2(_menu.itemSpacing.x, -_t.sizeDelta.y);
+				_t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
+				break;
+			case MenuAnchor.TopRight:
+				_t.anchorMin = new Vector2(1f, 1f);
+				_t.anchorMax = new Vector2(1f, 1f);
+				_t.pivot = new Vector2(1f, 1f);
+				_t.localScale = Vector3.one;
+				_t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
 				break;
         }
     }
