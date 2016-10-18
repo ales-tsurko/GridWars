@@ -144,6 +144,7 @@ public static class UI {
 			}
 
 			_mainCanvas = go.GetComponent<Canvas>();
+			_mainCanvas.GetComponentInChildren<EventSystem>().sendNavigationEvents = false;
 
 			go.name = "Canvas";
 		}

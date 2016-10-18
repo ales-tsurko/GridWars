@@ -9,6 +9,7 @@ public class Keys {
     public const string CHANGECAM = "Camera";
     public const string CONCEDE = "Concede";
     public const string TOGGLEKEYS = "Hotkeys";
+	public const string FOCUSMENU = "FocusMenu";
     public const string BACK = "Back";
 
 	public Keys() {

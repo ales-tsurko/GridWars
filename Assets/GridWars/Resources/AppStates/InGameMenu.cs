@@ -1,13 +1,30 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class InGameMenu {
 	public PlayingGameState playingGameState;
 	public Player player;
 
+	public int localPlayerNumber {
+		get {
+			if (isLocalPlayer1) {
+				return 1;
+			}
+			else {
+				return 2;
+			}
+		}
+	}
+
 	public bool isAiVsAi {
 		get {
 			return player == null;
+		}
+	}
+
+	public bool isFocused {
+		get {
+			return new List<UIButton>(menu.GetComponentsInChildren<UIButton>()).Find(b => b.isSelected) != null;
 		}
 	}
 
@@ -34,12 +51,26 @@ public class InGameMenu {
 			cameraItem.ReadInput();
 		}
 
+		if ((Keys.FOCUSMENU + localPlayerNumber).KeyDown()) {
+			if (isFocused) {
+				menu.LoseFocus();
+			}
+			else {
+				menu.SelectNextItem();
+			}
+		}
 	}
 
 	UIMenu menu;
 	InGameMenuItem concedeItem;
 	InGameMenuItem hotkeysItem;
 	InGameMenuItem cameraItem;
+
+	bool isLocalPlayer1 {
+		get {
+			return isAiVsAi || player.localNumber == 1;
+		}
+	}
 
 	MenuAnchor menuAnchor {
 		get {
@@ -85,7 +116,7 @@ public class InGameMenu {
 			menu.AddItem(hotkeysItem.menuItem);
 		}
 
-		if (isAiVsAi || player.localNumber == 1) {
+		if (isLocalPlayer1) {
 			cameraItem = new InGameMenuItem();
 			cameraItem.inGameMenu = this;
 			cameraItem.title = "Camera";
@@ -94,11 +125,13 @@ public class InGameMenu {
 			menu.AddItem(cameraItem.menuItem);
 		}
 
+		menu.controllerInputName = isLocalPlayer1 ? UIMenu.CONTROLLER_1_MENU_CURSOR_NAME : UIMenu.CONTROLLER_2_MENU_CURSOR_NAME;
+		menu.controllerSelectionKey = isLocalPlayer1 ? KeyCode.Joystick1Button1 : KeyCode.Joystick2Button1;
 
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuAnchor);
 		menu.SetBackground(Color.black, 0);
-		menu.isNavigable = false;
+		menu.selectsOnShow = false;
 		menu.Show();
 	}
 
@@ -112,6 +145,7 @@ public class InGameMenu {
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuAnchor);
 		menu.SetBackground(Color.black, 0);
+		menu.selectsOnShow = true;
 		menu.Show();
 	}
 
@@ -152,7 +186,6 @@ public class InGameMenuItem {
 	public UIButton menuItem {
 		get {
 			if (_menuItem == null) {
-				Debug.Log(keyMappingName);
 				_menuItem = UI.MenuItem(title + " (" + keyMappingName.GetKeyCode().ToString() + ")", action);
 			}
 
@@ -162,7 +195,6 @@ public class InGameMenuItem {
 
 	public void ReadInput() {
 		if (keyMappingName.KeyDown()) {
-			Debug.Log(keyMappingName);
 			action();
 		}
 	}
@@ -171,7 +203,7 @@ public class InGameMenuItem {
 
 	string keyMappingName {
 		get {
-			return keyName + (inGameMenu.isAiVsAi ? "1" : inGameMenu.player.localNumber.ToString());
+			return keyName + inGameMenu.localPlayerNumber;
 		}
 	}
 }

@@ -414,14 +414,25 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	// KeyDelegate
 
+	bool inGameMenuIsFocused {
+		get {
+			if (App.shared.state.inheritsFrom(typeof(PlayingGameState))) {
+				return (App.shared.state as PlayingGameState).InGameMenuForPlayer(player).isFocused;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
 	public void KeyPressed() {
-		if (!npcModeOn) {
+		if (!npcModeOn && !inGameMenuIsFocused) {
 			SendAttemptQueueUnit();
 		}
 	}
 
 	public void KeyLongPressed() {
-		if (!npcModeOn) {
+		if (!npcModeOn && !inGameMenuIsFocused) {
 			SendAttemptQueueUnit(1);
 		}
 	}

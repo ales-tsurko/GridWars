@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 public class UIMenu : UIElement {
+	public static string CONTROLLER_1_MENU_CURSOR_NAME = "MenuCursor1";
+	public static string CONTROLLER_2_MENU_CURSOR_NAME = "MenuCursor2";
+
 	Image image;
 
 	public Vector2 itemSpacing = new Vector2(0f, 18f); //TODO: match with font size?
@@ -27,15 +30,14 @@ public class UIMenu : UIElement {
         }
     }
 
+	public string controllerInputName = "MenuCursor1";
+	public KeyCode controllerSelectionKey = KeyCode.Joystick1Button1;
+
 	public UIButton selectedItem;
 
 	public bool isNavigable = true;
 
-	bool canNavigate {
-		get {
-			return isNavigable && selectableItems.Count > 0;
-		}
-	}
+	public bool selectsOnShow = true;
 
 	public Color backgroundColor {
 		get {
@@ -178,8 +180,8 @@ public class UIMenu : UIElement {
         t.offsetMin = new Vector2(0, 0);
         t.offsetMax = new Vector2(0, 0);
 
-		if (canNavigate) {
-			SelectNextItem();
+		if (isNavigable && selectsOnShow) {
+			Focus();
 		}
     }
 
@@ -198,9 +200,27 @@ public class UIMenu : UIElement {
 		}
 	}
 
+	public void Focus() {
+		if (selectableItems.Count > 0) {
+			selectedItem = selectableItems[0];
+			selectedItem.Select();
+		}
+	}
+
+	public void LoseFocus() {
+		UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+		selectedItem = null;
+	}
+
 	public int selectedItemIndex {
 		get {
 			return selectableItems.IndexOf(selectedItem);
+		}
+	}
+
+	public bool hasFocus {
+		get {
+			return selectedItem != null;
 		}
 	}
 
@@ -240,13 +260,7 @@ public class UIMenu : UIElement {
 	float lastSelectionTime = 0f;
 
 	void Update() {
-		if (canNavigate) {
-			/* Unity calls OnClick for selected items when return is pressed by default
-			if (Input.GetKeyDown(KeyCode.Return)) {
-				selectedItem.OnClick();
-			}
-			*/
-
+		if (hasFocus) {
 			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
 				SelectNextItem();
 			}
@@ -255,7 +269,7 @@ public class UIMenu : UIElement {
 				SelectPreviousItem();
 			}
 
-			var controllerDirection = Input.GetAxis("Vertical");
+			var controllerDirection = Input.GetAxis(controllerInputName);
 
 			if (Time.time > lastSelectionTime + controllerPeriod) {
 				if (controllerDirection < 0) {
@@ -265,9 +279,11 @@ public class UIMenu : UIElement {
 					SelectPreviousItem();
 				}
 			}
-				
-			if (Input.GetKeyDown(KeyCode.Joystick1Button1)) {
-				selectedItem.OnClick();				
+			
+			if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(controllerSelectionKey)) {
+				if (selectedItem != null) {
+					selectedItem.OnClick();
+				}
 			}
 		}
 	}
