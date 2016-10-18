@@ -33,7 +33,7 @@ public class KeyDataDefaults : ScriptableObject {
 		new KeyData(){ code = Keys.TOGGLEKEYS + "1", description = "Toggle Hotkeys", key = KeyCode.Joystick1Button7, playerNum = 1},
 		new KeyData(){ code = Keys.CHANGECAM + "1", description = "Change Camera Angle", key = KeyCode.Joystick1Button5, playerNum = 1},
 		new KeyData(){ code = Keys.FOCUSMENU + "1", description = "Focus Menu", key = KeyCode.Joystick1Button9, playerNum = 1},
-		new KeyData(){ code = "Exit", description = "Exit First Person View", key = KeyCode.Joystick1Button9, playerNum = 1 }
+		new KeyData(){ code = "Exit", description = "Exit First Person View", key = KeyCode.Joystick1Button9, playerNum = 1 },
 
 		new KeyData(){ code = "Chopper2", description = "Chopper", key = KeyCode.Joystick2Button3, playerNum = 2 },
 		new KeyData(){ code = "Tanker2", description = "Tanker", key = KeyCode.Joystick2Button2, playerNum = 2 },
