@@ -234,7 +234,9 @@ public class Player : MonoBehaviour {
 
 		if (npcModeOn && BoltNetwork.isServer) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
-				AI();
+				for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
+					AI();
+				}
 			}
 		}
 	}

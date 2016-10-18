@@ -345,7 +345,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		foreach(var counterType in iconUnit.CountersTypes()) {
 			foreach (var unit in player.EnemyUnitsOfType(counterType)) {
-				cost += unit.PowerCost(unit.veteranLevel);
+				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio;
 			}
 		}
 
@@ -357,7 +357,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		foreach(GameUnit unit in EnemyUnits()) {
 			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
-				cost += unit.PowerCost(unit.veteranLevel);
+				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio;
 			}
 		}
 
@@ -367,11 +367,16 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public float aiStyle = 0;
 
 	public float Effectiveness() {
-		//float we = CountOfEnemyUnitsWeCanCounter();
-		//float cu = CountOfEnemyUnitsThatCounterUs();
+		float we = 0;
+		float cu = 0;
 
-		float we = CostOfEnemyUnitsWeCanCounter();
-		float cu = CostOfEnemyUnitsThatCounterUs();
+		if (player.playerNumber == 2) {
+			we = CountOfEnemyUnitsWeCanCounter();
+			cu = CountOfEnemyUnitsThatCounterUs();
+		} else {
+			we = CostOfEnemyUnitsWeCanCounter();
+			cu = CostOfEnemyUnitsThatCounterUs();
+		}
 		float c = CountOfTowerUnits();
 
 		float cost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
