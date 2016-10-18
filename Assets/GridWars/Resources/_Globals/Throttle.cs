@@ -20,7 +20,7 @@ public class Throttle {
 		}
 	}
 
-	public int behaviour {
+	public MonoBehaviour behaviour {
 		set {
 			_behaviour = value;
 			UpdateBucket();
@@ -31,7 +31,7 @@ public class Throttle {
 	}
 
 	void UpdateBucket() {
-		if (behaviour != null) {
+		if (behaviour != null && period != 0) {
 			_bucket = (int)((uint)behaviour.GetHashCode() % (uint)period);
 		}
 	}

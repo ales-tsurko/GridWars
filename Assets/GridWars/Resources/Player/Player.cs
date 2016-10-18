@@ -221,11 +221,21 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	private int npcThinkFrequency = 30;
+
+	/*
+	thinkThrottle = new Throttle();
+	thinkThrottle.behaviour = this;
+	thinkThrottle.period = 25;
+	*/
+
 	public void FixedUpdate () {
 		//base.ServerFixedUpdate(); 
 
 		if (npcModeOn && BoltNetwork.isServer) {
-			AI();
+			if (App.shared.timeCounter % npcThinkFrequency == 0) {
+				AI();
+			}
 		}
 	}
 

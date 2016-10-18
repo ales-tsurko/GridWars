@@ -7,10 +7,6 @@ public class Chopper : AirVehicle {
 	public float cruiseHeight;
 	public float thrustHeight = 2f;
 
-	public GameObject mainRotorFixed; // used to apply thrust - normal rotor spins
-	public GameObject mainRotor;
-	public GameObject tailRotor;
-
 	public GameObject leftJet;
 	public GameObject rightJet;
 	public GameObject rearJet;
@@ -62,6 +58,7 @@ public class Chopper : AirVehicle {
 		return null;
 	}
 
+	/*
 	public float TargetXZDistance() {
 		Vector3 p1 = transform.position;
 		p1.y = 0f;
@@ -71,13 +68,11 @@ public class Chopper : AirVehicle {
 
 		return Vector3.Distance(p1, p2);
 	}
+	*/
 
 	public float UpDesire() { // 0.0 to 1.0
 		float ch = cruiseHeight;
 		float diff = ( ch - y() ) / ch; 
-
-		//diff = SmoothValue(diff);
-
 		return Mathf.Clamp(diff, -1f, 1f);
 	}
 
@@ -99,7 +94,6 @@ public class Chopper : AirVehicle {
 		//Debug.DrawLine(_t.position, _t.position + (target.transform.position - _t.position).normalized * (TargetDistance() - standOffDistance), Color.yellow); 
 
 		return v;
-
 	}
 
 	public float TiltRightDesire() { // -1.0 to 1.0
@@ -159,7 +153,7 @@ public class Chopper : AirVehicle {
 	*/
 
 	public void ApplyJetThrust() {
-/*
+		/*
 		Vector3 leftForce  = leftJet.transform.forward  * (thrust / 2f);
 		Vector3 rightForce = rightJet.transform.forward * (thrust / 2f);
 			
@@ -168,17 +162,16 @@ public class Chopper : AirVehicle {
 		*/
 		rigidBody().AddForce(_t.up * TotalUpThrust());
 		rigidBody().AddForce(_t.forward * ForwardDesire() * AvailableThrust());
+	}
 
-		PositionJets();
-
-
+	void StablizeZ() {
 		float rotZ = Object_rotZ(gameObject);
-		rotZ = Convert360to180(rotZ);
-		rotZ *= 0.9f;
-		rotZ = Convert180to360(rotZ);
-
-		Object_setRotZ(gameObject, rotZ);
-
+		if (!Mathf.Approximately(rotZ, 0)) {
+			rotZ = Convert360to180(rotZ);
+			rotZ *= 0.9f;
+			rotZ = Convert180to360(rotZ);
+			Object_setRotZ(gameObject, rotZ);
+		}
 	}
 
 	public override void ServerFixedUpdate () {
@@ -186,8 +179,19 @@ public class Chopper : AirVehicle {
 		if (isRunning) {
 			SteerTowardsTarget();
 			ApplyJetThrust();
-			DieIfOverAccelerated();
+
+			if (App.shared.timeCounter % 10 == 0) {
+				StablizeZ();
+				DieIfOverAccelerated();
+			}
 		}			
+	}
+
+	public override void ServerAndClientFixedUpdate() {
+		base.ServerAndClientFixedUpdate();
+		if (App.shared.timeCounter % 10 == 0) {
+			PositionJets(); // these are just for show - we don't use them for force calcs
+		}
 	}
 
 	private void DieIfOverAccelerated() {
@@ -195,13 +199,6 @@ public class Chopper : AirVehicle {
 			Die();
 		}
 	}
-		
-	/*
-	public override void ServerAndClientFixedUpdate () {
-		base.ServerAndClientFixedUpdate();
-		PositionJets();
-	}
-	*/
 
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
