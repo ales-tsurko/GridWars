@@ -10,7 +10,7 @@ public class Keys {
     public const string CONCEDE = "Concede";
     public const string TOGGLEKEYS = "Hotkeys";
 	public const string FOCUSMENU = "FocusMenu";
-    public const string BACK = "Back";
+    public const string EXIT = "Exit";
 
 	public Keys() {
 		keyDelegateMap = new Dictionary<string, List<KeyDelegate>>();
