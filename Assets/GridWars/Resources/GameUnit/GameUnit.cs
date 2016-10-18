@@ -762,6 +762,19 @@ public class GameUnit : NetworkObject {
 		return player.IsEnemyOf(otherUnit.player);
 	}
 
+	public float RatioOfDistanceToEnemyFortress() {
+		float fd = player.fortress.DistanceToEnemyFortress();
+		return DistanceToEnemyFortress() / fd; 
+	}
+
+	public float DistanceToEnemyFortress() {
+		foreach (var enemyPlayer in player.enemyPlayers) {
+			return Vector3.Distance(player.fortress.transform.position, transform.position);
+		}
+
+		return -1; 
+	}
+
 	public float DistanceToObj(GameObject obj) {
 		// please do not change this to sqrMagnitude
 		return Vector3.Distance(obj.transform.position, transform.position);

@@ -12,7 +12,7 @@ public class Fortress : MonoBehaviour {
 	}
 	public float towerToPowerSpacing {
 		get {
-			return 0.25f*Tower.size.x;
+			return 0.25f * Tower.size.x;
 		}
 	}
 
@@ -23,6 +23,14 @@ public class Fortress : MonoBehaviour {
 				powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
 			);
 		}
+	}
+
+	public float DistanceToEnemyFortress() {
+		foreach (var enemyPlayer in player.enemyPlayers) {
+			return Vector3.Distance(enemyPlayer.fortress.transform.position, transform.position);
+		}
+
+		return -1; 
 	}
 
 	static System.Type[] unitTypes = new System.Type[] {

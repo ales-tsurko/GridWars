@@ -309,11 +309,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	// --- AI ------------------------------
 
 
+	// count effectiveness
+
 	public int CountOfTowerUnits() {
 		return player.FriendlyUnitsOfType(iconUnit.GetType()).Count;
 	}
 
-	// count effectiveness
 
 	public int CountOfEnemyUnitsWeCanCounter() {
 		int total = 0;
@@ -340,24 +341,34 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	// cost effectiveness
 
+	public float CostOfTowerUnits() {
+		float cost = 0;
+		foreach (var unit in player.FriendlyUnitsOfType(iconUnit.GetType())) {
+			cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio;
+		}
+
+		return cost;
+	}
 	public float CostOfEnemyUnitsWeCanCounter() {
 		float cost = 0;
 
 		foreach(var counterType in iconUnit.CountersTypes()) {
 			foreach (var unit in player.EnemyUnitsOfType(counterType)) {
-				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio;
+				float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio * dr;
 			}
 		}
 
 		return cost;
 	}
-
+		
 	public float CostOfEnemyUnitsThatCounterUs() {
 		float cost = 0;
 
 		foreach(GameUnit unit in EnemyUnits()) {
 			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
-				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio;
+				float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio * dr;
 			}
 		}
 
@@ -367,21 +378,24 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public float aiStyle = 0;
 
 	public float Effectiveness() {
-		float we = 0;
+		float wc = 0;
 		float cu = 0;
+		//float c  = 0;
+		float e = 0;
+		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 
 		if (player.playerNumber == 2) {
-			we = CountOfEnemyUnitsWeCanCounter();
+			wc = CountOfEnemyUnitsWeCanCounter();
 			cu = CountOfEnemyUnitsThatCounterUs();
+			//c  = CountOfTowerUnits();
+			//float e = ( (wc - c) / (1 + cu) ) / unitCost;
+			e = ( (wc) / (1 + cu) ) / unitCost;
 		} else {
-			we = CostOfEnemyUnitsWeCanCounter();
+			wc = CostOfEnemyUnitsWeCanCounter();
 			cu = CostOfEnemyUnitsThatCounterUs();
+			//c  = CostOfTowerUnits();
+			e = ( (wc) / (1 + cu) ) / unitCost;
 		}
-		float c = CountOfTowerUnits();
-
-		float cost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
-
-		float e = ( (we - c) / (1 + cu) ) / cost;
 
 		return e;
 	}
