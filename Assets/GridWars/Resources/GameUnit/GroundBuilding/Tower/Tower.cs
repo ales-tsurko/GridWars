@@ -313,6 +313,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		return player.FriendlyUnitsOfType(iconUnit.GetType()).Count;
 	}
 
+	// count effectiveness
 
 	public int CountOfEnemyUnitsWeCanCounter() {
 		int total = 0;
@@ -337,22 +338,45 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		return total;
 	}
 
+	// cost effectiveness
+
+	public float CostOfEnemyUnitsWeCanCounter() {
+		float cost = 0;
+
+		foreach(var counterType in iconUnit.CountersTypes()) {
+			foreach (var unit in player.EnemyUnitsOfType(counterType)) {
+				cost += unit.PowerCost(unit.veteranLevel);
+			}
+		}
+
+		return cost;
+	}
+
+	public float CostOfEnemyUnitsThatCounterUs() {
+		float cost = 0;
+
+		foreach(GameUnit unit in EnemyUnits()) {
+			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
+				cost += unit.PowerCost(unit.veteranLevel);
+			}
+		}
+
+		return cost;
+	}
+
 	public float aiStyle = 0;
 
 	public float Effectiveness() {
-		float a = CountOfEnemyUnitsWeCanCounter();
-		float b = CountOfEnemyUnitsThatCounterUs();
+		//float we = CountOfEnemyUnitsWeCanCounter();
+		//float cu = CountOfEnemyUnitsThatCounterUs();
+
+		float we = CostOfEnemyUnitsWeCanCounter();
+		float cu = CostOfEnemyUnitsThatCounterUs();
 		float c = CountOfTowerUnits();
 
 		float cost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 
-		float e = 0;
-		//if (aiStyle > .5) {
-		if (true) {
-			e = ( (a - c) / (1 + b) ) / cost;
-		}/* else {
-			e = (1.5f * a - b) / cost;
-		}*/
+		float e = ( (we - c) / (1 + cu) ) / cost;
 
 		return e;
 	}
