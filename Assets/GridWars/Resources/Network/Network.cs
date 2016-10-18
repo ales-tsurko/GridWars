@@ -10,7 +10,8 @@ public class Network : Bolt.GlobalEventListener {
 	// public interface
 
 	public string listenEndpoint = "0.0.0.0";
-	public string zeusEndpoint = "159.8.0.207:24000";
+	//public string zeusEndpoint = "159.8.0.207:24000";
+    public string zeusEndpoint = "107.170.5.61:24000";
 
 
 	//Bolt
