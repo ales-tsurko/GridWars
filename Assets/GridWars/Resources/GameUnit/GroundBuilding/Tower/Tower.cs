@@ -384,7 +384,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		float e = 0;
 		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 
-		if (player.playerNumber == 2) {
+		if (player.playerNumber == 1) {
 			wc = CountOfEnemyUnitsWeCanCounter();
 			cu = CountOfEnemyUnitsThatCounterUs();
 			//c  = CountOfTowerUnits();
