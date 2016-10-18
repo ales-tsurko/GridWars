@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Throttle {
-	public MonoBehaviour behaviour;
+	public MonoBehaviour _behaviour;
 	public int _period;
 	public int _bucket;
 		
@@ -13,10 +13,26 @@ public class Throttle {
 	public int period {
 		set {
 			_period = value;
-			_bucket = (int)((uint)behaviour.GetHashCode() % (uint)period);
+			UpdateBucket();
 		}
 		get {
 			return _period;
+		}
+	}
+
+	public int behaviour {
+		set {
+			_behaviour = value;
+			UpdateBucket();
+		}
+		get {
+			return _behaviour;
+		}
+	}
+
+	void UpdateBucket() {
+		if (behaviour != null) {
+			_bucket = (int)((uint)behaviour.GetHashCode() % (uint)period);
 		}
 	}
 
