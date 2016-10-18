@@ -146,6 +146,8 @@ public class InGameMenu {
 		menu.SetAnchor(menuAnchor);
 		menu.SetBackground(Color.black, 0);
 		menu.selectsOnShow = true;
+		menu.controllerInputName = isLocalPlayer1 ? UIMenu.CONTROLLER_1_MENU_CURSOR_NAME : UIMenu.CONTROLLER_2_MENU_CURSOR_NAME;
+		menu.controllerSelectionKey = isLocalPlayer1 ? KeyCode.Joystick1Button1 : KeyCode.Joystick2Button1;
 		menu.Show();
 	}
 
