@@ -106,22 +106,6 @@ public class App : MonoBehaviour {
 	void Update() {
 		state.Update();
 		keys.Update();
-
-		if (Mathf.Abs(Input.GetAxis("MenuCursor1")) > 0) {
-			Debug.Log("MenuCursor1");
-		}
-
-		if (Mathf.Abs(Input.GetAxis("MenuCursor2")) > 0) {
-			Debug.Log("MenuCursor2");
-		}
-
-		if (Input.GetKeyDown(KeyCode.Joystick1Button2)) {
-			Debug.Log("Joystick1Button2");
-		}
-
-		if (Input.GetKeyDown(KeyCode.Joystick2Button2)) {
-			Debug.Log("Joystick2Button2");
-		}
 	}
 
 	// --- Menu --------------------
