@@ -291,6 +291,20 @@ public class GameUnit : NetworkObject {
 		isTargetable = true;
 	}
 
+	// Cache
+
+	public string cacheKey {
+		get {
+			return entity.prefabId.ToString();
+		}
+	}
+
+	public GameUnitCache cache {
+		get {
+			return App.shared.battlefield.gameUnitCache;
+		}
+	}
+
 	//Networking
 
 	public bool shouldDestroyColliderOnClient = true;
@@ -300,8 +314,17 @@ public class GameUnit : NetworkObject {
 
 	public IGameUnitState gameUnitState;
 
-	public GameUnit Instantiate() {
-		return BoltNetwork.Instantiate(gameObject).GetComponent<GameUnit>();
+	public virtual GameUnit Instantiate() {
+		var unit = cache.ForKeyPop(cacheKey);
+		if (unit == null) {
+			return BoltNetwork.Instantiate(gameObject).GetComponent<GameUnit>();
+		}
+		else {
+			unit.entity.Freeze(false);
+			unit.GetComponent<NetworkedGameUnit>().Attached();
+			return unit;
+		}
+
 	}
 
 	public static GameUnit Instantiate(System.Type unitType) {
@@ -1032,15 +1055,24 @@ public class GameUnit : NetworkObject {
 		destroySelfTimer.action = DestroySelf;
 		destroySelfTimer.Start();
 
+		//App.shared.Log("RemoveFromGame", this);
+
 		isInGame = false;
 	}
 
 	public virtual void DestroySelf() {
-		BoltNetwork.Destroy(gameObject);
+		//Debug.Log("Add to Cache");
+		if (cache.ForKeyPush(cacheKey, this)) {
+			gameUnitState.RemoveAllCallbacks();
+			entity.Freeze(true);
+		}
+		else {
+			BoltNetwork.Destroy(gameObject);
 
-		foreach (var comp in gameObject.GetComponents<AudioSource>())
-		{
-			Destroy(comp);
+			foreach (var comp in gameObject.GetComponents<AudioSource>())
+			{
+				Destroy(comp);
+			}
 		}
 	}
 
