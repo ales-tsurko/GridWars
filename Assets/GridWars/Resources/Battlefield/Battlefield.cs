@@ -115,6 +115,9 @@ public class Battlefield : MonoBehaviour {
 		DestroyEntities();
 		DestroyChaff();
 		gameUnitCache.Reset();
+		foreach(var player in players) {
+			player.isInGame = false;
+		}
 	}
 
 	void DestroyEntities() {

@@ -82,8 +82,19 @@ public class PostGameState : NetworkDelegateState {
 		base.ReceivedAcceptRematch();
 
 		if (BoltNetwork.isServer) {
-			battlefield.SoftReset();
+			App.shared.StartCoroutine(ServerReceivedAcceptRematch());
 		}
+		else {
+			TransitionTo(new PlayingGameState());
+		}
+	}
+
+	IEnumerator ServerReceivedAcceptRematch() {
+		battlefield.SoftReset();
+		while (battlefield.livingPlayers.Count > 0) {
+			yield return null;
+		}
+
 		TransitionTo(new PlayingGameState());
 	}
 
@@ -136,12 +147,31 @@ public class PostGameState : NetworkDelegateState {
 	}
 
 	void AcceptRematch() {
+		if (BoltNetwork.isServer) {
+			App.shared.StartCoroutine(ServerAcceptRematch());
+		}
+		else {
+			ClientAcceptRematch();
+		}
+	}
+
+	IEnumerator ServerAcceptRematch() {
+		battlefield.SoftReset();
+		while (battlefield.livingPlayers.Count > 0) {
+			yield return null;
+		}
+
+		SendAcceptRematchEvent();
+	}
+
+	void ClientAcceptRematch() {
+		SendAcceptRematchEvent();
+	}
+
+	void SendAcceptRematchEvent() {
 		AcceptRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
 		app.Log("AcceptRematchEvent.Send", this);
 
-		if (BoltNetwork.isServer) {
-			battlefield.SoftReset();
-		}
 		TransitionTo(new PlayingGameState());
 	}
 }

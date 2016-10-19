@@ -105,6 +105,8 @@ public class Player : MonoBehaviour {
 		//gameObject.tag = "Player" + playerNumber;
 	}
 
+	public bool isInGame;
+
 	public void StartGame() {
 		if (fortress == null) { //fortress will exist for rematches
 			fortress = this.CreateChild<Fortress>();
@@ -116,6 +118,8 @@ public class Player : MonoBehaviour {
 		units = new List<GameUnit>();
 
 		fortress.StartGame();
+
+		isInGame = true;
 	}
 
 	//Painting

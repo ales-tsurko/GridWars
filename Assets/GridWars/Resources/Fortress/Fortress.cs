@@ -145,10 +145,15 @@ public class Fortress : MonoBehaviour {
 
 	public void TowerDied(Tower tower) {
 		towers.Remove(tower);
+
+		if (!player.isInGame) {
+			return;
+		}
+
 		if (towers.Count == 0) {
 			player.powerSource.ShutDown();
 		} else {
-			//player.powerSource.MakeMax();
+			player.powerSource.MakeMax();
 			player.powerSource.generationRate *= 1.05f;
 		}
 	}
