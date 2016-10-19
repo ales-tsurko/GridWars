@@ -169,10 +169,10 @@ public class App : MonoBehaviour {
 	}
 
 	public void PlayAppSoundNamed(string soundName) {
-		PlayAppSoundNamedWithVolume(soundName, 1f);
+		PlayAppSoundNamedAtVolume(soundName, 1f);
 	}
 
-	public void PlayAppSoundNamedWithVolume(string soundName, float v) {
+	public void PlayAppSoundNamedAtVolume(string soundName, float v) {
 		string soundPath = "Sounds/" + soundName;
 		AudioClip clip = Resources.Load<AudioClip>(soundPath);
 		PlayOneShot(clip, v);
