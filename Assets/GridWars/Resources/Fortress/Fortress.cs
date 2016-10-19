@@ -152,4 +152,28 @@ public class Fortress : MonoBehaviour {
 			player.powerSource.generationRate *= 1.05f;
 		}
 	}
+
+	public GameObject ClosestEnemyObject() {
+		float closestDist = Mathf.Infinity;
+		GameObject closestObj = null;
+
+		foreach (var tower in towers) {
+			var enemyObj = tower.ClosestEnemyObject();
+			float d = tower.DistanceToObj(enemyObj);
+			if (d < closestDist) {
+				closestObj = enemyObj;
+			}
+		}
+
+		return closestObj;
+	}
+
+	public float DistanceRatioOfClosestEnemy() {
+		GameObject obj = ClosestEnemyObject();
+		if (obj != null && obj.GameUnit() != null) {
+			return obj.GameUnit().RatioOfDistanceToEnemyFortress();
+		}
+
+		return 1f;
+	}
 }

@@ -792,7 +792,7 @@ public class GameUnit : NetworkObject {
 
 	public float DistanceToEnemyFortress() {
 		foreach (var enemyPlayer in player.enemyPlayers) {
-			return Vector3.Distance(player.fortress.transform.position, transform.position);
+			return Vector3.Distance(enemyPlayer.fortress.transform.position, transform.position);
 		}
 
 		return -1; 

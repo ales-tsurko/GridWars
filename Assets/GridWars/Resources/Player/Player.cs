@@ -245,7 +245,12 @@ public class Player : MonoBehaviour {
 		float minPowerRatio = 0.0f;
 
 		if (playerNumber == 2) {
-			minPowerRatio = 1f;
+			float r = fortress.DistanceRatioOfClosestEnemy();
+			if (r < 0.4f) {
+				minPowerRatio = 0f;
+			} else {
+				minPowerRatio = 1f;
+			}
 		}
 
 		if ( powerSource.PowerRatio() >= minPowerRatio) {
