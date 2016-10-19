@@ -20,6 +20,7 @@ public class CameraController : MonoBehaviour {
 	bool initComplete = false;
 	public KeyIconRotation keyIconRotation;
 	public List<CameraControllerDelegate> cameraControllerDelegates;
+	public bool isInFirstPerson;
 
 	void Start () {
 		initComplete = false;
@@ -131,6 +132,7 @@ public class CameraController : MonoBehaviour {
 			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast (vRay, out hit, 3000)) {
 				if (hit.transform.GetComponent<GameUnit> ()) {
+					isInFirstPerson = true;
 					MoveToActionPosition (hit.transform);	
 				}
 			}
@@ -198,6 +200,13 @@ public class CameraController : MonoBehaviour {
 		UnlockCursor();
 		cam.transform.parent =  null;
 		NextPosition();
+		StartCoroutine(ResetIsInFirstPerson());
+	}
+
+	//skip 1 frame so InGameMenu isn't focused
+	IEnumerator ResetIsInFirstPerson() {
+		yield return null;
+		isInFirstPerson = false;
 	}
 
 	void UnlockCursor() {
