@@ -51,7 +51,7 @@ public class InGameMenu {
 			cameraItem.ReadInput();
 		}
 
-		if ((Keys.FOCUSMENU + localPlayerNumber).KeyDown()) {
+		if ((Keys.FOCUSMENU + localPlayerNumber).KeyDown() && !App.shared.cameraController.isInFirstPerson) {
 			if (isFocused) {
 				menu.LoseFocus();
 			}
