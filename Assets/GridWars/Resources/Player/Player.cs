@@ -221,7 +221,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private int npcThinkFrequency = 30;
+	private int npcThinkFrequency = 20;
 
 	/*
 	thinkThrottle = new Throttle();
@@ -234,9 +234,9 @@ public class Player : MonoBehaviour {
 
 		if (npcModeOn && BoltNetwork.isServer) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
-				for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
+				//for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
 					AI();
-				}
+				//}
 			}
 		}
 	}
