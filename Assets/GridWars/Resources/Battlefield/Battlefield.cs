@@ -10,6 +10,7 @@ public class Battlefield : MonoBehaviour {
 
 	public Vector3 bounds = new Vector3(100f, 10f, 100f);
 	public List<Player> players;
+	public GameUnitCache gameUnitCache;
 
 	public Player PlayerNumbered(int playerNumber) {
 		if (playerNumber < 1 || playerNumber > players.Count) {
@@ -65,6 +66,8 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 		App.shared.debug = true;
 
+		gameUnitCache = new GameUnitCache();
+
 		AddPlayers();
 	}
 
@@ -111,6 +114,7 @@ public class Battlefield : MonoBehaviour {
 		App.shared.stepCache.Reset();
 		DestroyEntities();
 		DestroyChaff();
+		gameUnitCache.Reset();
 	}
 
 	void DestroyEntities() {

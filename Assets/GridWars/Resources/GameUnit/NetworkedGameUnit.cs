@@ -7,6 +7,8 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 	public override void Attached() {
 		base.Attached();
 
+		serverStarted = false;
+
 		gameUnit = GetComponent<GameUnit>();
 
 		gameUnit.gameUnitState = entity.GetState<IGameUnitState>();
@@ -29,6 +31,7 @@ public class NetworkedGameUnit : Bolt.EntityBehaviour {
 		base.SimulateOwner();
 
 		if (!gameUnit.isInGame) {
+			//App.shared.Log("!isInGame", gameUnit);
 			return;
 		}
 

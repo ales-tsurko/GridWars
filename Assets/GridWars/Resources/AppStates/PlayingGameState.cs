@@ -112,6 +112,10 @@ public class PlayingGameState : NetworkDelegateState {
 		app.ResetMenu(); //TODO: Needed?
 	}
 
+	public InGameMenu InGameMenuForPlayer(Player player) {
+		return inGameMenus.Find(m => m.player == player);
+	}
+
 	void ShowInGameMenus() {
 		app.ResetMenu();
 
