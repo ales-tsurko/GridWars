@@ -236,11 +236,10 @@ public class Player : MonoBehaviour {
 	public void FixedUpdate () {
 		//base.ServerFixedUpdate(); 
 
-		if (npcModeOn && BoltNetwork.isServer) {
+		//|| Input.GetKey(KeyCode.Space)
+		if ((npcModeOn && BoltNetwork.isServer)) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
-				//for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
 					AI();
-				//}
 			}
 		}
 	}
