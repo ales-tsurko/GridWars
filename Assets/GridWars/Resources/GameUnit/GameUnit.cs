@@ -127,9 +127,15 @@ public class GameUnit : NetworkObject {
 
 	// -- vet sound ---------
 
-	public AudioClip vetSound {
+	public AudioClip vet1Sound {
 		get {
-			return SoundNamed("vet");
+			return SoundNamed("vet1");
+		}
+	}
+
+	public AudioClip vet2Sound {
+		get {
+			return SoundNamed("vet2");
 		}
 	}
 
@@ -657,7 +663,11 @@ public class GameUnit : NetworkObject {
 			return;
 		}
 
-		App.shared.PlayOneShot(vetSound, 1f);
+		if (veteranLevel == 1) {
+			App.shared.PlayOneShot(vet1Sound, 1f);
+		} else {
+			App.shared.PlayOneShot(vet2Sound, 1f);
+		}
 
 		// cycler setup --------------
 
