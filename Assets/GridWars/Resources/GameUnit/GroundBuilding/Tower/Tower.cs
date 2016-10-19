@@ -354,7 +354,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		foreach(var counterType in iconUnit.CountersTypes()) {
 			foreach (var unit in player.EnemyUnitsOfType(counterType)) {
-				float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				//float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				//float dr = 1f/(1f + unit.RatioOfDistanceToEnemyFortress());
+				float dr = 1f;
 				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio * dr;
 			}
 		}
@@ -367,7 +369,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		foreach(GameUnit unit in EnemyUnits()) {
 			if (unit != null && unit.CountersTypes().Contains(iconUnit.GetType())) {
-				float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				//float dr = Mathf.Sqrt(1f - unit.RatioOfDistanceToEnemyFortress()*0.5f);
+				//float dr = 1f/(1f + unit.RatioOfDistanceToEnemyFortress());
+				float dr = 1f;
 				cost += unit.PowerCost(unit.veteranLevel) * unit.hpRatio * dr;
 			}
 		}

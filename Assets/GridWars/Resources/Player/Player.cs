@@ -242,7 +242,13 @@ public class Player : MonoBehaviour {
 	}
 
 	private void AI() {
-		if (powerSource.PowerRatio() > 0.3f) {
+		float minPowerRatio = 0.0f;
+
+		if (playerNumber == 2) {
+			minPowerRatio = 1f;
+		}
+
+		if ( powerSource.PowerRatio() >= minPowerRatio) {
 			
 			Tower bestTower = null;
 			float bestEffectiveness = 0f;

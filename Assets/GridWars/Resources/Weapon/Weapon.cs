@@ -555,7 +555,7 @@ public class Weapon : MonoBehaviour {
 		float cutoff = aimedAngle;
 
 		float d = TargetDistance();
-		if (d < 7f) {
+		if (d < 6f) {
 			//cutoff *= 10f/(1 + d);
 			if (RayCastHitsEnemy()) {
 				return true;
@@ -654,6 +654,7 @@ public class Weapon : MonoBehaviour {
 		projectile.target = target;
 		projectile.damage *= damageMultiplier;
 		projectile.lifeSpan *= rangeMultiplier;
+		projectile.ownerWeapon = this;
 
 		foreach (KeyValuePair<System.Type, float> kvp in damageAdjustments )
 		{

@@ -12,6 +12,7 @@ public class Projectile : GameUnit {
 	public float damageVarianceRatio;
 	public bool allowFriendlyFire = true;
 	public GameUnit ownerUnit;
+	public Weapon ownerWeapon; // can be null
 	public float birthTime;
 	public float lifeSpan;
 

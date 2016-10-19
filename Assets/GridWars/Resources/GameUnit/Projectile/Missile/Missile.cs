@@ -14,11 +14,17 @@ public class Missile : Projectile {
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate();
 
+		if (isSeeking && target == null) { // attempt to re-target missile
+			if (ownerWeapon != null) {
+				target = ownerWeapon.target;
+			}
+		}
+
 		if (target == null) {
 			showsUnitExplosion = false;
 			Die();
 		}
-
+			
 		if (isSeeking && target != null) {
 			// control thrust vectoring
 			//Vector3 tpos = TargetLeadPosition();

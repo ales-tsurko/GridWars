@@ -1087,7 +1087,7 @@ public class GameUnit : NetworkObject {
 
 
 	public void ShowFxExplosion() {
-		if (deathExplosionPrefab != null) {
+		if (showsUnitExplosion && deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {
 				var obj = Instantiate(deathExplosionPrefab);
