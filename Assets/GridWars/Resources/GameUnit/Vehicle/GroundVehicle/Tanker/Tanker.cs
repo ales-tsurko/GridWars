@@ -11,16 +11,7 @@ public class Tanker : GroundVehicle {
 	public override void Awake() {
 		base.Awake();
 		powerCostPerLevel = new float[] { 15f, float.MaxValue, float.MaxValue };
-
 	}
-
-	/*
-	public GameObject getChildGameObject(GameObject fromGameObject, string withName) {
-		Transform[] ts = fromGameObject.transform.GetComponentsInChildren(typeof(GameObject));
-		foreach (Transform t in ts) if (t.gameObject.name == withName) return t.gameObject;
-		return null;
-	}
-	*/
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();

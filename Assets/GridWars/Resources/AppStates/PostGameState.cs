@@ -28,7 +28,7 @@ public class PostGameState : NetworkDelegateState {
 				}
 				else {
 					title = "Defeat!";
-					App.shared.PlayAppSoundNamed("Defeat");
+					App.shared.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
 
 				}
 			}
@@ -136,7 +136,7 @@ public class PostGameState : NetworkDelegateState {
 		RequestRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
 		app.Log("RequestRematchEvent.Send", this);
 
-		//App.shared.PlayAppSoundNamedWithVolume("Rematch", 0.3f); // want to play this until menu is removed
+		//App.shared.PlayAppSoundNamedAtVolume("Rematch", 0.3f); // want to play this until menu is removed
 
 		requestedRematch = true;
 

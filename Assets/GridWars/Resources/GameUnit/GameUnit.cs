@@ -792,7 +792,7 @@ public class GameUnit : NetworkObject {
 
 	public float DistanceToEnemyFortress() {
 		foreach (var enemyPlayer in player.enemyPlayers) {
-			return Vector3.Distance(player.fortress.transform.position, transform.position);
+			return Vector3.Distance(enemyPlayer.fortress.transform.position, transform.position);
 		}
 
 		return -1; 
@@ -1119,7 +1119,7 @@ public class GameUnit : NetworkObject {
 
 
 	public void ShowFxExplosion() {
-		if (deathExplosionPrefab != null) {
+		if (showsUnitExplosion && deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {
 				var obj = Instantiate(deathExplosionPrefab);

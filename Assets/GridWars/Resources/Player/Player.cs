@@ -225,7 +225,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	private int npcThinkFrequency = 30;
+	private int npcThinkFrequency = 20;
 
 	/*
 	thinkThrottle = new Throttle();
@@ -238,15 +238,26 @@ public class Player : MonoBehaviour {
 
 		if (npcModeOn && BoltNetwork.isServer) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
-				for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
+				//for (int x = 0; x < 4; x++) { // 4 = max number of units released at once
 					AI();
-				}
+				//}
 			}
 		}
 	}
 
 	private void AI() {
-		if (powerSource.PowerRatio() > 0.3f) {
+		float minPowerRatio = 0.0f;
+
+		if (playerNumber == 2) {
+			float r = fortress.DistanceRatioOfClosestEnemy();
+			if (r < 0.4f) {
+				minPowerRatio = 0f;
+			} else {
+				minPowerRatio = 1f;
+			}
+		}
+
+		if ( powerSource.PowerRatio() >= minPowerRatio) {
 			
 			Tower bestTower = null;
 			float bestEffectiveness = 0f;

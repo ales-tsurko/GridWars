@@ -82,7 +82,7 @@ public class BigBoom : Explosion {
 				if (unit.IsOfType(typeof(Vehicle))) {
 					unit.ApplyDamage(a * 8f * (1 - DoneRatio()));
 				} else {
-					unit.ApplyDamage(a * 0.4f);
+					unit.ApplyDamage(a * 0.2f);
 				}
 			}
 		}
