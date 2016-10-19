@@ -104,7 +104,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 			releaseZone.transform.localPosition = new Vector3(-launchZoneWidth/2 + unitWidth/2 + i*(unitWidth+unitSpacing), 0.05f, 0f);
 
 			releaseZone.transform.Translate(Vector3.Scale(
-				new Vector3(0f, size.y/2 + unitSize.y/2 + unitSpacing, size.z/2 + unitLength/2 + unitSpacing),
+				new Vector3(0f, size.y/2 + unitSize.y/2 + unitSpacing, size.z/2 + unitLength/2 + unitSpacing * 2f),
 				unitPrefab.GetComponent<GameUnit>().launchDirection
 			));
 

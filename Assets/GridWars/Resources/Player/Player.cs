@@ -245,11 +245,17 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public float DistanceRatioOfFriendlyToEnemyFortress() {
+		return 1f;
+	}
+
 	private void AI() {
 		float minPowerRatio = 0.0f;
 
 		if (playerNumber == 2) {
+
 			float r = fortress.DistanceRatioOfClosestEnemy();
+
 			if (r < 0.4f) {
 				minPowerRatio = 0f;
 			} else {
