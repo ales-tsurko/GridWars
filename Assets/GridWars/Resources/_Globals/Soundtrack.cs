@@ -10,7 +10,10 @@ public class Soundtrack : MonoBehaviour {
 
 	public void Play() {
 		if (audioSource.isPlaying == false) {
-			audioSource.PlayOneShot(clip, maxVolume);
+			audioSource.loop = true;
+			audioSource.volume = maxVolume;
+			audioSource.clip = clip;
+			audioSource.Play();
 			audioSource.time = 0;
 		}
 	}

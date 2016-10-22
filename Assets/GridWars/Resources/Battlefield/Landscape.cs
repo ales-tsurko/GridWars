@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿/*
+ * using UnityEngine;
 using System.Collections.Generic;
 
 public class Landscape : MonoBehaviour {
@@ -12,8 +13,6 @@ public class Landscape : MonoBehaviour {
 	public Material cloudMaterial;
 
 	void Start() {
-		//Rect fieldRect = new Rect(-50, -50, 100, 100);
-		//Rect fieldRect = new Rect(-100, -100, 200, 200);
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
@@ -58,14 +57,7 @@ public class Landscape : MonoBehaviour {
 			}
 		}
 
-		/*
-		var maxSpeed = 0.1f;
-		if (UnityEngine.Random.value > .5) {
-			speed = new Vector3(Rand(maxSpeed), 0, 0);
-		} else {
-			speed = new Vector3(0, 0, Rand(maxSpeed));
-		}
-		*/
+
 	}
 
 	bool CoinFlip() {
@@ -119,3 +111,4 @@ public class Landscape : MonoBehaviour {
 	}
 
 }
+*/

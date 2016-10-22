@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
+using InControl;
 
 public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
@@ -9,8 +10,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	//public Mesh theMesh;
 	[HideInInspector]
-	public KeyCode attemptQueueUnitKeyCode = KeyCode.None;
-    public string unitKeyMap = "None";
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -128,19 +127,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		iconObject.transform.localRotation = Quaternion.identity;
 		player.Paint(iconObject);
 
-        unitKeyMap = iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber;
-        attemptQueueUnitKeyCode = unitKeyMap.GetKeyCode();
-		//Keys.data.TryGetValue(iconUnit.GetComponent<GameUnit>().GetType().ToString() + player.localNumber, out attemptQueueUnitKeyCode); //assigns KeyCode from string - dictionary is editable for remapping keys
-
-        keyIcon.GetComponentInChildren<TextMesh>().text = attemptQueueUnitKeyCode.ToString().FormatForKeyboard();
-
-		keyIcon.EachRenderer(r => r.enabled = true);//GameUnit.SetVisibileAndEnabled(true) isn't working for some reason.
-
-		//Debug.Log(player.playerNumber + ": " + gameUnit.GetType() + ": " + attemptQueueUnitKeyCode.ToString());
-
-		if (entity.hasControl) {
-			App.shared.keys.AddKeyDelegate(unitKeyMap, this);
-		}
+		keyIcon.EachRenderer(r => r.enabled = true);
 	}
 
 	public override void ServerFixedUpdate () {
@@ -160,11 +147,40 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
+	BindingSourceType lastInputType = BindingSourceType.None;
+
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
 		iconObject.SetActive(CanQueueUnit(0));
-		keyIcon.SetActive(attemptQueueUnitKeyCode != KeyCode.None && player.isLocal && prefs.keyIconsVisible);
+		keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
+
+		//CANT DO THIS -- NEED TO CHECK PER PLAYER
+		if (player.inputs.LastInputType != lastInputType) {
+			lastInputType = player.inputs.LastInputType;
+			foreach(var binding in releaseAction.Bindings) {
+				if (binding.BindingSourceType == lastInputType) {
+					var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
+					textMesh.text = binding.HotkeyDescription();
+					if (textMesh.text == "△") {
+						textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+						textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
+					}
+					else if (textMesh.text == "▢") {
+						textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+						textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
+					}
+					else if (textMesh.text == "◯") {
+						textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+						textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
+					}
+					else {
+						textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
+						textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
+					}
+				}
+			}
+		}
 	}
 
 
@@ -180,7 +196,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		base.ServerAndClientLeftGame();
 
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
-		App.shared.keys.RemoveKeyDelegate(unitKeyMap, this);
 	}
 
 	// HUD
@@ -231,28 +246,61 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	float mouseDownStart;
+	// Input
 
+
+	float longPressDuration = 0.5f;
+	float releaseUnitDownTime;
+
+	void ReleaseUnitDown() {
+		if (!npcModeOn) {
+			releaseUnitDownTime = Time.time;
+		}
+	}
+
+	void ReleaseUnitUp() {
+		if (!npcModeOn && releaseUnitDownTime != 0f) {
+			SendAttemptQueueUnit(0);
+		}
+	}
+
+	void ReleaseUnitUpdate() {
+		if (releaseUnitDownTime > 0f && (Time.time - releaseUnitDownTime >= longPressDuration)) {
+			releaseUnitDownTime = 0f;
+			SendAttemptQueueUnit(1);
+		}
+	}
+
+
+	//TODO: don't allow keyboard player to release units for other side?
 	void OnMouseDown() {
-		mouseDownStart = Time.time;
+		ReleaseUnitDown();
 	}
 
 	void OnMouseUp() {
-		if (!npcModeOn) {
-			if (mouseDownStart != 0f) {
-				mouseDownStart = 0f;
-				SendAttemptQueueUnit(0);
-			}
+		ReleaseUnitUp();
+	}
+
+	PlayerAction releaseAction {
+		get {
+			return player.inputs.GetPlayerActionByName(unitPrefab.name);
 		}
 	}
 
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
-		if (mouseDownStart > 0f && (Time.time - mouseDownStart >= App.shared.keys.longPressDuration)) {
-			mouseDownStart = 0f;
-			SendAttemptQueueUnit(1);
+		if (player.inGameMenu != null && !player.inGameMenu.hasFocus) {
+			if (releaseAction.WasPressed) {
+				ReleaseUnitDown();
+			}
+
+			if (releaseAction.WasReleased) {
+				ReleaseUnitUp();
+			}
 		}
+
+		ReleaseUnitUpdate();
 	}
 
 	public void SendAttemptQueueUnit(int veteranLevel = 0) {
@@ -421,7 +469,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	bool inGameMenuIsFocused {
 		get {
 			if (App.shared.state.inheritsFrom(typeof(PlayingGameState))) {
-				return (App.shared.state as PlayingGameState).InGameMenuForPlayer(player).isFocused;
+				return (App.shared.state as PlayingGameState).InGameMenuForPlayer(player).hasFocus;
 			}
 			else {
 				return false;

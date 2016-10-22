@@ -32,6 +32,7 @@ public class App : MonoBehaviour {
 	public Battlefield battlefield;
 	public CameraController cameraController;
 	public Keys keys;
+	public PlayerInputs inputs; //used outside of games
 
 	public string version {
 		get {
@@ -54,7 +55,7 @@ public class App : MonoBehaviour {
 		}
 	}
 
-	// --- Game Loop -------------------
+	// --- MonoBehaviour -------------------
 
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
@@ -90,6 +91,10 @@ public class App : MonoBehaviour {
 
 		keys = new Keys();
 
+		inputs = new PlayerInputs();
+		inputs.AddControllerBindings();
+		inputs.AddLocalPlayer1KeyBindings();
+
 		menu = UI.Menu();
 
 		var mainMenuState = new MainMenuState();
@@ -106,6 +111,10 @@ public class App : MonoBehaviour {
 	void Update() {
 		state.Update();
 		keys.Update();
+	}
+
+	void OnDestroy() {
+		inputs.Destroy();
 	}
 
 	// --- Menu --------------------

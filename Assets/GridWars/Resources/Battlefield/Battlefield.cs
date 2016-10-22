@@ -39,10 +39,21 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
-	public Player localPlayer {
+	public Player localPlayer1 {
 		get {
 			if (localPlayers.Count > 0) {
 				return localPlayers[0];
+			}
+			else {
+				return null;
+			}
+		}
+	}
+
+	public Player localPlayer2 {
+		get {
+			if (localPlayers.Count > 1) {
+				return localPlayers[1];
 			}
 			else {
 				return null;
@@ -57,6 +68,7 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public bool isInternetPVP;
+	public bool isAiVsAi;
 
 	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
@@ -75,6 +87,10 @@ public class Battlefield : MonoBehaviour {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
+	}
+
+	public void UpdatePlayerInputs() {
+		
 	}
 
 	public void StartGame() {
@@ -146,7 +162,8 @@ public class Battlefield : MonoBehaviour {
 			"App",
 			"BoltControl",
 			"BoltBehaviours",
-			"SocketIO"
+			"SocketIO",
+			"InControl"
 		});
 
 		var objs = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();

@@ -6,13 +6,15 @@ public class MainMenuState : AppState {
 		base.EnterFrom(state);
 
 		battlefield.isInternetPVP = false;
+		battlefield.player1.isLocal = false;
+		battlefield.player2.isLocal = false;
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
-        menu.AddItem(UI.MenuItem("Options", OptionsClicked));
+        //menu.AddItem(UI.MenuItem("Options", OptionsClicked)); //Remove until we have player profiles.
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
@@ -21,6 +23,7 @@ public class MainMenuState : AppState {
 	}
 	
 	void InternetPvpClicked() {
+		//return PlayerInputs..BoundTo.Device.GetControl(InputControlType.Action1).Handle;
 		battlefield.isInternetPVP = true;
 
 		TransitionTo(new MatchmakerState());
@@ -30,11 +33,12 @@ public class MainMenuState : AppState {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = true;
 
-		TransitionTo(new WaitForBoltState());
+		TransitionTo(new BindInputsToPlayersState());
 	}
 
 	void PlayerVsCompClicked() {
 		battlefield.player1.isLocal = true;
+		battlefield.player2.isLocal = false;
 
 		battlefield.player2.npcModeOn = true;
 
@@ -42,6 +46,9 @@ public class MainMenuState : AppState {
 	}
 
 	void CompVsCompClicked() {
+		battlefield.isAiVsAi = true;
+		battlefield.player1.isLocal = false;
+		battlefield.player2.isLocal = false;
 		battlefield.player1.npcModeOn = true;
 		battlefield.player2.npcModeOn = true;
 

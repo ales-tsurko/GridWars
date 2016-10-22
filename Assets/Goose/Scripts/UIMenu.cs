@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-public class UIMenu : UIElement {
-	public static string CONTROLLER_1_MENU_CURSOR_NAME = "MenuCursor1";
-	public static string CONTROLLER_2_MENU_CURSOR_NAME = "MenuCursor2";
+using InControl;
 
+public class UIMenu : UIElement {
 	Image image;
 
 	public Vector2 itemSpacing = new Vector2(0f, 18f); //TODO: match with font size?
@@ -30,9 +29,6 @@ public class UIMenu : UIElement {
         }
     }
 
-	public string controllerInputName = "MenuCursor1";
-	public KeyCode controllerSelectionKey = KeyCode.Joystick1Button1;
-
 	public UIButton selectedItem;
 
 	public bool isNavigable = true;
@@ -48,6 +44,25 @@ public class UIMenu : UIElement {
 			image.color = value;
 		}
 	}
+
+	PlayerInputs _inputs;
+	public PlayerInputs inputs {
+		get {
+			if (_inputs == null) {
+				return App.shared.inputs;
+			}
+			else {
+				return _inputs;
+			}
+		}
+
+		set {
+			_inputs = inputs;
+		}
+	}
+
+	MenuOrientation orientation;
+
 
 	//public AudioSource audioSource;
 
@@ -70,11 +85,17 @@ public class UIMenu : UIElement {
 		OrderMenu ();
 	}
 
+	public void SetOrientation(MenuOrientation orientation) {
+		OrderMenu(orientation);
+	}
+
     public void OrderMenu (MenuOrientation orientation = MenuOrientation.Vertical, float _spacing = 0){
 
 		bool isVertical = orientation == MenuOrientation.Vertical;
 		Vector2 pivot;
 		Vector2 layoutDirection;
+
+		this.orientation = orientation;
 
 		if (isVertical) {
 			//x = 0 is center
@@ -196,7 +217,7 @@ public class UIMenu : UIElement {
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
 			selectedItem = item;
-			lastSelectionTime = Time.time;
+			//lastSelectionTime = Time.time;
 		}
 	}
 
@@ -256,19 +277,45 @@ public class UIMenu : UIElement {
         }
     }
 
+	/*
 	public float controllerPeriod = 0.25f;
 	float lastSelectionTime = 0f;
+	*/
 
 	void Update() {
 		if (hasFocus) {
-			if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
-				SelectNextItem();
+			if (orientation == MenuOrientation.Vertical) {
+				if (inputs.upItem.WasPressed) {
+					//App.shared.Log("inputs.upItem.WasPressed", this);
+					SelectPreviousItem();
+				}
+
+				if (inputs.downItem.WasPressed) {
+					//App.shared.Log("inputs.downItem.WasPressed", this);
+					SelectNextItem();
+				}
+			}
+			else {
+				if (inputs.leftItem.WasPressed) {
+					//App.shared.Log("inputs.leftItem.WasPressed", this);
+					SelectPreviousItem();
+				}
+
+				if (inputs.rightItem.WasPressed) {
+					//App.shared.Log("inputs.rightItem.WasPressed", this);
+					SelectNextItem();
+				}
 			}
 
-			if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-				SelectPreviousItem();
+			if (inputs.selectItem.WasPressed) {
+				if (selectedItem != null) {
+					//App.shared.Log("selectedItem.OnClick();", this);
+					selectedItem.OnClick();
+				}
 			}
+				
 
+			/*
 			var controllerDirection = Input.GetAxis(controllerInputName);
 
 			if (Time.time > lastSelectionTime + controllerPeriod) {
@@ -279,18 +326,13 @@ public class UIMenu : UIElement {
 					SelectPreviousItem();
 				}
 			}
-			
-			if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(controllerSelectionKey)) {
-				if (selectedItem != null) {
-					selectedItem.OnClick();
-				}
-			}
+			*/
 		}
 	}
 }
 
 public enum MenuAnchor { MiddleCenter, TopCenter, TopLeft, TopRight };
-public enum MenuOrientation {Vertical, Horizontal};
+public enum MenuOrientation { Vertical, Horizontal };
 public static class UIMenuExtension {
     public static void SetAnchor (this UIMenu _menu, MenuAnchor anchor){
         RectTransform _t = _menu.panel;
@@ -324,8 +366,4 @@ public static class UIMenuExtension {
 				break;
         }
     }
-    public static void SetOrientation (this UIMenu _menu, MenuOrientation orientation){
-        _menu.OrderMenu(orientation);
-    }
-        
 }

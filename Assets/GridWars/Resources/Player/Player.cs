@@ -75,11 +75,27 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public string description {
+	public bool isLocalPlayer1 {
 		get {
-			return (playerNumber == 1 ? "Red" : "Blue") + "Player";
+			return localNumber == 1;
 		}
 	}
+
+	public bool isLocalPlayer2 {
+		get {
+			return localNumber == 2;
+		}
+	}
+
+	public string description {
+		get {
+			return (playerNumber == 1 ? "Red" : "Blue") + " Player";
+		}
+	}
+
+	public InGameMenu inGameMenu;
+
+	// MonoBehaviour
 
 	void Awake() {
 		units = new List<GameUnit>();
@@ -104,6 +120,12 @@ public class Player : MonoBehaviour {
 
 		//gameObject.tag = "Player" + playerNumber;
 	}
+
+	void OnDestroy() {
+		DestroyInputs();
+	}
+
+	// Game
 
 	public bool isInGame;
 
@@ -306,6 +328,34 @@ public class Player : MonoBehaviour {
 			Debug.Log(vectorToCamera);
 
 			return vectorToCamera;
+		}
+	}
+
+	// -- Input --------------------------------
+
+	PlayerInputs _inputs;
+	public PlayerInputs inputs {
+		get {
+			if (_inputs == null) {
+				return App.shared.inputs; //inputs are only assigned for SharedScreenPVP.  Use defaults otherwise.
+			}
+			else {
+				return _inputs;
+			}
+		}
+
+		set {
+			Debug.Log(localNumber + ": " + "Assign Inputs");
+			DestroyInputs();
+			_inputs = value;
+		}
+	}
+
+	public void DestroyInputs() {
+		if (_inputs != null) {
+			App.shared.Log("DestroyInputs", this);
+			_inputs.Destroy();
+			_inputs = null;
 		}
 	}
 }

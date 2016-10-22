@@ -13,42 +13,32 @@ public class PostGameState : NetworkDelegateState {
 
 		network.networkDelegate = this;
 
-		/*
-		if (battlefield.localPlayer == null) {
-			//AIvAI
-			LeaveGame();
-		}
-		else {
-			*/
-			IsEntering();
+		IsEntering();
 
-			app.ResetMenu();
-			menu.SetBackground(Color.black, 0);
-			var title = "";
-			if (battlefield.localPlayers.Count == 1) {
-				if (victoriousPlayer.isLocal) {
-					title = "Victory!";
-					App.shared.PlayAppSoundNamed("Victory");
-				} else {
-					title = "Defeat!";
-					App.shared.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
-
-				}
-			}
-			else {
-				title = "Player " + victoriousPlayer.playerNumber + " is Victorious!";
-			}
-
-			menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
-			if (battlefield.isInternetPVP) {
-				menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
+		app.ResetMenu();
+		menu.SetBackground(Color.black, 0);
+		var title = "";
+		if (battlefield.localPlayers.Count == 1) {
+			if (victoriousPlayer.isLocal) {
+				title = "Victory!";
+				App.shared.PlayAppSoundNamed("Victory");
 			} else {
-				menu.AddItem(UI.MenuItem("Rematch!", RequestRematch));
+				title = "Defeat!";
+				App.shared.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
 			}
-			menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
+		} else {
+			title = "Player " + victoriousPlayer.playerNumber + " is Victorious!";
+		}
 
-			menu.Show();
-		//}
+		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
+		if (battlefield.isInternetPVP) {
+			menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
+		} else {
+			menu.AddItem(UI.MenuItem("Rematch!", RequestRematch));
+		}
+		menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
+
+		menu.Show();
 	}
 
 	void IsEntering() {
