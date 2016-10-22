@@ -20,8 +20,8 @@ public class PlayingGameState : NetworkDelegateState {
 
 		//do this before ShowInGameMenu
 		if (battlefield.isInternetPVP) {
-			battlefield.PlayerNumbered(1).isLocal = BoltNetwork.isServer;
-			battlefield.PlayerNumbered(2).isLocal = BoltNetwork.isClient;
+			battlefield.player1.isLocal = BoltNetwork.isServer;
+			battlefield.player2.isLocal = BoltNetwork.isClient;
 		}
 
 		ShowInGameMenus();
@@ -85,7 +85,7 @@ public class PlayingGameState : NetworkDelegateState {
 		base.ReceivedConcede();
 
 		var state = new PostGameState();
-		state.victoriousPlayer = battlefield.localPlayer;
+		state.victoriousPlayer = battlefield.localPlayer1;
 
 		TransitionTo(state);
 	}
@@ -122,7 +122,7 @@ public class PlayingGameState : NetworkDelegateState {
 		inGameMenus = new List<InGameMenu>();
 
 		if (app.battlefield.localPlayers.Count == 0) {
-			AddInGameMenu(null);
+			AddInGameMenu(app.battlefield.player1);
 		}
 		else {
 			foreach (var player in app.battlefield.localPlayers) {
@@ -135,7 +135,10 @@ public class PlayingGameState : NetworkDelegateState {
 		var inGameMenu = new InGameMenu();
 		inGameMenu.playingGameState = this;
 		inGameMenu.player = player;
+		inGameMenu.menuPlacement = player.localNumber == 2 ? MenuAnchor.TopRight : MenuAnchor.TopLeft;
 		inGameMenu.Show();
+
+		player.inGameMenu = inGameMenu;
 
 		inGameMenus.Add(inGameMenu);
 	}

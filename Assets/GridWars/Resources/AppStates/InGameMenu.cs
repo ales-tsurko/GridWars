@@ -4,27 +4,11 @@ using System.Collections.Generic;
 public class InGameMenu {
 	public PlayingGameState playingGameState;
 	public Player player;
+	public MenuAnchor menuPlacement;
 
-	public int localPlayerNumber {
+	public bool hasFocus {
 		get {
-			if (isLocalPlayer1) {
-				return 1;
-			}
-			else {
-				return 2;
-			}
-		}
-	}
-
-	public bool isAiVsAi {
-		get {
-			return player == null;
-		}
-	}
-
-	public bool isFocused {
-		get {
-			return new List<UIButton>(menu.GetComponentsInChildren<UIButton>()).Find(b => b.isSelected) != null;
+			return menu.hasFocus;
 		}
 	}
 
@@ -37,6 +21,9 @@ public class InGameMenu {
 	public void Hide() {
 		if (menu != null) {
 			menu.Destroy();
+			menu = null;
+			player.inGameMenu = null;
+			player = null;
 		}
 	}
 
@@ -47,12 +34,20 @@ public class InGameMenu {
 			hotkeysItem.ReadInput();
 		}
 
-		if (cameraItem != null) {
-			cameraItem.ReadInput();
+		if (previousCameraItem != null) {
+			previousCameraItem.ReadInput();
 		}
 
-		if ((Keys.FOCUSMENU + localPlayerNumber).KeyDown() && !App.shared.cameraController.isInFirstPerson) {
-			if (isFocused) {
+		if (nextCameraItem != null) {
+			nextCameraItem.ReadInput();
+		}
+
+		if (firstPersonCameraItem != null) {
+			firstPersonCameraItem.ReadInput();
+		}
+
+		if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPerson) {
+			if (menu.hasFocus) {
 				menu.LoseFocus();
 			}
 			else {
@@ -64,22 +59,13 @@ public class InGameMenu {
 	UIMenu menu;
 	InGameMenuItem concedeItem;
 	InGameMenuItem hotkeysItem;
-	InGameMenuItem cameraItem;
+	InGameMenuItem nextCameraItem;
+	InGameMenuItem previousCameraItem;
+	InGameMenuItem firstPersonCameraItem;
 
-	bool isLocalPlayer1 {
+	PlayerInputs inputs {
 		get {
-			return isAiVsAi || player.localNumber == 1;
-		}
-	}
-
-	MenuAnchor menuAnchor {
-		get {
-			if (player == null || player.localNumber == 1) {
-				return MenuAnchor.TopLeft;
-			}
-			else {
-				return MenuAnchor.TopRight;
-			}
+			return player.inputs;
 		}
 	}
 
@@ -93,7 +79,7 @@ public class InGameMenu {
 		string title;
 
 		//TODO: detect which player conceded in shared screen pvp
-		if (player == null) { //AIvAI
+		if (App.shared.battlefield.isAiVsAi) { //AIvAI
 			title = "Quit";
 		}
 		else {
@@ -101,37 +87,43 @@ public class InGameMenu {
 		}
 
 		concedeItem = new InGameMenuItem();
-		concedeItem.inGameMenu = this;
 		concedeItem.title = title;
-		concedeItem.keyName = Keys.CONCEDE;
-		concedeItem.action = HandleConcede;
+		concedeItem.inGameMenu = this;
+		concedeItem.playerAction = inputs.concede;
+		concedeItem.menuAction = HandleConcede;
 		menu.AddItem(concedeItem.menuItem);
 
-		if (!isAiVsAi) {
+		if (!App.shared.battlefield.isAiVsAi) {
 			hotkeysItem = new InGameMenuItem();
-			hotkeysItem.inGameMenu = this;
 			hotkeysItem.title = "Hotkeys";
-			hotkeysItem.keyName = Keys.TOGGLEKEYS;
-			hotkeysItem.action = HandleHotkeys;
+			hotkeysItem.inGameMenu = this;
+			hotkeysItem.playerAction = inputs.toggleHotkeys;
+			hotkeysItem.menuAction = HandleHotkeys;
 			menu.AddItem(hotkeysItem.menuItem);
 		}
 
-		if (isLocalPlayer1) {
-			cameraItem = new InGameMenuItem();
-			cameraItem.inGameMenu = this;
-			cameraItem.title = "Camera";
-			cameraItem.keyName = Keys.CHANGECAM;
-			cameraItem.action = HandleCamera;
-			menu.AddItem(cameraItem.menuItem);
+		if (inputs.nextCamera.Bindings.Count > 0) {
+			/*
+			previousCameraItem = new InGameMenuItem();
+			previousCameraItem.inGameMenu = this;
+			previousCameraItem.title = "< Camera";
+			previousCameraItem.menuAction = HandlePreviousCamera;
+			menu.AddItem(previousCameraItem.menuItem);
+			*/
+
+			nextCameraItem = new InGameMenuItem();
+			nextCameraItem.inGameMenu = this;
+			nextCameraItem.playerAction = inputs.nextCamera;
+			nextCameraItem.title = "Camera";
+			nextCameraItem.menuAction = HandleCamera;
+			menu.AddItem(nextCameraItem.menuItem);
 		}
 
-		menu.controllerInputName = isLocalPlayer1 ? UIMenu.CONTROLLER_1_MENU_CURSOR_NAME : UIMenu.CONTROLLER_2_MENU_CURSOR_NAME;
-		menu.controllerSelectionKey = isLocalPlayer1 ? KeyCode.Joystick1Button1 : KeyCode.Joystick2Button1;
-
 		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(menuAnchor);
+		menu.SetAnchor(menuPlacement);
 		menu.SetBackground(Color.black, 0);
 		menu.selectsOnShow = false;
+		menu.inputs = inputs;
 		menu.Show();
 	}
 
@@ -143,18 +135,17 @@ public class InGameMenu {
 		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
 		menu.AddItem(UI.MenuItem("Cancel", Reset));
 		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(menuAnchor);
+		menu.SetAnchor(menuPlacement);
 		menu.SetBackground(Color.black, 0);
 		menu.selectsOnShow = true;
-		menu.controllerInputName = isLocalPlayer1 ? UIMenu.CONTROLLER_1_MENU_CURSOR_NAME : UIMenu.CONTROLLER_2_MENU_CURSOR_NAME;
-		menu.controllerSelectionKey = isLocalPlayer1 ? KeyCode.Joystick1Button1 : KeyCode.Joystick2Button1;
+		menu.inputs = inputs;
 		menu.Show();
 	}
 
 	void ReallyConcede() {
 		var state = new PostGameState();
 
-		if (isAiVsAi) {
+		if (App.shared.battlefield.isAiVsAi) {
 			state.victoriousPlayer = null;
 		}
 		else {
@@ -182,13 +173,13 @@ public class InGameMenu {
 public class InGameMenuItem {
 	public InGameMenu inGameMenu;
 	public string title;
-	public string keyName;
-	public System.Action action;
+	public InControl.PlayerAction playerAction;
+	public System.Action menuAction;
 
 	public UIButton menuItem {
 		get {
 			if (_menuItem == null) {
-				_menuItem = UI.MenuItem(title + " (" + keyMappingName.GetKeyCode().ToString() + ")", action);
+				_menuItem = UI.MenuItem(title, menuAction);
 			}
 
 			return _menuItem;
@@ -196,16 +187,10 @@ public class InGameMenuItem {
 	}
 
 	public void ReadInput() {
-		if (keyMappingName.KeyDown()) {
-			action();
+		if (playerAction.WasPressed) {
+			menuAction();
 		}
 	}
 
 	UIButton _menuItem;
-
-	string keyMappingName {
-		get {
-			return keyName + inGameMenu.localPlayerNumber;
-		}
-	}
 }

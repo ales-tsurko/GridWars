@@ -13,7 +13,7 @@ public class PostGameState : NetworkDelegateState {
 
 		network.networkDelegate = this;
 
-		if (battlefield.localPlayer == null) {
+		if (battlefield.localPlayer1 == null) {
 			//AIvAI
 			LeaveGame();
 		}

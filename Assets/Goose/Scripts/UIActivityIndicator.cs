@@ -53,9 +53,15 @@ public class UIActivityIndicator : UIButton {
 	void UpdateText() {
 		var suffix = "";
 
-		for (var i = 0; i < dotCount; i ++) {
-			suffix += ".";
+		if (dotCount == 0) { //prevent jitter
+			suffix = " ";
 		}
+		else {
+			for (var i = 0; i < dotCount; i ++) {
+				suffix += ".";
+			}
+		}
+
 
 		transform.GetComponentInChildren<Text>().text = prefix + suffix;
 		SizeToFit();

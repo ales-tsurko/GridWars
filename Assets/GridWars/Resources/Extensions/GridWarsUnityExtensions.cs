@@ -254,7 +254,7 @@ public static class GridWarsUnityExtensions {
 		BoxCollider bc = self.GetComponent<BoxCollider>();
 		Bounds b = new Bounds();
 		b.center = bc.center;
-		b.extents = bc.extents;
+		b.extents = bc.size;
 		return b;
 	}
 }

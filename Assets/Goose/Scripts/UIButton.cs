@@ -127,11 +127,13 @@ public class UIButton : UIElement {
 
     public void SizeToFit() {
 		var w = textComponent.preferredWidth;
-		var h = textComponent.fontSize;
+
+		var lineCount = textComponent.text.Split('\n').Length;
+		var h = textComponent.font.lineHeight*lineCount;
 
 		rectTransform.sizeDelta = new Vector2(
-			w + h*innerMargins.x*2,
-			h + h*innerMargins.y*2
+			w + textComponent.font.fontSize*innerMargins.x*2,
+			h + textComponent.font.fontSize*innerMargins.y*2
 		);
     }
 
