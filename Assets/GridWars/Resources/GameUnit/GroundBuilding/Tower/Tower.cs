@@ -432,7 +432,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public float Effectiveness() {
 		float wc = 0;
 		float cu = 0;
-		//float c  = 0;
+		float c  = 0;
 		float e = 0;
 		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 
@@ -441,12 +441,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 			cu = CountOfEnemyUnitsThatCounterUs();
 			//c  = CountOfTowerUnits();
 			//float e = ( (wc - c) / (1 + cu) ) / unitCost;
-			e = ( (wc) / (1 + cu) ) / unitCost;
+			e = ( (wc) / (1f + cu) ) / unitCost;
 		} else {
 			wc = CostOfEnemyUnitsWeCanCounter();
 			cu = CostOfEnemyUnitsThatCounterUs();
-			//c  = CostOfTowerUnits();
-			e = ( (wc) / (1 + cu) ) / unitCost;
+			c  = CostOfTowerUnits();
+			e = ( (wc - c/2f) / (1f + cu) ) / unitCost;
 		}
 
 		return e;

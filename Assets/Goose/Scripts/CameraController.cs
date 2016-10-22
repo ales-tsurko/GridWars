@@ -8,11 +8,14 @@ public class CameraController : MonoBehaviour {
     [HideInInspector]
 	public int pos;
 	public bool moving;
-	public float moveSpeed;
+	public float moveSpeed; // time in seconds to complete animation
+
 	Vector3 startPos;
-	Vector3 targetPos;
 	Quaternion startRot;
+
+	Vector3 targetPos;
 	Quaternion targetRot;
+
 	float startTime;
 	public Transform cam;
 	MouseLook mouseLook;
@@ -21,6 +24,10 @@ public class CameraController : MonoBehaviour {
 	public KeyIconRotation keyIconRotation;
 	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPerson;
+
+	public bool isOrbiting;
+	public Vector3 orbitCenter;
+	public float orbitRadius;
 
 	void Start () {
 		initComplete = false;
@@ -148,11 +155,17 @@ public class CameraController : MonoBehaviour {
 			moving = false;
 		}
 		//print ("Moving " + Time.time);
+		/*
 		float timeSinceStarted = Time.time - startTime;
 		float percentageComplete = timeSinceStarted / moveSpeed;
 
 		cam.localPosition = Vector3.Lerp (startPos, targetPos, percentageComplete);
 		cam.localRotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
+		*/
+
+		float f = 0.05f;
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, f);
+		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, f);
 
 	}
 
