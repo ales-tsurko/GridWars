@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour {
 
 	private bool isOrbiting = false;
 	private Vector3 orbitCenter = new Vector3(0,0,0);
-	private float orbitRadius = 70f;
+	private float orbitRadius = 80f;
 	private float orbitPeriod = 50f; // second per cycles 
 	private float orbitAngle;
 	private float orbitHeight = 30f;

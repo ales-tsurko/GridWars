@@ -206,4 +206,16 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 	*/
+
+	public bool isPvP() {
+		return player1.npcModeOn == false && player2.npcModeOn == false;
+	}
+
+	public bool isAIvsAI() {
+		return player1.npcModeOn == true && player2.npcModeOn == true;
+	}
+
+	public bool isPvsAI() {
+		return player1.isLocal == true && player2.npcModeOn == true;
+	}
 }

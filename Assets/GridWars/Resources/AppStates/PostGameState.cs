@@ -13,12 +13,14 @@ public class PostGameState : NetworkDelegateState {
 
 		network.networkDelegate = this;
 
+		/*
 		if (battlefield.localPlayer == null) {
 			//AIvAI
 			LeaveGame();
 		}
 		else {
-			Object.FindObjectOfType<CameraController>().StartOrbit();
+			*/
+			IsEntering();
 
 			app.ResetMenu();
 			menu.SetBackground(Color.black, 0);
@@ -27,8 +29,7 @@ public class PostGameState : NetworkDelegateState {
 				if (victoriousPlayer.isLocal) {
 					title = "Victory!";
 					App.shared.PlayAppSoundNamed("Victory");
-				}
-				else {
+				} else {
 					title = "Defeat!";
 					App.shared.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
 
@@ -41,14 +42,20 @@ public class PostGameState : NetworkDelegateState {
 			menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
 			if (battlefield.isInternetPVP) {
 				menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
+			} else {
+				menu.AddItem(UI.MenuItem("Rematch!", RequestRematch));
 			}
 			menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
 
 			menu.Show();
-		}
+		//}
 	}
 
-	void Exiting() {
+	void IsEntering() {
+		Object.FindObjectOfType<CameraController>().StartOrbit();
+	}
+
+	void IsExiting() {
 		Object.FindObjectOfType<CameraController>().EndOrbit();
 	}
 
@@ -58,7 +65,7 @@ public class PostGameState : NetworkDelegateState {
 		base.ZeusDisconnected();
 
 		ShowLostConnection();
-		Exiting();
+		IsExiting();
 	}
 
 	public override void BoltShutdownCompleted() {
@@ -73,7 +80,7 @@ public class PostGameState : NetworkDelegateState {
 		base.Disconnected(connection);
 
 		ShowLostConnection();
-		Exiting();
+		IsExiting();
 	}
 
 	public override void ReceivedRematchRequest() {
@@ -117,7 +124,7 @@ public class PostGameState : NetworkDelegateState {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator(prefix + "Returning to Main Menu"));
 		menu.Show();
-		Exiting();
+		IsExiting();
 
 		app.battlefield.HardReset();
 		network.ShutdownBolt();
@@ -129,7 +136,7 @@ public class PostGameState : NetworkDelegateState {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
 		menu.Show();
-		Exiting();
+		IsExiting();
 
 
 		if (BoltNetwork.isRunning) {
@@ -144,6 +151,13 @@ public class PostGameState : NetworkDelegateState {
 	//Rematch
 
 	void RequestRematch() {
+
+		if (!battlefield.isInternetPVP) {
+			battlefield.SoftReset();
+			TransitionTo(new PlayingGameState());
+			return;
+		}
+
 		RequestRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
 		app.Log("RequestRematchEvent.Send", this);
 
