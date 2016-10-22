@@ -10,6 +10,9 @@ public class Vehicle : GameUnit  {
 	//public float timeToMaxSpeed = 1f;
 
 	public float damageThrustAdjustment = 0.1f;
+	public float maxRotYDegPerSec = 20f; 
+	public float lastRotY = -1; 
+	public float rotDY = 0; 
 
 	[HideInInspector]
 
@@ -82,7 +85,19 @@ public class Vehicle : GameUnit  {
 			EnableVehicleCollisionsIfClear();
 		}
 		*/
+		//EnforceMaxRotYDegPerSec();
 	}
+
+	/*
+	public void EnforceMaxRotYDegPerSec() {
+		Vector3 av = rigidBody().angularVelocity;
+
+		if (Mathf.Abs(av.y) > maxRotYDegPerSec * 0.0174533f) {
+			av.y = Mathf.Sign(av.y) * maxRotYDegPerSec;
+			rigidBody().angularVelocity = av;
+		}
+	}
+	*/
 
 	public virtual void SteerTowardsTarget() {
 		if (target != null) {
@@ -117,9 +132,17 @@ public class Vehicle : GameUnit  {
 			}
 		}
 
+		/*
 		if (nearestObsticle != null) {
-			//Debug.DrawLine (_t.position, nearestObsticle.transform.position, Color.red, 0, true);  
+			Vector3 p1 = _t.position;
+			p1.y += 0.5f;
+
+			Vector3 p2 = nearestObsticle.transform.position;
+			p2.y += 0.5f;
+
+			DebugLine.DrawLine (p1, p2, Color.white, 1, 3);  
 		}
+		*/
 	}
 
 	public virtual void RotateAwayFromNearestObsticle() {
@@ -128,19 +151,25 @@ public class Vehicle : GameUnit  {
 			float desire =  SmoothValue(1f - r*r);
 			desire = SmoothValue(desire);
 			desire = SmoothValue(desire);
-			//desire = SmoothValue(desire);
-			//desire = SmoothValue(desire);
-			//float desire = 1f;
 
 			var otherPos = nearestObsticle.transform.position;
 			Vector3 dir = (otherPos - _t.position).normalized;
 			float angleToTarget = AngleBetweenOnAxis(_t.forward, dir, _t.up);
 
-			//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
-			//Debug.DrawLine(_t.position, _t.position + dir*10.0f, Color.yellow); // targetDir yellow
-			//Debug.DrawLine(_t.position, _t.position + dir*AvailableRotationThrust, Color.red); // targetDir red
+			if (Mathf.Abs(angleToTarget) < 90f) {
+				float rotdy = rigidBody().angularVelocity.y * 57.2958f; // degrees per second
 
-			rigidBody().AddTorque(_t.up * (-angleToTarget) * .4f * desire * AvailableRotationThrust(), ForceMode.Force);
+				bool isTurningAway = Mathf.Sign(rotdy) == -Mathf.Sign(angleToTarget);
+
+				if (!isTurningAway || Math.Abs(rotdy) < maxRotYDegPerSec) {
+					float f = 1f; //0.4f; 
+					rigidBody().AddTorque(_t.up * (-angleToTarget) * f * desire * AvailableRotationThrust(), ForceMode.Force);
+					
+					//Debug.DrawLine(_t.position, _t.position + _t.forward * 10.0f, Color.blue); // forward blue
+					//Debug.DrawLine(_t.position, _t.position + dir * 10.0f, Color.yellow); // targetDir yellow
+					//Debug.DrawLine(_t.position, _t.position + dir * AvailableRotationThrust, Color.red); // targetDir red
+				}
+			}
 		}
 	}
 
@@ -155,21 +184,27 @@ public class Vehicle : GameUnit  {
 
 	#endif
 
-	public virtual float RotateDesire() { // -1 to 1 - y axis and clockwise?
-		//float ya = YAngleToTarget();
-		float d = 1f; //SmoothValue(ya / 180f);
-		return d;
+	public Vector3 TargetMovePos() {
+		if (target != null) {
+
+			/*
+			if (nearestObsticle != null) {
+				var otherPos = nearestObsticle.transform.position;
+			}
+			*/
+				
+			return target.transform.position;
+		}
+		return new Vector3();
+	}
+
+	public float YAngleToTargetMovePos() {
+		Vector3 targetDir = (TargetMovePos() - _t.position).normalized;
+		return AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
 	}
 
 	public virtual void RotateTowardTarget() {
-		/*
-		var targetPos = obj.transform.position;
-
-		Vector3 targetDir = (targetPos - _t.position).normalized;
-		float angleToTarget = AngleBetweenOnAxis(_t.forward, targetDir, _t.up);
-		*/
-
-		float ya = YAngleToTarget();
+		float ya = YAngleToTargetMovePos();
 
 		//Debug.DrawLine(_t.position, _t.position + _t.forward*10.0f, Color.blue); // forward blue
 		//Debug.DrawLine(_t.position, _t.position + targetDir*10.0f, Color.yellow); // targetDir yellow

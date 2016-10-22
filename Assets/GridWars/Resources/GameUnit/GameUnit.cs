@@ -16,6 +16,7 @@ public class GameUnit : NetworkObject {
 
 	public AudioClip deathSound;
 
+
 	[HideInInspector]
 	public bool showsUnitExplosion = true;
 
