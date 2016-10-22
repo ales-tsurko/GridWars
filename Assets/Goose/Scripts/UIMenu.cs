@@ -68,6 +68,7 @@ public class UIMenu : UIElement {
 
 	public void Init() {
 		image = gameObject.AddComponent<Image>();
+		image.raycastTarget = false;
 		image.color = Color.black;
 		RectTransform t = GetComponent<RectTransform>();
 		t.anchorMin = new Vector2(0, 0);
