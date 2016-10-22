@@ -10,6 +10,8 @@ public class PlayingGameState : NetworkDelegateState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		Object.FindObjectOfType<CameraController>().EndOrbit();
+
 		battlefield.canCheckGameOver = false;
 
 		network.networkDelegate = this;

@@ -10,13 +10,13 @@ public class CameraController : MonoBehaviour {
 	public bool moving;
 	public float moveSpeed; // time in seconds to complete animation
 
-	Vector3 startPos;
-	Quaternion startRot;
+	//Vector3 startPos;
+	//Quaternion startRot;
 
 	Vector3 targetPos;
 	Quaternion targetRot;
 
-	float startTime;
+	//float startTime;
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
@@ -25,9 +25,14 @@ public class CameraController : MonoBehaviour {
 	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPerson;
 
-	public bool isOrbiting;
-	public Vector3 orbitCenter;
-	public float orbitRadius;
+	// orbits
+
+	private bool isOrbiting = false;
+	private Vector3 orbitCenter = new Vector3(0,0,0);
+	private float orbitRadius = 70f;
+	private float orbitPeriod = 50f; // second per cycles 
+	private float orbitAngle;
+	private float orbitHeight = 30f;
 
 	void Start () {
 		initComplete = false;
@@ -119,6 +124,18 @@ public class CameraController : MonoBehaviour {
 		return (Vector2)Res;
 	}
 
+	public void StartOrbit() {
+		isOrbiting = true;
+	}
+
+	public void EndOrbit() {
+		if (isOrbiting) {
+			isOrbiting = false;
+			pos--;
+			NextPosition();
+		}
+	}
+
 	void Update () {
 		if (!initComplete) {
 			return;
@@ -163,9 +180,33 @@ public class CameraController : MonoBehaviour {
 		cam.localRotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
 		*/
 
-		float f = 0.05f;
-		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, f);
-		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, f);
+		float pf = 0.05f;
+		float rf = 0.05f;
+
+		// adjust target pos & rot
+
+		if (isOrbiting) {
+			orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
+			targetPos = new Vector3( 
+				orbitRadius * Mathf.Cos(orbitAngle), 
+				orbitHeight,
+				orbitRadius * Mathf.Sin(orbitAngle)
+			);
+				
+			var rotationLookAt = Quaternion.LookRotation(orbitCenter - cam.position);
+			targetRot = Quaternion.Slerp(cam.rotation, rotationLookAt, 1f);
+
+			if (Vector3.Distance(cam.position, targetPos) > 0.1f) {
+				pf = 0.005f;
+			} else {
+				rf = 0.2f;
+			}
+		}
+
+		// move towards target position & rotation
+
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf);
+		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf);
 
 	}
 
@@ -177,9 +218,9 @@ public class CameraController : MonoBehaviour {
 		cam.parent = _target.transform;
 		targetPos = Vector3.zero + new Vector3 (0, 2, 0);
 		targetRot = Quaternion.Euler (Vector3.zero);
-		startPos = cam.localPosition;
-		startRot = cam.localRotation;
-		startTime = Time.time;
+		//startPos = cam.localPosition;
+		//startRot = cam.localRotation;
+		//startTime = Time.time;
 		moving = true;
 	}
 
@@ -196,10 +237,10 @@ public class CameraController : MonoBehaviour {
 		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
 		targetPos = transform.position;
 		targetRot = transform.rotation;
-		startPos = cam.position;
-		startRot = cam.rotation;
+		//startPos = cam.position;
+		//startRot = cam.rotation;
 		//print (Time.timeScale);
-		startTime = Time.time;
+		//startTime = Time.time;
 		moving = true;
         App.shared.prefs.camPosition = pos;
 

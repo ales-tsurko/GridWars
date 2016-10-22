@@ -18,6 +18,8 @@ public class PostGameState : NetworkDelegateState {
 			LeaveGame();
 		}
 		else {
+			Object.FindObjectOfType<CameraController>().StartOrbit();
+
 			app.ResetMenu();
 			menu.SetBackground(Color.black, 0);
 			var title = "";
@@ -46,12 +48,17 @@ public class PostGameState : NetworkDelegateState {
 		}
 	}
 
+	void Exiting() {
+		Object.FindObjectOfType<CameraController>().EndOrbit();
+	}
+
 	// Network
 
 	public override void ZeusDisconnected() {
 		base.ZeusDisconnected();
 
 		ShowLostConnection();
+		Exiting();
 	}
 
 	public override void BoltShutdownCompleted() {
@@ -66,6 +73,7 @@ public class PostGameState : NetworkDelegateState {
 		base.Disconnected(connection);
 
 		ShowLostConnection();
+		Exiting();
 	}
 
 	public override void ReceivedRematchRequest() {
@@ -109,6 +117,7 @@ public class PostGameState : NetworkDelegateState {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator(prefix + "Returning to Main Menu"));
 		menu.Show();
+		Exiting();
 
 		app.battlefield.HardReset();
 		network.ShutdownBolt();
@@ -120,6 +129,8 @@ public class PostGameState : NetworkDelegateState {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
 		menu.Show();
+		Exiting();
+
 
 		if (BoltNetwork.isRunning) {
 			app.battlefield.HardReset();
