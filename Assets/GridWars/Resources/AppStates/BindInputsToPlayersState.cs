@@ -21,7 +21,7 @@ public class BindInputsToPlayersState : AppState {
 	void ResetMenu() {
 		app.ResetMenu();
 		//TODO describe the controller button.
-		menu.AddItem(UI.ActivityIndicator("<color=#" + ColorUtility.ToHtmlStringRGB(player.primaryColor.WithV(1f)) + ">" + player.description + "</color>\n\n" + "Press return to use keyboard.\n\nPress any button to use controller."));
+		menu.AddItem(UI.ActivityIndicator("<color=#" + ColorUtility.ToHtmlStringRGB(player.primaryColor.WithV(1f)) + ">" + player.description + "</color>\n\n" + "Press return or click continue to use keyboard and mouse.\n\nPress any button to use controller."));
 		menu.AddItem(UI.MenuItem("Continue", Continue));
 		menu.AddItem(UI.MenuItem("Cancel", Cancel));
 		menu.Show();
@@ -58,11 +58,12 @@ public class BindInputsToPlayersState : AppState {
 				NextState();
 			}
 		}
-		else if (Input.GetKeyDown(KeyCode.Return)) {
+		else if (Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.Return)) {
 			player.inputs = new PlayerInputs();
 			player.inputs.LastInputType = BindingSourceType.KeyBindingSource;
 
 			if (player.isLocalPlayer1) {
+				firstPlayerUsedKeyboard = true;
 				player.inputs.AddLocalPlayer1KeyBindings();
 				NextPlayer();
 			}
