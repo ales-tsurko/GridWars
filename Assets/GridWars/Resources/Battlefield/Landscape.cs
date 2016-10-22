@@ -1,5 +1,4 @@
-﻿/*
- * using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class Landscape : MonoBehaviour {
@@ -111,4 +110,3 @@ public class Landscape : MonoBehaviour {
 	}
 
 }
-*/
