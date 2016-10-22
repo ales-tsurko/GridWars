@@ -360,7 +360,7 @@ public static class UIMenuExtension {
 			case MenuAnchor.TopRight:
 				_t.anchorMin = new Vector2(1f, 1f);
 				_t.anchorMax = new Vector2(1f, 1f);
-				_t.pivot = new Vector2(1f, 1f);
+				_t.pivot = new Vector2(1f, 0.5f);
 				_t.localScale = Vector3.one;
 				_t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
 				break;
