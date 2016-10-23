@@ -14,6 +14,8 @@ public class Landscape : MonoBehaviour {
 	public GameObject ship1;
 	public GameObject ship2;
 	public GameObject ship3;
+	public GameObject ship4;
+	public GameObject ship5;
 
 
 	void Start() {
@@ -32,7 +34,7 @@ public class Landscape : MonoBehaviour {
 		}
 
 		// clouds
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 35; i++) {
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
@@ -45,11 +47,24 @@ public class Landscape : MonoBehaviour {
 				chunk.transform.position = p;
 				chunk.AddComponent<Cloud>().material = cloudMaterial;;
 			//}
-
 		}
 
+		/*
+		for (int i = 0; i < 3; i++) {
+			GameObject newShip = Instantiate(ship2);
+			newShip.transform.parent = transform;
+			Vector3 p = newShip.transform.position;
+			p.x = RandNeg(700);
+			p.y = 130f + Rand(10f);
+			p.z = RandNeg(700);
+			newShip.transform.position = p;
+			newShip.AddComponent<Cloud>();
 
-		var ships = new List<GameObject>{ship1, ship2, ship3};
+			//newShip.Paint(Color color, string materialName = null);
+		}
+		*/
+
+		var ships = new List<GameObject>{ship1, ship2, ship3, ship4, ship5};
 
 		foreach (GameObject ship in ships) {
 			if (ship) {
@@ -61,6 +76,7 @@ public class Landscape : MonoBehaviour {
 				ship.AddComponent<Cloud>();
 			}
 		}
+
 
 		// tall buildings
 		for (int i = 0; i < 20; i++) {
@@ -76,6 +92,8 @@ public class Landscape : MonoBehaviour {
 
 
 	}
+
+	// Random
 
 	bool CoinFlip() {
 		return UnityEngine.Random.value > .5;
@@ -96,7 +114,7 @@ public class Landscape : MonoBehaviour {
 		return r;
 	}
 
-
+	// Chunk
 
 	GameObject CreateChunk(Rect chunkRect, float height, Material mat, int maxCount) {
 		var chunk = new GameObject();
