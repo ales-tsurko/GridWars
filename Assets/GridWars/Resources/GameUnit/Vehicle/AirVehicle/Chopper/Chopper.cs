@@ -228,11 +228,7 @@ public class Chopper : AirVehicle {
 		var choppers = player.units.Where(unit => unit.IsOfType(typeof(Chopper))).ToList<GameUnit>();
 		return choppers.Count;
 	}
-
-	public Soundtrack Soundtrack() {
-		return App.shared.SoundtrackNamed("Wagner_Ride_of_the_Valkyries");
-	}
-
+		
 	public override List<System.Type> CountersTypes() {
 		List<System.Type> counters = base.CountersTypes();
 		counters.Add(typeof(Tank));

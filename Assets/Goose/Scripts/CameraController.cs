@@ -182,6 +182,7 @@ public class CameraController : MonoBehaviour {
 
 		float pf = 0.05f;
 		float rf = 0.05f;
+		float v = 1f + 0.8f * (Mathf.Sin(Time.time / 100f) + 1f) / 2f;
 
 		// adjust target pos & rot
 
@@ -189,7 +190,7 @@ public class CameraController : MonoBehaviour {
 			orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
 			targetPos = new Vector3( 
 				orbitRadius * Mathf.Cos(orbitAngle), 
-				orbitHeight,
+				orbitHeight * v,
 				orbitRadius * Mathf.Sin(orbitAngle)
 			);
 				

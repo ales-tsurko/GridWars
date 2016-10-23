@@ -77,8 +77,6 @@ public class App : MonoBehaviour {
 		Wreckage.SetupLayerCollisions();
 		Projectile.SetupLayerCollisions();
 
-		SoundtrackNamed("Wagner_Ride_of_the_Valkyries"); // preload
-
 		matchmaker = new Matchmaker();
 
 		network = new GameObject().AddComponent<Network>();

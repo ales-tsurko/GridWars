@@ -17,7 +17,7 @@ public class Cloud : MonoBehaviour {
 	}
 
 	void PickSpeed () {
-		speed = UnityEngine.Random.Range(20f, 30f) / 30f;
+		speed = UnityEngine.Random.Range(20f, 30f) / 120f;
 
 		int r = (int)Mathf.Floor(UnityEngine.Random.value * 4);
 
