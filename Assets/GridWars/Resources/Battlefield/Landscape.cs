@@ -74,6 +74,7 @@ public class Landscape : MonoBehaviour {
 				p.z = RandNeg(700);
 				ship.transform.position = p;
 				ship.AddComponent<Cloud>();
+				Destroy(ship);
 			}
 		}
 

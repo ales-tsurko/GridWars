@@ -49,6 +49,12 @@ public class Cloud : MonoBehaviour {
 	void Update () {
 		transform.localPosition += transform.forward * speed;
 
+		if (App.shared.timeCounter % 60 == 0) {
+			WrapPositionIfNeeded();
+		}
+	}
+
+	void WrapPositionIfNeeded() {
 		Vector3 p = transform.localPosition;
 		Bounds b = ParentBounds();
 		float d = 0.1f;
