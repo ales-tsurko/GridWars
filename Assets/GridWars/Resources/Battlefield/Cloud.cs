@@ -30,7 +30,6 @@ public class Cloud : MonoBehaviour {
 		} else if (r == 3) {
 			gameObject.SetRotY(gameObject.RotY() + 180f);
 		}  
-
 	}
 
 	Bounds ParentBounds() {
@@ -92,6 +91,5 @@ public class Cloud : MonoBehaviour {
 		}
 
 		transform.localPosition = p;
-
 	}
 }

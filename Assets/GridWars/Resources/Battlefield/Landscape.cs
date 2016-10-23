@@ -54,9 +54,11 @@ public class Landscape : MonoBehaviour {
 		foreach (GameObject ship in ships) {
 			if (ship) {
 				Vector3 p = ship.transform.position;
+				p.x = RandNeg(700);
 				p.y = 130f + Rand(10f);
+				p.z = RandNeg(700);
 				ship.transform.position = p;
-				ship.AddComponent<Cloud>().isForwardOnly = true;
+				ship.AddComponent<Cloud>();
 			}
 		}
 
@@ -67,7 +69,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 20f + Rand(200f) + Rand(200f), material2, 15);
+				var chunk = CreateChunk(chunkRect,  Rand(150f) + Rand(150f), material2, 15);
 				chunk.name = "building";
 			}
 		}
