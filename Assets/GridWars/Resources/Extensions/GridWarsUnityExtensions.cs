@@ -81,6 +81,16 @@ public static class GridWarsUnityExtensions {
 		}
 	}
 
+	public static float RotY(this GameObject obj) {
+		return obj.transform.eulerAngles.y;
+	}
+
+	public static void SetRotY(this GameObject obj, float a) {
+		var e = obj.transform.eulerAngles;
+		obj.transform.eulerAngles = new Vector3(e.x, a, e.z);
+	}
+
+
 	public static T CreateChild<T>(this MonoBehaviour self) where T: MonoBehaviour {
 		var gameObject = new GameObject();
 		gameObject.transform.parent = self.transform;

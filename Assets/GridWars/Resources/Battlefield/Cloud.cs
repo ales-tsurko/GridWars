@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class Cloud : MonoBehaviour {
-	Vector3 speed;
+	float speed;
+	public bool isForwardOnly;
 	public Material material;
 
 	void Start () {
@@ -16,16 +17,20 @@ public class Cloud : MonoBehaviour {
 	}
 
 	void PickSpeed () {
-		bool flip = UnityEngine.Random.value < 0.5f;
-		float sign = UnityEngine.Random.value < 0.5f ? -1f : 1f;
-		float s = sign * UnityEngine.Random.Range(20f, 30f) / 60f;
-		s *= 0.5f;
+		speed = UnityEngine.Random.Range(20f, 30f) / 30f;
 
-		if (flip) {
-			speed = new Vector3(s, 0, 0);
-		} else {
-			speed = new Vector3(0, 0, s);
-		}
+		int r = (int)Mathf.Floor(UnityEngine.Random.value * 4);
+
+		if (r == 0) {
+			gameObject.SetRotY(gameObject.RotY() + 0f);
+		} else if (r == 1) {
+			gameObject.SetRotY(gameObject.RotY() + 90f);
+		} else if (r == 2) {
+			gameObject.SetRotY(gameObject.RotY() - 90f);
+		} else if (r == 3) {
+			gameObject.SetRotY(gameObject.RotY() + 180f);
+		}  
+
 	}
 
 	Bounds ParentBounds() {
@@ -43,7 +48,7 @@ public class Cloud : MonoBehaviour {
 	}
 
 	void Update () {
-		transform.localPosition += speed;
+		transform.localPosition += transform.forward * speed;
 
 		Vector3 p = transform.localPosition;
 		Bounds b = ParentBounds();

@@ -11,6 +11,11 @@ public class Landscape : MonoBehaviour {
 	public Material material2;
 	public Material cloudMaterial;
 
+	public GameObject ship1;
+	public GameObject ship2;
+	public GameObject ship3;
+
+
 	void Start() {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
@@ -28,20 +33,31 @@ public class Landscape : MonoBehaviour {
 
 		// clouds
 		for (int i = 0; i < 40; i++) {
-			//Rect chunkRect = RandRect(100f, 300f, 50f, 100f);
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
-			if (fieldRect.Overlaps(chunkRect) == false) {
+			//if (fieldRect.Overlaps(chunkRect) == false) {
 				var chunk = CreateChunk(chunkRect, 2f, material2, 7);
 				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
-				p.y = 120f + Rand(50f);
+				p.y = 120f + Rand(10f);
 				chunk.transform.position = p;
 				chunk.AddComponent<Cloud>().material = cloudMaterial;;
-			}
+			//}
 
+		}
+
+
+		var ships = new List<GameObject>{ship1, ship2, ship3};
+
+		foreach (GameObject ship in ships) {
+			if (ship) {
+				Vector3 p = ship.transform.position;
+				p.y = 130f + Rand(10f);
+				ship.transform.position = p;
+				ship.AddComponent<Cloud>().isForwardOnly = true;
+			}
 		}
 
 		// tall buildings
