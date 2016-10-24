@@ -14,29 +14,31 @@ public class Player : MonoBehaviour {
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
-	/*
-	Color[] colors = new Color[]{ 
-		new Color(95f/255, 95f/255, 56f/255), 
-		new Color(180f/255, 157f/255, 128f/255) 
-	};
-	*/
+	// human player colors
 
 	Color[] primaryColors = new Color[]{ 
-		//Color.red, 
-		//Color.gray, 
-		//Color.blue
-		new Color(81f/255, 0f/255, 0f/255),
-		new Color(22f/255, 22f/255, 191f/255)
+		new Color(81f/255, 0f/255, 0f/255),    // red
+		new Color(22f/255, 22f/255, 191f/255) // blue
 	};
 
 	Color[] secondaryColors = new Color[]{ 
-		//new Color(120f/255, 120f/255, 120f/255),
-		new Color(181f/255, 181f/255, 0f/255),
-		new Color(181f/255, 181f/255, 0f/255)
+		new Color(181f/255, 181f/255, 0f/255),  // yellow
+		new Color(181f/255, 181f/255, 0f/255)   // yellow
 	};
 
-	//Color[] colors = new Color[]{ new Color(100f/255, 100f/255, 100f/255), new Color(150f/255, 150f/255, 150f/255) };
+	// npc colors
 
+	Color[] npcPrimaryColors = new Color[]{ 
+		new Color(81f/255, 0f/255, 0f/255),    // red
+		new Color(22f/255, 22f/255, 191f/255) // blue
+	};
+
+
+	Color[] npcSecondaryColors = new Color[]{ 
+		new Color(181f/255, 181f/255, 0f/255),  // yellow
+		new Color(181f/255, 181f/255, 0f/255)   // yellow 
+	};
+		
 	//public List<GameObject> ownedObjects;
 
 	public int playerNumber {
@@ -44,15 +46,36 @@ public class Player : MonoBehaviour {
 			return battlefield.players.IndexOf(this) + 1;
 		}
 	}
+		
+	private bool _npcModeOn;
+
+	public bool npcModeOn {
+		get {
+
+			return _npcModeOn;
+		}
+
+		set {
+			_npcModeOn = value;
+			UpdateColors();
+		}
+	}
 
 	public Color primaryColor {
 		get {
+			if (npcModeOn) {
+				return npcPrimaryColors[playerNumber - 1];
+			}
+
 			return primaryColors[playerNumber - 1];
 		}
 	}
 
 	public Color secondaryColor {
 		get {
+			if (npcModeOn) {
+				return npcSecondaryColors[playerNumber - 1];
+			}
 			return secondaryColors[playerNumber - 1];
 		}
 	}
@@ -64,8 +87,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public List<GameUnit> units;
-
-	public bool npcModeOn;
 
 	public bool isLocal;
 
@@ -107,18 +128,19 @@ public class Player : MonoBehaviour {
 		}
 
 		primaryMaterial = new Material(Resources.Load("Materials/" + primaryColorMaterialName) as Material);
-		primaryMaterial.color = primaryColor;
-
 		secondaryMaterial = new Material(Resources.Load("Materials/" + secondaryColorMaterialName) as Material);
-		secondaryMaterial.color = secondaryColor;
-		//primaryMaterial.SetFloat("_Glossiness", 0.35f);
-		//ownedObjects = new List<GameObject>();
+		UpdateColors();
 
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
 
 		//gameObject.tag = "Player" + playerNumber;
+	}
+
+	void UpdateColors() {
+		primaryMaterial.color = primaryColor;
+		secondaryMaterial.color = secondaryColor;
 	}
 
 	void OnDestroy() {
