@@ -230,7 +230,7 @@ public class Player : MonoBehaviour {
 		var enemyObjects = new List<GameObject>();
 		foreach(var enemyPlayer in enemyPlayers) {
 			foreach (var unit in enemyPlayer.units) {
-				if (unit) {
+				if (unit != null) {
 					enemyObjects.Add(unit.gameObject);
 				}
 			}
@@ -281,7 +281,7 @@ public class Player : MonoBehaviour {
 		//base.ServerFixedUpdate(); 
 
 		//|| Input.GetKey(KeyCode.Space)
-		if ((npcModeOn && BoltNetwork.isServer)) {
+		if (npcModeOn && BoltNetwork.isServer && isInGame) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
 					AI();
 			}

@@ -164,6 +164,9 @@ public class Fortress : MonoBehaviour {
 
 		foreach (var tower in towers) {
 			var enemyObj = tower.ClosestEnemyObject();
+			if (enemyObj == null) {
+				continue;
+			}
 			float d = tower.DistanceToObj(enemyObj);
 			if (d < closestDist) {
 				closestObj = enemyObj;
