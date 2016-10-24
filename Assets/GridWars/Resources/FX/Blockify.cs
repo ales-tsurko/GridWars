@@ -75,9 +75,15 @@ public class Blockify : MonoBehaviour {
 		//Rigidbody test = part.GetComponent<Rigidbody>();
 		//Debug.Log(test);
 
-		Wreckage w = cube.AddComponent<Wreckage>();
-		w.SetChillPeriod(4f);
-		w.SetSinkPeriod(4f);
+		FadeAway w = cube.AddComponent<FadeAway>();
+		w.SetFadePeriod(6f);
+
+		/*
+		BrightFadeInGeneric fadein = cube.AddComponent<BrightFadeInGeneric>();
+		fadein.period = 2f;
+		fadein.startColor = Color.yellow;
+		fadein.OnEnable();
+		*/
 
 		return cube;
 	}

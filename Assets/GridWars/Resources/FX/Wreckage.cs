@@ -63,8 +63,8 @@ using System.Collections;
 	}
 
 	public void FixedUpdate() {
-		float y = transform.position.y;
 		if (Time.time > chillDoneTime) {
+			float y = transform.position.y;
 			if (y < 0.1f) {
 				if (sinkDoneTime == 0) {
 					sinkStartTime = Time.time;

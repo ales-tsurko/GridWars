@@ -11,7 +11,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	AssemblyCSharp.Timer timer;
 	ParticleSystem ps;
 
-	private Color startColor = Color.white;
+	public Color startColor = Color.white;
 	private Dictionary<Material, Color> materialColors;
 
 	void Start () {
