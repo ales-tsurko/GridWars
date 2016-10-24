@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using InControl;
 
 public class MouseLook : MonoBehaviour
 {
@@ -17,6 +17,18 @@ public class MouseLook : MonoBehaviour
 	// Yaw rotation will affect this object instead of the camera if set.
 	public GameObject characterBody;
 
+    PlayerInputs _inputs;
+    public PlayerInputs inputs {
+        get {
+            if (_inputs == null) {
+                return App.shared.inputs; //inputs are only assigned for SharedScreenPVP.  Use defaults otherwise.
+            }
+            else {
+                return _inputs;
+            }
+        }
+    }
+
 	void Start()
 	{
 		// Set target direction to the camera's initial orientation.
@@ -30,7 +42,7 @@ public class MouseLook : MonoBehaviour
 	{
 		// Ensure the cursor is always locked when set
 		//Screen.lockCursor = lockCursor;
-        if (Keys.EXIT.KeyDown()) {
+        if (Keys.EXIT.KeyDown() || inputs.goBack.WasPressed) {
             FindObjectOfType<CameraController>().ResetCamera();
             return;
         }
