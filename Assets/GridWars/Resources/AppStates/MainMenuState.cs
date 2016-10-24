@@ -14,6 +14,7 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
+		menu.AddItem(UI.MenuItem("Chat", ChatClicked));
         //menu.AddItem(UI.MenuItem("Options", OptionsClicked)); //Remove until we have player profiles.
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
@@ -53,6 +54,10 @@ public class MainMenuState : AppState {
 		battlefield.player2.npcModeOn = true;
 
 		TransitionTo(new WaitForBoltState());
+	}
+
+	void ChatClicked() {
+		Application.OpenURL("http://slack.baremetalgame.com/");
 	}
 
     void OptionsClicked() {
