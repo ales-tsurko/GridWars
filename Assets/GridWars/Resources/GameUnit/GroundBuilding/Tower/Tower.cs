@@ -252,6 +252,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	float longPressDuration = 0.5f;
 	float releaseUnitDownTime;
 
+	bool passedLongPress {
+		get {
+			return Time.time - releaseUnitDownTime >= longPressDuration;
+		}
+	}
+
 	void ReleaseUnitDown() {
 		if (!npcModeOn) {
 			releaseUnitDownTime = Time.time;
@@ -259,13 +265,14 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	void ReleaseUnitUp() {
-		if (!npcModeOn && releaseUnitDownTime != 0f) {
+		if (!npcModeOn && releaseUnitDownTime != 0f && !passedLongPress) {
 			SendAttemptQueueUnit(0);
 		}
+		releaseUnitDownTime = 0f;
 	}
 
 	void ReleaseUnitUpdate() {
-		if (releaseUnitDownTime > 0f && (Time.time - releaseUnitDownTime >= longPressDuration)) {
+		if (releaseUnitDownTime > 0f && passedLongPress && HasEnoughPower(1)) {
 			releaseUnitDownTime = 0f;
 			SendAttemptQueueUnit(1);
 		}
