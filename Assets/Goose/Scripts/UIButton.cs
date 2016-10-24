@@ -17,7 +17,7 @@ public class UIButton : UIElement {
 	}
 
 	UnityEvent method;
-	
+    public bool isBackItem;
 	public Text textComponent {
 		get {
 			return GetComponentInChildren<Text>();

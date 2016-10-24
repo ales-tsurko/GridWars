@@ -77,10 +77,11 @@ public class UIMenu : UIElement {
 		t.offsetMax = new Vector2(0, 0);
 	}
 
-	public void AddItem (UIButton _item){
+    public void AddItem (UIButton _item, bool isBackItem = false){
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
 		items.Add (_item);
+        _item.isBackItem = isBackItem;
 		_item.Show ();
 		_item.menu = this;
 		OrderMenu ();
@@ -314,6 +315,14 @@ public class UIMenu : UIElement {
 					selectedItem.OnClick();
 				}
 			}
+
+            if (inputs.goBack.WasPressed) {
+                foreach (UIButton button in FindObjectsOfType<UIButton>()) {
+                    if (button.isBackItem) {
+                        button.OnClick();
+                    }
+                }
+            }
 				
 
 			/*

@@ -8,7 +8,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("SEARCHING FOR OPPONENT"));
 		cancelItem = UI.MenuItem("Cancel", Cancel);
-		menu.AddItem(cancelItem);
+		menu.AddItem(cancelItem, true);
 		menu.Show();
 
 		matchmaker.matchmakerDelegate = this;

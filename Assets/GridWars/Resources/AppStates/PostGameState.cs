@@ -157,7 +157,7 @@ public class PostGameState : NetworkDelegateState {
 
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("WAITING FOR RESPONSE"));
-		menu.AddItem(UI.MenuItem("Cancel", LeaveGame));
+		menu.AddItem(UI.MenuItem("Cancel", LeaveGame), true);
 		menu.Show();
 	}
 

@@ -133,7 +133,7 @@ public class InGameMenu {
 
 		menu = UI.Menu();
 		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
-		menu.AddItem(UI.MenuItem("Cancel", Reset));
+		menu.AddItem(UI.MenuItem("Cancel", Reset), true);
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuPlacement);
 		menu.SetBackground(Color.black, 0);

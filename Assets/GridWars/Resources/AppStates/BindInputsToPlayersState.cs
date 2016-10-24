@@ -23,7 +23,7 @@ public class BindInputsToPlayersState : AppState {
 		//TODO describe the controller button.
 		menu.AddItem(UI.ActivityIndicator("<color=#" + ColorUtility.ToHtmlStringRGB(player.primaryColor.WithV(1f)) + ">" + player.description + "</color>\n\n" + "Press return or click continue to use keyboard and mouse.\n\nPress any button to use controller."));
 		menu.AddItem(UI.MenuItem("Continue", Continue));
-		menu.AddItem(UI.MenuItem("Cancel", Cancel));
+		menu.AddItem(UI.MenuItem("Cancel", Cancel), true);
 		menu.Show();
 	}
 
