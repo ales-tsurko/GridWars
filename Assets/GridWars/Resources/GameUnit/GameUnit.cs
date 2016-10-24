@@ -705,7 +705,7 @@ public class GameUnit : NetworkObject {
 			//cycler.startColor = Color.Lerp(player.primaryColor, player.secondaryColor, 1f);
 		}
 
-		//var fader = gameObject.AddComponent<BrightFadeInGeneric>();
+		// remove brightfade if present
 		var brightFade = GetComponent<BrightFadeInGeneric>();
 		if (brightFade != null) {
 			brightFade.enabled = false;
@@ -1104,7 +1104,7 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	void ShowUnitExplosion() {
+	public virtual GameObject ShowUnitExplosion() {
 		if (showsUnitExplosion && deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion != null) {
@@ -1124,23 +1124,27 @@ public class GameUnit : NetworkObject {
 
 					erb.mass = rb.mass;
 				}
+				return explosion.gameObject;
 			}
 		}
+		return null;
 	}
 
 
-	public void ShowFxExplosion() {
+	public virtual GameObject ShowFxExplosion() {
 		if (showsUnitExplosion && deathExplosionPrefab != null) {
 			var unitExplosion = deathExplosionPrefab.GameUnit();
 			if (unitExplosion == null) {
 				var obj = Instantiate(deathExplosionPrefab);
 				obj.transform.position = _t.position;
 				obj.transform.rotation = _t.rotation;
+				return obj;
 			}
 		}
-		
+		return null;
 	}
 		
+
 	// --- Weapons ------------------------------------------
 
 	Weapon[] _weapons;

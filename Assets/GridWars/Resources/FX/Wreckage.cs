@@ -22,10 +22,19 @@ using System.Collections;
 	public float deathSoundVolume = 1f;
 	private AudioSource audioSource;
 
+	public void SetChillPeriod(float v) {
+		chillPeriod = v;
+	}
+
+	public void SetSinkPeriod(float v) {
+		sinkPeriod = v;
+	}
+
 	static public void SetupLayerCollisions() {
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Default"), true);
-		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Wreckage"), true);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Wreckage"), false);
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Projectile"), true);
 	}
 
 	public void Start () {

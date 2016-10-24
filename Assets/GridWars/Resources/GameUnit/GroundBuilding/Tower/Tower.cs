@@ -488,4 +488,21 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 			SendAttemptQueueUnit(1);
 		}
 	}
+
+	private bool _dieWithBlockify = false;
+
+	public void DieWithBlockify() {
+		_dieWithBlockify = true;
+	}
+
+	public override GameObject ShowFxExplosion() {
+		var explosion = base.ShowFxExplosion();
+
+		if (_dieWithBlockify) {
+			Blockify b = explosion.GetComponent<Blockify>();
+			b.enabled = true;
+		}
+
+		return explosion;
+	}
 }

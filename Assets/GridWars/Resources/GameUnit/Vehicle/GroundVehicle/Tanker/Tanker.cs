@@ -76,6 +76,12 @@ public class Tanker : GroundVehicle {
 			if (!otherUnit.IsOfType(typeof(Projectile))) {
 				Die();
 			}
+
+			if (otherUnit.IsOfType(typeof(Tower))) {
+				Tower tower = (Tower)otherUnit;
+				tower.DieWithBlockify();
+				tower.Die();
+			}
 		}
 	}
 
