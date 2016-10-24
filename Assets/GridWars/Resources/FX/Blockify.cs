@@ -76,7 +76,7 @@ public class Blockify : MonoBehaviour {
 		//Debug.Log(test);
 
 		FadeAway w = cube.AddComponent<FadeAway>();
-		w.SetFadePeriod(6f);
+		w.SetFadePeriod(4f);
 
 		/*
 		BrightFadeInGeneric fadein = cube.AddComponent<BrightFadeInGeneric>();
