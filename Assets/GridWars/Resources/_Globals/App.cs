@@ -42,7 +42,7 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	private bool _isProcessingDestroyQueue = false;
 
-	public bool testEndOfGameMode = true;
+	public bool testEndOfGameMode = false;
 
 	public static App shared {
 		get {
