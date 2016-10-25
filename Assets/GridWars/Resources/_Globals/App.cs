@@ -12,7 +12,7 @@ using System.Linq;
  * 
  */
 
-public class App : MonoBehaviour {
+public class App : MonoBehaviour, AppStateOwner {
 	//test github push
     [Range(.01f, 5)]
     public float gameSpeed = 1;
@@ -24,7 +24,7 @@ public class App : MonoBehaviour {
 	public bool debug = false;
 	public List <Soundtrack> soundtracks;
 	public Prefs prefs;
-	public AppState state;
+	public AppState state { get; set; }
 	public UIMenu menu;
 
 	public Matchmaker matchmaker;
@@ -42,7 +42,7 @@ public class App : MonoBehaviour {
 
 	private bool _isProcessingDestroyQueue = false;
 
-	public bool testEndOfGameMode = false;
+	public bool testEndOfGameMode = true;
 
 	public static App shared {
 		get {
@@ -96,6 +96,7 @@ public class App : MonoBehaviour {
 		menu = UI.Menu();
 
 		var mainMenuState = new MainMenuState();
+		mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
 	}

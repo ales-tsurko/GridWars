@@ -76,6 +76,7 @@ public static class UI {
             case MenuItemType.ButtonTextOnly:
 				var button = ButtonPrefab(title, null);
 				button.isInteractible = false;
+				button.matchesNeighborSize = false;
 				return button;
             case MenuItemType.ButtonPrefab:
 			button = ButtonPrefab(title, action);

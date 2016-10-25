@@ -1,53 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PostGameState : NetworkDelegateState {
+public class PostGameState : NetworkDelegateState, AppStateOwner {
 	public Player victoriousPlayer;
 
-	bool requestedRematch;
+	// LeaveGame
+
+	public void LeaveGame() {
+		LeaveGame("");
+	}
+
+	public void LeaveGame(string reason) {
+		app.ResetMenu();
+		menu.AddItem(UI.ActivityIndicator(reason + "RETURNING TO MAIN MENU"));
+		menu.Show();
+
+
+		if (BoltNetwork.isRunning) {
+			app.battlefield.HardReset();
+			network.ShutdownBolt();
+		}
+		else {
+			BoltShutdownCompleted();
+		}
+	}
+
+	// Restart
+
+	bool didRestart;
+
+	public void RestartGame() {
+		if (didRestart) { //We have to spam bolt events because they're unreliable.  Avoid restarting twice.
+			return;
+		}
+
+		didRestart = true;
+
+		if (BoltNetwork.isServer) {
+			app.StartCoroutine(RestartGameCoroutine());
+		}
+		else {
+			TransitionTo(new PlayingGameState());
+		}
+	}
+
+	IEnumerator RestartGameCoroutine() {
+		battlefield.SoftReset();
+		while (battlefield.livingPlayers.Count > 0) {
+			yield return null;
+		}
+
+		TransitionTo(new PlayingGameState());
+	}
 
 	//AppState
+
+	public AppState state { get; set; }
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
 		network.networkDelegate = this;
+		didRestart = false;
 
-		IsEntering();
+		Object.FindObjectOfType<CameraController>().StartOrbit();
 
-		app.ResetMenu();
-		menu.SetBackground(Color.black, 0);
-		var title = "";
-		if (battlefield.localPlayers.Count == 1) {
-			if (victoriousPlayer.isLocal) {
-				title = "Victory!";
-				App.shared.PlayAppSoundNamed("Victory");
-			} else {
-				title = "Defeat!";
-				App.shared.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
-			}
-		} else {
-			title = "Player " + victoriousPlayer.playerNumber + " is Victorious!";
-		}
-
-		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
-		if (battlefield.isInternetPVP) {
-			menu.AddItem(UI.MenuItem("Request Rematch", RequestRematch));
-		} else {
-			menu.AddItem(UI.MenuItem("Rematch!", RequestRematch));
-		}
-		menu.AddItem(UI.MenuItem("Leave Game", LeaveGame));
-
-		menu.Show();
+		subState = new ShowOutcomeState();
+		subState.owner = this;
+		subState.EnterFrom(null);
 	}
 
 	public override void WillExit() {
 		base.WillExit();
+		subState.WillExit();
 		IsExiting();
-	}
-
-	void IsEntering() {
-		Object.FindObjectOfType<CameraController>().StartOrbit();
 	}
 
 	void IsExiting() {
@@ -56,10 +82,20 @@ public class PostGameState : NetworkDelegateState {
 
 	// Network
 
+	PostGameSubState subState {
+		get {
+			return (PostGameSubState)state;
+		}
+
+		set {
+			state = value;
+		}
+	}
+
 	public override void ZeusDisconnected() {
 		base.ZeusDisconnected();
 
-		ShowLostConnection();
+		subState.Disconnected();
 	}
 
 	public override void BoltShutdownCompleted() {
@@ -73,129 +109,18 @@ public class PostGameState : NetworkDelegateState {
 	public override void Disconnected(BoltConnection connection) {
 		base.Disconnected(connection);
 
-		ShowLostConnection();
+		subState.Disconnected();
 	}
 
 	public override void ReceivedRematchRequest() {
 		base.ReceivedRematchRequest();
 
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("Opponent Requests a Rematch"));
-		menu.AddItem(UI.MenuItem("Accept", AcceptRematch));
-		menu.AddItem(UI.MenuItem("Decline", LeaveGame));
-		menu.Show();
+		subState.ReceivedRematchRequest();
 	}
 
 	public override void ReceivedAcceptRematch() {
 		base.ReceivedAcceptRematch();
 
-		if (BoltNetwork.isServer) {
-			App.shared.StartCoroutine(ServerReceivedAcceptRematch());
-		}
-		else {
-			TransitionTo(new PlayingGameState());
-		}
-	}
-
-	IEnumerator ServerReceivedAcceptRematch() {
-		battlefield.SoftReset();
-		while (battlefield.livingPlayers.Count > 0) {
-			yield return null;
-		}
-
-		TransitionTo(new PlayingGameState());
-	}
-
-	// Menus
-
-	void ShowLostConnection() {
-		string prefix = "";
-		if (requestedRematch) {
-			prefix = "Opponent Declined. ";
-		}
-
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator(prefix + "Returning to Main Menu"));
-		menu.Show();
-
-		app.battlefield.HardReset();
-		network.ShutdownBolt();
-	}
-
-	// LeaveGame
-
-	void LeaveGame() {
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("RETURNING TO MAIN MENU"));
-		menu.Show();
-
-
-		if (BoltNetwork.isRunning) {
-			app.battlefield.HardReset();
-			network.ShutdownBolt();
-		}
-		else {
-			BoltShutdownCompleted();
-		}
-	}
-
-	//Rematch
-
-	void RequestRematch() {
-
-		if (!battlefield.isInternetPVP) {
-			App.shared.StartCoroutine(RestartGame());
-			return;
-		}
-
-		RequestRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
-		app.Log("RequestRematchEvent.Send", this);
-
-		//App.shared.PlayAppSoundNamedAtVolume("Rematch", 0.3f); // want to play this until menu is removed
-
-		requestedRematch = true;
-
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator("WAITING FOR RESPONSE"));
-		menu.AddItem(UI.MenuItem("Cancel", LeaveGame), true);
-		menu.Show();
-	}
-
-	IEnumerator RestartGame() {
-		battlefield.SoftReset();
-		while (battlefield.livingPlayers.Count > 0) {
-			yield return null;
-		}
-
-		SendAcceptRematchEvent();
-	}
-
-	void AcceptRematch() {
-		if (BoltNetwork.isServer) {
-			App.shared.StartCoroutine(ServerAcceptRematch());
-		}
-		else {
-			ClientAcceptRematch();
-		}
-	}
-
-	IEnumerator ServerAcceptRematch() {
-		battlefield.SoftReset();
-		while (battlefield.livingPlayers.Count > 0) {
-			yield return null;
-		}
-
-		SendAcceptRematchEvent();
-	}
-
-	void ClientAcceptRematch() {
-		SendAcceptRematchEvent();
-	}
-
-	void SendAcceptRematchEvent() {
-		AcceptRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
-		app.Log("AcceptRematchEvent.Send", this);
-
-		TransitionTo(new PlayingGameState());
+		subState.ReceivedAcceptRematch();
 	}
 }

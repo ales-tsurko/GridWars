@@ -33,7 +33,8 @@ public class WaitForServerState : BoltRendezvousState {
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
 		base.SessionListUpdated(sessionList);
 
-		if (firstSessionListUpdate) {
+		//Bolt sometimes calls SessionListUpdated with an empty sessionList and then calls it again on a subsequent Update.
+		if (firstSessionListUpdate && sessionList.Count == 0) {
 			firstSessionListUpdate = false;
 			return;
 		}

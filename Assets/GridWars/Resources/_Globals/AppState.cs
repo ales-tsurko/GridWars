@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class AppState {
+	public AppStateOwner owner;
+
 	public string name {
 		get {
 			return this.GetType().ToString();
@@ -9,14 +11,18 @@ public class AppState {
 	}
 
 	public void TransitionTo(AppState state) {
-		App.shared.state = state;
+		owner.state = state;
+		state.owner = owner;
 		this.WillExit();
 		state.EnterFrom(this);
 	}
 
 	public virtual void EnterFrom(AppState state) {
 		if (state != null) {
-			Debug.Log("AppState: " + state.name + " > " + this.name);
+			app.Log("EnterFrom: " + state.name, this);
+		}
+		else {
+			app.Log("EnterFrom null", this);
 		}
 	}
 
@@ -54,4 +60,8 @@ public class AppState {
 			return App.shared.matchmaker;
 		}
 	}
+}
+
+public interface AppStateOwner {
+	AppState state { get; set; }
 }
