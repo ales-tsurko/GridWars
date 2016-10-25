@@ -26,7 +26,7 @@ public class FPSDisplay : MonoBehaviour
 			int fps = Mathf.RoundToInt(1.0f / dt);
 			string msg = "";
 
-			if (fps < 40) {
+			if (fps < 20) {
 				if (Application.targetFrameRate != 60) {
 					msg += Mathf.Round(fps) + "/" + Application.targetFrameRate + " FPS";
 				} else {

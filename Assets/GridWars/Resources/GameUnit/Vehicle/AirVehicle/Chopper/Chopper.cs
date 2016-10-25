@@ -192,10 +192,13 @@ public class Chopper : AirVehicle {
 	public override void ServerFixedUpdate () {
 		base.ServerFixedUpdate(); // this will call Think/PickTarget, and RemoveIfOutOfBounds
 		if (isRunning) {
-			SteerTowardsTarget();
+			//if (App.shared.timeCounter % 2 == 0) {
+				SteerTowardsTarget();
+			//}
+
 			ApplyJetThrust();
 
-			if (App.shared.timeCounter % 10 == 0) {
+			if (App.shared.timeCounter % 20 == 0) {
 				StablizeZ();
 				DieIfOverAccelerated();
 			}
@@ -210,7 +213,7 @@ public class Chopper : AirVehicle {
 	}
 
 	private void DieIfOverAccelerated() {
-		if (rigidBody().velocity.magnitude > 40f) {
+		if (rigidBody().velocity.magnitude > 45f) {
 			Die();
 		}
 	}
