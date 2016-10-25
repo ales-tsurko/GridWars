@@ -22,6 +22,8 @@ public class Blockify : MonoBehaviour {
 		Vector3 partSize = new Vector3(dx, dy, dz);
 
 
+		float r = UnityEngine.Random.value;
+
 		for (int x = 0; x < xDivisions; x++) {
 			for (int y = 0; y < yDivisions; y++) {
 				for (int z = 0; z < zDivisions; z++) {
@@ -33,7 +35,8 @@ public class Blockify : MonoBehaviour {
 
 
 					Rigidbody partRb = part.GetComponent<Rigidbody>();
-					Vector3 force = localCenter.normalized * 2000f;
+					//localCenter.z += 5f;
+					Vector3 force = localCenter.normalized * (1000f + 500 * r + 1000f * UnityEngine.Random.value);
 					partRb.AddForce(force);
 
 				}
