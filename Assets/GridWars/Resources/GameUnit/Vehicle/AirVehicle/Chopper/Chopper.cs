@@ -112,20 +112,35 @@ public class Chopper : AirVehicle {
 		return upThrust;
 	}
 
-	//private float lastSpeed;
+	// client speed 
+	private Vector3 lastPosition;
+	private float lastPositionTime;
+
+		private void UpdateClientSpeed() {
+		lastPosition = transform.position;
+		lastPositionTime = Time.time;
+	}
+
+	public float ClientForwardSpeed() { // hack - can only call this once per frame
+		float dt = Time.time - lastPositionTime;
+		Vector3 speed = (transform.position - lastPosition)/dt;
+		UpdateClientSpeed();
+		return Vector3.Dot(transform.forward, speed);
+	}
+
+	// client position jets
 
 	public void PositionJets() {
-		float speed = ForwardSpeed();
-		//float acceleration = speed - lastSpeed;
+		float speed = ClientForwardSpeed();
 
+		//float acceleration = speed - lastSpeed;
 		//float xr = (- 90f) + Mathf.Clamp((speed + acceleration * 10f) * 10f , -90f, 90f);
+
 		float xr = (- 90f) + Mathf.Clamp(speed * 10f , -90f, 90f);
 
 		xr = Convert180to360(xr);
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
-
-		//lastSpeed = speed;
 	}
 
 	/*
