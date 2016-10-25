@@ -20,6 +20,12 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction selectItem;
 	public PlayerAction goBack;
 
+	PlayerAction lookLeft;
+	PlayerAction lookRight;
+	PlayerAction lookUp;
+	PlayerAction lookDown;
+	public PlayerTwoAxisAction look;
+
 	/*
 	InputDevice _device;
 	public InputDevice device {
@@ -57,6 +63,12 @@ public class PlayerInputs : PlayerActionSet {
 		rightItem = CreatePlayerAction("Right Item");
 		selectItem = CreatePlayerAction("Select Item");
 		goBack = CreatePlayerAction("Go Back");
+
+		lookLeft = CreatePlayerAction("Look Left");
+		lookRight = CreatePlayerAction("Look Right");
+		lookUp = CreatePlayerAction("Look Up");
+		lookDown = CreatePlayerAction("Look Down");
+		look = CreateTwoAxisPlayerAction(lookLeft, lookRight, lookDown, lookUp);
 	}
 
 	public void AddControllerBindings() {
@@ -98,6 +110,15 @@ public class PlayerInputs : PlayerActionSet {
 
 		selectItem.AddDefaultBinding(InputControlType.Action1);
 		goBack.AddDefaultBinding(InputControlType.Action2);
+
+		lookLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
+		lookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+		lookRight.AddDefaultBinding(InputControlType.LeftStickRight);
+		lookRight.AddDefaultBinding(InputControlType.RightStickRight);
+		lookDown.AddDefaultBinding(InputControlType.LeftStickDown);
+		lookDown.AddDefaultBinding(InputControlType.RightStickDown);
+		lookUp.AddDefaultBinding(InputControlType.LeftStickUp);
+		lookUp.AddDefaultBinding(InputControlType.RightStickUp);
 	}
 
 	public void AddLocalPlayer1KeyBindings() {
