@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour {
 	public KeyIconRotation keyIconRotation;
 	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPerson;
-
+    int FPSindex = 0;
 	// orbits
 
 	private bool isOrbiting = false;
@@ -161,6 +161,21 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
+        //check for Joystick input for FPS Mode
+        if (isInFirstPerson) {
+            if (Keys.EXIT.KeyDown() || App.shared.inputs.toggleFPS.WasPressed) {
+                FindObjectOfType<CameraController>().ResetCamera();
+                return;
+            }
+            FPSindex += App.shared.inputs.unitNext.WasPressed ? ChangeFPSUnit(1) : 0;
+            FPSindex += App.shared.inputs.unitPrev.WasPressed ? ChangeFPSUnit(-1) : 0;
+        } 
+        if (!isInFirstPerson && App.shared.inputs.toggleFPS.WasPressed) {
+            EnterFPSModeFromJoystick();
+        }
+
+
+
         if (cam == null) {
             return;
         }
@@ -211,6 +226,36 @@ public class CameraController : MonoBehaviour {
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf);
 
 	}
+
+    void EnterFPSModeFromJoystick () {
+        List<GameUnit> units = GetUnits();
+        units.RemoveAll(i => i.gameObject.layer == 10);
+        if (units.Count > 0) {
+            FPSindex = units.Count - 1;
+            isInFirstPerson = true;
+            MoveToActionPosition (units[FPSindex].transform);
+        }
+    }
+
+    int ChangeFPSUnit (int x){
+        int index = FPSindex + x;
+        List<GameUnit> units = GetUnits();
+        units.RemoveAll(i => i.gameObject.layer == 10);
+        index = index == -1 ? units.Count - 1 : index % units.Count;
+        MoveToActionPosition(units[index].transform);
+        return index - FPSindex;
+    }
+
+   List<GameUnit> GetUnits (){
+        Player[] players = FindObjectsOfType<Player>();
+        foreach (Player player in players){
+            if (player.isLocalPlayer1){
+                return player.units;
+            }
+        }
+        return new List<GameUnit>();
+    }
+
 
 	void MoveToActionPosition (Transform _target) {
 		if (!actionMode) {

@@ -42,7 +42,7 @@ public class MouseLook : MonoBehaviour
 	{
 		// Ensure the cursor is always locked when set
 		//Screen.lockCursor = lockCursor;
-        if (Keys.EXIT.KeyDown() || inputs.goBack.WasPressed) {
+        if (Keys.EXIT.KeyDown() || inputs.toggleFPS.WasPressed) {
             FindObjectOfType<CameraController>().ResetCamera();
             return;
         }

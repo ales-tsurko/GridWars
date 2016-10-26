@@ -25,6 +25,9 @@ public class PlayerInputs : PlayerActionSet {
 	PlayerAction lookUp;
 	PlayerAction lookDown;
 	public PlayerTwoAxisAction look;
+    public PlayerAction toggleFPS;
+    public PlayerAction unitNext;
+    public PlayerAction unitPrev;
 
 	/*
 	InputDevice _device;
@@ -69,6 +72,9 @@ public class PlayerInputs : PlayerActionSet {
 		lookUp = CreatePlayerAction("Look Up");
 		lookDown = CreatePlayerAction("Look Down");
 		look = CreateTwoAxisPlayerAction(lookLeft, lookRight, lookDown, lookUp);
+        toggleFPS = CreatePlayerAction("Enter FPS Mode");
+        unitNext = CreatePlayerAction("Next Unit");
+        unitPrev = CreatePlayerAction("Previous Unit");
 	}
 
 	public void AddControllerBindings() {
@@ -119,6 +125,11 @@ public class PlayerInputs : PlayerActionSet {
 		lookDown.AddDefaultBinding(InputControlType.RightStickDown);
 		lookUp.AddDefaultBinding(InputControlType.LeftStickUp);
 		lookUp.AddDefaultBinding(InputControlType.RightStickUp);
+
+        toggleFPS.AddDefaultBinding(InputControlType.LeftStickButton);
+        unitNext.AddDefaultBinding(InputControlType.RightBumper);
+        unitPrev.AddDefaultBinding(InputControlType.LeftBumper);
+
 	}
 
 	public void AddLocalPlayer1KeyBindings() {
