@@ -69,7 +69,6 @@ public class Battlefield : MonoBehaviour {
 
 	public bool isInternetPVP;
 	public bool isAiVsAi;
-
 	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
 	void Start() {
@@ -99,12 +98,6 @@ public class Battlefield : MonoBehaviour {
 		foreach (var player in players) {
 			player.StartGame();
 		}
-        
-        /*
-		foreach (GameObject tile in tiles) {
-			tile.GetComponent<BrightFadeInGeneric>().OnEnable();
-		}
-		*/
 	}
 
 	void AddPlayer() {

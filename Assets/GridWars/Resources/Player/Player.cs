@@ -295,6 +295,10 @@ public class Player : MonoBehaviour {
 	private void AI() {
 		float minPowerRatio = 0.0f;
 
+		if (Player.EnemyObjects().Count == 0) {
+			return;
+		}
+
 		if (playerNumber == 2) {
 
 			float r = fortress.DistanceRatioOfClosestEnemy();

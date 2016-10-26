@@ -496,7 +496,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	private bool _dieWithBlockify = false;
+	private bool _dieWithBlockify;
 
 	public void DieWithBlockify() {
 		_dieWithBlockify = true;

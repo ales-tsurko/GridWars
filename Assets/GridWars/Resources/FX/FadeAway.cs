@@ -32,10 +32,10 @@ public class FadeAway : MonoBehaviour {
 				c.a = a;
 				mat.color = c;
 			});
-		}
-
-		if (Time.time - startTime > fadePeriod) {
-			AddToDestroyQueue();
+		
+			if (Time.time - startTime > fadePeriod) {
+				AddToDestroyQueue();
+			}
 		}
 	}
 		
