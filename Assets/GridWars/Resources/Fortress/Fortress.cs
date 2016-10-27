@@ -81,6 +81,7 @@ public class Fortress : MonoBehaviour {
 	void PlacePowerSource() {
 		//client sets powerSource reference separately
 		powerSource = GameUnit.Instantiate<PowerSource>();
+		powerSource.name = "PowerSource Player" + player.playerNumber;
 		powerSource.player = player;
 		powerSource.transform.position = transform.position;
 		powerSource.transform.rotation = transform.rotation;

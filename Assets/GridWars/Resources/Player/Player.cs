@@ -154,6 +154,7 @@ public class Player : MonoBehaviour {
 	public void StartGame() {
 		if (fortress == null) { //fortress will exist for rematches
 			fortress = this.CreateChild<Fortress>();
+			fortress.name = "Fortress Player" + playerNumber;
 			fortress.player = this;
 			fortress.transform.localPosition = Vector3.zero;
 			fortress.transform.localRotation = Quaternion.identity;
