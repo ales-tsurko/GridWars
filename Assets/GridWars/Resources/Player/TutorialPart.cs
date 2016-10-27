@@ -63,6 +63,7 @@ public class TutorialPart : MonoBehaviour {
 	void FixedUpdate () {
 		if (_hasBegun) {
 			if (Input.GetKeyUp("space")) {
+				_hasBegun = false;
 				Next();
 			}
 
@@ -104,8 +105,11 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	public void SetTutorialLabelText(string s) {
-		_textMesh.text = s;
-		_textMesh.characterSize = characterSize;
+		if (_textMesh.text != s) {
+			_textMesh.text = s;
+			_textMesh.characterSize = characterSize;
+			App.shared.PlayAppSoundNamedAtVolume("bleep2", 0.04f);
+		}
 	}
 
 	public void DoneTutorial() {
