@@ -71,8 +71,7 @@ public class TutorialPart : MonoBehaviour {
 			nextPart.GetComponent<TutorialPart>().Begin();
 		} else {
 			TutorialLabel().SetActive(false);
-			App.shared.cameraController.ResetCamera();
-			LeaveGame();
+			DoneTutorial();
 		}
 	}
 
@@ -90,20 +89,18 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 
-	public void LeaveGame() {
-		/*
-		app.ResetMenu();
-		menu.AddItem(UI.ActivityIndicator(reason + "RETURNING TO MAIN MENU"));
-		menu.Show();
+	public void DoneTutorial() {
+		App.shared.battlefield.isAiVsAi = false;
 
+		App.shared.battlefield.player1.isLocal = true;
+		App.shared.battlefield.player1.isTutorialMode = false;
+		App.shared.battlefield.player1.npcModeOn = false;
 
-		if (BoltNetwork.isRunning) {
-			app.battlefield.HardReset();
-			network.ShutdownBolt();
-		}
-		else {
-			BoltShutdownCompleted();
-		}
-		*/
+		App.shared.battlefield.player2.isTutorialMode = false;
+		App.shared.battlefield.player2.npcModeOn = true;
+
+		App.shared.cameraController.ResetCamera();
+		App.shared.cameraController.pos = 1;
+		App.shared.cameraController.NextPosition();
 	}
 }

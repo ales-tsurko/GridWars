@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class CameraController : MonoBehaviour {
-	public List<Transform> positions = new List<Transform>();
 
+public class CameraController : MonoBehaviour {
+	
+	public List<Transform> positions = new List<Transform>();
 	public List<SerializedTransform> gamePositions = new List<SerializedTransform>();
+
     [HideInInspector]
+
 	public int pos;
 	public bool moving;
 	public float moveSpeed; // time in seconds to complete animation
@@ -21,6 +24,7 @@ public class CameraController : MonoBehaviour {
 	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPerson;
     int FPSindex = 0;
+
 	// orbits
 
 	private bool isOrbiting = false;
