@@ -64,7 +64,8 @@ public class TutorialPart : MonoBehaviour {
 		if (_hasBegun) {
 			if (Input.GetKeyUp("space")) {
 				_hasBegun = false;
-				Next();
+				App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
+				//Next();
 			}
 
 			counter ++;
@@ -108,7 +109,7 @@ public class TutorialPart : MonoBehaviour {
 		if (_textMesh.text != s) {
 			_textMesh.text = s;
 			_textMesh.characterSize = characterSize;
-			App.shared.PlayAppSoundNamedAtVolume("bleep2", 0.04f);
+			App.shared.PlayAppSoundNamedAtVolume("bleep2", 0.02f);
 		}
 	}
 
