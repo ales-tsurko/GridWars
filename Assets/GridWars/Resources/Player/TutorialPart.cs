@@ -100,7 +100,7 @@ public class TutorialPart : MonoBehaviour {
 		App.shared.battlefield.player2.npcModeOn = true;
 
 		App.shared.cameraController.ResetCamera();
-		App.shared.cameraController.pos = 1;
+		App.shared.cameraController.pos = 0;
 		App.shared.cameraController.NextPosition();
 	}
 }
