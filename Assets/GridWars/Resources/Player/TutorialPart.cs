@@ -62,7 +62,7 @@ public class TutorialPart : MonoBehaviour {
 	
 	void FixedUpdate () {
 		if (_hasBegun) {
-			if (Input.GetKeyUp("space")) {
+			if (Input.GetKeyDown("space")) {
 				_hasBegun = false;
 				App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
 				//Next();
@@ -91,6 +91,7 @@ public class TutorialPart : MonoBehaviour {
 
 	void Next() {
 		gameObject.SetActive(false);
+		SetTutorialLabelText("");
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
 
 		if (nextPart != null) {
