@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// attach this to a GUIText
+// attach this to a GUIText container
 
 public class HoverText : MonoBehaviour {
 
@@ -16,22 +16,9 @@ public class HoverText : MonoBehaviour {
 	}
 
 	public void Update () {
-		/*
-		Transform pt = transform;
-		pt.position = cam.WorldToViewportPoint(target.position + offset);
-
-		Vector3 v = cam.transform.position - pt.position;
-		v.x = v.z = 0.0f;
-		pt.LookAt(cam.transform.position - v); 
-		pt.Rotate(0, 180, 0);
-		*/
-
-		Vector3 v = cam.transform.position - transform.position; 
-		transform.rotation = Quaternion.LookRotation( v );
-	
-
+		Vector3 directionToCam = Camera.main.transform.position - transform.position; 
+		transform.rotation = Quaternion.LookRotation(directionToCam);
 
 		//transform.rotation = Quaternion.LookRotation(n) * Quaternion.Euler(0, 90, 0);
-
 	}
 }

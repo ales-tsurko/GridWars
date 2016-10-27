@@ -293,9 +293,14 @@ public class Player : MonoBehaviour {
 	}
 
 	private void AI() {
+		if (isTutorialMode) {
+			TutorialStep();
+			return;
+		}
+
 		float minPowerRatio = 0.0f;
 
-		if (Player.EnemyObjects().Count == 0) {
+		if (EnemyObjects().Count == 0) {
 			return;
 		}
 
@@ -384,4 +389,17 @@ public class Player : MonoBehaviour {
 			_inputs = null;
 		}
 	}
+		
+
+	public bool isTutorialMode = false;
+	private GameObject firstTutorial = null;
+
+	void TutorialStep() {
+		if (firstTutorial == null && App.shared.cameraController.initComplete) {
+			firstTutorial = GameObject.Find("TutorialPart (1)");
+			firstTutorial.GetComponent<TutorialPart>().Begin();
+		}
+	}
+
+
 }

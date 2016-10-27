@@ -155,6 +155,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		iconObject.SetActive(CanQueueUnit(0));
 		keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
 
+		gameObject.name = "Tower Player" + player.playerNumber + " " + unitPrefab.name;
+
+
 		//CANT DO THIS -- NEED TO CHECK PER PLAYER
 		if (player.inputs.LastInputType != lastInputType) {
 			lastInputType = player.inputs.LastInputType;
@@ -459,18 +462,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		return e;
 	}
 
-	public void NpcStep () {
-		if (npcModeOn) {
-			if (player.powerSource.PowerRatio() > 0.3f) {
-				if (Random.value < 0.001f * Effectiveness()) {
-					SendAttemptQueueUnit();
-				} else if (player.powerSource.IsAtMax()) {
-					LaunchWithChance(0.002f);
-				}
-			} 
-		}
-	}
-
 	// KeyDelegate
 
 	bool inGameMenuIsFocused {
@@ -496,7 +487,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	private bool _dieWithBlockify;
+	private bool _dieWithBlockify = false;
 
 	public void DieWithBlockify() {
 		_dieWithBlockify = true;
@@ -512,4 +503,18 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 		return explosion;
 	}
+
+	public void NpcStep () {
+
+		if (npcModeOn) {
+			if (player.powerSource.PowerRatio() > 0.3f) {
+				if (Random.value < 0.001f * Effectiveness()) {
+					SendAttemptQueueUnit();
+				} else if (player.powerSource.IsAtMax()) {
+					LaunchWithChance(0.002f);
+				}
+			} 
+		}
+	}
+
 }

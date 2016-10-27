@@ -10,17 +10,13 @@ public class CameraController : MonoBehaviour {
 	public bool moving;
 	public float moveSpeed; // time in seconds to complete animation
 
-	//Vector3 startPos;
-	//Quaternion startRot;
+	public Vector3 targetPos;
+	public Quaternion targetRot;
 
-	Vector3 targetPos;
-	Quaternion targetRot;
-
-	//float startTime;
 	public Transform cam;
 	MouseLook mouseLook;
 	bool actionMode;
-	bool initComplete = false;
+	public bool initComplete = false;
 	public KeyIconRotation keyIconRotation;
 	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPerson;
@@ -186,14 +182,6 @@ public class CameraController : MonoBehaviour {
 
 			moving = false;
 		}
-		//print ("Moving " + Time.time);
-		/*
-		float timeSinceStarted = Time.time - startTime;
-		float percentageComplete = timeSinceStarted / moveSpeed;
-
-		cam.localPosition = Vector3.Lerp (startPos, targetPos, percentageComplete);
-		cam.localRotation = Quaternion.Lerp (startRot, targetRot, percentageComplete);
-		*/
 
 		float pf = 0.05f;
 		float rf = 0.05f;
@@ -265,9 +253,6 @@ public class CameraController : MonoBehaviour {
 		cam.parent = _target.transform;
 		targetPos = Vector3.zero + new Vector3 (0, 2, 0);
 		targetRot = Quaternion.Euler (Vector3.zero);
-		//startPos = cam.localPosition;
-		//startRot = cam.localRotation;
-		//startTime = Time.time;
 		moving = true;
 	}
 
@@ -284,10 +269,6 @@ public class CameraController : MonoBehaviour {
 		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
 		targetPos = transform.position;
 		targetRot = transform.rotation;
-		//startPos = cam.position;
-		//startRot = cam.rotation;
-		//print (Time.timeScale);
-		//startTime = Time.time;
 		moving = true;
         App.shared.prefs.camPosition = pos;
 
