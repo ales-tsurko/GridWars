@@ -14,6 +14,13 @@ public class TutorialPart : MonoBehaviour {
 	public float fractionToTarget = 0f;
 
 	public GameObject nextPart;
+	public bool _hasBegun = false;
+
+	private int counter = 0;
+	private int countsPerCharacter = 3;
+
+	private TextMesh _textMesh = null;
+	private string _formattedText = null;
 
 	void Start () {
 	}
@@ -46,22 +53,39 @@ public class TutorialPart : MonoBehaviour {
 		Vector3 p = Target().transform.position;
 		p.y += yOffset;
 		TutorialLabel().transform.position = p;
-		SetTutorialLabelText(hoverText);
+		//SetTutorialLabelText(hoverText);
+
+		_textMesh = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
+		_formattedText = hoverText.Replace("NEWLINE", "\n").ToUpper();
+		_hasBegun = true;
 	}
 	
-	void Update () {
-		if (Input.GetKeyDown("space")) {
-			Next();
+	void FixedUpdate () {
+		if (_hasBegun) {
+			if (Input.GetKeyUp("space")) {
+				Next();
+			}
+
+			counter ++;
+
+			if (counter % countsPerCharacter == 0) {
+				SetTutorialLabelText(VisibleText());
+			}
 		}
 	}
 
-	/*
-	GameObject NextPart() {
-		Regex x = new Regex("(\\(\\])(.*?)(\\)\\])");
-		string repl = "the replacement text";
-		string Result = x.Replace(gameObject.name, "$1" + gameObject.name + "$3");
+	public string VisibleText() {
+		string s = _formattedText;
+		int max = Mathf.Clamp(counter / countsPerCharacter, 0, s.Length);
+
+		string outs = s.Substring(0, max);
+
+		for (int i = max; i < s.Length; i ++) {
+			outs += s[i] == "\n"[0] ? "\n" : " ";
+		}
+
+		return outs;
 	}
-	*/
 
 	void Next() {
 		gameObject.SetActive(false);
@@ -80,14 +104,9 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	public void SetTutorialLabelText(string s) {
-		TextMesh tm = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
-
-		s = s.Replace("NEWLINE","\n");
-		//s += "\n\n[ press space ]";
-		tm.text = s.ToUpper();
-		tm.characterSize = characterSize;
+		_textMesh.text = s;
+		_textMesh.characterSize = characterSize;
 	}
-
 
 	public void DoneTutorial() {
 		App.shared.battlefield.isAiVsAi = false;
