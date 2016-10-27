@@ -213,7 +213,7 @@ public class Chopper : AirVehicle {
 	}
 
 	private void DieIfOverAccelerated() {
-		if (rigidBody().velocity.magnitude > 45f) {
+		if (rigidBody().velocity.magnitude > 40f) {
 			Die();
 		}
 	}
