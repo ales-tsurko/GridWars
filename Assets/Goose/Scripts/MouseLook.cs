@@ -50,7 +50,7 @@ public class MouseLook : MonoBehaviour
 		var targetCharacterOrientation = Quaternion.Euler(targetCharacterDirection);
 
 		// Get raw mouse input for a cleaner reading on more sensitive mice.
-		var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+        var mouseDelta = App.shared.inputs.look.Value - App.shared.inputs.look.LastValue;
         var joyDelta = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         mouseDelta += joyDelta;
 		// Scale input against the sensitivity setting and multiply that against the smoothing value.
