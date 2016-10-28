@@ -17,19 +17,7 @@ public class MouseLook : MonoBehaviour
 	// Yaw rotation will affect this object instead of the camera if set.
 	public GameObject characterBody;
 
-    PlayerInputs _inputs;
-    public PlayerInputs inputs {
-        get {
-            if (_inputs == null) {
-                return App.shared.inputs; //inputs are only assigned for SharedScreenPVP.  Use defaults otherwise.
-            }
-            else {
-                return _inputs;
-            }
-        }
-    }
-
-	void Start()
+   	void Start()
 	{
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.root.rotation.eulerAngles;
