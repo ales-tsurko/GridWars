@@ -33,6 +33,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public CameraController cameraController;
 	public Keys keys;
 	public PlayerInputs inputs; //used outside of games
+	public Account account;
 
 	public string version {
 		get {
@@ -93,12 +94,16 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs.AddControllerBindings();
 		inputs.AddLocalPlayer1KeyBindings();
 
+		account = new Account();
+
 		menu = UI.Menu();
 
+		//*
 		var mainMenuState = new MainMenuState();
 		mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
+		//*/
 	}
 
 	public void FixedUpdate() {

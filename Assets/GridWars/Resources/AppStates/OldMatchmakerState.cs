@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MatchmakerState : AppState, MatchmakerDelegate {
+public class OldMatchmakerState : AppState, MatchmakerDelegate {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -13,16 +13,23 @@ public class MatchmakerState : AppState, MatchmakerDelegate {
 
 		matchmaker.matchmakerDelegate = this;
 		if (!matchmaker.isConnected) {
-			matchmaker.Start();
+			matchmaker.Connect();
 		}
 	}
 
+	public void MatchmakerConnected() {
+	}
+
+
 	public void MatchmakerDisconnected() {
-		matchmaker.Start();
+		matchmaker.Connect();
 	}
 
 	public void MatchmakerErrored() {
-		matchmaker.Start();
+		matchmaker.Connect();
+	}
+
+	public void MatchmakerReceivedMessage(JSONObject message) {
 	}
 
 	public void MatchmakerReceivedHost(string gameId) {

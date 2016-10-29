@@ -17,7 +17,8 @@ public class UIButton : UIElement {
 	}
 
 	UnityEvent method;
-    public bool isBackItem;
+
+	public UIMenu containingMenu;
 	public Text textComponent {
 		get {
 			return GetComponentInChildren<Text>();
@@ -36,6 +37,32 @@ public class UIButton : UIElement {
             SizeToFit();
         }
     }
+
+	public UIButton SetText(string text) {
+		this.text = text;
+		return this;
+	}
+
+	public bool isBackItem;
+
+	public UIButton SetIsBackItem(bool isBackItem) {
+		this.isBackItem = isBackItem;
+		return this;
+	}
+
+	public RuntimeAnimatorController alertStyleController;
+
+	public UIButton UseAlertStyle() {
+		this.GetComponent<Animator>().runtimeAnimatorController = alertStyleController;
+		return this;
+	}
+
+	public System.Action action;
+
+	public UIButton SetAction(System.Action action) {
+		this.action = action;
+		return this;
+	}
 
 	public bool isInteractible {
 		get {
@@ -113,7 +140,9 @@ public class UIButton : UIElement {
 	}
 
 	public void OnPointerEnter() {
-		menu.SelectItem(this);
+		if (isInteractible) {
+			menu.SelectItem(this);
+		}
 	}
 
 	public void OnSelected() {
@@ -142,7 +171,7 @@ public class UIButton : UIElement {
         rectTransform.sizeDelta = menuSize;
     }
 
-    public void SetFillColor (Color _color, ButtonColorType type = ButtonColorType.Normal){
+	public UIButton SetFillColor (Color _color, ButtonColorType type = ButtonColorType.Normal){
         ColorBlock c = GetComponent<Button>().colors;
         switch (type) {
             case ButtonColorType.Normal:
@@ -166,6 +195,7 @@ public class UIButton : UIElement {
 			break;
         }
         GetComponent<Button>().colors = c;
+		return this;
     }
 
     public void SetBorderColor (Color _color){
@@ -173,9 +203,10 @@ public class UIButton : UIElement {
         i.color = _color;
     }
 
-    public void SetTextColor (Color _color){
+	public UIButton SetTextColor (Color _color){
         Text t = transform.FindChild("Text").GetComponent<Text>();
         t.color = _color;
+		return this;
     }
 }
 public enum ButtonColorType { Normal, Pressed, Hover, Disabled, All }

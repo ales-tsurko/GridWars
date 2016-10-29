@@ -10,7 +10,8 @@ public class MainMenuState : AppState {
 		battlefield.player2.isLocal = false;
 
 		app.ResetMenu();
-		menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
+		//menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
+		menu.AddItem(UI.MenuItem("Play a Friend", PlayAFriendClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
@@ -21,14 +22,16 @@ public class MainMenuState : AppState {
 		menu.Show();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
-
 	}
 	
 	void InternetPvpClicked() {
-		//return PlayerInputs..BoundTo.Device.GetControl(InputControlType.Action1).Handle;
 		battlefield.isInternetPVP = true;
 
-		TransitionTo(new MatchmakerState());
+		TransitionTo(new OldMatchmakerState());
+	}
+
+	void PlayAFriendClicked() {
+		TransitionTo(new FriendsListState());
 	}
 
 	void SharedScreenPvpClicked() {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System;
 
 public class BetterMonoBehaviour : MonoBehaviour {
-
 	[HideInInspector]
 	public Transform _t;
 

@@ -37,9 +37,19 @@ public class AppState {
 		}
 	}
 
-	protected UIMenu menu {
+	UIMenu _menu;
+	public UIMenu menu {
 		get {
-			return App.shared.menu;
+			if (_menu == null) {
+				return App.shared.menu;
+			}
+			else {
+				return _menu;
+			}
+		}
+
+		set {
+			_menu = value;
 		}
 	}
 
@@ -55,9 +65,19 @@ public class AppState {
 		}
 	}
 
-	protected Matchmaker matchmaker {
+	Matchmaker _matchmaker;
+	public Matchmaker matchmaker {
 		get {
-			return App.shared.matchmaker;
+			if (_matchmaker == null) {
+				return App.shared.matchmaker;
+			}
+			else {
+				return _matchmaker;
+			}
+		}
+
+		set {
+			_matchmaker = value;
 		}
 	}
 }

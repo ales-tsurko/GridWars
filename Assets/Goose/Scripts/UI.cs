@@ -32,8 +32,8 @@ public static class UI {
 			button.isInteractible = false;
 			button.matchesNeighborSize = false;
 		} else {
-			Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
-			image.overrideSprite = sprite;
+			//Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
+			//image.overrideSprite = sprite;
 		}
 		button.SetAction(action);
 		button.SetText(title, allcaps);
@@ -85,14 +85,8 @@ public static class UI {
 		return null;
     }
 
-	public static UIMenu Menu (string title = "", string skin = "Default"){
-		UIMenu _menu = new GameObject ().AddComponent<UIMenu> ();
-		_menu.gameObject.name = "Menu";
-		_menu.Init();
-		AssignToCanvas (_menu.gameObject);
-		//add graphic options here re skins
-		//_menu.SetText(title);
-		return _menu;
+	public static UIMenu Menu() {
+		return new GameObject().AddComponent<UIMenu>();
 	}
 
 	public static UIActivityIndicator ActivityIndicator (string text = "", string skin = "Default"){

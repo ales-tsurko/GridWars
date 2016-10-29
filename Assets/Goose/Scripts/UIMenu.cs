@@ -65,8 +65,20 @@ public class UIMenu : UIElement {
 
 
 	//public AudioSource audioSource;
+	bool didStart = false;
 
-	public void Init() {
+	public virtual void Start() {
+		if (didStart) {
+			return;
+		}
+
+		didStart = true;
+
+		gameObject.name = "Menu";
+		UI.AssignToCanvas(gameObject);
+		//add graphic options here re skins
+		//_menu.SetText(title);
+
 		image = gameObject.AddComponent<Image>();
 		image.raycastTarget = false;
 		image.color = Color.black;
@@ -80,24 +92,34 @@ public class UIMenu : UIElement {
     public void AddItem (UIButton _item, bool isBackItem = false){
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
-		items.Add (_item);
+		items.Add(_item);
         _item.isBackItem = isBackItem;
-		_item.Show ();
+		_item.Show();
 		_item.menu = this;
-		OrderMenu ();
+	}
+
+	public UIButton AddNewButton() {
+		var button = UIButton.Instantiate();
+		button.containingMenu = this;
+		AddItem(button);
+		return button;
+	}
+
+	public UIButton AddNewText() {
+		var button = AddNewButton();
+		button.isInteractible = false;
+		button.matchesNeighborSize = false;
+		return button;
 	}
 
 	public void SetOrientation(MenuOrientation orientation) {
-		OrderMenu(orientation);
+		this.orientation = orientation;
 	}
 
-    public void OrderMenu (MenuOrientation orientation = MenuOrientation.Vertical, float _spacing = 0){
-
-		bool isVertical = orientation == MenuOrientation.Vertical;
+    public void OrderMenu(){
+		bool isVertical = (orientation == MenuOrientation.Vertical);
 		Vector2 pivot;
 		Vector2 layoutDirection;
-
-		this.orientation = orientation;
 
 		if (isVertical) {
 			//x = 0 is center
@@ -169,8 +191,8 @@ public class UIMenu : UIElement {
 	public void Reset () {
        // Destroy(gameObject);
        // return;
-		foreach (Transform child in transform) {
-			Destroy (child.gameObject);
+		foreach (Transform child in panel.transform) {
+			Destroy(child.gameObject);
 		}
 		items = new List<UIButton> ();
 	}
@@ -197,6 +219,9 @@ public class UIMenu : UIElement {
    
     public override void Show () {
         base.Show();
+
+		Start();
+
         RectTransform t = GetComponent<RectTransform>();
         t.anchorMin = new Vector2(0, 0);
         t.anchorMax = new Vector2(1, 1);
@@ -206,6 +231,8 @@ public class UIMenu : UIElement {
 		if (isNavigable && selectsOnShow) {
 			Focus();
 		}
+
+		OrderMenu();
     }
 
 	public List<UIButton>selectableItems {
@@ -225,6 +252,7 @@ public class UIMenu : UIElement {
 
 	public void Focus() {
 		if (selectableItems.Count > 0) {
+			App.shared.Log("Focus", this);
 			selectedItem = selectableItems[0];
 			selectedItem.Select();
 		}
@@ -284,7 +312,7 @@ public class UIMenu : UIElement {
 	float lastSelectionTime = 0f;
 	*/
 
-	void Update() {
+	protected virtual void Update() {
 		if (hasFocus) {
 			if (orientation == MenuOrientation.Vertical) {
 				if (inputs.upItem.WasPressed) {
@@ -311,7 +339,7 @@ public class UIMenu : UIElement {
 
 			if (inputs.selectItem.WasPressed) {
 				if (selectedItem != null) {
-					//App.shared.Log("selectedItem.OnClick();", this);
+					App.shared.Log("selectedItem.OnClick();", this);
 					selectedItem.OnClick();
 				}
 			}
@@ -339,41 +367,40 @@ public class UIMenu : UIElement {
 			*/
 		}
 	}
+
+	public void SetAnchor (MenuAnchor anchor){
+		RectTransform _t = panel;
+		currentAnchor = anchor;
+		switch (anchor) {
+		case MenuAnchor.MiddleCenter:
+			_t.anchorMin = new Vector2(.5f, .5f);
+			_t.anchorMax = new Vector2(.5f, .5f);
+			_t.localPosition = new Vector3(0f, 0f, 0f);
+			break;
+		case MenuAnchor.TopCenter:
+			_t.anchorMin = new Vector2(.5f, 1f);
+			_t.anchorMax = new Vector2(.5f, 1f);
+			_t.pivot = new Vector2(0.5f, 0.5f);
+			_t.localScale = Vector3.one;
+			_t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
+			break;
+		case MenuAnchor.TopLeft:
+			_t.anchorMin = new Vector2(0f, 1f);
+			_t.anchorMax = new Vector2(0f, 1f);
+			_t.pivot = new Vector2(0f, 0.5f);
+			_t.localScale = Vector3.one;
+			_t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
+			break;
+		case MenuAnchor.TopRight:
+			_t.anchorMin = new Vector2(1f, 1f);
+			_t.anchorMax = new Vector2(1f, 1f);
+			_t.pivot = new Vector2(1f, 0.5f);
+			_t.localScale = Vector3.one;
+			_t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
+			break;
+		}
+	}
 }
 
 public enum MenuAnchor { MiddleCenter, TopCenter, TopLeft, TopRight };
 public enum MenuOrientation { Vertical, Horizontal };
-public static class UIMenuExtension {
-    public static void SetAnchor (this UIMenu _menu, MenuAnchor anchor){
-        RectTransform _t = _menu.panel;
-        _menu.currentAnchor = anchor;
-        switch (anchor) {
-            case MenuAnchor.MiddleCenter:
-                _t.anchorMin = new Vector2(.5f, .5f);
-                _t.anchorMax = new Vector2(.5f, .5f);
-                _t.localPosition = new Vector3(0f, 0f, 0f);
-                break;
-            case MenuAnchor.TopCenter:
-				_t.anchorMin = new Vector2(.5f, 1f);
-				_t.anchorMax = new Vector2(.5f, 1f);
-				_t.pivot = new Vector2(0.5f, 0.5f);
-                _t.localScale = Vector3.one;
-                _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
-                break;
-			case MenuAnchor.TopLeft:
-				_t.anchorMin = new Vector2(0f, 1f);
-				_t.anchorMax = new Vector2(0f, 1f);
-				_t.pivot = new Vector2(0f, 0.5f);
-				_t.localScale = Vector3.one;
-				_t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
-				break;
-			case MenuAnchor.TopRight:
-				_t.anchorMin = new Vector2(1f, 1f);
-				_t.anchorMax = new Vector2(1f, 1f);
-				_t.pivot = new Vector2(1f, 0.5f);
-				_t.localScale = Vector3.one;
-				_t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
-				break;
-        }
-    }
-}

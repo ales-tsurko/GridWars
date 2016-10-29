@@ -4,19 +4,33 @@ using SocketIO;
 using System;
 
 public interface MatchmakerDelegate {
+	void MatchmakerConnected();
 	void MatchmakerDisconnected();
 	void MatchmakerErrored();
+	void MatchmakerReceivedMessage(JSONObject message);
+
+
 	void MatchmakerReceivedHost(string gameId);
 	void MatchmakerReceivedJoin(string gameId);
 	void MatchmakerReceivedVersion(string version);
 }
 
-public class Matchmaker {
+public class Matchmaker : AppStateOwner {
 	public Network network;
 	public MatchmakerDelegate matchmakerDelegate;
+
 	public bool isConnected {
 		get {
 			return socket.IsConnected;
+		}
+	}
+
+	public MatchmakerMenu menu;
+
+	public AppState state { get; set; }
+	public MatchmakerState matchmakerState {
+		get {
+			return (MatchmakerState)state;
 		}
 	}
 
@@ -30,11 +44,17 @@ public class Matchmaker {
 		socket.On("joinGame", JoinGame);
 		socket.On("version", ReceiveVersion);
 
+		menu = new GameObject().AddComponent<MatchmakerMenu>();
+		state = new MatchmakerDisconnectedState();
+		state.matchmaker = this;
+		state.owner = this;
+		state.EnterFrom(null);
+
 		//ws://gw-matchmaker.herokuapp.com/socket.io/?EIO=4&transport=websocket
 		//ws://localhost:8080/socket.io/?EIO=4&transport=websocket
 	}
 
-	public void Start() {
+	public void Connect() {
 		if (socket.IsConnected) {
 			throw new Exception("Already connected to Matchmaker");
 		}
@@ -54,7 +74,9 @@ public class Matchmaker {
 
 	void SocketConnected(SocketIOEvent e) {
 		App.shared.Log("SocketConnected", this);
-		SendVersion();
+		if (matchmakerDelegate != null) {
+			matchmakerDelegate.MatchmakerConnected();
+		}
 	}
 
 	void SocketDisconnected(SocketIOEvent e) {

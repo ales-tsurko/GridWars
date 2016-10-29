@@ -78,20 +78,28 @@ public class BoltRendezvousState : NetworkDelegateState, MatchmakerDelegate {
 	public override void Disconnected(BoltConnection connection) {
 		base.Disconnected(connection);
 
-		postBoltShutdownState = new MatchmakerState();
+		postBoltShutdownState = new OldMatchmakerState();
 		network.ShutdownBolt();
 	}
 
 	//Matchmaker
 
+	public void MatchmakerConnected() {
+		
+	}
+
 	public void MatchmakerDisconnected() {
-		postBoltShutdownState = new MatchmakerState();
+		postBoltShutdownState = new OldMatchmakerState();
 		network.ShutdownBolt();
 	}
 
 	public void MatchmakerErrored() {
-		postBoltShutdownState = new MatchmakerState();
+		postBoltShutdownState = new OldMatchmakerState();
 		matchmaker.Disconnect();
+	}
+
+	public void MatchmakerReceivedMessage(JSONObject message) {
+		
 	}
 
 	public void MatchmakerReceivedHost(string gameId) {

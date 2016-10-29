@@ -33,7 +33,7 @@ public class UIElement : MonoBehaviour {
 	}
 
 	public System.Object data;
-	public System.Action action;
+
 	/// <summary>
 	/// Sets the position of the Button
 	/// </summary>
@@ -74,17 +74,6 @@ public class UIElement : MonoBehaviour {
 		}
 		GetComponent<Image> ().type = type;
 	}
-
-   
-
-	/// <summary>
-	/// Sets the method to call OnClick
-	/// </summary>
-	/// <param name="action">Method without parens</param>
-	
-    public void SetAction (System.Action _action){
-        action = _action;
-    }
 
 }
 
