@@ -157,6 +157,8 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTanker.AddDefaultBinding(Key.F);
 		releaseTank.AddDefaultBinding(Key.J);
 		releaseMobileSam.AddDefaultBinding(Key.K);
+
+        toggleFPS.AddDefaultBinding(Key.Escape);
 	}
 
 	public void AddLocalPlayer2KeyBindings() {

@@ -163,12 +163,13 @@ public class CameraController : MonoBehaviour {
 		}
         //check for Joystick input for FPS Mode
         if (isInFirstPerson) {
-            if (Keys.EXIT.KeyDown() || App.shared.inputs.toggleFPS.WasPressed) {
+            PlayerInputs inputs = App.shared.inputs;
+            if (inputs.goBack.WasPressed || inputs.toggleFPS.WasPressed) {
                 FindObjectOfType<CameraController>().ResetCamera();
                 return;
             }
-            FPSindex += App.shared.inputs.unitNext.WasPressed ? ChangeFPSUnit(1) : 0;
-            FPSindex += App.shared.inputs.unitPrev.WasPressed ? ChangeFPSUnit(-1) : 0;
+            FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
+            FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
         } 
         if (!isInFirstPerson && App.shared.inputs.toggleFPS.WasPressed) {
             EnterFPSModeFromJoystick();
