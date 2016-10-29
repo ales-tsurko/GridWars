@@ -170,7 +170,7 @@ public class CameraController : MonoBehaviour {
             }
             FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
             FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
-        } 
+        }
         if (!isInFirstPerson && App.shared.inputs.toggleFPS.WasPressed) {
             EnterFPSModeFromJoystick();
         }
@@ -179,7 +179,7 @@ public class CameraController : MonoBehaviour {
             return;
         }
         //check for Camera position change
-        if (inputs.camNext.WasPressed || inputs.camPrev.WasPressed) {
+        if (!isInFirstPerson && (inputs.camNext.WasPressed || inputs.camPrev.WasPressed)) {
             NextPosition(inputs.camNext.WasPressed);
         }
 
