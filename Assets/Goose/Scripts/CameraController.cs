@@ -140,6 +140,7 @@ public class CameraController : MonoBehaviour {
 		if (!initComplete) {
 			return;
 		}
+        PlayerInputs inputs = App.shared.inputs;
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
 			thisScreenRes = GetMainGameViewSize();
@@ -163,7 +164,6 @@ public class CameraController : MonoBehaviour {
 		}
         //check for Joystick input for FPS Mode
         if (isInFirstPerson) {
-            PlayerInputs inputs = App.shared.inputs;
             if (inputs.goBack.WasPressed || inputs.toggleFPS.WasPressed) {
                 FindObjectOfType<CameraController>().ResetCamera();
                 return;
@@ -175,11 +175,14 @@ public class CameraController : MonoBehaviour {
             EnterFPSModeFromJoystick();
         }
 
-
-
         if (cam == null) {
             return;
         }
+        //check for Camera position change
+        if (inputs.camNext.WasPressed || inputs.camPrev.WasPressed) {
+            NextPosition(inputs.camNext.WasPressed);
+        }
+
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
@@ -261,15 +264,16 @@ public class CameraController : MonoBehaviour {
 		moving = true;
 	}
 
-	public void NextPosition () {
+    public void NextPosition (bool next = true) {
 		//print ("Next Called");
+        int dir = next ? 1 : -1;
 		actionMode = false;
 		if (mouseLook != null) {
 			mouseLook.enabled = false;
 		}
 
 		cam.parent = null;
-		pos++;
+        pos += dir;
 		var transform = gamePositions[pos % gamePositions.Count];
 		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
 		targetPos = transform.position;

@@ -29,6 +29,9 @@ public class PlayerInputs : PlayerActionSet {
     public PlayerAction unitNext;
     public PlayerAction unitPrev;
 
+    public PlayerAction camNext;
+    public PlayerAction camPrev;
+
 	/*
 	InputDevice _device;
 	public InputDevice device {
@@ -75,6 +78,9 @@ public class PlayerInputs : PlayerActionSet {
         toggleFPS = CreatePlayerAction("Enter FPS Mode");
         unitNext = CreatePlayerAction("Next Unit");
         unitPrev = CreatePlayerAction("Previous Unit");
+
+        camNext = CreatePlayerAction("Next Camera Position");
+        camPrev = CreatePlayerAction("Previous Camera Position");
 	}
 
 	public void AddControllerBindings() {
@@ -130,6 +136,9 @@ public class PlayerInputs : PlayerActionSet {
         unitNext.AddDefaultBinding(InputControlType.RightBumper);
         unitPrev.AddDefaultBinding(InputControlType.LeftBumper);
 
+        camNext.AddDefaultBinding(InputControlType.RightBumper);
+        camPrev.AddDefaultBinding(InputControlType.LeftBumper);
+
 	}
 
 	public void AddLocalPlayer1KeyBindings() {
@@ -159,6 +168,9 @@ public class PlayerInputs : PlayerActionSet {
 		releaseMobileSam.AddDefaultBinding(Key.K);
 
         toggleFPS.AddDefaultBinding(Key.Escape);
+
+        camNext.AddDefaultBinding(Key.RightArrow);
+        camPrev.AddDefaultBinding(Key.LeftArrow);
 	}
 
 	public void AddLocalPlayer2KeyBindings() {
