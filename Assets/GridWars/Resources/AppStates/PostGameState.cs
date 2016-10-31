@@ -65,6 +65,8 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 
 		Object.FindObjectOfType<CameraController>().StartOrbit();
 
+		menu.backgroundColor = new Color(0, 0, 0, 0);
+
 		subState = new ShowOutcomeState();
 		subState.owner = this;
 		subState.EnterFrom(null);
@@ -73,6 +75,7 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 	public override void WillExit() {
 		base.WillExit();
 		subState.WillExit();
+		menu.backgroundColor = new Color(0, 0, 0, 1);
 		IsExiting();
 	}
 

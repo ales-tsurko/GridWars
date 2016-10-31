@@ -33,10 +33,14 @@ public class PlayingGameState : NetworkDelegateState {
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
 		App.shared.PlayAppSoundNamed("GameStart");
+
+		menu.backgroundColor = new Color(0, 0, 0, 0);
 	}
 
 	public override void WillExit() {
 		base.WillExit();
+
+		menu.backgroundColor = new Color(0, 0, 0, 1);
 
 		HideInGameMenus();
 	}

@@ -20,6 +20,7 @@ public class MainMenuState : AppState {
         //menu.AddItem(UI.MenuItem("Options", OptionsClicked)); //Remove until we have player profiles.
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
+		menu.backgroundColor = new Color(0, 0, 0, 1);
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
 	}
