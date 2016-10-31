@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AppState {
+public class AppState : MatchmakerMenuDelegate {
 	public AppStateOwner owner;
 
 	public string name {
@@ -24,9 +24,13 @@ public class AppState {
 		else {
 			app.Log("EnterFrom null", this);
 		}
+
+		matchmaker.menu.AddDelegate(this);
+		ConfigureMatchmakerMenu();
 	}
 
 	public virtual void WillExit() {
+		matchmaker.menu.RemoveDelegate(this);
 	}
 
 	public virtual void Update() {}
@@ -78,6 +82,52 @@ public class AppState {
 
 		set {
 			_matchmaker = value;
+		}
+	}
+
+	public virtual void ConfigureMatchmakerMenu() {
+		if (matchmaker.menu.isOpen) {
+			DisconnectMatchmakerMenu();
+		}
+		else {
+			ConnectMatchmakerMenu();
+		}
+	}
+
+	public virtual void MatchmakerMenuOpened() {
+		this.menu.Hide();
+		DisconnectMatchmakerMenu();
+	}
+
+	public virtual void MatchmakerMenuClosed() {
+		var selectsOnShow = this.menu.selectsOnShow;
+		this.menu.selectsOnShow = false;
+		this.menu.Show();
+		this.menu.selectsOnShow = selectsOnShow;
+		ConnectMatchmakerMenu();
+	}
+
+	public virtual void ConnectMatchmakerMenu() {
+		App.shared.Log("ConnectMatchmakerMenu", this);
+		matchmaker.menu.nextMenu = menu;
+		matchmaker.menu.previousMenu = menu;
+		matchmaker.menu.orientation = MenuOrientation.Vertical;
+
+		if (menu != null) {
+			menu.previousMenu = matchmaker.menu;
+			menu.nextMenu = matchmaker.menu;
+		}
+	}
+
+	public virtual void DisconnectMatchmakerMenu() {
+		App.shared.Log("DisconnectMatchmakerMenu", this);
+		matchmaker.menu.nextMenu = null;
+		matchmaker.menu.previousMenu = null;
+		matchmaker.menu.orientation = MenuOrientation.Vertical;
+
+		if (menu != null) {
+			menu.previousMenu = null;
+			menu.nextMenu = null;
 		}
 	}
 }

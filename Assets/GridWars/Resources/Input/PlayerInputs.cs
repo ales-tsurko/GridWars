@@ -167,10 +167,10 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTank.AddDefaultBinding(Key.J);
 		releaseMobileSam.AddDefaultBinding(Key.K);
 
-        toggleFPS.AddDefaultBinding(Key.Escape);
+        //toggleFPS.AddDefaultBinding(Key.Escape);
 
-        camNext.AddDefaultBinding(Key.RightArrow);
-        camPrev.AddDefaultBinding(Key.LeftArrow);
+		//camNext.AddDefaultBinding(Key.RightArrow);
+        //camPrev.AddDefaultBinding(Key.LeftArrow);
 	}
 
 	public void AddLocalPlayer2KeyBindings() {

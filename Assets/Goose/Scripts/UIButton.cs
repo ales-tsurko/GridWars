@@ -152,6 +152,7 @@ public class UIButton : UIElement {
 
 	public void OnDeselected() {
 		isSelected = false;
+		menu.ItemDeselected(this);
 	}
 
     public void SizeToFit() {

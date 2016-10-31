@@ -20,6 +20,7 @@ public class InGameMenu {
 
 	public void Hide() {
 		if (menu != null) {
+			App.shared.Log("Hide menu", this);
 			menu.Destroy();
 			menu = null;
 			player.inGameMenu = null;
@@ -121,10 +122,16 @@ public class InGameMenu {
 
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuPlacement);
-		menu.SetBackground(Color.black, 0);
 		menu.selectsOnShow = false;
 		menu.inputs = inputs;
 		menu.Show();
+
+		if (App.shared.matchmaker.menu.isOpen) {
+			DisconnectMatchmakerMenu();
+		}
+		else {
+			ConnectMatchmakerMenu();
+		}
 	}
 
 
@@ -167,6 +174,32 @@ public class InGameMenu {
 
 	void HandleCamera() {
 		App.shared.cameraController.NextPosition();
+	}
+
+	//Matchmaker Menu
+
+	public void ConnectMatchmakerMenu() {
+		App.shared.Log("ConnectMatchmakerMenu: " + menu, this);
+		App.shared.matchmaker.menu.nextMenu = menu;
+		App.shared.matchmaker.menu.previousMenu = menu;
+		App.shared.matchmaker.menu.orientation = MenuOrientation.Horizontal;
+
+		if (menu != null) {
+			menu.previousMenu = App.shared.matchmaker.menu;
+			menu.nextMenu = App.shared.matchmaker.menu;
+		}
+	}
+
+	public void DisconnectMatchmakerMenu() {
+		App.shared.Log("DisconnectMatchmakerMenu: " + menu, this);
+		App.shared.matchmaker.menu.nextMenu = null;
+		App.shared.matchmaker.menu.previousMenu = null;
+		App.shared.matchmaker.menu.orientation = MenuOrientation.Vertical;
+
+		if (menu != null) {
+			menu.previousMenu = null;
+			menu.nextMenu = null;
+		}
 	}
 }
 

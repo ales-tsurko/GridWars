@@ -124,8 +124,14 @@ public class App : MonoBehaviour, AppStateOwner {
 	// --- Menu --------------------
 
 	public void ResetMenu() {
-		menu.Destroy();
+		/*
+		if (menu != null) {
+			menu.Destroy();
+		}
 		menu = UI.Menu();
+		*/
+		menu.Reset();
+		menu.Hide();
 	}
 
 	// --- Finding Paths --------------------
@@ -249,15 +255,20 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Log(object message, object context) {
+		var messageString = "null";
+		if (message != null) {
+			messageString = message.ToString();
+		}
+
 		if (context == null) {
-			Log(message);
+			Log(messageString);
 		}
 		else {
 			if (context.inheritsFrom(typeof(UnityEngine.Object))) {
-				Log(context.GetType() + "." + (context as UnityEngine.Object).GetInstanceID() + ": " + message.ToString());
+				Log(context.GetType() + "." + (context as UnityEngine.Object).GetInstanceID() + ": " + messageString);
 			}
 			else {
-				Log(context.GetType() + ": " + message.ToString());
+				Log(context.GetType() + ": " + messageString);
 			}
 		}
 	}

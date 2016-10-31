@@ -9,7 +9,7 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void MatchmakerMenuOpened() {
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
-			.SetText("Unable to connect to the server.\nInternet matches disabled.");
+			.SetText("Unable to connect to the server.\n\nInternet matches disabled.");
 		matchmaker.menu.AddNewButton()
 			.SetText("Close")
 			.SetAction(matchmaker.menu.Close)
@@ -25,5 +25,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();
 		matchmaker.menu.Show();
+		matchmaker.menu.Focus();
 	}
 }

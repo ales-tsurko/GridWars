@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -101,6 +102,10 @@ public static class GridWarsUnityExtensions {
 		return gameObject.AddComponent<T>();
 	}
 
+	public static IEnumerator OnEndOfFrame(this MonoBehaviour self, Action action) {
+		yield return new WaitForEndOfFrame();
+		action();
+	}
 
 	/// <summary>
 	/// Checks if a GameObject has been destroyed.

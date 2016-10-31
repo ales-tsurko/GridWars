@@ -35,14 +35,23 @@ public class UIMenu : UIElement {
 
 	public bool selectsOnShow = true;
 
+	public UIMenu nextMenu;
+	public UIMenu previousMenu;
+
 	public Color backgroundColor {
 		get {
-			return image.color;
+			if (image == null) {
+				return new Color(0, 0, 0, 0);
+			}
+			else {
+				return image.color;
+			}
 		}
 
 		set {
-			App.shared.Log(value.ToString(), this);
-			image.color = value;
+			if (image != null) {
+				image.color = value;
+			}
 		}
 	}
 
@@ -62,25 +71,25 @@ public class UIMenu : UIElement {
 		}
 	}
 
-	MenuOrientation orientation;
+	MenuOrientation _orientation;
+	public MenuOrientation orientation {
+		get {
+			return _orientation;
+		}
+
+		set {
+			var oldValue = _orientation;
+			_orientation = value;
+			if (oldValue != value) {
+				OrderMenu();
+			}
+		}
+	}
 
 
 	//public AudioSource audioSource;
 
-	public virtual void Start() {
-		
-	}
-
-
-	bool didInit = false;
-
-	public virtual void Init() {
-		if (didInit) {
-			return;
-		}
-
-		didInit = true;
-
+	public virtual void Awake() {
 		gameObject.name = "Menu";
 		UI.AssignToCanvas(gameObject);
 		//add graphic options here re skins
@@ -88,7 +97,7 @@ public class UIMenu : UIElement {
 
 		image = gameObject.AddComponent<Image>();
 		image.raycastTarget = false;
-		backgroundColor = Color.black;
+		backgroundColor = new Color(0, 0, 0, 0);
 		RectTransform t = GetComponent<RectTransform>();
 		t.anchorMin = new Vector2(0, 0);
 		t.anchorMax = new Vector2(1, 1);
@@ -120,8 +129,9 @@ public class UIMenu : UIElement {
 		return button;
 	}
 
-	public void SetOrientation(MenuOrientation orientation) {
+	public UIMenu SetOrientation(MenuOrientation orientation) {
 		this.orientation = orientation;
+		return this;
 	}
 
     public void OrderMenu(){
@@ -228,7 +238,7 @@ public class UIMenu : UIElement {
     public override void Show () {
         base.Show();
 
-		Init();
+		this.gameObject.SetActive(true);
 
 		if (isNavigable && selectsOnShow) {
 			Focus();
@@ -253,11 +263,7 @@ public class UIMenu : UIElement {
 	}
 
 	public void Focus() {
-		if (selectableItems.Count > 0) {
-			App.shared.Log("Focus", this);
-			selectedItem = selectableItems[0];
-			selectedItem.Select();
-		}
+		SelectFirstItem();
 	}
 
 	public void LoseFocus() {
@@ -277,10 +283,44 @@ public class UIMenu : UIElement {
 		}
 	}
 
+	public bool canFocus {
+		get {
+			return selectableItems.Count > 0;
+		}
+	}
+
+	public void ItemDeselected(UIButton item) {
+		if (selectedItem == item) {
+			//App.shared.Log("ItemDeselected", item);
+			selectedItem = null;
+		}
+	}
+
+	public void SelectFirstItem() {
+		if (selectableItems.Count > 0) {
+			SelectItem(selectableItems[0]);
+		}
+	}
+
+	public void SelectLastItem() {
+		if (selectableItems.Count > 0) {
+			SelectItem(selectableItems[selectableItems.Count - 1]);
+		}
+	}
+
 	public void SelectNextItem() {
 		var nextIndex = selectedItemIndex + 1;
 		if (nextIndex >= selectableItems.Count) {
-			nextIndex = 0;
+			//App.shared.Log(nextMenu, this);
+			if (nextMenu != null && nextMenu.canFocus) {
+				StartCoroutine(this.OnEndOfFrame(() => { //otherwise menu might read input again
+					nextMenu.SelectFirstItem();
+				}));
+				return;
+			}
+			else {
+				nextIndex = 0;
+			}
 		}
 		SelectItem(selectableItems[nextIndex]);
 	}
@@ -288,7 +328,15 @@ public class UIMenu : UIElement {
 	public void SelectPreviousItem() {
 		var previousIndex = selectedItemIndex - 1;
 		if (previousIndex < 0) {
-			previousIndex = selectableItems.Count - 1;
+			if (previousMenu != null && previousMenu.canFocus) {
+				StartCoroutine(this.OnEndOfFrame(() => { //otherwise menu might read input again
+					previousMenu.SelectLastItem();
+				}));
+				return;
+			}
+			else {
+				previousIndex = selectableItems.Count - 1;
+			}
 		}
 		SelectItem(selectableItems[previousIndex]);
 	}
@@ -341,7 +389,7 @@ public class UIMenu : UIElement {
 
 			if (inputs.selectItem.WasPressed) {
 				if (selectedItem != null) {
-					App.shared.Log("selectedItem.OnClick();", this);
+					//App.shared.Log("selectedItem.OnClick();", this);
 					selectedItem.OnClick();
 				}
 			}

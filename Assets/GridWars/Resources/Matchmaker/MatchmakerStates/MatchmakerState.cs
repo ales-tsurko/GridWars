@@ -6,7 +6,12 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		base.EnterFrom(state);
 
 		matchmaker.matchmakerDelegate = this;
-		matchmaker.menu.theDelegate = this;
+	}
+
+	// MatchmakerMenuDelegate
+
+	public override void ConfigureMatchmakerMenu() {
+		base.ConfigureMatchmakerMenu();
 
 		if (matchmaker.menu.isOpen) {
 			MatchmakerMenuOpened();
@@ -16,13 +21,15 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		}
 	}
 
-	public virtual void MatchmakerMenuOpened() {
+	public override void MatchmakerMenuOpened() {
 		
 	}
 
-	public virtual void MatchmakerMenuClosed() {
+	public override void MatchmakerMenuClosed() {
 
 	}
+
+	//MatchmakerDelegate
 
 	public void MatchmakerConnected() {
 		app.Log("MatchmakerConnected", this);

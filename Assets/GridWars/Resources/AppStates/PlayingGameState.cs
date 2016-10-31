@@ -33,7 +33,6 @@ public class PlayingGameState : NetworkDelegateState {
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
 		App.shared.PlayAppSoundNamed("GameStart");
-
 	}
 
 	public override void WillExit() {
@@ -143,5 +142,29 @@ public class PlayingGameState : NetworkDelegateState {
 		player.inGameMenu = inGameMenu;
 
 		inGameMenus.Add(inGameMenu);
+	}
+
+	public InGameMenu primaryInGameMenu {
+		get {
+			if (inGameMenus != null && inGameMenus.Count > 0) {
+				return inGameMenus[0];
+			}
+			else {
+				return null;
+			}
+
+		}
+	}
+
+	public override void ConnectMatchmakerMenu() {
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.ConnectMatchmakerMenu();
+		}
+	}
+
+	public override void DisconnectMatchmakerMenu() {
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.DisconnectMatchmakerMenu();
+		}
 	}
 }
