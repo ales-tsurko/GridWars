@@ -99,6 +99,7 @@ public class UIMenu : UIElement {
     public void AddItem (UIButton _item, bool isBackItem = false){
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
+        _item.transform.localScale = Vector3.one;
 		items.Add(_item);
         _item.isBackItem = isBackItem;
 		_item.Show();
@@ -372,34 +373,35 @@ public class UIMenu : UIElement {
 	public void SetAnchor (MenuAnchor anchor){
 		RectTransform _t = panel;
 		currentAnchor = anchor;
-		switch (anchor) {
-		case MenuAnchor.MiddleCenter:
-			_t.anchorMin = new Vector2(.5f, .5f);
-			_t.anchorMax = new Vector2(.5f, .5f);
-			_t.localPosition = new Vector3(0f, 0f, 0f);
-			break;
-		case MenuAnchor.TopCenter:
-			_t.anchorMin = new Vector2(.5f, 1f);
-			_t.anchorMax = new Vector2(.5f, 1f);
-			_t.pivot = new Vector2(0.5f, 0.5f);
-			_t.localScale = Vector3.one;
-			_t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
-			break;
-		case MenuAnchor.TopLeft:
-			_t.anchorMin = new Vector2(0f, 1f);
-			_t.anchorMax = new Vector2(0f, 1f);
-			_t.pivot = new Vector2(0f, 0.5f);
-			_t.localScale = Vector3.one;
-			_t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
-			break;
-		case MenuAnchor.TopRight:
-			_t.anchorMin = new Vector2(1f, 1f);
-			_t.anchorMax = new Vector2(1f, 1f);
-			_t.pivot = new Vector2(1f, 0.5f);
-			_t.localScale = Vector3.one;
-			_t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
-			break;
-		}
+        switch (anchor) {
+            case MenuAnchor.MiddleCenter:
+                _t.anchorMin = new Vector2(.5f, .5f);
+                _t.anchorMax = new Vector2(.5f, .5f);
+                _t.localScale = Vector3.one;
+                _t.localPosition = new Vector3(0f, 0f, 0f);
+                break;
+            case MenuAnchor.TopCenter:
+                _t.anchorMin = new Vector2(.5f, 1f);
+                _t.anchorMax = new Vector2(.5f, 1f);
+                _t.pivot = new Vector2(0.5f, 0.5f);
+                _t.localScale = Vector3.one;
+                _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
+                break;
+            case MenuAnchor.TopLeft:
+                _t.anchorMin = new Vector2(0f, 1f);
+                _t.anchorMax = new Vector2(0f, 1f);
+                _t.pivot = new Vector2(0f, 0.5f);
+                _t.localScale = Vector3.one;
+                _t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
+                break;
+            case MenuAnchor.TopRight:
+                _t.anchorMin = new Vector2(1f, 1f);
+                _t.anchorMax = new Vector2(1f, 1f);
+                _t.pivot = new Vector2(1f, 0.5f);
+                _t.localScale = Vector3.one;
+                _t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
+                break;
+        }
 	}
 }
 
