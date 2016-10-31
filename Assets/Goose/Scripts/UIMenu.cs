@@ -41,6 +41,7 @@ public class UIMenu : UIElement {
 		}
 
 		set {
+			App.shared.Log(value.ToString(), this);
 			image.color = value;
 		}
 	}
@@ -65,14 +66,20 @@ public class UIMenu : UIElement {
 
 
 	//public AudioSource audioSource;
-	bool didStart = false;
 
 	public virtual void Start() {
-		if (didStart) {
+		
+	}
+
+
+	bool didInit = false;
+
+	public virtual void Init() {
+		if (didInit) {
 			return;
 		}
 
-		didStart = true;
+		didInit = true;
 
 		gameObject.name = "Menu";
 		UI.AssignToCanvas(gameObject);
@@ -81,7 +88,7 @@ public class UIMenu : UIElement {
 
 		image = gameObject.AddComponent<Image>();
 		image.raycastTarget = false;
-		image.color = Color.black;
+		backgroundColor = Color.black;
 		RectTransform t = GetComponent<RectTransform>();
 		t.anchorMin = new Vector2(0, 0);
 		t.anchorMax = new Vector2(1, 1);
@@ -220,13 +227,7 @@ public class UIMenu : UIElement {
     public override void Show () {
         base.Show();
 
-		Start();
-
-        RectTransform t = GetComponent<RectTransform>();
-        t.anchorMin = new Vector2(0, 0);
-        t.anchorMax = new Vector2(1, 1);
-        t.offsetMin = new Vector2(0, 0);
-        t.offsetMax = new Vector2(0, 0);
+		Init();
 
 		if (isNavigable && selectsOnShow) {
 			Focus();
