@@ -1,36 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MatchmakerDisconnectedState : MatchmakerState {
-
-	// AppState
-
-	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
-
-		//TODO: countdown?
-		matchmaker.Connect();
-	}
-
-	//MatchmakerDelegate
-
-	public override void MatchmakerConnected() {
-		TransitionTo(new MatchmakerAuthenticatingState());
-	}
-
-	public override void MatchmakerErrored() {
-		base.MatchmakerErrored();
-
-		//TODO: show retrying with countdown?
-		TransitionTo(this);
-	}
+public class MatchmakerUpdateRequiredState : MatchmakerState {
 
 	// MatchmakerMenuDelegate
 
 	public override void MatchmakerMenuOpened() {
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
-			.SetText("Unable to connect to the server.\n\nInternet matches disabled.");
+			.SetText("Update to the latest version to play multiplayer");
+		matchmaker.menu.AddNewButton()
+			.SetText("Update")
+			.SetAction(OpenSite);
 		matchmaker.menu.AddNewButton()
 			.SetText("Close")
 			.SetAction(matchmaker.menu.Close)
@@ -41,11 +22,15 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void MatchmakerMenuClosed() {
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
-			.SetText("CONNECT TO SERVER")
+			.SetText("UPDATE REQUIRED")
 			.SetTextColor(Color.red)
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();
 		matchmaker.menu.Show();
 		matchmaker.menu.Focus();
+	}
+
+	void OpenSite() {
+		Application.OpenURL("http://www.baremetalgame.com/");
 	}
 }

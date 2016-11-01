@@ -40,9 +40,7 @@ public class Matchmaker : AppStateOwner {
 		socket.On("connect", SocketConnected);
 		socket.On("disconnect", SocketDisconnected);
 		socket.On("error", SocketError);
-		socket.On("hostGame", HostGame);
-		socket.On("joinGame", JoinGame);
-		socket.On("version", ReceiveVersion);
+		socket.On("message", Receive);
 
 		menu = new GameObject().AddComponent<MatchmakerMenu>();
 		state = new MatchmakerDisconnectedState();
@@ -122,5 +120,20 @@ public class Matchmaker : AppStateOwner {
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerReceivedJoin(gameId);
 		}
+	}
+
+	// Messages
+
+	public void Send(string messageName, JSONObject data) {
+		App.shared.Log("Send: " + messageName + ": " + data, this);
+		JSONObject message = new JSONObject();
+		message.AddField("name", messageName);
+		message.AddField("data", data);
+		socket.Emit("message", message);
+	}
+
+	public void Receive(SocketIOEvent e) {
+		App.shared.Log("Receive: " + e.data.GetField("name").str + ": " + e.data.GetField("data"), this);
+		matchmakerDelegate.MatchmakerReceivedMessage(e.data);
 	}
 }

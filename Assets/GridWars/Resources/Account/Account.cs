@@ -5,9 +5,10 @@ public class Account {
 	public string id;
 	public string screenName;
 	public string email;
-	public List<Account>friends;
+	public string accessToken;
+	public List<Account>playerList;
 
 	public Account() {
-		friends = new List<Account>();
+		playerList = new List<Account>();
 	}
 }

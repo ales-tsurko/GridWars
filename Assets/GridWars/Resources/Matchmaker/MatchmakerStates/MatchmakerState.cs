@@ -2,6 +2,15 @@
 using System.Collections;
 
 public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDelegate {
+
+	protected void HandleUnexpectedMessage(JSONObject message) {
+		app.Log("Unexpected Message: " + message);
+		matchmaker.Disconnect();
+		TransitionTo(new MatchmakerDisconnectedState());
+	}
+
+	// AppState
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -31,13 +40,15 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	//MatchmakerDelegate
 
-	public void MatchmakerConnected() {
+	public virtual void MatchmakerConnected() {
 		app.Log("MatchmakerConnected", this);
 	}
 
 
 	public virtual void MatchmakerDisconnected() {
 		app.Log("MatchmakerDisconnected", this);
+
+		TransitionTo(new MatchmakerDisconnectedState());
 	}
 
 	public virtual void MatchmakerErrored() {
