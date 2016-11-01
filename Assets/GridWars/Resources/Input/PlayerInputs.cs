@@ -10,7 +10,7 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction toggleMenu;
 	public PlayerAction concede;
 	public PlayerAction toggleHotkeys;
-	//public PlayerAction previousCamera;
+	public PlayerAction previousCamera;
 	public PlayerAction nextCamera;
 	public PlayerAction firstPersonCamera;
 	public PlayerAction upItem;
@@ -25,12 +25,12 @@ public class PlayerInputs : PlayerActionSet {
 	PlayerAction lookUp;
 	PlayerAction lookDown;
 	public PlayerTwoAxisAction look;
-    public PlayerAction toggleFPS;
+    public PlayerAction enterFPS;
+    public PlayerAction exitFPS;
     public PlayerAction unitNext;
     public PlayerAction unitPrev;
 
-    public PlayerAction camNext;
-    public PlayerAction camPrev;
+    public PlayerAction camNext, camPrev;
 
 	/*
 	InputDevice _device;
@@ -58,7 +58,7 @@ public class PlayerInputs : PlayerActionSet {
 		concede = CreatePlayerAction("Concede");
 		toggleHotkeys = CreatePlayerAction("Hotkeys");
 
-		//previousCamera = CreatePlayerAction("Previous Camera");
+		previousCamera = CreatePlayerAction("Previous Camera");
 		nextCamera = CreatePlayerAction("Next Camera");
 
 		firstPersonCamera = CreatePlayerAction("Unit Camera");
@@ -75,12 +75,14 @@ public class PlayerInputs : PlayerActionSet {
 		lookUp = CreatePlayerAction("Look Up");
 		lookDown = CreatePlayerAction("Look Down");
 		look = CreateTwoAxisPlayerAction(lookLeft, lookRight, lookDown, lookUp);
-        toggleFPS = CreatePlayerAction("Enter FPS Mode");
+        enterFPS = CreatePlayerAction("Enter FPS Mode");
+        exitFPS = CreatePlayerAction("Exit FPS Mode");
         unitNext = CreatePlayerAction("Next Unit");
         unitPrev = CreatePlayerAction("Previous Unit");
 
         camNext = CreatePlayerAction("Next Camera Position");
         camPrev = CreatePlayerAction("Previous Camera Position");
+
 	}
 
 	public void AddControllerBindings() {
@@ -95,7 +97,7 @@ public class PlayerInputs : PlayerActionSet {
 		toggleHotkeys.AddDefaultBinding(InputControlType.RightTrigger);
 
 		//previousCamera.AddDefaultBinding(InputControlType.DPadLeft);
-		nextCamera.AddDefaultBinding(InputControlType.DPadRight);
+		//nextCamera.AddDefaultBinding(InputControlType.DPadRight);
 		firstPersonCamera.AddDefaultBinding(InputControlType.DPadDown);
 
 		//previousItem.AddDefaultBinding(InputControlType.LeftStickLeft);
@@ -132,7 +134,8 @@ public class PlayerInputs : PlayerActionSet {
 		lookUp.AddDefaultBinding(InputControlType.LeftStickUp);
 		lookUp.AddDefaultBinding(InputControlType.RightStickUp);
 
-        toggleFPS.AddDefaultBinding(InputControlType.LeftStickButton);
+        enterFPS.AddDefaultBinding(InputControlType.LeftStickButton);
+        exitFPS.AddDefaultBinding(InputControlType.LeftStickButton);
         unitNext.AddDefaultBinding(InputControlType.RightBumper);
         unitPrev.AddDefaultBinding(InputControlType.LeftBumper);
 
@@ -159,7 +162,7 @@ public class PlayerInputs : PlayerActionSet {
 		toggleHotkeys.AddDefaultBinding(Key.H);
 
 		//previousCamera.AddDefaultBinding(Key.LeftArrow);
-		nextCamera.AddDefaultBinding(Key.C);
+        //nextCamera.AddDefaultBinding(Key.RightArrow);
 		firstPersonCamera.AddDefaultBinding(Key.DownArrow);
 
 		releaseChopper.AddDefaultBinding(Key.D);
@@ -167,10 +170,12 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTank.AddDefaultBinding(Key.J);
 		releaseMobileSam.AddDefaultBinding(Key.K);
 
-        toggleFPS.AddDefaultBinding(Key.Escape);
+        exitFPS.AddDefaultBinding(Key.Escape);
 
         camNext.AddDefaultBinding(Key.RightArrow);
         camPrev.AddDefaultBinding(Key.LeftArrow);
+
+
 	}
 
 	public void AddLocalPlayer2KeyBindings() {
