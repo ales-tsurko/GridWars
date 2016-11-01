@@ -224,13 +224,14 @@ public class UIMenu : UIElement {
 	}
 
 	public void Focus() {
-		if (selectableItems.Count > 0) {
+        if (selectableItems.Count > 0) {
 			selectedItem = selectableItems[0];
 			selectedItem.Select();
 		}
 	}
 
 	public void LoseFocus() {
+        FindObjectOfType<CameraController>().menuHasFocus = false;
 		UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 		selectedItem = null;
 	}

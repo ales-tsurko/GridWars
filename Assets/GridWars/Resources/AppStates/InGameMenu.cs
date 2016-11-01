@@ -46,11 +46,12 @@ public class InGameMenu {
 			firstPersonCameraItem.ReadInput();
 		}
 
-		if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPerson) {
+		if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPersonMode) {
 			if (menu.hasFocus) {
 				menu.LoseFocus();
 			}
 			else {
+                MonoBehaviour.FindObjectOfType<CameraController>().menuHasFocus = true;
 				menu.SelectNextItem();
 			}
 		}
