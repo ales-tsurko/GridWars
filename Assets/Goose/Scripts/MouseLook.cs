@@ -17,19 +17,7 @@ public class MouseLook : MonoBehaviour
 	// Yaw rotation will affect this object instead of the camera if set.
 	public GameObject characterBody;
 
-    PlayerInputs _inputs;
-    public PlayerInputs inputs {
-        get {
-            if (_inputs == null) {
-                return App.shared.inputs; //inputs are only assigned for SharedScreenPVP.  Use defaults otherwise.
-            }
-            else {
-                return _inputs;
-            }
-        }
-    }
-
-	void Start()
+   	void Start()
 	{
 		// Set target direction to the camera's initial orientation.
 		targetDirection = transform.root.rotation.eulerAngles;
@@ -51,7 +39,7 @@ public class MouseLook : MonoBehaviour
 
 		// Get raw mouse input for a cleaner reading on more sensitive mice.
 		var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-        var joyDelta = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+		var joyDelta = App.shared.inputs.look.Value - App.shared.inputs.look.LastValue;
         mouseDelta += joyDelta;
 		// Scale input against the sensitivity setting and multiply that against the smoothing value.
 		mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity.x * smoothing.x, sensitivity.y * smoothing.y));

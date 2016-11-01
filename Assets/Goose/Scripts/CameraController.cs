@@ -140,6 +140,7 @@ public class CameraController : MonoBehaviour {
 		if (!initComplete) {
 			return;
 		}
+        PlayerInputs inputs = App.shared.inputs;
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
 			thisScreenRes = GetMainGameViewSize();
@@ -163,22 +164,25 @@ public class CameraController : MonoBehaviour {
 		}
         //check for Joystick input for FPS Mode
         if (isInFirstPerson) {
-            if (Keys.EXIT.KeyDown() || App.shared.inputs.toggleFPS.WasPressed) {
+            if (inputs.goBack.WasPressed || inputs.toggleFPS.WasPressed) {
                 FindObjectOfType<CameraController>().ResetCamera();
                 return;
             }
-            FPSindex += App.shared.inputs.unitNext.WasPressed ? ChangeFPSUnit(1) : 0;
-            FPSindex += App.shared.inputs.unitPrev.WasPressed ? ChangeFPSUnit(-1) : 0;
-        } 
+            FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
+            FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
+        }
         if (!isInFirstPerson && App.shared.inputs.toggleFPS.WasPressed) {
             EnterFPSModeFromJoystick();
         }
 
-
-
         if (cam == null) {
             return;
         }
+        //check for Camera position change
+        if (!isInFirstPerson && (inputs.camNext.WasPressed || inputs.camPrev.WasPressed)) {
+            NextPosition(inputs.camNext.WasPressed);
+        }
+
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
@@ -260,15 +264,16 @@ public class CameraController : MonoBehaviour {
 		moving = true;
 	}
 
-	public void NextPosition () {
+    public void NextPosition (bool next = true) {
 		//print ("Next Called");
+        int dir = next ? 1 : -1;
 		actionMode = false;
 		if (mouseLook != null) {
 			mouseLook.enabled = false;
 		}
 
 		cam.parent = null;
-		pos++;
+        pos += dir;
 		var transform = gamePositions[pos % gamePositions.Count];
 		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
 		targetPos = transform.position;
