@@ -828,17 +828,31 @@ public class GameUnit : NetworkObject {
 	}
 
 
-	public virtual List <GameObject> NonAirEnemyVehicles() {
+	public virtual List <GameObject> EnemyNonAirUnits() {
 		var results = new List<GameObject>();
 
 		foreach (GameObject enemy in EnemyObjects()) {
-			if ( !enemy.GameUnit().IsOfType(typeof(Vehicle)) 
-				&& !enemy.GameUnit().IsOfType(typeof(Projectile))) {
+			GameUnit gu = enemy.GameUnit();
+			if ( !gu.IsOfType(typeof(Vehicle)) 
+				&& !gu.IsOfType(typeof(Projectile))) {
 				results.Add(enemy);
 			}
 		}
 		return results;
 	}
+
+	public virtual List <GameObject> EnemyAirUnits() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			GameUnit gu = enemy.GameUnit();
+			if ( gu.IsOfType(typeof(AirVehicle)) ) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+
 
 	public virtual List <GameObject> EnemyBuildings() {
 		var results = new List<GameObject>();

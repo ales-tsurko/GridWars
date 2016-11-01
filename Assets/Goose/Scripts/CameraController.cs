@@ -11,7 +11,6 @@ public class CameraController : MonoBehaviour {
 
 	public int pos;
 	public bool moving;
-	public float moveSpeed; // time in seconds to complete animation
 
 	public Vector3 targetPos;
 	public Quaternion targetRot;
@@ -25,6 +24,7 @@ public class CameraController : MonoBehaviour {
 	public bool isInFirstPerson;
     int FPSindex = 0;
 
+
 	// orbits
 
 	private bool isOrbiting = false;
@@ -33,6 +33,10 @@ public class CameraController : MonoBehaviour {
 	private float orbitPeriod = 50f; // second per cycles 
 	private float orbitAngle;
 	private float orbitHeight = 30f;
+
+
+	float zoomRate = 0.05f;
+	float rotationRate = 0.05f;
 
 	void Start () {
 		initComplete = false;
@@ -108,8 +112,14 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 
-		cam.position = gamePositions[0].position;
-		cam.rotation = gamePositions[0].rotation;
+		//cam.position = gamePositions[0].position;
+		//cam.rotation = gamePositions[0].rotation;
+
+		Transform startView = GameObject.Find("StartView").transform;
+		cam.position = startView.position;
+		cam.rotation = startView.rotation;
+		AdjustZoomRates(0.8f);
+
         pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
 		initComplete = true;
@@ -134,6 +144,16 @@ public class CameraController : MonoBehaviour {
 			pos--;
 			NextPosition();
 		}
+	}
+
+	void ResetZoomRates() {
+		zoomRate = 0.05f;
+		rotationRate = 0.05f;
+	}
+
+	void AdjustZoomRates(float f) {
+		zoomRate *= f;
+		rotationRate *= f;
 	}
 
 	void Update () {
@@ -189,10 +209,11 @@ public class CameraController : MonoBehaviour {
 			}
 
 			moving = false;
+			ResetZoomRates();
 		}
 
-		float pf = 0.05f;
-		float rf = 0.05f;
+		float pf = zoomRate; // 0.05f;
+		float rf = rotationRate; //0.05f;
 		float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
 
 		// adjust target pos & rot
