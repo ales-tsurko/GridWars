@@ -115,10 +115,12 @@ public class CameraController : MonoBehaviour {
 		//cam.position = gamePositions[0].position;
 		//cam.rotation = gamePositions[0].rotation;
 
-		Transform startView = GameObject.Find("StartView").transform;
-		cam.position = startView.position;
-		cam.rotation = startView.rotation;
-		AdjustZoomRates(0.8f);
+		//Transform startView = GameObject.Find("StartView").transform;
+
+		Vector2 r = Random.insideUnitCircle * 1200f;
+		cam.position = new Vector3(r.x, 500f + 200f*UnityEngine.Random.value, r.y);
+		cam.rotation = Quaternion.LookRotation(-cam.position);
+		UseSlowZoomRate();
 
         pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
@@ -151,9 +153,9 @@ public class CameraController : MonoBehaviour {
 		rotationRate = 0.05f;
 	}
 
-	void AdjustZoomRates(float f) {
-		zoomRate *= f;
-		rotationRate *= f;
+	void UseSlowZoomRate() {
+		zoomRate = 0.025f;
+		rotationRate = 0.025f;
 	}
 
 	void Update () {
@@ -285,6 +287,8 @@ public class CameraController : MonoBehaviour {
 		moving = true;
 	}
 
+	//ResetZoomRates
+
     public void NextPosition (bool next = true) {
 		//print ("Next Called");
         int dir = next ? 1 : -1;
@@ -305,7 +309,6 @@ public class CameraController : MonoBehaviour {
 		foreach (var cameraControllerDelegate in cameraControllerDelegates) {
 			cameraControllerDelegate.CameraControllerBeganTransition();
 		}
-       
 	}
 
 	public void ResetCamera () {

@@ -35,8 +35,8 @@ public class TutorialPart : MonoBehaviour {
 			return;
 		}
 
-		TutorialLabel().SetActive(true);
-		gameObject.SetActive(true);
+		enabled = true;
+		TutorialLabel().GetComponent<HoverText>().enabled = true;
 		nextTime = Time.time + timeout;
 
 		Vector3 diff = transform.position - Target().transform.position;
@@ -54,6 +54,7 @@ public class TutorialPart : MonoBehaviour {
 		p.y += yOffset;
 		TutorialLabel().transform.position = p;
 		//SetTutorialLabelText(hoverText);
+
 
 		_textMesh = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
 		_formattedText = hoverText.Replace("NEWLINE", "\n").ToUpper();
@@ -90,14 +91,14 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	void Next() {
-		gameObject.SetActive(false);
+		enabled = false;
 		SetTutorialLabelText("");
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
 
 		if (nextPart != null) {
 			nextPart.GetComponent<TutorialPart>().Begin();
 		} else {
-			TutorialLabel().SetActive(false);
+			TutorialLabel().GetComponent<HoverText>().enabled = false;
 			DoneTutorial();
 		}
 	}

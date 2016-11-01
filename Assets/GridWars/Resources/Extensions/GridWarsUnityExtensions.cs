@@ -5,6 +5,21 @@ using System.Linq;
 
 public static class GridWarsUnityExtensions {
 
+	/*
+	public static GameObject FindObject(this GameObject parent, string name)
+	{
+		Transform[] trs = parent.GetComponentsInChildren(typeof(Transform), true);
+
+		foreach(Transform t in trs){
+			if(t.name == name) {
+				return t.gameObject;
+			}
+		}
+
+		return null;
+	}
+	*/
+
 	public static GameUnit GameUnit(this GameObject self) {
 		return self.GetComponent<GameUnit>();
 	}
