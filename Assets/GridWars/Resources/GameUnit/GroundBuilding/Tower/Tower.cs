@@ -10,6 +10,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	//public Mesh theMesh;
 	[HideInInspector]
+	private bool _dieWithBlockify = false;
+
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -487,7 +489,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	private bool _dieWithBlockify = false;
 
 	public void DieWithBlockify() {
 		_dieWithBlockify = true;

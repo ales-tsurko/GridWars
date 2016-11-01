@@ -17,6 +17,7 @@ public class FPSDisplay : MonoBehaviour
 
 	void Update()
 	{
+		/*
 		count++; 
 
 		if (count == sampleCount) {
@@ -38,6 +39,7 @@ public class FPSDisplay : MonoBehaviour
 			TM().text = msg;
 			lastTime = Time.time;
 		}
+		*/
 	}
 
 	int GameObjectCount() {

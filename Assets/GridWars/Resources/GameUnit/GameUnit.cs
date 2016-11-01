@@ -832,7 +832,8 @@ public class GameUnit : NetworkObject {
 		var results = new List<GameObject>();
 
 		foreach (GameObject enemy in EnemyObjects()) {
-			if ( !enemy.GameUnit().IsOfType(typeof(AirVehicle)) ) {
+			if ( !enemy.GameUnit().IsOfType(typeof(Vehicle)) 
+				&& !enemy.GameUnit().IsOfType(typeof(Projectile))) {
 				results.Add(enemy);
 			}
 		}
