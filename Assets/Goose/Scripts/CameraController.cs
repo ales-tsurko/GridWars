@@ -258,11 +258,7 @@ public class CameraController : MonoBehaviour {
 
     void EnterFPSModeFromJoystick () {
         List<GameUnit> units = GetUnits();
-        units.RemoveAll(i => i == null || i.gameObject.layer == 10);
-        if (units == null) {
-            ResetCamera();
-            return 0;
-        }
+        units.RemoveAll(i => i.gameObject.layer == 10);
         if (units.Count > 0) {
             FPSindex = units.Count - 1;
             isInFirstPersonMode = true;
@@ -273,7 +269,11 @@ public class CameraController : MonoBehaviour {
     int ChangeFPSUnit (int x){
         int index = FPSindex + x;
         List<GameUnit> units = GetUnits();
-        units.RemoveAll(i => i.gameObject.layer == 10);
+        units.RemoveAll(i => i == null || i.gameObject.layer == 10);
+        if (units == null) {
+            ResetCamera();
+            return 0;
+        }
         index = index == -1 ? units.Count - 1 : index % units.Count;
         MoveToActionPosition(units[index].transform);
         return index - FPSindex;
