@@ -108,7 +108,6 @@ public class AppState : MatchmakerMenuDelegate {
 	}
 
 	public virtual void ConnectMatchmakerMenu() {
-		App.shared.Log("ConnectMatchmakerMenu", this);
 		matchmaker.menu.nextMenu = menu;
 		matchmaker.menu.previousMenu = menu;
 		matchmaker.menu.orientation = MenuOrientation.Vertical;
@@ -120,7 +119,6 @@ public class AppState : MatchmakerMenuDelegate {
 	}
 
 	public virtual void DisconnectMatchmakerMenu() {
-		App.shared.Log("DisconnectMatchmakerMenu", this);
 		matchmaker.menu.nextMenu = null;
 		matchmaker.menu.previousMenu = null;
 		matchmaker.menu.orientation = MenuOrientation.Vertical;

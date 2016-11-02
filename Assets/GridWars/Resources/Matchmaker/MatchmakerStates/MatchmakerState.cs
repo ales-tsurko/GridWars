@@ -4,10 +4,15 @@ using System.Collections;
 public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDelegate {
 
 	protected void HandleUnexpectedMessage(JSONObject message) {
-		app.Log("Unexpected Message: " + message);
+		HandleUnexpectedMessage(message.GetField("name").str, message.GetField("data"));
+	}
+
+	protected void HandleUnexpectedMessage(string name, JSONObject data) {
+		app.Log("Unexpected Message: " + name + ": " + data);
 		matchmaker.Disconnect();
 		TransitionTo(new MatchmakerDisconnectedState());
 	}
+
 
 	// AppState
 
@@ -57,6 +62,12 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void MatchmakerReceivedMessage(JSONObject message) {
 		app.Log("MatchmakerReceivedMessage: " + message.ToString(), this);
+
+		HandleMessage(message.GetField("name").str, message.GetField("data"));
+	}
+
+	public virtual void HandleMessage(string name, JSONObject data) {
+		
 	}
 
 	public virtual void MatchmakerReceivedHost(string gameId) {

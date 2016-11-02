@@ -11,11 +11,11 @@ public class MatchmakerRequestPlayerListState : MatchmakerState {
 
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerReceivedMessage(JSONObject message) {
-		base.MatchmakerReceivedMessage(message);
+	public override void HandleMessage(string name, JSONObject data) {
+		base.HandleMessage(name, data);
 
-		if (message.GetField("name").str == "playerList") {
-			foreach (var obj in message.GetField("data").list) {
+		if (name == "playerList") {
+			foreach (var obj in data.list) {
 				var account = new Account();
 				account.screenName = obj.GetField("screenName").str;
 				app.account.playerList.Add(account);
@@ -23,7 +23,7 @@ public class MatchmakerRequestPlayerListState : MatchmakerState {
 			TransitionTo(new MatchmakerPlayerListState());
 		}
 		else {
-			HandleUnexpectedMessage(message);
+			HandleUnexpectedMessage(name, data);
 		}
 	}
 

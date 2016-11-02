@@ -11,24 +11,23 @@ public class MatchmakerPlayerListState : MatchmakerState {
 	// MatchmakerMenuDelegate
 
 	public override void MatchmakerMenuOpened() {
-		matchmaker.menu.Reset();
-		foreach (var account in app.account.playerList) {
-			matchmaker.menu.AddNewText()
-				.SetText(account.screenName);
-		}
-		matchmaker.menu.AddNewButton()
-			.SetText("Close")
-			.SetAction(matchmaker.menu.Close)
-			.SetIsBackItem(true);
-		matchmaker.menu.Show();
 	}
 
 	public override void MatchmakerMenuClosed() {
+		var text = "Play PVP";
+		if (app.account.playerList.Count > 0) {
+			text += ": " + app.account.playerList.Count + " Online";
+		}
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
-			.SetText(app.account.playerList.Count + " players online")
-			.SetAction(matchmaker.menu.Open);
+			.SetText(text)
+			.SetAction(SearchForOpponent);
 		matchmaker.menu.Show();
 		matchmaker.menu.Focus();
+	}
+
+	void SearchForOpponent() {
+		TransitionTo(new MatchmakerSearchForOpponentState());
 	}
 }

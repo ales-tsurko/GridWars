@@ -8,6 +8,7 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		app.account.ResetPlayerList();
 		//TODO: countdown?
 		matchmaker.Connect();
 	}

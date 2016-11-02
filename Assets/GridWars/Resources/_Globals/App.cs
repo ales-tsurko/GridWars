@@ -78,6 +78,8 @@ public class App : MonoBehaviour, AppStateOwner {
 		Wreckage.SetupLayerCollisions();
 		Projectile.SetupLayerCollisions();
 
+		account = new Account();
+
 		matchmaker = new Matchmaker();
 
 		network = new GameObject().AddComponent<Network>();
@@ -93,8 +95,6 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs = new PlayerInputs();
 		inputs.AddControllerBindings();
 		inputs.AddLocalPlayer1KeyBindings();
-
-		account = new Account();
 
 		menu = UI.Menu();
 

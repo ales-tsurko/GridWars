@@ -132,6 +132,10 @@ public class Matchmaker : AppStateOwner {
 		socket.Emit("message", message);
 	}
 
+	public void Send(string messageName) {
+		Send(messageName, new JSONObject(JSONObject.Type.OBJECT));
+	}
+
 	public void Receive(SocketIOEvent e) {
 		App.shared.Log("Receive: " + e.data.GetField("name").str + ": " + e.data.GetField("data"), this);
 		matchmakerDelegate.MatchmakerReceivedMessage(e.data);

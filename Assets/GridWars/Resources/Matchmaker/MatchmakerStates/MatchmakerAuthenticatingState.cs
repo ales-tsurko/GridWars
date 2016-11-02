@@ -18,20 +18,19 @@ public class MatchmakerAuthenticatingState : MatchmakerState {
 
 	//MatchmakerDelegate
 
-	public override void MatchmakerReceivedMessage(JSONObject message) {
-		base.MatchmakerReceivedMessage(message);
+	public override void HandleMessage(string name, JSONObject data) {
+		base.HandleMessage(name, data);
 
-		if (message.GetField("name").str == "authenticate") {
-			var data = message.GetField("data");
+		if (name == "authenticate") {
 			app.account.screenName = data.GetField("screenName").str;
 			app.account.accessToken = data.GetField("accessToken").str;
 			TransitionTo(new MatchmakerRequestPlayerListState());
 		}
-		else if (message.GetField("name").str == "updateRequired") {
+		else if (name == "updateRequired") {
 			TransitionTo(new MatchmakerUpdateRequiredState());
 		}
 		else {
-			HandleUnexpectedMessage(message);
+			HandleUnexpectedMessage(name, data);
 		}
 	}
 
