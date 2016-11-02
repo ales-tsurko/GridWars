@@ -684,7 +684,7 @@ public class GameUnit : NetworkObject {
 		cycler.OnEnable();
 		cycler.cyclePeriod = 1f;
 		cycler.delayTime = 0f;
-*/
+		*/
 
 		// ------------------------------------
 
@@ -827,13 +827,25 @@ public class GameUnit : NetworkObject {
 		return results;
 	}
 
+	public virtual List <GameObject> EnemyBuildingUnits() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			GameUnit gu = enemy.GameUnit();
+			if ( gu.IsOfType(typeof(GroundBuilding))) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+
 
 	public virtual List <GameObject> EnemyNonAirUnits() {
 		var results = new List<GameObject>();
 
 		foreach (GameObject enemy in EnemyObjects()) {
 			GameUnit gu = enemy.GameUnit();
-			if ( !gu.IsOfType(typeof(Vehicle)) 
+			if ( !gu.IsOfType(typeof(AirVehicle)) 
 				&& !gu.IsOfType(typeof(Projectile))) {
 				results.Add(enemy);
 			}
