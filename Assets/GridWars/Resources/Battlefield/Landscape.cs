@@ -21,13 +21,13 @@ public class Landscape : MonoBehaviour {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 140; i++) {
+		for (int i = 0; i < 100; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
 			chunkRect.x = RandNeg(xMax);
 			chunkRect.y = RandNeg(zMax);
 
 			if (chunkRect.Overlaps(fieldRect) == false) {
-				var chunk = CreateChunk(chunkRect, 5f + Rand(10f), material, 5);
+				var chunk = CreateChunk(chunkRect, 5f + Rand(10f), material, 4);
 
 				/*
 				if (UnityEngine.Random.value < 0.2) {
@@ -56,7 +56,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			//if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 2f, material2, 7);
+				var chunk = CreateChunk(chunkRect, 2f, material2, 5);
 				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
 				p.y = 120f + Rand(10f);
