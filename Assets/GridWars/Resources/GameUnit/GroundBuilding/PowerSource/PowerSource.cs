@@ -112,7 +112,7 @@ public class PowerSource : GroundBuilding {
 
 			player.Paint(segment.gameObject);
 
-			segment.SetActive(false);
+			//segment.SetActive(false);
 			segments.Add(segment);
 		}
 
@@ -145,7 +145,17 @@ public class PowerSource : GroundBuilding {
 		int activeSegmentCount = ActiveSegmentCount();
 
 		for (var i = 0; i < segmentCount; i ++) {
-			segments[i].SetActive((i + 1) <= activeSegmentCount);
+			GameObject segment = segments[i];
+			bool isActive = (i + 1) <= activeSegmentCount;
+			bool wasActive = segment.activeSelf;
+
+			if (isActive != wasActive) {
+				segment.SetActive(isActive);
+
+				if (wasActive == false && isActive == true) {
+					PulseSegment(segment);
+				}
+			}
 		}
 
 		// pulse segments if power is full
@@ -157,8 +167,17 @@ public class PowerSource : GroundBuilding {
 
 		lastActiveSegmentCount = activeSegmentCount;
 
+		// animate shutdown if not generating power (you lost the game)
+
 		if (generationRate < 0f) {
 			ShowShutDown();
+		}
+	}
+
+	void PulseSegment(GameObject segment) {
+		BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
+		if (fader.enabled == false) {
+			fader.enabled = true;
 		}
 	}
 
@@ -167,13 +186,7 @@ public class PowerSource : GroundBuilding {
 			var segment = segments[i];
 
 			if (UnityEngine.Random.value < 0.02f) {
-				BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
-				if (fader == null) {
-					fader =segment.AddComponent<BrightFadeInGeneric>();
-				}
-
-				//BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
-				fader.OnEnable();
+				PulseSegment(segment);
 			}
 		}
 	}
@@ -181,13 +194,7 @@ public class PowerSource : GroundBuilding {
 	void ShowFull() {
 		for (var i = 0; i < segmentCount; i ++) {
 			var segment = segments[i];
-
-			BrightFadeInGeneric fader = segment.GetComponent<BrightFadeInGeneric>();
-			if (fader == null) {
-				fader = segment.AddComponent<BrightFadeInGeneric>();
-			}
-
-			fader.OnEnable();
+			PulseSegment(segment);
 		}
 		PlaySoundNamed("fullpower", 0.25f);
 	}

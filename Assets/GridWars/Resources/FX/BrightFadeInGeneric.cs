@@ -8,49 +8,49 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	public float variance = 0.0f;
 	public bool useEase = true;
 
-	AssemblyCSharp.Timer timer;
-	ParticleSystem ps;
+	float startTime = 0f;
+	//AssemblyCSharp.Timer timer;
+	//ParticleSystem ps;
 
 	public Color startColor = Color.white;
-	private Dictionary<Material, Color> materialColors;
+	private Dictionary<Material, Color> materialColors = null;
 
-	void Start () {
-		SetupMaterialColorsIfNeeded();
+
+	// --- enable / disable --------
+
+	public void OnEnable() { // called when the object becomes enabled and active.
+		TimerStart();
+		ShowStartValue();
 	}
 
-	public void OnEnable() {
-		//GameObject g = gameObject;
-		//print(g);
-		StartTimer();
-		if (materialColors != null) {
-			ShowStartValue();
-		}
-	}
-
-	void OnDisable() {
-		//GameObject g = gameObject;
-		//print(g);
-		CancelTimer();
+	void OnDisable() { // called when the behaviour becomes disabled () or inactive.
+		TimerCancel();
 		ShowFinalValue();
 	}
 
-	void StartTimer() {
-		if (timer != null) { 
-			CancelTimer();
-		}
-			
-		timer = App.shared.timerCenter.NewTimer();
-		timer.action = DestroyThisComponent;
-		timer.SetTimeout(period + variance * UnityEngine.Random.value);
-		timer.Start();
+	// --- timer -------------------
+
+	void TimerStart() {
+		startTime = Time.time;
 	}
 
-	void CancelTimer() {
-		if (timer != null) { //in case start is never called.
-			timer.Cancel();
-			timer = null;
-		}
+	void TimerCancel() {
+		startTime = -1f;
 	}
+
+	float TimerRatioDone() {
+		if (startTime < 0) {
+			return 1f;
+		}
+
+		return Mathf.Clamp((Time.time - startTime) / period, 0f, 1f);
+	}
+		
+	bool TimerDone() {
+		return TimerRatioDone() == 1f;
+	}
+
+	// --- materials ---------------------------
 
 	void SetupMaterialColorsIfNeeded() {
 		if (materialColors == null) {
@@ -62,38 +62,31 @@ public class BrightFadeInGeneric : MonoBehaviour {
 		}
 	}
 
-	void DestroyThisComponent() {
-		UpdateForValue(1f);
-		Destroy(GetComponent(this.GetType()));
-	}
-
 	void Update () {
-		if (!enabled) {
-			return;
-		}
+		if (App.shared.timeCounter % 10 == 0) {
+			float t = TimerRatioDone();
+			UpdateForValue(t);
 
-		float t = 0; 
-		if (timer != null) {
-			t = timer.RatioDone();
-		}
-		UpdateForValue(t);
-
-		if (Mathf.Approximately(t, 1)) {
-			DestroyThisComponent();
+			if (t == 1f) {
+				enabled = false;
+			}
 		}
 	}
 
 	void UpdateForValue(float t) {
-		SetupMaterialColorsIfNeeded();
+		SetupMaterialColorsIfNeeded(); // need to delay this until now in case object is painted w player color after init
 
-		gameObject.EachMaterial(mat => {
-			if (!materialColors.ContainsKey(mat)) {
-				print("error - missing start material color");
-			}
-			Color realColor = materialColors[mat];
-			Color currentColor = ValueForColor(realColor, t);
-			mat.color = currentColor;
-		});
+		if (materialColors != null) {
+			gameObject.EachMaterial(mat => {
+				if (!materialColors.ContainsKey(mat)) {
+					print("error - missing start material color");
+					return;
+				}
+				Color realColor = materialColors[mat];
+				Color currentColor = ValueForColor(realColor, t);
+				mat.color = currentColor;
+			});
+		}
 	}
 
 	Color ValueForColor(Color realColor, float t) {
@@ -106,12 +99,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 			
 		return Color.Lerp(startColor, realColor, t);
 	}
-
-	void OnDestroy() {
-		CancelTimer();
-		UpdateForValue(1f);
-	}
-
+		
 
 	void ShowStartValue() {
 		UpdateForValue(0f);
