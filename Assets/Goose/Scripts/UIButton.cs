@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 public class UIButton : UIElement {
 
 	public static UIButton Instantiate() {
-		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
+		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
 		UIButton button = go.GetComponent<UIButton>();
 		return button;

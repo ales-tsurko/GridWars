@@ -10,6 +10,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	//public Mesh theMesh;
 	[HideInInspector]
+	private bool _dieWithBlockify = false;
+
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -47,7 +49,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public GameObject unitPrefab {
 		get {
 			if (_unitPrefab == null) {
-				_unitPrefab = Resources.Load<GameObject>(unitPrefabPath);
+				_unitPrefab = App.shared.LoadGameObject(unitPrefabPath);
 				_unitPrefab.GetComponent<GameUnit>().Awake();
 			}
 			return _unitPrefab;
@@ -487,7 +489,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 	}
 
-	private bool _dieWithBlockify = false;
 
 	public void DieWithBlockify() {
 		_dieWithBlockify = true;

@@ -18,7 +18,8 @@ public static class UI {
 		skin += "/";
 		GameObject go;
 		if (animated) {
-			go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/AnimatedButton"));
+			go = MonoBehaviour.Instantiate (App.shared.LoadGameObject("UI/AnimatedButton"));
+			//go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/AnimatedButton"));
 		} else {
 			go = new GameObject ();
 		}
@@ -124,7 +125,7 @@ public static class UI {
 	/// <returns>The canvas.</returns>
 	public static Canvas MainCanvas () {
 		if (_mainCanvas == null) {
-			var go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
+			var go = MonoBehaviour.Instantiate (App.shared.LoadGameObject("UI/Canvas"));
 			if (go == null) {
 				Canvas canvas;
 				go = new GameObject (); 

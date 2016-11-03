@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIButtonRemapKey : UIButton {
 	public static new UIButtonRemapKey Instantiate() {
-		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
+		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
 		GameObject.Destroy(go.GetComponent<UIButton>());
 		var button = go.AddComponent<UIButtonRemapKey>();

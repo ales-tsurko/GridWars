@@ -9,7 +9,7 @@ public class UIActivityIndicator : UIButton {
 	float showTime = 0f;
 
 	public static new UIActivityIndicator Instantiate() {
-		GameObject go = MonoBehaviour.Instantiate(Resources.Load<GameObject>(UI.BUTTONPREFAB));
+		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
 		Destroy(go.GetComponent<UIButton>());
 		UIActivityIndicator indicator = go.AddComponent<UIActivityIndicator>();

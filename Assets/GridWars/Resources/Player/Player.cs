@@ -397,7 +397,7 @@ public class Player : MonoBehaviour {
 
 	void TutorialStep() {
 		if (playerNumber == 1 && firstTutorial == null && App.shared.cameraController.initComplete) {
-			firstTutorial = GameObject.Find("TutorialPart (1)");
+			firstTutorial = GameObject.Find("TutorialStart");
 			firstTutorial.GetComponent<TutorialPart>().Begin();
 		}
 	}

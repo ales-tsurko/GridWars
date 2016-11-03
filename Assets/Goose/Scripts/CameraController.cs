@@ -11,7 +11,6 @@ public class CameraController : MonoBehaviour {
 
 	public int pos;
 	public bool moving;
-	public float moveSpeed; // time in seconds to complete animation
 
 	public Vector3 targetPos;
 	public Quaternion targetRot;
@@ -22,8 +21,10 @@ public class CameraController : MonoBehaviour {
 	public bool initComplete = false;
 	public KeyIconRotation keyIconRotation;
 	public List<CameraControllerDelegate> cameraControllerDelegates;
-	public bool isInFirstPerson;
+	public bool isInFirstPersonMode;
+    public bool menuHasFocus;
     int FPSindex = 0;
+
 
 	// orbits
 
@@ -33,6 +34,10 @@ public class CameraController : MonoBehaviour {
 	private float orbitPeriod = 50f; // second per cycles 
 	private float orbitAngle;
 	private float orbitHeight = 30f;
+
+
+	float zoomRate = 0.05f;
+	float rotationRate = 0.05f;
 
 	void Start () {
 		initComplete = false;
@@ -108,11 +113,20 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 
-		cam.position = gamePositions[0].position;
-		cam.rotation = gamePositions[0].rotation;
+		//cam.position = gamePositions[0].position;
+		//cam.rotation = gamePositions[0].rotation;
+
+		//Transform startView = GameObject.Find("StartView").transform;
+
+		Vector2 r = Random.insideUnitCircle * 1200f;
+		cam.position = new Vector3(r.x, 500f + 200f*UnityEngine.Random.value, r.y);
+		cam.rotation = Quaternion.LookRotation(-cam.position);
+		UseSlowZoomRate();
+
         pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
 		initComplete = true;
+        menuHasFocus = false;
 	}
     [HideInInspector]
     Vector2 lastScreenRes, thisScreenRes;
@@ -136,6 +150,21 @@ public class CameraController : MonoBehaviour {
 		}
 	}
 
+	void ResetZoomRates() {
+		zoomRate = 0.05f;
+		rotationRate = 0.05f;
+	}
+
+	void UseSlowZoomRate2() {
+		zoomRate = 0.025f;
+		rotationRate = 0.025f;
+	}
+
+	void UseSlowZoomRate() {
+		zoomRate = 0.03f;
+		rotationRate = 0.03f;
+	}
+
 	void Update () {
 		if (!initComplete) {
 			return;
@@ -152,26 +181,26 @@ public class CameraController : MonoBehaviour {
 		}
 		#endif
 
-		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
+		if (!menuHasFocus && Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
 			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast (vRay, out hit, 3000)) {
 				if (hit.transform.GetComponent<GameUnit> ()) {
-					isInFirstPerson = true;
+					isInFirstPersonMode = true;
 					MoveToActionPosition (hit.transform);	
 				}
 			}
 		}
         //check for Joystick input for FPS Mode
-        if (isInFirstPerson) {
-            if (inputs.goBack.WasPressed || inputs.toggleFPS.WasPressed) {
+        if (!menuHasFocus && isInFirstPersonMode) {
+            if (inputs.goBack.WasPressed || inputs.exitFPS.WasPressed) {
                 FindObjectOfType<CameraController>().ResetCamera();
                 return;
             }
             FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
             FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
         }
-        if (!isInFirstPerson && App.shared.inputs.toggleFPS.WasPressed) {
+        if (!menuHasFocus && !isInFirstPersonMode && App.shared.inputs.enterFPS.WasPressed) {
             EnterFPSModeFromJoystick();
         }
 
@@ -179,8 +208,11 @@ public class CameraController : MonoBehaviour {
             return;
         }
         //check for Camera position change
-        if (!isInFirstPerson && (inputs.camNext.WasPressed || inputs.camPrev.WasPressed)) {
-            NextPosition(inputs.camNext.WasPressed);
+        if (!isInFirstPersonMode && (inputs.camPrev.WasPressed || inputs.camNext.WasPressed)) {
+            if (!menuHasFocus) {
+                print(menuHasFocus);
+                NextPosition(inputs.camNext.WasPressed);
+            }
         }
 
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
@@ -189,10 +221,11 @@ public class CameraController : MonoBehaviour {
 			}
 
 			moving = false;
+			ResetZoomRates();
 		}
 
-		float pf = 0.05f;
-		float rf = 0.05f;
+		float pf = zoomRate; // 0.05f;
+		float rf = rotationRate; //0.05f;
 		float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
 
 		// adjust target pos & rot
@@ -228,7 +261,7 @@ public class CameraController : MonoBehaviour {
         units.RemoveAll(i => i.gameObject.layer == 10);
         if (units.Count > 0) {
             FPSindex = units.Count - 1;
-            isInFirstPerson = true;
+            isInFirstPersonMode = true;
             MoveToActionPosition (units[FPSindex].transform);
         }
     }
@@ -236,7 +269,11 @@ public class CameraController : MonoBehaviour {
     int ChangeFPSUnit (int x){
         int index = FPSindex + x;
         List<GameUnit> units = GetUnits();
-        units.RemoveAll(i => i.gameObject.layer == 10);
+        units.RemoveAll(i => i == null || i.gameObject.layer == 10);
+        if (units == null) {
+            ResetCamera();
+            return 0;
+        }
         index = index == -1 ? units.Count - 1 : index % units.Count;
         MoveToActionPosition(units[index].transform);
         return index - FPSindex;
@@ -264,6 +301,8 @@ public class CameraController : MonoBehaviour {
 		moving = true;
 	}
 
+	//ResetZoomRates
+
     public void NextPosition (bool next = true) {
 		//print ("Next Called");
         int dir = next ? 1 : -1;
@@ -284,7 +323,6 @@ public class CameraController : MonoBehaviour {
 		foreach (var cameraControllerDelegate in cameraControllerDelegates) {
 			cameraControllerDelegate.CameraControllerBeganTransition();
 		}
-       
 	}
 
 	public void ResetCamera () {
@@ -297,7 +335,7 @@ public class CameraController : MonoBehaviour {
 	//skip 1 frame so InGameMenu isn't focused
 	IEnumerator ResetIsInFirstPerson() {
 		yield return null;
-		isInFirstPerson = false;
+		isInFirstPersonMode = false;
 	}
 
 	void UnlockCursor() {

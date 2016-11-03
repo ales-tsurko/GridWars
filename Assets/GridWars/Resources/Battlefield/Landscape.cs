@@ -21,17 +21,37 @@ public class Landscape : MonoBehaviour {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 200; i++) {
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
-			chunkRect.x = RandNeg(xMax);
-			chunkRect.y = RandNeg(zMax);
+			chunkRect.x = RandNeg(xMax*1.3f);
+			chunkRect.y = RandNeg(zMax*1.3f);
 
-			if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 5f, material, 15);
+			if (chunkRect.Overlaps(fieldRect) == false) {
+				var chunk = CreateChunk(chunkRect, 5f + Rand(10f), material, 3);
+
+				/*
+				if (UnityEngine.Random.value < 0.2) {
+					if (UnityEngine.Random.value < 0.5) {
+						chunk.SetRotY(30);
+					} else {
+						chunk.SetRotY(-30);
+					}
+				}
+
+
+				if (chunk.GetComponent<Renderer>().bounds.Intersects(fieldBox) == true) {
+					chunk.SetRotY(0);
+					//Destroy(chunk);
+				}
+				*/
+					
 				chunk.name = "ground";
+				chunk.isStatic = true;
+				chunk.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 
+		/*
 		// clouds
 		for (int i = 0; i < 2; i++) {
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
@@ -39,7 +59,7 @@ public class Landscape : MonoBehaviour {
 			chunkRect.y = RandNeg(zMax);
 
 			//if (fieldRect.Overlaps(chunkRect) == false) {
-				var chunk = CreateChunk(chunkRect, 2f, material2, 7);
+				var chunk = CreateChunk(chunkRect, 2f, material2, 5);
 				chunk.name = "cloud";
 				Vector3 p = chunk.transform.position;
 				p.y = 120f + Rand(10f);
@@ -47,6 +67,7 @@ public class Landscape : MonoBehaviour {
 				chunk.AddComponent<Cloud>().material = cloudMaterial;;
 			//}
 		}
+		*/
 
 		/*
 		for (int i = 0; i < 3; i++) {
@@ -73,7 +94,8 @@ public class Landscape : MonoBehaviour {
 				p.z = RandNeg(700);
 				ship.transform.position = p;
 				ship.AddComponent<Cloud>();
-				Destroy(ship);
+				//Destroy(ship);
+				ship.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 
@@ -87,6 +109,8 @@ public class Landscape : MonoBehaviour {
 			if (fieldRect.Overlaps(chunkRect) == false) {
 				var chunk = CreateChunk(chunkRect,  Rand(150f) + Rand(150f), material2, 15);
 				chunk.name = "building";
+				chunk.isStatic = true;
+				chunk.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 

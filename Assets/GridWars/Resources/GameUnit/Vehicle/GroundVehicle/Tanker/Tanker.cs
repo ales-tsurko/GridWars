@@ -45,7 +45,16 @@ public class Tanker : GroundVehicle {
 	}
 
 	public virtual List <GameObject> PossibleDefaultTargets() {
-		return NonAirEnemyVehicles();
+		var results = EnemyBuildingUnits();
+
+		if (results.Count == 0) {
+			results = EnemyNonAirUnits();
+		}
+
+		if (results.Count == 0) {
+			results = EnemyAirUnits();
+		}
+		return results;
 	}
 
 	public override GameObject DefaultTarget() {

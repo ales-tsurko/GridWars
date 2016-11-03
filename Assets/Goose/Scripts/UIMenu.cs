@@ -270,6 +270,7 @@ public class UIMenu : UIElement {
 	}
 
 	public void LoseFocus() {
+        FindObjectOfType<CameraController>().menuHasFocus = false;
 		UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 		selectedItem = null;
 	}

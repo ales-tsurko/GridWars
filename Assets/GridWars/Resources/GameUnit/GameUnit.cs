@@ -267,7 +267,8 @@ public class GameUnit : NetworkObject {
 	public AudioClip SoundNamed(string name) {
 		string path = ResourcePath();
 		string soundPath = path + "/Sounds/" + name;
-		return Resources.Load<AudioClip>(soundPath);
+		return App.shared.LoadAudioClip(soundPath);
+		//return Resources.Load<AudioClip>(soundPath);
 	}
 
 	public void PlaySoundNamed(string name, float volume) {
@@ -684,7 +685,7 @@ public class GameUnit : NetworkObject {
 		cycler.OnEnable();
 		cycler.cyclePeriod = 1f;
 		cycler.delayTime = 0f;
-*/
+		*/
 
 		// ------------------------------------
 
@@ -827,17 +828,44 @@ public class GameUnit : NetworkObject {
 		return results;
 	}
 
-
-	public virtual List <GameObject> NonAirEnemyVehicles() {
+	public virtual List <GameObject> EnemyBuildingUnits() {
 		var results = new List<GameObject>();
 
 		foreach (GameObject enemy in EnemyObjects()) {
-			if ( !enemy.GameUnit().IsOfType(typeof(AirVehicle)) ) {
+			GameUnit gu = enemy.GameUnit();
+			if ( gu.IsOfType(typeof(GroundBuilding))) {
 				results.Add(enemy);
 			}
 		}
 		return results;
 	}
+
+
+	public virtual List <GameObject> EnemyNonAirUnits() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			GameUnit gu = enemy.GameUnit();
+			if ( !gu.IsOfType(typeof(AirVehicle)) 
+				&& !gu.IsOfType(typeof(Projectile))) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+
+	public virtual List <GameObject> EnemyAirUnits() {
+		var results = new List<GameObject>();
+
+		foreach (GameObject enemy in EnemyObjects()) {
+			GameUnit gu = enemy.GameUnit();
+			if ( gu.IsOfType(typeof(AirVehicle)) ) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
+
 
 	public virtual List <GameObject> EnemyBuildings() {
 		var results = new List<GameObject>();
@@ -1038,7 +1066,8 @@ public class GameUnit : NetworkObject {
 	}
 
 	void SetupDeathExplosion () {
-		deathExplosionPrefab = Resources.Load<GameObject> (App.shared.ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
+		string s = App.shared.ResourcePathForUnitType(GetType()) + "/Prefabs/DeathExplosion";
+		deathExplosionPrefab = App.shared.LoadGameObject(s);
 	}
 
 
