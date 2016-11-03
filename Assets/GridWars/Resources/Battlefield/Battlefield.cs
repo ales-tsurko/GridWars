@@ -197,7 +197,7 @@ public class Battlefield : MonoBehaviour {
 	void SetupTiles() {
 		tiles = new List<GameObject>();
 
-		GameObject tilePrefab = Resources.Load<GameObject> ("FX/Prefabs/Tile");
+		GameObject tilePrefab = App.shared.LoadGameObject("FX/Prefabs/Tile");
 
 		//Vector3 size = tilePrefab.GetComponent<Renderer>().bounds.size;
 		float r = 5;

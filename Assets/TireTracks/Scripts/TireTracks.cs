@@ -48,7 +48,6 @@ public class TireTracks: MonoBehaviour {
 
 	void Start() {
 		die = false;
-		//skidmarksMaterial = Resources.Load<Material> ("TireTracks/Tracks");
 		skidmarksMaterial = App.shared.LoadMaterial("TireTracks/Tracks");
 		skidmarks = new MarkSection[MAX_MARKS];
 		for (int i = 0; i < MAX_MARKS; i++) {

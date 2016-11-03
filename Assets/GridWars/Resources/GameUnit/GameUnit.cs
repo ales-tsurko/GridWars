@@ -1068,7 +1068,6 @@ public class GameUnit : NetworkObject {
 	void SetupDeathExplosion () {
 		string s = App.shared.ResourcePathForUnitType(GetType()) + "/Prefabs/DeathExplosion";
 		deathExplosionPrefab = App.shared.LoadGameObject(s);
-		//deathExplosionPrefab = Resources.Load<GameObject> (s);
 	}
 
 

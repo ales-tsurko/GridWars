@@ -24,7 +24,6 @@ public class Soundtrack : MonoBehaviour {
 
 	public void SetTrackName(string aTrackName) {
 		trackName = aTrackName;
-		//clip = Resources.Load<AudioClip>(ResourcePath());
 		clip = App.shared.LoadAudioClip(ResourcePath());
 	}
 

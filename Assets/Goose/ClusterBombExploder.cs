@@ -4,11 +4,8 @@ using System.Collections;
 public class ClusterBombExploder : MonoBehaviour {
 	public GameObject explosionEffect;
 	public float damage;
-	//AudioClip explosionSound;
-	//AudioSource audioSource;
+
 	void Start () {
-		//audioSource = gameObject.AddComponent<AudioSource> ();
-		//explosionSound = Resources.Load<AudioClip> ("BulletPing");
 	}
 
 	void Update () {

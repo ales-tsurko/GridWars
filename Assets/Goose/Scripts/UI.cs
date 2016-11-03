@@ -18,7 +18,8 @@ public static class UI {
 		skin += "/";
 		GameObject go;
 		if (animated) {
-			go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/AnimatedButton"));
+			go = MonoBehaviour.Instantiate (App.shared.LoadGameObject("UI/AnimatedButton"));
+			//go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/AnimatedButton"));
 		} else {
 			go = new GameObject ();
 		}

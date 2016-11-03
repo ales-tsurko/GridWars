@@ -53,7 +53,6 @@ public class Engineer : GroundVehicle {
 			body = GetComponent<Rigidbody> ();
 			anim = GetComponent<Animation> ();
 			body.isKinematic = true;
-//			towerToBuild = Resources.Load<GameObject> ("GameUnit/Engineer/StaticTurret");
 			towerToBuild = App.shared.LoadGameObject("GameUnit/Engineer/StaticTurret");
 
 			GameObject moveTargetGO = new GameObject ();
