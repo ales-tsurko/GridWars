@@ -46,9 +46,12 @@ public class Landscape : MonoBehaviour {
 				*/
 					
 				chunk.name = "ground";
+				chunk.isStatic = true;
+				chunk.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 
+		/*
 		// clouds
 		for (int i = 0; i < 2; i++) {
 			Rect chunkRect = RandRect(50f, 150f, 25f, 50f);
@@ -64,6 +67,7 @@ public class Landscape : MonoBehaviour {
 				chunk.AddComponent<Cloud>().material = cloudMaterial;;
 			//}
 		}
+		*/
 
 		/*
 		for (int i = 0; i < 3; i++) {
@@ -91,6 +95,7 @@ public class Landscape : MonoBehaviour {
 				ship.transform.position = p;
 				ship.AddComponent<Cloud>();
 				//Destroy(ship);
+				ship.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 
@@ -104,6 +109,8 @@ public class Landscape : MonoBehaviour {
 			if (fieldRect.Overlaps(chunkRect) == false) {
 				var chunk = CreateChunk(chunkRect,  Rand(150f) + Rand(150f), material2, 15);
 				chunk.name = "building";
+				chunk.isStatic = true;
+				chunk.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
 

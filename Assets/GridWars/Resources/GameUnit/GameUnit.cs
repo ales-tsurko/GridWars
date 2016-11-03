@@ -267,7 +267,8 @@ public class GameUnit : NetworkObject {
 	public AudioClip SoundNamed(string name) {
 		string path = ResourcePath();
 		string soundPath = path + "/Sounds/" + name;
-		return Resources.Load<AudioClip>(soundPath);
+		return App.shared.LoadAudioClip(soundPath);
+		//return Resources.Load<AudioClip>(soundPath);
 	}
 
 	public void PlaySoundNamed(string name, float volume) {
@@ -1065,7 +1066,9 @@ public class GameUnit : NetworkObject {
 	}
 
 	void SetupDeathExplosion () {
-		deathExplosionPrefab = Resources.Load<GameObject> (App.shared.ResourcePathForUnitType (GetType ()) + "/Prefabs/DeathExplosion");
+		string s = App.shared.ResourcePathForUnitType(GetType()) + "/Prefabs/DeathExplosion";
+		deathExplosionPrefab = App.shared.LoadGameObject(s);
+		//deathExplosionPrefab = Resources.Load<GameObject> (s);
 	}
 
 

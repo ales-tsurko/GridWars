@@ -273,7 +273,71 @@ public class App : MonoBehaviour, AppStateOwner {
 		soundtracks.Add(track);
 		return track;
 	}
+
+	// --- load GameObject ---
+
+	private Dictionary<string, GameObject> loadedGos = null;
+
+	public GameObject LoadGameObject(string k) {
+
+		if (loadedGos == null) {
+			loadedGos = new Dictionary<string, GameObject>();
+		}
+
+		if (loadedGos.ContainsKey(k)) {
+			return loadedGos[k];
+		}
+			
+		GameObject v = Resources.Load<GameObject>(k);
+		loadedGos[k] = v;
+
+		return v;
+	}
+
+	// --- load AudioClip ---
+
+	private Dictionary<string, AudioClip> loadedClips = null;
+
+	public AudioClip LoadAudioClip(string k) {
+
+		if (loadedClips == null) {
+			loadedClips = new Dictionary<string, AudioClip>();
+		}
+
+		if (loadedClips.ContainsKey(k)) {
+			return loadedClips[k];
+		}
+
+		AudioClip v = Resources.Load<AudioClip>(k);
+		loadedClips[k] = v;
+
+		return v;
+	}
+
+	// --- load Material ---
+
+
+	private Dictionary<string, Material> loadedMaterials = null;
+
+	public Material LoadMaterial(string k) {
+
+		if (loadedMaterials == null) {
+			loadedMaterials = new Dictionary<string, Material>();
+		}
+
+		if (loadedMaterials.ContainsKey(k)) {
+			return loadedMaterials[k];
+		}
+
+		Material v = Resources.Load<Material>(k);
+		loadedMaterials[k] = v;
+
+		return v;
+	}
+
 }
+
+
 
 
 /*

@@ -53,7 +53,17 @@ public static class GridWarsUnityExtensions {
 		}
 		*/
 
+		/*
 		foreach (var renderer in self.GetComponentsInChildren<MeshRenderer>()) {
+			f(renderer);
+		}
+		*/
+
+
+		MeshRenderer[] renderers = self.GetComponentsInChildren<MeshRenderer>();
+		int max = renderers.Length;
+		for (int i = 0; i < max; i++) {
+			MeshRenderer renderer = renderers[i];
 			f(renderer);
 		}
 	}

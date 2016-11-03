@@ -9,8 +9,6 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	public bool useEase = true;
 
 	float startTime = 0f;
-	//AssemblyCSharp.Timer timer;
-	//ParticleSystem ps;
 
 	public Color startColor = Color.white;
 	private Dictionary<Material, Color> materialColors = null;
@@ -62,12 +60,12 @@ public class BrightFadeInGeneric : MonoBehaviour {
 		}
 	}
 
-	void Update () {
-		if (App.shared.timeCounter % 10 == 0) {
+	void FixedUpdate () {
+		if (App.shared.timeCounter % 6 == 0) {
 			float t = TimerRatioDone();
 			UpdateForValue(t);
 
-			if (t == 1f) {
+			if (t >= 1f) {
 				enabled = false;
 			}
 		}

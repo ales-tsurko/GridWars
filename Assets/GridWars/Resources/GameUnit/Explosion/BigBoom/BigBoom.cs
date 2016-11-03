@@ -14,7 +14,7 @@ public class BigBoom : Explosion {
 
 	public override void ServerAndClientJoinedGame () {
 		base.ServerAndClientJoinedGame();
-		Instantiate (Resources.Load<GameObject>("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
+		Instantiate (App.shared.LoadGameObject("NukeEffect"), _t.position + new Vector3 (0, 3, 0), _t.rotation);
 		currentBlastRadius = minBlastRadius;
 		startTime = Time.time;
 		isTargetable = false;

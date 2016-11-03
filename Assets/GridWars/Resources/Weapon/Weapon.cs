@@ -153,11 +153,11 @@ public class Weapon : MonoBehaviour {
 
 		fireThrottle = new Throttle();
 		fireThrottle.behaviour = this;
-		fireThrottle.period = 10;
+		fireThrottle.period = 25; // was 10
 
 		aimThrottle = new Throttle();
 		aimThrottle.behaviour = this;
-		aimThrottle.period = 4;
+		aimThrottle.period = 8; // was 4
 
 		targetableTypes = new List<System.Type>();
 
