@@ -99,6 +99,10 @@ namespace SocketIO
 			sid = null;
 			packetId = 0;
 
+			var host = "gw-matchmaker.herokuapp.com";
+			host = "localhost:8080";
+			url = "ws://" + host + "/socket.io/?EIO=4&transport=websocket";
+
 			ws = new WebSocket(url);
 			ws.OnOpen += OnOpen;
 			ws.OnMessage += OnMessage;
