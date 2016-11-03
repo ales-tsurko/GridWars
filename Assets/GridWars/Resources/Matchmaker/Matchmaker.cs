@@ -8,11 +8,6 @@ public interface MatchmakerDelegate {
 	void MatchmakerDisconnected();
 	void MatchmakerErrored();
 	void MatchmakerReceivedMessage(JSONObject message);
-
-
-	void MatchmakerReceivedHost(string gameId);
-	void MatchmakerReceivedJoin(string gameId);
-	void MatchmakerReceivedVersion(string version);
 }
 
 public class Matchmaker : AppStateOwner {
@@ -43,6 +38,7 @@ public class Matchmaker : AppStateOwner {
 		socket.On("message", Receive);
 
 		menu = new GameObject().AddComponent<MatchmakerMenu>();
+		menu.backgroundColor = new Color(0, 0, 0, 0);
 		state = new MatchmakerDisconnectedState();
 		state.matchmaker = this;
 		state.owner = this;
@@ -88,37 +84,6 @@ public class Matchmaker : AppStateOwner {
 		App.shared.Log("SocketError", this);
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerErrored();
-		}
-	}
-
-	void SendVersion() {
-		App.shared.Log("SendVersion: " + App.shared.version, this);
-		var data = new JSONObject();
-		data.AddField("version", App.shared.version);
-		socket.Emit("version", data);
-	}
-
-	void ReceiveVersion(SocketIOEvent e) {
-		var version = e.data.GetField("version").str;
-		App.shared.Log("ReceiveVersion: " + version, this);
-		if (matchmakerDelegate != null) {
-			matchmakerDelegate.MatchmakerReceivedVersion(version);
-		}
-	}
-
-	void HostGame(SocketIOEvent e) {
-		var gameId = e.data.GetField("gameId").str;
-		App.shared.Log("HostGame: " + gameId, this);
-		if (matchmakerDelegate != null) {
-			matchmakerDelegate.MatchmakerReceivedHost(gameId);
-		}
-	}
-
-	void JoinGame(SocketIOEvent e) {
-		var gameId = e.data.GetField("gameId").str;
-		App.shared.Log("JoinGame: " + gameId, this);
-		if (matchmakerDelegate != null) {
-			matchmakerDelegate.MatchmakerReceivedJoin(gameId);
 		}
 	}
 

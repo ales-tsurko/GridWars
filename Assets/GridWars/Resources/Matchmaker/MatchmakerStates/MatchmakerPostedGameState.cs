@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 
-public class MatchmakerSearchForOpponentState : MatchmakerState {
+public class MatchmakerPostedGameState : MatchmakerState {
 	// AppState
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		matchmaker.Send("postChallenge");
+		matchmaker.Send("postGame");
 	}
 
 	// MatchmakerMenuDelegate
 
 	public override void MatchmakerMenuClosed() {
+		base.MatchmakerMenuClosed();
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
 			.SetText("Searching for Game ...")
@@ -21,6 +23,8 @@ public class MatchmakerSearchForOpponentState : MatchmakerState {
 	}
 
 	public override void MatchmakerMenuOpened() {
+		base.MatchmakerMenuOpened();
+
 		matchmaker.menu.Reset();
 
 		matchmaker.menu.AddNewButton()
@@ -38,17 +42,21 @@ public class MatchmakerSearchForOpponentState : MatchmakerState {
 
 	// MatchmakerDelegate
 
-	public override void HandleMessage(string name, JSONObject data) {
-		base.HandleMessage(name, data);
+	public void HandleOpponentJoinedGame(JSONObject data) {
+		account.game = new Game();
+		account.game.id = data.GetField("id").str;
+		account.game.host = app.account.AccountNamed(data.GetField("host").GetField("screenName").str);
+		account.game.client = app.account.AccountNamed(data.GetField("client").GetField("screenName").str);
 
-		if (name == "playerAcceptedChallenge") {
-			TransitionTo(new MatchmakerPreGameState());
-		}
+		app.Log(account.game.host, this);
+		app.Log(account.game.client, this);
+
+		TransitionTo(new MatchmakerJoinedGameState());
 	}
 
 	void StopSearching() {
-		matchmaker.Send("cancelChallenge");
+		matchmaker.Send("cancelGame");
 		matchmaker.menu.Close();
-		TransitionTo(new MatchmakerPlayerListState());
+		TransitionTo(new MatchmakerPostAuthState());
 	}
 }

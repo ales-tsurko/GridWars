@@ -3,16 +3,17 @@ using System.Collections;
 
 public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDelegate {
 
-	protected void HandleUnexpectedMessage(JSONObject message) {
-		HandleUnexpectedMessage(message.GetField("name").str, message.GetField("data"));
+	public Account account {
+		get {
+			return app.account;
+		}
 	}
 
-	protected void HandleUnexpectedMessage(string name, JSONObject data) {
-		app.Log("Unexpected Message: " + name + ": " + data);
-		matchmaker.Disconnect();
-		TransitionTo(new MatchmakerDisconnectedState());
+	public Game game {
+		get {
+			return account.game;
+		}
 	}
-
 
 	// AppState
 
@@ -36,11 +37,11 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public override void MatchmakerMenuOpened() {
-		
+		app.Log("MatchmakerMenuOpened", this);
 	}
 
 	public override void MatchmakerMenuClosed() {
-
+		app.Log("MatchmakerMenuClosed", this);
 	}
 
 	//MatchmakerDelegate
@@ -67,15 +68,29 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public virtual void HandleMessage(string name, JSONObject data) {
-		
+		var methodName = "Handle" + name.Capitalized();
+		app.Log(methodName, this);
+		var method = this.GetType().GetMethod(methodName);
+		if (method == null) {
+			this.HandleUnexpectedMessage(name, data);
+		}
+		else {
+			method.Invoke(this, new object[]{ data });
+		}
 	}
 
-	public virtual void MatchmakerReceivedHost(string gameId) {
+	protected void HandleUnexpectedMessage(string name, JSONObject data) {
+		app.Log("Unexpected Message:" + name + ": " + data);
 	}
 
-	public virtual void MatchmakerReceivedJoin(string gameId) {
+	public virtual void HandleGamePosted(JSONObject data) {
 	}
 
-	public virtual void MatchmakerReceivedVersion(string version) {
+	public virtual void HandlePlayerConnected(JSONObject data) {
+		account.PlayerConnected(data);
+	}
+
+	public virtual void HandlePlayerDisconnected(JSONObject data) {
+		account.PlayerDisconnected(data);
 	}
 }

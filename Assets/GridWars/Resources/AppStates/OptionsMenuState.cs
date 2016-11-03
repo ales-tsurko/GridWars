@@ -10,7 +10,6 @@ public class OptionsMenuState : AppState {
         menu.AddItem(UI.MenuItem("Remap Player 1 Keys", RemapKeys1));
         menu.AddItem(UI.MenuItem("Remap Player 2 Keys", RemapKeys2));
         menu.AddItem(UI.MenuItem("Back", ShowMainMenu));
-        menu.SetBackground(Color.black, 1);
         menu.Show();
     }
 

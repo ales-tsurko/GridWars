@@ -7,7 +7,7 @@ public class ShowOutcomeState : PostGameSubState {
 		base.EnterFrom(state);
 
 		app.ResetMenu();
-		menu.SetBackground(Color.black, 0);
+		menu.backgroundColor = new Color(0, 0, 0, 0);
 		var title = "";
 		if (battlefield.localPlayers.Count == 1) {
 			if (postGameState.victoriousPlayer.isLocal) {

@@ -1,22 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MatchmakerPlayerListState : MatchmakerState {
-	// AppState
-
+public class MatchmakerPostAuthState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
-	}
 
+		matchmaker.menu.Close();
+	}
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuOpened() {
-	}
-
 	public override void MatchmakerMenuClosed() {
+		base.MatchmakerMenuClosed();
+
 		var text = "Play PVP";
-		if (app.account.playerList.Count > 0) {
-			text += ": " + app.account.playerList.Count + " Online";
+		if (app.account.otherPlayers.Count > 0) {
+			text += ": " + app.account.otherPlayers.Count + " Online";
 		}
 
 		matchmaker.menu.Reset();
@@ -28,6 +26,6 @@ public class MatchmakerPlayerListState : MatchmakerState {
 	}
 
 	void SearchForOpponent() {
-		TransitionTo(new MatchmakerSearchForOpponentState());
+		TransitionTo(new MatchmakerPostedGameState());
 	}
 }

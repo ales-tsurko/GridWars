@@ -278,6 +278,10 @@ public static class GridWarsUnityExtensions {
 		return new String(Enumerable.Range(0, n).SelectMany(x => s).ToArray());
 	}
 
+	public static string Capitalized(this string self) {
+		return self.Substring(0, 1).ToUpper() + self.Substring(1);
+	}
+
 	/*
 	public static string Repeat(this char c, int n)
 	{

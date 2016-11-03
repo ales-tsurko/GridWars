@@ -34,13 +34,13 @@ public class PlayingGameState : NetworkDelegateState {
 
 		App.shared.PlayAppSoundNamed("GameStart");
 
-		menu.backgroundColor = new Color(0, 0, 0, 0);
+		menu.Hide();
 	}
 
 	public override void WillExit() {
 		base.WillExit();
 
-		menu.backgroundColor = new Color(0, 0, 0, 1);
+		menu.Show();
 
 		HideInGameMenus();
 	}

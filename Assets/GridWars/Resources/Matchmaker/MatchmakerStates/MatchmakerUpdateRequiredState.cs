@@ -6,6 +6,8 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 	// MatchmakerMenuDelegate
 
 	public override void MatchmakerMenuOpened() {
+		base.MatchmakerMenuOpened();
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
 			.SetText("Update to the latest version to play multiplayer");
@@ -20,6 +22,8 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 	}
 
 	public override void MatchmakerMenuClosed() {
+		base.MatchmakerMenuClosed();
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
 			.SetText("UPDATE REQUIRED")

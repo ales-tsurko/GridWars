@@ -7,7 +7,49 @@ public class Account {
 	public string email;
 	public string accessToken;
 	public List<Account>playerList;
-	public Challenge challenge;
+	public Game game;
+
+	public bool isHost {
+		get {
+			return game.host.screenName == screenName;
+		}
+	}
+
+	public bool isReadyForGame {
+		get {
+			return isHost ? game.hostIsReady : game.clientIsReady;
+		}
+
+		set {
+			if (isHost) {
+				game.hostIsReady = value;
+			}
+			else {
+				game.clientIsReady = value;
+			}
+		}
+	}
+
+	public bool isOpponentReadyForGame {
+		get {
+			return isHost ? game.clientIsReady : game.hostIsReady;
+		}
+
+		set {
+			if (isHost) {
+				game.clientIsReady = value;
+			}
+			else {
+				game.hostIsReady = value;
+			}
+		}
+	}
+
+	public List<Account>otherPlayers {
+		get {
+			return playerList.FindAll(account => account != this);
+		}
+	}
 
 	public Account() {
 		ResetPlayerList();
@@ -19,15 +61,16 @@ public class Account {
 
 	public void ResetPlayerList() {
 		playerList = new List<Account>();
+		playerList.Add(this);
 	}
 
-	public void PlayerConnected(string screenName) {
+	public void PlayerConnected(JSONObject accountData) {
 		var account = new Account();
-		account.screenName = screenName;
+		account.screenName = accountData.GetField("screenName").str;
 		playerList.Add(account);
 	}
 
-	public void PlayerDisconnected(string screenName) {
-		playerList.Remove(AccountNamed(screenName));
+	public void PlayerDisconnected(JSONObject accountData) {
+		playerList.Remove(AccountNamed(accountData.GetField("screenName").str));
 	}
 }

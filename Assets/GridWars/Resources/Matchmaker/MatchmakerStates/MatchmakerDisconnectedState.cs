@@ -16,7 +16,7 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	//MatchmakerDelegate
 
 	public override void MatchmakerConnected() {
-		TransitionTo(new MatchmakerAuthenticatingState());
+		TransitionTo(new MatchmakerPreAuthState());
 	}
 
 	public override void MatchmakerErrored() {
@@ -29,6 +29,8 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	// MatchmakerMenuDelegate
 
 	public override void MatchmakerMenuOpened() {
+		base.MatchmakerMenuOpened();
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
 			.SetText("Unable to connect to the server.\n\nInternet matches disabled.");
@@ -40,6 +42,8 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	}
 
 	public override void MatchmakerMenuClosed() {
+		base.MatchmakerMenuClosed();
+
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
 			.SetText("CONNECT TO SERVER")

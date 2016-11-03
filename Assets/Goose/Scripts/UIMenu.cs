@@ -97,7 +97,7 @@ public class UIMenu : UIElement {
 
 		image = gameObject.AddComponent<Image>();
 		image.raycastTarget = false;
-		backgroundColor = new Color(0, 0, 0, 0);
+		backgroundColor = new Color(0, 0, 0, 1);
 		RectTransform t = GetComponent<RectTransform>();
 		t.anchorMin = new Vector2(0, 0);
 		t.anchorMax = new Vector2(1, 1);
@@ -127,6 +127,13 @@ public class UIMenu : UIElement {
 		button.isInteractible = false;
 		button.matchesNeighborSize = false;
 		return button;
+	}
+
+	public UIActivityIndicator AddNewIndicator() {
+		var indicator = UIActivityIndicator.Instantiate();
+		indicator.containingMenu = this;
+		AddItem(indicator);
+		return indicator;
 	}
 
 	public UIMenu SetOrientation(MenuOrientation orientation) {
@@ -214,10 +221,6 @@ public class UIMenu : UIElement {
 		}
 		items = new List<UIButton> ();
 	}
-
-    public void SetBackground(Color _color, float alpha = 1){
-        backgroundColor = new Color(_color.r, _color.g, _color.b, alpha);
-    }
 
 	public override Text SetText (string s, bool allcaps = false, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
 		Text textObj = null;
