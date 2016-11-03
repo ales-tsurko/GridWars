@@ -161,8 +161,8 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void UseSlowZoomRate() {
-		zoomRate = 0.02f;
-		rotationRate = 0.02f;
+		zoomRate = 0.03f;
+		rotationRate = 0.03f;
 	}
 
 	void Update () {
