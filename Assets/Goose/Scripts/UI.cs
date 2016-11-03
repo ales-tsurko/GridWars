@@ -131,7 +131,7 @@ public static class UI {
 	/// <returns>The canvas.</returns>
 	public static Canvas MainCanvas () {
 		if (_mainCanvas == null) {
-			var go = MonoBehaviour.Instantiate (Resources.Load<GameObject> ("UI/Canvas"));
+			var go = MonoBehaviour.Instantiate (App.shared.LoadGameObject("UI/Canvas"));
 			if (go == null) {
 				Canvas canvas;
 				go = new GameObject (); 

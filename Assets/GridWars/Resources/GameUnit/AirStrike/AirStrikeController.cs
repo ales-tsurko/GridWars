@@ -23,7 +23,6 @@ public class AirStrikeController : MonoBehaviour {
 	void Awake () {
 		initd = false;
 		audioSource = GetComponent <AudioSource> ();
-		//flyBySoundClip = Resources.Load<AudioClip> (flyBySound);
 		flyBySoundClip = App.shared.LoadAudioClip(flyBySound);
 		audioSource.PlayOneShot (flyBySoundClip);
 	}
