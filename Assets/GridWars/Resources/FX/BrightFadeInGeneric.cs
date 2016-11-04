@@ -11,8 +11,7 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	float startTime = 0f;
 
 	public Color startColor = Color.white;
-	private Dictionary<Material, Color> materialColors = null;
-
+	private Dictionary<string, Color> materialColors = null;
 
 	// --- enable / disable --------
 
@@ -52,12 +51,18 @@ public class BrightFadeInGeneric : MonoBehaviour {
 
 	void SetupMaterialColorsIfNeeded() {
 		if (materialColors == null) {
-			materialColors = new Dictionary<Material, Color>();
-
-			gameObject.EachMaterial(mat => {
-				materialColors.Add(mat, mat.color);
-			});
+			SetupMaterialColors();
 		}
+	}
+
+	public void SetupMaterialColors() {
+		materialColors = new Dictionary<string, Color>();
+
+		gameObject.EachMaterial(mat => {
+			if (!materialColors.ContainsKey(mat.name)) {
+				materialColors.Add(mat.name, mat.color);
+			}
+		});
 	}
 
 	void FixedUpdate () {
@@ -76,11 +81,11 @@ public class BrightFadeInGeneric : MonoBehaviour {
 
 		if (materialColors != null) {
 			gameObject.EachMaterial(mat => {
-				if (!materialColors.ContainsKey(mat)) {
-					print("error - missing start material color");
+				if (!materialColors.ContainsKey(mat.name)) {
+					print("error - missing start material color '" + mat.name + "'");
 					return;
 				}
-				Color realColor = materialColors[mat];
+				Color realColor = materialColors[mat.name];
 				Color currentColor = ValueForColor(realColor, t);
 				mat.color = currentColor;
 			});
