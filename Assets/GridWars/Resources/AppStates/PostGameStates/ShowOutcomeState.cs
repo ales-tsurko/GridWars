@@ -9,6 +9,10 @@ public class ShowOutcomeState : PostGameSubState {
 		app.ResetMenu();
 		menu.SetBackground(Color.black, 0);
 		var title = "";
+        if (postGameState.victoriousPlayer == null) {
+            postGameState.LeaveGame();
+            return;
+        }
 		if (battlefield.localPlayers.Count == 1) {
 			if (postGameState.victoriousPlayer.isLocal) {
 				title = "Victory!";
