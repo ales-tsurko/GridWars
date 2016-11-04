@@ -27,6 +27,8 @@ public class PowerSource : GroundBuilding {
 
 	public GameObject prefab;
 
+    public bool gameStart;
+
 	float trackLength {
 		get {
 			return bounds.x;
@@ -64,6 +66,7 @@ public class PowerSource : GroundBuilding {
 
 	public override void Awake () {
 		base.Awake();
+        gameStart = false;
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 		generationRate = 1.3f;
 	}
@@ -121,7 +124,7 @@ public class PowerSource : GroundBuilding {
 
 	public override void ServerFixedUpdate() {
 		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.
-
+        if (!gameStart) {return;}
 		float rate = generationRate;
 		float r = power / maxPower;
 		rate *= (1 + r / 2);
