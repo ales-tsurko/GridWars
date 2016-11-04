@@ -14,7 +14,6 @@ public class MeshMerger : MonoBehaviour {
 			return;
 		}
 
-
 		string goName = gameObject.name;
 		Debug.Log(gameObject.name + " MeshMerger");
 
