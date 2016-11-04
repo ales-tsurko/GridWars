@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class MeshMerger : MonoBehaviour {
 
-	private Dictionary<Material, List<MeshFilter>> meshes = null;
+	private Dictionary<string, List<MeshFilter>> meshes = null;
 	private bool foundPrefab = false;
 
-	public void Start () {
+	public void Start_DISABLED_DISABLED_DISABLED_DISABLED() {
 
 		if (gameObject.scene.name == null) {
-			Debug.Log(gameObject.name " is a prefab - MeshMerger bailing");
+			Debug.Log(gameObject.name + " is a prefab - MeshMerger bailing");
 			return;
 		}
 
@@ -18,11 +18,13 @@ public class MeshMerger : MonoBehaviour {
 		string goName = gameObject.name;
 		Debug.Log(gameObject.name + " MeshMerger");
 
-		Transform originalTransform = transform;
+		Vector3 origPos = transform.position;
+		Quaternion origRot = transform.rotation;
+
 		transform.position = Vector3.zero;
 		transform.rotation = Quaternion.identity;
 
-		meshes = new Dictionary<Material, List<MeshFilter>>();
+		meshes = new Dictionary<string, List<MeshFilter>>();
 
 		// walk transforms and find meshes
 		// sort into dict by material
@@ -36,14 +38,15 @@ public class MeshMerger : MonoBehaviour {
 			Debug.Log(gameObject.name + " MeshMerger BAILED");
 		}
 
-		transform.position = originalTransform.position;
-		transform.rotation = originalTransform.rotation;
-		//Destroy(this);
+		transform.position = origPos;
+		transform.rotation = origRot;
 
+		//BrightFadeInGeneric fader = gameObject.GetComponent<BrightFadeInGeneric>();
+		//fader.SetupMaterialColors();
 	}
 
 	void WalkTransform(Transform t) {
-		if (t.name == "pivot") {
+		if (t.name.StartsWith("Turret")) {
 			return;
 		}
 			
@@ -64,11 +67,6 @@ public class MeshMerger : MonoBehaviour {
 		if (meshFilter != null && renderer != null) {
 			Material mat = null;
 
-			if (renderer.sharedMaterials != null) {
-				foundPrefab = true;
-				return;
-			}
-
 			try {
 				mat = renderer.material;
 				//mat = renderer.sharedMaterial;
@@ -79,10 +77,10 @@ public class MeshMerger : MonoBehaviour {
 			}
 
 			if (mat != null) {
-				if (!meshes.ContainsKey(mat)) {
-					meshes[mat] = new List<MeshFilter>();
+				if (!meshes.ContainsKey(mat.name)) {
+					meshes[mat.name] = new List<MeshFilter>();
 				}
-				meshes[mat].Add(meshFilter);
+				meshes[mat.name].Add(meshFilter);
 			} else {
 				Debug.Log(gameObject.name + " MeshMerger: missing material on renderer");
 				foundPrefab = true;
@@ -94,15 +92,16 @@ public class MeshMerger : MonoBehaviour {
 	void MergeMeshesForMaterials() {
 		//Debug.Log(gameObject.name + " merging " + meshes.Count + " material meshes");
 
-		foreach(KeyValuePair<Material, List<MeshFilter>> entry in meshes) {
+		foreach(KeyValuePair<string, List<MeshFilter>> entry in meshes) {
 			//List<MeshFilter> mfs = entry.Value;
 			MergeMaterialMeshes(entry.Key, entry.Value);
 		}
 	}
 
-	void MergeMaterialMeshes(Material material, List<MeshFilter> mfs) {
+	void MergeMaterialMeshes(string materialName, List<MeshFilter> mfs) {
 
 		CombineInstance[] combine = new CombineInstance[mfs.Count];
+		Material material = null;
 
 		// add old meshes to combine
 		for (int i = 0; i < mfs.Count; i++) {
@@ -110,6 +109,8 @@ public class MeshMerger : MonoBehaviour {
 			//combine[i].mesh = meshFilter.sharedMesh;
 			combine[i].mesh = meshFilter.mesh;
 			combine[i].transform = meshFilter.transform.localToWorldMatrix;
+
+			material = meshFilter.gameObject.GetComponent<MeshRenderer>().material;
 		}
 
 		// add a child game object to put our new mesh in
@@ -122,7 +123,8 @@ public class MeshMerger : MonoBehaviour {
 
 		MeshRenderer renderer = newGo.AddComponent<MeshRenderer>();
 		renderer.material = material; // set material
-			
+		renderer.material.name = material.name;
+
 		// remove old mesh filters and renderers
 		for (int i = 0; i < mfs.Count; i++) {
 			MeshFilter mf = mfs[i];
