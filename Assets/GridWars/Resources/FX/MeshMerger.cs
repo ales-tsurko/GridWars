@@ -2,15 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-
 public class MeshMerger : MonoBehaviour {
 
 	private Dictionary<Material, List<MeshFilter>> meshes = null;
 	private bool foundPrefab = false;
 
-	public void Run () {
+	public void Start () {
+
+		if (gameObject.scene.name == null) {
+			Debug.Log(gameObject.name " is a prefab - MeshMerger bailing");
+			return;
+		}
+
+
 		string goName = gameObject.name;
 		Debug.Log(gameObject.name + " MeshMerger");
 
