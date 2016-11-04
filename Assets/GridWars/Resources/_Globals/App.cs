@@ -113,6 +113,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	void Update() {
+		matchmaker.Update();
 		state.Update();
 		keys.Update();
 	}

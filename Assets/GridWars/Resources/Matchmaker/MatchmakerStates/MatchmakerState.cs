@@ -37,11 +37,11 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public override void MatchmakerMenuOpened() {
-		app.Log("MatchmakerMenuOpened", this);
+		//app.Log("MatchmakerMenuOpened", this);
 	}
 
 	public override void MatchmakerMenuClosed() {
-		app.Log("MatchmakerMenuClosed", this);
+		//app.Log("MatchmakerMenuClosed", this);
 	}
 
 	//MatchmakerDelegate

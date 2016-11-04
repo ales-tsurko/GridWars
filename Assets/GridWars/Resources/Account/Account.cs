@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Account {
+public class Account : BoltAgentDelegate {
 	public string id;
 	public string screenName;
 	public string email;
 	public string accessToken;
 	public List<Account>playerList;
 	public Game game;
+	public BoltAgent boltAgent;
 
 	public bool isHost {
 		get {
@@ -72,5 +73,37 @@ public class Account {
 
 	public void PlayerDisconnected(JSONObject accountData) {
 		playerList.Remove(AccountNamed(accountData.GetField("screenName").str));
+	}
+
+	//BoltAgent
+
+	public void StartBoltAgent() {
+		if (isHost) {
+			boltAgent = new BoltServer();
+		}
+		else {
+			boltAgent = new BoltClient();
+		}
+
+		boltAgent.boltAgentDelegate = this;
+		boltAgent.Start();
+	}
+
+	public void BoltAgentConnectFailed() {
+		StartBoltAgent();
+	}
+
+	public void BoltAgentDisconnected() {
+		StartBoltAgent();
+	}
+
+	public void BoltAgentConnected() {
+		if (BoltNetwork.isClient) {
+			App.shared.matchmaker.Send("connectedToServer");
+		}
+	}
+
+	public void BoltAgentDidShutdown() {
+		StartBoltAgent();
 	}
 }

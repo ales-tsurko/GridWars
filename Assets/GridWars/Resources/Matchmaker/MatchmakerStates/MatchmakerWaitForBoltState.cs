@@ -1,12 +1,28 @@
 ﻿using UnityEngine;
 
 public class MatchmakerWaitForBoltState : MatchmakerState {
+	bool didStartBolt = false;
 	// AppState
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Open();
+
+		if (BoltNetwork.isRunning) {
+			app.network.ShutdownBolt();
+		}
+
+		Debug.Log("EnterFrom");
+	}
+
+	public override void Update() {
+		base.Update();
+
+		if (!didStartBolt && !BoltNetwork.isRunning) {
+			didStartBolt = true;
+			account.StartBoltAgent();
+		}
 	}
 
 	// MatchmakerMenuDelegate
@@ -27,6 +43,8 @@ public class MatchmakerWaitForBoltState : MatchmakerState {
 
 	void Leave() {
 		matchmaker.Send("cancelGame");
+		account.boltAgent.Shutdown();
+		account.boltAgent.boltAgentDelegate = null;
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 

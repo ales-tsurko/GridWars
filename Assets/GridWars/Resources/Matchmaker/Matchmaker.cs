@@ -14,11 +14,7 @@ public class Matchmaker : AppStateOwner {
 	public Network network;
 	public MatchmakerDelegate matchmakerDelegate;
 
-	public bool isConnected {
-		get {
-			return socket.IsConnected;
-		}
-	}
+	public bool isConnected;
 
 	public MatchmakerMenu menu;
 
@@ -49,9 +45,11 @@ public class Matchmaker : AppStateOwner {
 	}
 
 	public void Connect() {
-		if (socket.IsConnected) {
+		if (isConnected) {
 			throw new Exception("Already connected to Matchmaker");
 		}
+
+		isConnected = false;
 
 		App.shared.Log("Start", this);
 		socket.Connect();
@@ -68,6 +66,7 @@ public class Matchmaker : AppStateOwner {
 
 	void SocketConnected(SocketIOEvent e) {
 		App.shared.Log("SocketConnected", this);
+		isConnected = true;
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerConnected();
 		}
@@ -75,16 +74,35 @@ public class Matchmaker : AppStateOwner {
 
 	void SocketDisconnected(SocketIOEvent e) {
 		App.shared.Log("SocketDisconnected", this);
+		isConnected = false;
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerDisconnected();
 		}
 	}
 
+	bool receivedError = false;
+	private System.Object lockObj = new System.Object();
+
 	void SocketError(SocketIOEvent e) {
-		App.shared.Log("SocketError", this);
-		if (matchmakerDelegate != null) {
-			matchmakerDelegate.MatchmakerErrored();
+		lock(lockObj) {
+			receivedError = true;
 		}
+	}
+
+	public void Update() {
+		state.Update();
+
+		if (receivedError) {
+			lock(lockObj) {
+				receivedError = false;
+			}
+
+			App.shared.Log("SocketError", this);
+			if (matchmakerDelegate != null) {
+				matchmakerDelegate.MatchmakerErrored();
+			}
+		}
+
 	}
 
 	// Messages

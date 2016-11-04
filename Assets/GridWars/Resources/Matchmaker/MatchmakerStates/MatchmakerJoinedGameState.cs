@@ -44,12 +44,18 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 	void Ready() {
 		account.isReadyForGame = true;
 		matchmaker.Send("readyForGame");
-		MatchmakerMenuOpened();
-
+		if (account.isOpponentReadyForGame) {
+			TransitionTo(new MatchmakerWaitForBoltState());
+		}
+		else {
+			MatchmakerMenuOpened();
+		}
 	}
 
 	void Leave() {
 		matchmaker.Send("cancelGame");
+		account.boltAgent.Shutdown();
+		account.boltAgent.boltAgentDelegate = null;
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 
