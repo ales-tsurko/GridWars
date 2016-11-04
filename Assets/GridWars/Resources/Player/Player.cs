@@ -260,12 +260,14 @@ public class Player : MonoBehaviour {
 	// --- Networking ---------------------------------------
 
 	public void TakeControlOf(GameUnit gameUnit) {
-		if (isLocal || (App.shared.network.connection == null)) {
+		if (isLocal || BoltNetwork.IsSinglePlayer) {
 			//take control as server
+			//App.shared.Log("TakeControl: " + gameUnit);
 			gameUnit.entity.TakeControl();
 		}
 		else {
 			//give control to client
+			//App.shared.Log("AssignControl: " + gameUnit);
 			gameUnit.entity.AssignControl(App.shared.network.connection);
 		}
 	}

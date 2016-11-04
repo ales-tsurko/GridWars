@@ -7,6 +7,7 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 
 		matchmaker.menu.Hide();
 
+		battlefield.isInternetPVP = true;
 		app.state.TransitionTo(new PlayingGameState());
 	}
 
