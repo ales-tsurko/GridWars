@@ -5,44 +5,12 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		matchmaker.menu.Open();
+		matchmaker.menu.Hide();
+
+		app.state.TransitionTo(new PlayingGameState());
 	}
 
-	public override void MatchmakerMenuOpened() {
-		base.MatchmakerMenuOpened();
-
-		matchmaker.menu.Reset();
-
-		matchmaker.menu.AddNewIndicator().SetText("Playing Game");
-
-		matchmaker.menu.AddNewButton()
-			.SetText("Concede")
-			.SetAction(Concede);
-
-		matchmaker.menu.AddNewButton()
-			.SetText("Win")
-			.SetAction(Win);
-
-		matchmaker.menu.AddNewButton()
-			.SetText("Disconnect")
-			.SetAction(Disconnect);
-
-		matchmaker.menu.Show();
-	}
-
-	void Concede() {
-		var data = new JSONObject();
-		data.AddField("isWinner", false);
-		matchmaker.Send("endGame", data);
-	}
-
-	void Win() {
-		var data = new JSONObject();
-		data.AddField("isWinner", true);
-		matchmaker.Send("endGame", data);
-	}
-
-	void Disconnect() {
-		account.boltAgent.Shutdown();
+	void HandleGameEnded(JSONObject data) {
+		(app.state as PlayingGameState).EndGame(data.GetField("isWinner") ? battlefield.localPlayer1 : battlefield.localPlayer2);
 	}
 }

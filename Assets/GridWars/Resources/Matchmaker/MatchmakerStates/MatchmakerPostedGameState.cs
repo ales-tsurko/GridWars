@@ -48,9 +48,6 @@ public class MatchmakerPostedGameState : MatchmakerState {
 		account.game.host = app.account.AccountNamed(data.GetField("host").GetField("screenName").str);
 		account.game.client = app.account.AccountNamed(data.GetField("client").GetField("screenName").str);
 
-		app.Log(account.game.host, this);
-		app.Log(account.game.client, this);
-
 		TransitionTo(new MatchmakerJoinedGameState());
 	}
 

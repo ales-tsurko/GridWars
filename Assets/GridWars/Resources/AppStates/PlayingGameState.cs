@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 public class PlayingGameState : NetworkDelegateState {
-	bool didHardReset = false;
 	List<InGameMenu> inGameMenus;
 
 	//AppState
@@ -15,10 +14,12 @@ public class PlayingGameState : NetworkDelegateState {
 		battlefield.canCheckGameOver = false;
 
 		network.networkDelegate = this;
+		/*
 		matchmaker.matchmakerDelegate = null;
 		if (matchmaker.isConnected) {
 			matchmaker.Disconnect();
 		}
+		*/
 
 		//do this before ShowInGameMenu
 		if (battlefield.isInternetPVP) {
@@ -48,14 +49,14 @@ public class PlayingGameState : NetworkDelegateState {
 	public override void Update() {
 		base.Update();
 
-		if (didHardReset) {
-			return;
-		}
-
-		if (battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
-			var state = new PostGameState();
-			state.victoriousPlayer = battlefield.livingPlayers[0];
-			TransitionTo(state);
+		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
+			var victor = battlefield.livingPlayers[0];
+			if (matchmaker.state is MatchmakerPlayingGameState) {
+				JSONObject data = new JSONObject();
+				data.AddField("isWinner", victor == battlefield.localPlayer1);
+				matchmaker.Send("endGame", data);
+			}
+			EndGame(victor);
 		}
 		else {
 			foreach (var inGameMenu in inGameMenus) {
@@ -64,10 +65,18 @@ public class PlayingGameState : NetworkDelegateState {
 		}
 	}
 
+	public void EndGame(Player victor) {
+		var state = new PostGameState();
+		state.victoriousPlayer = victor;
+		TransitionTo(state);
+	}
+
 	//NetworkDelegate
 
 	public override void ZeusDisconnected() {
 		base.ZeusDisconnected();
+
+		matchmaker.Send("cancelGame");
 
 		ShowLostConnection();
 	}
@@ -77,22 +86,19 @@ public class PlayingGameState : NetworkDelegateState {
 
 		network.networkDelegate = null;
 
+		if (matchmaker.state is MatchmakerWaitForBoltState) {
+			(matchmaker.state as MatchmakerWaitForBoltState).BoltShutdownCompleted();
+		}
+
 		TransitionTo(new MainMenuState());
 	}
 
 	public override void Disconnected(BoltConnection connection) {
 		base.Disconnected(connection);
 
+		matchmaker.Send("cancelGame");
+
 		ShowLostConnection();
-	}
-
-	public override void ReceivedConcede() {
-		base.ReceivedConcede();
-
-		var state = new PostGameState();
-		state.victoriousPlayer = battlefield.localPlayer1;
-
-		TransitionTo(state);
 	}
 
 	void ShowLostConnection() {
@@ -100,8 +106,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.AddItem(UI.ActivityIndicator("Lost Connection. Returning to Main Menu"));
 		menu.Show();
 
-		app.battlefield.HardReset();
-		didHardReset = true;
+		app.battlefield.SoftReset();
 		network.ShutdownBolt();
 	}
 

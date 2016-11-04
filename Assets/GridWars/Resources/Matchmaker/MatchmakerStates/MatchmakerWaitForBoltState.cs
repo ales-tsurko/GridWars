@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 public class MatchmakerWaitForBoltState : MatchmakerState {
-	bool didStartBolt = false;
 	// AppState
 
 	public override void EnterFrom(AppState state) {
@@ -12,17 +11,15 @@ public class MatchmakerWaitForBoltState : MatchmakerState {
 		if (BoltNetwork.isRunning) {
 			app.network.ShutdownBolt();
 		}
-
-		Debug.Log("EnterFrom");
-	}
-
-	public override void Update() {
-		base.Update();
-
-		if (!didStartBolt && !BoltNetwork.isRunning) {
-			didStartBolt = true;
+		else {
 			account.StartBoltAgent();
 		}
+	}
+
+	// Possibly sent from PlayingGameState
+
+	public void BoltShutdownCompleted() {
+		account.StartBoltAgent();
 	}
 
 	// MatchmakerMenuDelegate
@@ -56,15 +53,16 @@ public class MatchmakerWaitForBoltState : MatchmakerState {
 
 	public void HandleGameCancelled(JSONObject data) {
 		if (data.GetField("id").str == app.account.game.id) {
-			matchmaker.menu.Reset();
 
+			account.boltAgent.Shutdown();
+			account.boltAgent.boltAgentDelegate = null;
+
+			matchmaker.menu.Reset();
 			matchmaker.menu.AddNewText()
 				.SetText("Opponent left.");
-
 			matchmaker.menu.AddNewButton()
 				.SetText("OK")
 				.SetAction(OpponentLeftOK);
-
 			matchmaker.menu.Show();
 		}
 	}

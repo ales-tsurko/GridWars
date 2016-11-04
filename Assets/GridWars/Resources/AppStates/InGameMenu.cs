@@ -77,6 +77,7 @@ public class InGameMenu {
 		}
 
 		menu = UI.Menu();
+		menu.backgroundColor = Color.clear;
 
 		string title;
 
