@@ -47,7 +47,6 @@ public class CameraController : MonoBehaviour {
 	}
 	public void InitCamera () {
 		cameraControllerDelegates = new List<CameraControllerDelegate>();
-
 		StartCoroutine (WaitForTowers ());
 	}
 
@@ -125,9 +124,23 @@ public class CameraController : MonoBehaviour {
 
         pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
+        StartCoroutine(MonitorInitialCamMovement());
 		initComplete = true;
         menuHasFocus = false;
 	}
+
+    IEnumerator MonitorInitialCamMovement () {
+        yield return new WaitForEndOfFrame();
+        while (moving) {
+            yield return null;
+        }
+        foreach (PowerSource _powerSource in GameObject.FindObjectsOfType<PowerSource>()){
+            _powerSource.gameStart = true;
+        }
+        yield break;
+    }
+
+
     [HideInInspector]
     Vector2 lastScreenRes, thisScreenRes;
 	public static Vector2 GetMainGameViewSize()

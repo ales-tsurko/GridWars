@@ -172,6 +172,9 @@ public class InGameMenu {
 	//TODO: different for each player?
 	void HandleHotkeys() {
 		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
+        foreach (Tower _tower in GameObject.FindObjectsOfType<Tower>()) {
+            _tower.UpdateHotKeys();
+        }
 	}
 
 	void HandleCamera() {
