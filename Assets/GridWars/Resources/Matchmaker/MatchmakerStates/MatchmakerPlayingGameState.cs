@@ -2,6 +2,12 @@
 using System.Collections;
 
 public class MatchmakerPlayingGameState : MatchmakerState {
+	PlayingGameState playingGameState {
+		get {
+			return app.state as PlayingGameState;
+		}
+	}
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -12,9 +18,15 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 	}
 
 	public void HandleGameEnded(JSONObject data) {
-		TransitionTo(new MatchmakerAfterGameState());
+		playingGameState.GameEnded(data.GetField("isWinner").b ? battlefield.localPlayer1 : battlefield.localPlayer1.opponent);
 
-		(app.state as PlayingGameState).EndGame(data.GetField("isWinner").b ? battlefield.localPlayer1 : battlefield.localPlayer1.opponent);
+		TransitionTo(new MatchmakerAfterGameState());
+	}
+
+	public void HandleGameCancelled(JSONObject data) {
+		if (data.GetField("id").str == app.account.game.id) {
+			playingGameState.GameCancelled();
+		}
 	}
 
 	public void EndGame(Player victor) {

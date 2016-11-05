@@ -14,12 +14,6 @@ public class PlayingGameState : NetworkDelegateState {
 		battlefield.canCheckGameOver = false;
 
 		network.networkDelegate = this;
-		/*
-		matchmaker.matchmakerDelegate = null;
-		if (matchmaker.isConnected) {
-			matchmaker.Disconnect();
-		}
-		*/
 
 		//do this before ShowInGameMenu
 		if (battlefield.isInternetPVP) {
@@ -50,11 +44,7 @@ public class PlayingGameState : NetworkDelegateState {
 		base.Update();
 
 		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
-			var victor = battlefield.livingPlayers[0];
-			if (battlefield.isInternetPVP) {
-				(matchmaker.state as MatchmakerPlayingGameState).EndGame(victor);
-			}
-			EndGame(victor);
+			EndGame(battlefield.livingPlayers[0]);
 		}
 		else {
 			foreach (var inGameMenu in inGameMenus) {
@@ -64,9 +54,20 @@ public class PlayingGameState : NetworkDelegateState {
 	}
 
 	public void EndGame(Player victor) {
+		if (battlefield.isInternetPVP) {
+			(matchmaker.state as MatchmakerPlayingGameState).EndGame(victor);
+		}
+		GameEnded(victor);
+	}
+
+	public void GameEnded(Player victor) {
 		var state = new PostGameState();
 		state.victoriousPlayer = victor;
 		TransitionTo(state);
+	}
+
+	public void GameCancelled() {
+		ShowLostConnection();
 	}
 
 	//NetworkDelegate
@@ -79,6 +80,7 @@ public class PlayingGameState : NetworkDelegateState {
 		ShowLostConnection();
 	}
 
+	//Called when bolt is shutdown during a PVE game to allow for a pvp game.
 	public override void BoltShutdownCompleted() {
 		base.BoltShutdownCompleted();
 
@@ -95,20 +97,26 @@ public class PlayingGameState : NetworkDelegateState {
 		base.Disconnected(connection);
 
 		matchmaker.Send("cancelGame");
-
 		ShowLostConnection();
 	}
 
 	void ShowLostConnection() {
 		HideInGameMenus();
-		menu.AddItem(UI.ActivityIndicator("Lost Connection. Returning to Main Menu"));
-		menu.Show();
 
-		app.battlefield.SoftReset();
-		network.ShutdownBolt();
+		menu.backgroundColor = Color.clear;
+		menu.AddNewText().SetText("Lost Connection");
+		menu.AddNewButton().SetText("Leave").SetAction(Leave);
+		menu.Show();
 	}
 
-	// Menu
+	void Leave() {
+		app.battlefield.SoftReset();
+		network.ShutdownBolt();
+		network.networkDelegate = null;
+		TransitionTo(new MainMenuState());
+	}
+
+	// In Game Menu
 
 	public void HideInGameMenus() {
 		foreach(var inGameMenu in inGameMenus) {
@@ -162,6 +170,8 @@ public class PlayingGameState : NetworkDelegateState {
 
 		}
 	}
+
+	// Matchmaker
 
 	public override void ConnectMatchmakerMenu() {
 		if (primaryInGameMenu != null) {

@@ -9,7 +9,7 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 	public void LeaveGame() {
 		matchmaker.Send("cancelGame");
 		network.networkDelegate = null;
-		BoltLauncher.Shutdown();
+		network.ShutdownBolt();
 		TransitionTo(new MainMenuState());
 	}
 

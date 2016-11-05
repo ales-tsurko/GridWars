@@ -152,21 +152,7 @@ public class InGameMenu {
 	}
 
 	void ReallyConcede() {
-		var state = new PostGameState();
-
-		if (App.shared.battlefield.isAiVsAi) {
-			state.victoriousPlayer = null;
-		}
-		else {
-			state.victoriousPlayer = player.opponent;
-		}
-			
-		if (App.shared.battlefield.isInternetPVP) {
-			App.shared.Log("ConcedeEvent.Send", this);
-			ConcedeEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
-		}
-
-		playingGameState.TransitionTo(state);
+		playingGameState.EndGame(player.opponent);
 	}
 
 	//TODO: different for each player?
