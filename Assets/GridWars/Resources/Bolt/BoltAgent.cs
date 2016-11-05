@@ -10,6 +10,7 @@ public interface BoltAgentDelegate {
 
 public class BoltAgent : NetworkDelegate {
 	public BoltAgentDelegate boltAgentDelegate;
+	public BoltConnection connection;
 
 	public App app {
 		get {
@@ -83,6 +84,7 @@ public class BoltAgent : NetworkDelegate {
 
 	public virtual void Connected(BoltConnection connection) {
 		//app.Log("Connected", this);
+		this.connection = connection;
 		if (boltAgentDelegate != null) {
 			boltAgentDelegate.BoltAgentConnected();
 		}

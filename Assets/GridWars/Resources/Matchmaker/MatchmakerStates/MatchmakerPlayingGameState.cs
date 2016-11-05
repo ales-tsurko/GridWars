@@ -29,6 +29,11 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		}
 	}
 
+	public override void MatchmakerDisconnected() {
+		base.MatchmakerDisconnected();
+		playingGameState.GameCancelled();
+	}
+
 	public void EndGame(Player victor) {
 		JSONObject data = new JSONObject();
 		data.AddField("isWinner", victor == battlefield.localPlayer1);
