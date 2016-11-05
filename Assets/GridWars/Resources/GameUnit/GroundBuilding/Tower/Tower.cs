@@ -134,36 +134,11 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
         keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
 
         gameObject.name = "Tower Player" + player.playerNumber + " " + unitPrefab.name;
-
-        //CANT DO THIS -- NEED TO CHECK PER PLAYER
-        if (player.inputs.LastInputType != lastInputType) {
-            lastInputType = player.inputs.LastInputType;
-            foreach (var binding in releaseAction.Bindings) {
-                if (binding.BindingSourceType == lastInputType) {
-                    var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
-                    textMesh.text = binding.HotkeyDescription();
-                    if (textMesh.text == "△") {
-                        textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                        textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
-                    }
-                    else if (textMesh.text == "▢") {
-                        textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                        textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
-                    }
-                    else if (textMesh.text == "◯") {
-                        textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                        textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
-                    }
-                    else {
-                        textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
-                        textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
-                    }
-                }
-            }
-        } else {
-            var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
-            textMesh.text = player.inputs.GetPlayerActionByName(unitPrefab.name).Bindings[1].HotkeyDescription();
+        if (player.inputs.LastInputType == BindingSourceType.None) {
+            player.inputs.LastInputType = BindingSourceType.KeyBindingSource;
         }
+        WriteHotKeysBasedOnInput();
+
 	}
 
 	public override void ServerFixedUpdate () {
@@ -187,6 +162,10 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
+        if (player.inputs.LastInputType != lastInputType) {
+            WriteHotKeysBasedOnInput();
+        }
+
         iconObject.SetActive(CanQueueUnit(0));
 		
 	}
@@ -523,6 +502,32 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
     public void UpdateHotKeys(){
         keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
+    }
+
+    public void WriteHotKeysBasedOnInput() {
+        lastInputType = player.inputs.LastInputType;
+        foreach (var binding in releaseAction.Bindings) {
+            if (binding.BindingSourceType == lastInputType) {
+                var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
+                textMesh.text = binding.HotkeyDescription();
+                if (textMesh.text == "△") {
+                    textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+                    textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
+                }
+                else if (textMesh.text == "▢") {
+                    textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+                    textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
+                }
+                else if (textMesh.text == "◯") {
+                    textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                    textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
+                }
+                else {
+                    textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
+                    textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
+                }
+            }
+        }
     }
 
 }
