@@ -228,7 +228,11 @@ public class CameraController : MonoBehaviour {
             }
         }
 
-		if (Vector3.Distance (cam.localPosition, targetPos) < .05f && Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
+		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
+	//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
+
+		if (Vector3.Distance (cam.localPosition, targetPos) < .8f 
+			&& Quaternion.Angle(cam.localRotation, targetRot) < 1.2f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
 			}
@@ -239,11 +243,12 @@ public class CameraController : MonoBehaviour {
 
 		float pf = zoomRate; // 0.05f;
 		float rf = rotationRate; //0.05f;
-		float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
 
 		// adjust target pos & rot
 
 		if (isOrbiting) {
+			float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
+
 			//orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
 			orbitAngle = 2f * Mathf.PI * Time.time / orbitPeriod;
 			targetPos = new Vector3( 
@@ -264,8 +269,8 @@ public class CameraController : MonoBehaviour {
 
 		// move towards target position & rotation
 
-		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf);
-		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf);
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
+		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 
 	}
 
