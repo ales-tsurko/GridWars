@@ -20,10 +20,14 @@ public class ShowOutcomeState : PostGameSubState {
 		if (battlefield.localPlayers.Count == 1) {
 			if (postGameState.victoriousPlayer.isLocal) {
 				title = "Victory!";
-				app.PlayAppSoundNamed("Victory");
+				if (showRematch) {
+					app.PlayAppSoundNamed("Victory");
+				}
 			} else {
 				title = "Defeat!";
-				app.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
+				if (showRematch) {
+					app.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
+				}
 			}
 		} else {
 			title = postGameState.victoriousPlayer.description + " is Victorious!";
