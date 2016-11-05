@@ -11,7 +11,15 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		app.state.TransitionTo(new PlayingGameState());
 	}
 
-	void HandleGameEnded(JSONObject data) {
+	public void HandleGameEnded(JSONObject data) {
+		TransitionTo(new MatchmakerAfterGameState());
 		(app.state as PlayingGameState).EndGame(data.GetField("isWinner") ? battlefield.localPlayer1 : battlefield.localPlayer2);
+	}
+
+	public void EndGame(Player victor) {
+		JSONObject data = new JSONObject();
+		data.AddField("isWinner", victor == battlefield.localPlayer1);
+		matchmaker.Send("endGame", data);
+		TransitionTo(new MatchmakerAfterGameState());
 	}
 }

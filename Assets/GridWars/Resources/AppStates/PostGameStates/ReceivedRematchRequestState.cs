@@ -13,24 +13,11 @@ public class ReceivedRematchRequestState : PostGameSubState {
 	}
 
 	void AcceptRematch() {
-		attempts = 0;
-		SendAcceptEvent();
-		postGameState.RestartGame();
-	}
+		matchmaker.Send("requestRematch");
 
-	int attempts;
-
-	void SendAcceptEvent() {
-		if (attempts < 10) { //Spam this because Bolt is terrible.
-			AcceptRematchEvent.Create(Bolt.GlobalTargets.Others, Bolt.ReliabilityModes.ReliableOrdered).Send();
-			app.Log("AcceptRematchEvent.Send", this);
-
-			attempts ++;
-
-			var t = app.timerCenter.NewTimer();
-			t.action = SendAcceptEvent;
-			t.timeout = 0.05f;
-			t.Send();
-		}
+		app.ResetMenu();
+		menu.AddNewIndicator().SetText("Starting Game");
+		menu.AddNewButton().SetText("Leave").SetAction(postGameState.LeaveGame);
+		menu.Show();
 	}
 }

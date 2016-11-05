@@ -6,6 +6,10 @@ public class ShowOutcomeState : PostGameSubState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		ShowMenu(true);
+	}
+
+	void ShowMenu(bool showRematch) {
 		app.ResetMenu();
 		menu.backgroundColor = new Color(0, 0, 0, 0);
 		var title = "";
@@ -28,7 +32,10 @@ public class ShowOutcomeState : PostGameSubState {
 			title = "Rematch!";
 		}
 
-		menu.AddItem(UI.MenuItem(title, RequestRematch));
+		if (showRematch) {
+			menu.AddItem(UI.MenuItem(title, RequestRematch));
+		}
+
 		menu.AddItem(UI.MenuItem("Leave Game", postGameState.LeaveGame));
 
 		menu.Show();
@@ -36,10 +43,11 @@ public class ShowOutcomeState : PostGameSubState {
 
 	void RequestRematch() {
 		if (battlefield.isInternetPVP) {
+			matchmaker.Send("requestRematch");
 			TransitionTo(new AwaitRematchResponseState());
 		}
 		else {
-			postGameState.RestartGame();
+			postGameState.StartGame();
 		}
 	}
 
@@ -52,9 +60,15 @@ public class ShowOutcomeState : PostGameSubState {
 	}
 
 	public override void Disconnected() {
-		base.Disconnected();
+		//base.Disconnected(); don't use default behavior
 
-		postGameState.LeaveGame();
+		ShowMenu(false);
+	}
+
+	public override void GameCancelled() {
+		//base.GameCancelled(); don't use default behavior
+
+		ShowMenu(false);
 	}
 
 }

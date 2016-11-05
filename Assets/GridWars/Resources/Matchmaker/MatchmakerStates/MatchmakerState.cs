@@ -69,18 +69,18 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void HandleMessage(string name, JSONObject data) {
 		var methodName = "Handle" + name.Capitalized();
-		app.Log(methodName, this);
 		var method = this.GetType().GetMethod(methodName);
 		if (method == null) {
 			this.HandleUnexpectedMessage(name, data);
 		}
 		else {
+			app.Log(methodName, this);
 			method.Invoke(this, new object[]{ data });
 		}
 	}
 
 	protected void HandleUnexpectedMessage(string name, JSONObject data) {
-		app.Log("Unexpected Message:" + name + ": " + data);
+		app.Log("Unexpected Message: " + name + ": " + data, this);
 	}
 
 	public virtual void HandleGamePosted(JSONObject data) {

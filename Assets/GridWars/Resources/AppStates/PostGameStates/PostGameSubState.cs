@@ -15,5 +15,17 @@ public class PostGameSubState : AppState {
 	}
 
 	public virtual void Disconnected() {
+		ShowOpponentLeft();
+	}
+
+	public virtual void GameCancelled() {
+		ShowOpponentLeft();
+	}
+
+	void ShowOpponentLeft() {
+		app.ResetMenu();
+		menu.AddItem(UI.ActivityIndicator("Opponent Left"));
+		menu.AddItem(UI.MenuItem("Leave", postGameState.LeaveGame));
+		menu.Show();
 	}
 }

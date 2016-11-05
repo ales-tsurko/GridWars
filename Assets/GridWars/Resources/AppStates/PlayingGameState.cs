@@ -51,10 +51,8 @@ public class PlayingGameState : NetworkDelegateState {
 
 		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
 			var victor = battlefield.livingPlayers[0];
-			if (matchmaker.state is MatchmakerPlayingGameState) {
-				JSONObject data = new JSONObject();
-				data.AddField("isWinner", victor == battlefield.localPlayer1);
-				matchmaker.Send("endGame", data);
+			if (battlefield.isInternetPVP) {
+				(matchmaker.state as MatchmakerPlayingGameState).EndGame(victor);
 			}
 			EndGame(victor);
 		}

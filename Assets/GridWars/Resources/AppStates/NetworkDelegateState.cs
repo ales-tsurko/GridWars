@@ -32,13 +32,4 @@ public class NetworkDelegateState : AppState, NetworkDelegate {
 
 	public virtual void Disconnected(BoltConnection connection) {
 	}
-
-	public virtual void ReceivedRematchRequest() {
-	}
-
-	public virtual void ReceivedConcede() {
-	}
-
-	public virtual void ReceivedAcceptRematch() {
-	}
 }
