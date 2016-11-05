@@ -269,6 +269,11 @@ public class CameraController : MonoBehaviour {
 
 		// move towards target position & rotation
 
+		if (App.shared.testEndOfGameMode) {
+			pf = 1.0f;
+			rf = 1.0f;
+		}
+
 		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 
