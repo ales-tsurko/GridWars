@@ -13,7 +13,8 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 
 	public void HandleGameEnded(JSONObject data) {
 		TransitionTo(new MatchmakerAfterGameState());
-		(app.state as PlayingGameState).EndGame(data.GetField("isWinner") ? battlefield.localPlayer1 : battlefield.localPlayer2);
+
+		(app.state as PlayingGameState).EndGame(data.GetField("isWinner").b ? battlefield.localPlayer1 : battlefield.localPlayer1.opponent);
 	}
 
 	public void EndGame(Player victor) {
