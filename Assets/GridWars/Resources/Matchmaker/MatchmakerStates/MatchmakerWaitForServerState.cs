@@ -2,17 +2,16 @@
 using System.Collections;
 using AssemblyCSharp;
 
-public class WaitForServerState : BoltRendezvousState {
-	//private 
+public class MatchmakerWaitForServerState : MatchmakerWaitForPeerState {
 	bool firstSessionListUpdate;
-	int attempts = 0;
 	Timer attemptTimer;
+	bool didConnect;
 
-	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
+	protected override void StartBolt() {
+		base.StartBolt();
 
-		app.Log("StartClient", this);
-
+		app.Log("BoltLauncher.StartClient()", this);
+		didConnect = false;
 		BoltLauncher.StartClient();
 	}
 
@@ -25,32 +24,29 @@ public class WaitForServerState : BoltRendezvousState {
 	void RequestSessionList() {
 		app.Log("RequestSessionList", this);
 
-		firstSessionListUpdate = true;
-
 		Bolt.Zeus.RequestSessionList();
 	}
 
 	public override void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList) {
 		base.SessionListUpdated(sessionList);
 
-		//Bolt sometimes calls SessionListUpdated with an empty sessionList and then calls it again on a subsequent Update.
-		if (firstSessionListUpdate && sessionList.Count == 0) {
-			firstSessionListUpdate = false;
+		if (didConnect) { //sometimes bolt calls SessionListUpdated 2x for each RequestSessionList
 			return;
 		}
 
-		attempts ++;
+		CancelAttemptTimer();
 
-		if (attemptTimer != null) {
-			attemptTimer.Cancel();
-		}
+		app.Log(sessionList.Count, this);
 
 		foreach (var session in sessionList) {
-			if (session.Value.HostName == "GridWars") {
+			app.Log(session.Value.HostName);
+			if (session.Value.HostName == "BareMetal") {
 				var token = session.Value.GetProtocolToken() as ServerToken;
-				if (token.gameId == gameId) {
+				app.Log(token.gameId, this);
+				if (token.gameId == game.id) {
 					app.Log("Connecting To Game: " + token.gameId, this);
 					BoltNetwork.Connect(session.Value);
+					didConnect = true;
 					return;
 				}
 			}
@@ -58,14 +54,18 @@ public class WaitForServerState : BoltRendezvousState {
 
 		attemptTimer = app.timerCenter.NewTimer();
 		attemptTimer.action = RequestSessionList;
-		attemptTimer.timeout = 0.25f;
+		attemptTimer.timeout = 1.0f;
 		attemptTimer.Start();
 	}
 
-	public override void Cancel() {
-		base.Cancel();
+	public override void Connected(BoltConnection connection) {
+		base.Connected(connection);
 
-		if (attemptTimer != null) { //double click calls cancel twice
+		matchmaker.Send("connectedToServer");
+	}
+
+	void CancelAttemptTimer() {
+		if (attemptTimer != null) {
 			attemptTimer.Cancel();
 			attemptTimer = null;
 		}

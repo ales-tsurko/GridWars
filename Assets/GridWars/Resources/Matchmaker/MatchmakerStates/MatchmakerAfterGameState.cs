@@ -8,6 +8,12 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		}
 	}
 
+	public override void EnterFrom(AppState state) {
+		base.EnterFrom(state);
+
+		matchmaker.menu.Hide();
+	}
+
 	public void HandleOpponentRequestedRematch(JSONObject data) {
 		postGateState.ReceivedRematchRequest();
 	}
@@ -20,6 +26,7 @@ public class MatchmakerAfterGameState : MatchmakerState {
 	public void HandleGameCancelled(JSONObject data) {
 		if (data.GetField("id").str == app.account.game.id) {
 			postGateState.GameCancelled();
+			TransitionTo(new MatchmakerPostAuthState());
 		}
 	}
 

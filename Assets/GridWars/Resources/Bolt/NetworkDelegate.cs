@@ -4,6 +4,7 @@ public interface NetworkDelegate {
 	void BoltStartDone();
 	void BoltStartFailed();
 	void ZeusConnected(UdpKit.UdpEndPoint endpoint);
+	void ZeusConnectFailed();
 	void ZeusDisconnected();
 	void SessionListUpdated(UdpKit.Map<System.Guid, UdpKit.UdpSession> sessionList);
 	void ConnectRequest(UdpKit.UdpEndPoint endpoint, Bolt.IProtocolToken token);

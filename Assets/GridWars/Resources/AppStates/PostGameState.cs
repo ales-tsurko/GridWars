@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PostGameState : NetworkDelegateState, AppStateOwner {
+public class PostGameState : AppState, AppStateOwner {
 	public Player victoriousPlayer;
 
 	// LeaveGame
@@ -11,8 +11,6 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 			matchmaker.Send("cancelGame");
 		}
 
-		network.networkDelegate = null;
-		network.ShutdownBolt();
 		TransitionTo(new MainMenuState());
 	}
 
@@ -26,8 +24,6 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
-
-		network.networkDelegate = this;
 
 		Object.FindObjectOfType<CameraController>().StartOrbit();
 
@@ -58,6 +54,7 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 		}
 	}
 
+	/*
 	public override void ZeusDisconnected() {
 		base.ZeusDisconnected();
 
@@ -69,6 +66,7 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 
 		subState.Disconnected();
 	}
+	*/
 
 	public void ReceivedRematchRequest() {
 		subState.ReceivedRematchRequest();

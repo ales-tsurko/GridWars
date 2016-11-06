@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkDelegateState : AppState, NetworkDelegate {
+public class MatchmakerNetworkDelegateState : MatchmakerState, NetworkDelegate {
+	public BoltConnection connection;
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
 		network.networkDelegate = this;
 	}
+
+	// NetworkDelegate
 
 	public virtual void BoltStartDone() {
 	}
@@ -34,6 +37,7 @@ public class NetworkDelegateState : AppState, NetworkDelegate {
 	}
 
 	public virtual void Connected(BoltConnection connection) {
+		this.connection = connection;
 	}
 
 	public virtual void BoltShutdownCompleted() {

@@ -5,29 +5,26 @@ public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		app.battlefield.SoftReset();
+		network.Reset();
+
 		battlefield.isInternetPVP = false;
 		battlefield.player1.isLocal = false;
 		battlefield.player2.isLocal = false;
 
 		app.ResetMenu();
-		//menu.AddItem(UI.MenuItem("Internet PVP", InternetPvpClicked));
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Tutorial", Tutorial));
 		menu.AddItem(UI.MenuItem("Chat", ChatClicked));
-        //menu.AddItem(UI.MenuItem("Options", OptionsClicked)); //Remove until we have player profiles.
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 		menu.backgroundColor = new Color(0, 0, 0, 1);
 
-		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
-	}
-	
-	void InternetPvpClicked() {
-		battlefield.isInternetPVP = true;
+		matchmaker.menu.Show();
 
-		TransitionTo(new OldMatchmakerState());
+		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
 	}
 
 	void SharedScreenPvpClicked() {
@@ -73,10 +70,6 @@ public class MainMenuState : AppState {
 
 		TransitionTo(new WaitForBoltState());
 	}
-
-    void OptionsClicked() {
-        TransitionTo(new OptionsMenuState());
-    }
 
 	void Quit() {
 		Application.Quit();

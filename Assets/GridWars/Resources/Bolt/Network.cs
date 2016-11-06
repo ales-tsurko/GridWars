@@ -14,6 +14,15 @@ public class Network : Bolt.GlobalEventListener {
     public string zeusEndpoint = "107.170.5.61:24000";
 
 
+	public void Reset() {
+		Debug.Log(BoltNetwork.isRunning);
+		Debug.Log(isShuttingDown);
+		if (BoltNetwork.isRunning) {
+			ShutdownBolt();
+			networkDelegate = null;
+		}
+	}
+
 	//Bolt
 
 	public NetworkDelegate networkDelegate;
@@ -26,33 +35,8 @@ public class Network : Bolt.GlobalEventListener {
 		}
 
 		isShuttingDown = true;
-		connection = null;
-		StartShutdownTimer();
-		if (BoltNetwork.isRunning) {
-			App.shared.Log("ShutdownBolt", this);
-			BoltLauncher.Shutdown();
-		}
-	}
-
-	void CheckForShutdown() {
-		//Debug.Log("CheckForShutdown: " + BoltNetwork.isRunning + "," + Bolt.Zeus.IsConnected);
-		if (!BoltNetwork.isRunning && !Bolt.Zeus.IsConnected) {
-			isShuttingDown = false;
-			App.shared.Log("BoltShutdownCompleted", this);
-			if (networkDelegate != null) {
-				networkDelegate.BoltShutdownCompleted();
-			}
-		}
-		else {
-			StartShutdownTimer();
-		}
-	}
-
-	void StartShutdownTimer() {
-		var timer = App.shared.timerCenter.NewTimer();
-		timer.action = CheckForShutdown;
-		timer.timeout = 0.2f;
-		timer.Start();
+		App.shared.Log("ShutdownBolt", this);
+		BoltLauncher.Shutdown();
 	}
 
 	public override void BoltStartBegin() {
@@ -79,8 +63,11 @@ public class Network : Bolt.GlobalEventListener {
 
 	public override void ZeusConnectFailed(UdpKit.UdpEndPoint endpoint) {
 		base.ZeusConnectFailed(endpoint);
-		//TODO: implement this
 		App.shared.Log("ZeusConnectFailed", this);
+
+		if (networkDelegate != null) {
+			networkDelegate.ZeusConnectFailed();
+		}
 	}
 
 	public override void ZeusDisconnected(UdpKit.UdpEndPoint endpoint) {
@@ -135,8 +122,19 @@ public class Network : Bolt.GlobalEventListener {
 	}
 
 	public override void BoltShutdownBegin(Bolt.AddCallback registerDoneCallback) {
+		isShuttingDown = true;
 		base.BoltShutdownBegin(registerDoneCallback);
+		registerDoneCallback(BoltShutdownCompleted);
 		App.shared.Log("BoltShutdownBegin", this);
+	}
+
+	void BoltShutdownCompleted() {
+		App.shared.Log("BoltShutdownCompleted", this);
+		connection = null;
+		isShuttingDown = false;
+		if (networkDelegate != null) {
+			networkDelegate.BoltShutdownCompleted();
+		}
 	}
 
 	public override void BoltStartFailed() {

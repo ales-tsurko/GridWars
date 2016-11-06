@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BoltServer : BoltAgent {
+public class MatchmakerWaitForClientState : MatchmakerWaitForPeerState {
+	protected override void StartBolt() {
+		base.StartBolt();
 
-	public override void Start() {
-		base.Start();
-
-		app.Log("BoltLauncher.StartServer()", this);
 		BoltLauncher.StartServer(UdpKit.UdpEndPoint.Parse("0.0.0.0:0"));
 	}
 

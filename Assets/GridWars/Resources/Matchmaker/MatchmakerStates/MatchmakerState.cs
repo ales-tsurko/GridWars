@@ -20,6 +20,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		matchmaker.menu.Show();
 		matchmaker.matchmakerDelegate = this;
 	}
 

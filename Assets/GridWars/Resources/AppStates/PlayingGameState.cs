@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayingGameState : NetworkDelegateState {
+public class PlayingGameState : AppState {
 	List<InGameMenu> inGameMenus;
 
 	//AppState
@@ -12,8 +12,6 @@ public class PlayingGameState : NetworkDelegateState {
 		Object.FindObjectOfType<CameraController>().EndOrbit();
 
 		battlefield.canCheckGameOver = false;
-
-		network.networkDelegate = this;
 
 		//do this before ShowInGameMenu
 		if (battlefield.isInternetPVP) {
@@ -72,21 +70,14 @@ public class PlayingGameState : NetworkDelegateState {
 
 	//NetworkDelegate
 
+	/*
 	public override void ZeusDisconnected() {
 		base.ZeusDisconnected();
 
+		//(matchmaker.state as MatchmakerPlayingGameState).EndGame(victor);
 		matchmaker.Send("cancelGame");
 
 		ShowLostConnection();
-	}
-
-	//Called when bolt is shutdown during a PVE game to allow for a PVP game.
-	public override void BoltShutdownCompleted() {
-		base.BoltShutdownCompleted();
-
-		network.networkDelegate = null;
-
-		TransitionTo(new MainMenuState());
 	}
 
 	public override void Disconnected(BoltConnection connection) {
@@ -95,6 +86,7 @@ public class PlayingGameState : NetworkDelegateState {
 		matchmaker.Send("cancelGame");
 		ShowLostConnection();
 	}
+	*/
 
 	void ShowLostConnection() {
 		HideInGameMenus();
@@ -106,9 +98,6 @@ public class PlayingGameState : NetworkDelegateState {
 	}
 
 	public void Leave() {
-		app.battlefield.SoftReset();
-		network.ShutdownBolt();
-		network.networkDelegate = null;
 		TransitionTo(new MainMenuState());
 	}
 

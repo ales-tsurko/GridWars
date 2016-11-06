@@ -45,7 +45,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		account.isReadyForGame = true;
 		matchmaker.Send("readyForGame");
 		if (account.isOpponentReadyForGame) {
-			TransitionTo(new MatchmakerWaitForBoltState());
+			TransitionTo(new MatchmakerWaitForPeerState());
 		}
 		else {
 			MatchmakerMenuOpened();
@@ -54,8 +54,6 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 
 	void Leave() {
 		matchmaker.Send("cancelGame");
-		account.boltAgent.Shutdown();
-		account.boltAgent.boltAgentDelegate = null;
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 
@@ -84,7 +82,12 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		account.isOpponentReadyForGame = true;
 
 		if (account.isReadyForGame) {
-			TransitionTo(new MatchmakerWaitForBoltState());
+			if (account.isHost) {
+				TransitionTo(new MatchmakerWaitForClientState());
+			}
+			else {
+				TransitionTo(new MatchmakerWaitForServerState());
+			}
 		}
 		else {
 			MatchmakerMenuOpened();

@@ -26,6 +26,7 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 	public void HandleGameCancelled(JSONObject data) {
 		if (data.GetField("id").str == app.account.game.id) {
 			playingGameState.GameCancelled();
+			TransitionTo(new MatchmakerPostAuthState());
 		}
 	}
 
