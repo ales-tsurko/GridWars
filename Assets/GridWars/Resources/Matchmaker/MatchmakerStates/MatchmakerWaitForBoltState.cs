@@ -1,24 +1,42 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class MatchmakerWaitForBoltState : MatchmakerState {
 	// AppState
+
+	bool waitForBolt;
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Open();
 
-		if (BoltNetwork.isRunning) {
-			app.network.ShutdownBolt();
+		if (app.state is PlayingGameState) {
+			(app.state as PlayingGameState).Leave();
+			waitForBolt = true;
+		}
+		else if (app.state is PostGameState) {
+			(app.state as PostGameState).Leave(false);
+			waitForBolt = true;
 		}
 		else {
 			account.StartBoltAgent();
 		}
 	}
 
-	// Possibly sent from PlayingGameState
+	public override void Update() {
+		base.Update();
 
-	public void BoltShutdownCompleted() {
+		Debug.Log(network.networkDelegate);
+
+		if (waitForBolt && !BoltNetwork.isRunning) {
+			waitForBolt = false;
+			app.StartCoroutine(StartBoltAgentCoro());
+		}
+	}
+
+	IEnumerator StartBoltAgentCoro() {
+		yield return new WaitForSeconds(0.5f);
 		account.StartBoltAgent();
 	}
 

@@ -8,7 +8,7 @@ public class ReceivedRematchRequestState : PostGameSubState {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("Opponent Requests a Rematch"));
 		menu.AddItem(UI.MenuItem("Accept", AcceptRematch));
-		menu.AddItem(UI.MenuItem("Decline", postGameState.LeaveGame));
+		menu.AddItem(UI.MenuItem("Decline", postGameState.Leave));
 		menu.Show();
 	}
 
@@ -17,7 +17,7 @@ public class ReceivedRematchRequestState : PostGameSubState {
 
 		app.ResetMenu();
 		menu.AddNewIndicator().SetText("Starting Game");
-		menu.AddNewButton().SetText("Leave").SetAction(postGameState.LeaveGame);
+		menu.AddNewButton().SetText("Leave").SetAction(postGameState.Leave);
 		menu.Show();
 	}
 }

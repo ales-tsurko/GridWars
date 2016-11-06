@@ -80,15 +80,11 @@ public class PlayingGameState : NetworkDelegateState {
 		ShowLostConnection();
 	}
 
-	//Called when bolt is shutdown during a PVE game to allow for a pvp game.
+	//Called when bolt is shutdown during a PVE game to allow for a PVP game.
 	public override void BoltShutdownCompleted() {
 		base.BoltShutdownCompleted();
 
 		network.networkDelegate = null;
-
-		if (matchmaker.state is MatchmakerWaitForBoltState) {
-			(matchmaker.state as MatchmakerWaitForBoltState).BoltShutdownCompleted();
-		}
 
 		TransitionTo(new MainMenuState());
 	}
@@ -109,7 +105,7 @@ public class PlayingGameState : NetworkDelegateState {
 		menu.Show();
 	}
 
-	void Leave() {
+	public void Leave() {
 		app.battlefield.SoftReset();
 		network.ShutdownBolt();
 		network.networkDelegate = null;

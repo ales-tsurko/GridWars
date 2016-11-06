@@ -8,7 +8,7 @@ public class AwaitRematchResponseState : PostGameSubState {
 
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("WAITING FOR RESPONSE"));
-		menu.AddItem(UI.MenuItem("Leave", postGameState.LeaveGame), true);
+		menu.AddItem(UI.MenuItem("Leave", postGameState.Leave), true);
 		menu.Show();
 	}
 }

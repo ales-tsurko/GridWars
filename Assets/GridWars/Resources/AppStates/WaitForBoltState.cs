@@ -9,7 +9,7 @@ public class WaitForBoltState : NetworkDelegateState {
 		base.EnterFrom(state);
 
 		network.networkDelegate = this;
-		BoltLauncher.StartSinglePlayer();
+		BoltLauncher.StartServer();
 	}
 
 	// NetworkDelegate

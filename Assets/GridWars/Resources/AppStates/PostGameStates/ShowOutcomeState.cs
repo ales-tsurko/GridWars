@@ -14,7 +14,7 @@ public class ShowOutcomeState : PostGameSubState {
 		menu.backgroundColor = new Color(0, 0, 0, 0);
 		var title = "";
         if (postGameState.victoriousPlayer == null) {
-            postGameState.LeaveGame();
+            postGameState.Leave();
             return;
         }
 		if (battlefield.localPlayers.Count == 1) {
@@ -44,7 +44,7 @@ public class ShowOutcomeState : PostGameSubState {
 			menu.AddItem(UI.MenuItem(title, RequestRematch));
 		}
 
-		menu.AddItem(UI.MenuItem("Leave Game", postGameState.LeaveGame));
+		menu.AddItem(UI.MenuItem("Leave Game", postGameState.Leave));
 
 		menu.Show();
 	}

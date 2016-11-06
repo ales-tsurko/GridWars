@@ -260,7 +260,7 @@ public class Player : MonoBehaviour {
 	// --- Networking ---------------------------------------
 
 	public void TakeControlOf(GameUnit gameUnit) {
-		if (isLocal || BoltNetwork.IsSinglePlayer) {
+		if (isLocal || !battlefield.isInternetPVP) {
 			//take control as server
 			//App.shared.Log("TakeControl: " + gameUnit);
 			gameUnit.entity.TakeControl();

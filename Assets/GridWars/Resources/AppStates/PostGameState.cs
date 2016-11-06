@@ -6,11 +6,18 @@ public class PostGameState : NetworkDelegateState, AppStateOwner {
 
 	// LeaveGame
 
-	public void LeaveGame() {
-		matchmaker.Send("cancelGame");
+	public void Leave(bool cancelGame) {
+		if (cancelGame) {
+			matchmaker.Send("cancelGame");
+		}
+
 		network.networkDelegate = null;
 		network.ShutdownBolt();
 		TransitionTo(new MainMenuState());
+	}
+
+	public void Leave() {
+		Leave(true);
 	}
 
 	//AppState

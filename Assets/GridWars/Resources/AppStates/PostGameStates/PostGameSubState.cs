@@ -25,7 +25,7 @@ public class PostGameSubState : AppState {
 	void ShowOpponentLeft() {
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("Opponent Left"));
-		menu.AddItem(UI.MenuItem("Leave", postGameState.LeaveGame));
+		menu.AddItem(UI.MenuItem("Leave", postGameState.Leave));
 		menu.Show();
 	}
 }
