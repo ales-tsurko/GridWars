@@ -231,8 +231,8 @@ public class CameraController : MonoBehaviour {
 		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
 	//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 
-		if (Vector3.Distance (cam.localPosition, targetPos) < .8f 
-			&& Quaternion.Angle(cam.localRotation, targetRot) < 1.2f) {
+		if (Vector3.Distance (cam.localPosition, targetPos) < .05f*600f 
+			&& Quaternion.Angle(cam.localRotation, targetRot) < .1f*600f) {
 			if (actionMode) {
 				mouseLook.enabled = true;
 			}

@@ -179,7 +179,7 @@ public class Chopper : AirVehicle {
 		rigidBody().AddForce(_t.forward * ForwardDesire() * AvailableThrust());
 	}
 
-	void StablizeZ() {
+	void StablizeXZ() {
 		float rotZ = Object_rotZ(gameObject);
 		if (!Mathf.Approximately(rotZ, 0)) {
 			rotZ = Convert360to180(rotZ);
@@ -187,6 +187,21 @@ public class Chopper : AirVehicle {
 			rotZ = Convert180to360(rotZ);
 			Object_setRotZ(gameObject, rotZ);
 		}
+
+		float rotX = Object_rotX(gameObject);
+		if (!Mathf.Approximately(rotX, 0)) {
+			rotX = Convert360to180(rotX);
+			rotX *= 0.9f;
+			rotX = Convert180to360(rotX);
+			Object_setRotX(gameObject, rotX);
+		}
+
+		/*
+		Vector3 e = gameObject.transform.eulerAngles;
+		e.x *= 0.9f;
+		e.z *= 0.9f;
+		gameObject.transform.eulerAngles = e;
+		*/
 	}
 
 	public override void ServerFixedUpdate () {
@@ -199,7 +214,7 @@ public class Chopper : AirVehicle {
 			ApplyJetThrust();
 
 			if (App.shared.timeCounter % 20 == 0) {
-				StablizeZ();
+				StablizeXZ();
 				DieIfOverAccelerated();
 			}
 		}			
@@ -213,7 +228,7 @@ public class Chopper : AirVehicle {
 	}
 
 	private void DieIfOverAccelerated() {
-		if (rigidBody().velocity.magnitude > 40f) {
+		if (rigidBody().velocity.magnitude > 30f) {
 			Die();
 		}
 	}
