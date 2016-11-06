@@ -230,8 +230,14 @@ public class Weapon : MonoBehaviour {
 
 		if (!CanTargetObj(target)|| !TargetInRange()) {
 			// prioritize targets with weapons
+			GameObject newTarget = null;
+			List <GameObject> inRangeTargets = InRangeTargetableEnemyObjectsWithWeapon();
 
-			GameObject newTarget = ClosestTargetableEnemyObjectWithWeapon();
+			newTarget = inRangeTargets.PickRandom();
+
+			if (newTarget == null) {
+				newTarget = ClosestTargetableEnemyObjectWithWeapon();
+			}
 
 			if (newTarget == null) {
 				newTarget = ClosestTargetableEnemyObject();
@@ -303,7 +309,16 @@ public class Weapon : MonoBehaviour {
 	public virtual IEnumerable <GameObject> TargetableEnemyObjsWithWeapons() {
 		return TargetableEnemyObjects().Where(obj => obj.GameUnit() != null && obj.GameUnit().HasWeapons());
 	}
-
+		
+	public virtual List <GameObject> InRangeTargetableEnemyObjectsWithWeapon() {
+		var results = new List<GameObject>();
+		foreach (var enemy in TargetableEnemyObjsWithWeapons()) {
+			if (ObjectInRange(enemy)) {
+				results.Add(enemy);
+			}
+		}
+		return results;
+	}
 
 	public virtual GameObject ClosestTargetableEnemyObjectWithWeapon() {
 		return ClosestOfObjects(TargetableEnemyObjsWithWeapons());
@@ -533,6 +548,11 @@ public class Weapon : MonoBehaviour {
 	
 	public bool TargetInRange() {
 		return (range == -1) || (TargetDistance() < range);
+	}
+
+	public bool ObjectInRange(GameObject obj) {
+		var d =  Vector3.Distance(owner.transform.position, obj.transform.position);
+		return (range == -1) || (d < range);
 	}
 
 	public bool IsAimed() {

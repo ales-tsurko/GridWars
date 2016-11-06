@@ -40,6 +40,10 @@ public static class GridWarsUnityExtensions {
 
 	public static T PickRandom<T>(this IList<T> self)
 	{
+		if (self.Count == 0) {
+			return default (T);
+		}
+
 		int i = (int)Mathf.Floor(self.Count * UnityEngine.Random.value);
 		return self[i];
 	}
