@@ -12,6 +12,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	[HideInInspector]
 	private bool _dieWithBlockify = false;
 
+	public GameObject cube;
+
 	public bool npcModeOn {
 		get {
 			return player.npcModeOn;
@@ -139,6 +141,27 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
         }
         WriteHotKeysBasedOnInput();
 
+		HideMesh();
+	}
+
+	public void UnhideIn(float dt) {
+		// float dt = 0.5f * UnityEngine.Random.value;
+		App.shared.timerCenter.NewTimer().SetTimeout(dt).SetTarget(this).SetMethod("UnhideMesh").Start();
+	}
+
+	public void HideMesh() {
+		cube.GetComponent<MeshRenderer>().enabled = false;
+	}
+
+	public void UnhideMesh() {
+		if (cube.GetComponent<MeshRenderer>().enabled == false) {
+			cube.GetComponent<MeshRenderer>().enabled = true;
+			var fader = cube.AddComponent<BrightFadeInGeneric>();
+			fader.period = 0.35f;
+			//App.shared.PlayOneShot(iconUnit.birthSound, 0.2f);
+			App.shared.PlayAppSoundNamedAtVolume("TowerBirth", 0.35f);
+			fader.OnEnable();
+		}
 	}
 
 	public override void ServerFixedUpdate () {

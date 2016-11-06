@@ -130,17 +130,26 @@ public class Chopper : AirVehicle {
 
 	// client position jets
 
+	private float lastForwardSpeed = 0f;
+
 	public void PositionJets() {
 		float speed = ClientForwardSpeed();
-
+		//float acceleration = (speed - lastForwardSpeed)/Time.deltaTime;
 		//float acceleration = speed - lastSpeed;
 		//float xr = (- 90f) + Mathf.Clamp((speed + acceleration * 10f) * 10f , -90f, 90f);
 
-		float xr = (- 90f) + Mathf.Clamp(speed * 10f , -90f, 90f);
+		float xr = (- 90f) + Mathf.Clamp(speed * 10f, 0f, 90f);
+		//float xr = (- 90f) + Mathf.Clamp(90f * ForwardDesire(), -90f, 90f);
+		// at xr == 0, jet exhaust is pointed back for max speed
+		//xr = Mathf.Clamp(xr + acceleration * 30f , -180f, 90f);
+		//xr +=  acceleration * 3f;
+		//xr = Mathf.Clamp(xr, -180f, 0f);
 
-		xr = Convert180to360(xr);
+		//xr = Convert180to360(xr);
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
+
+		lastForwardSpeed = speed;
 	}
 
 	/*
@@ -222,6 +231,7 @@ public class Chopper : AirVehicle {
 
 	public override void ServerAndClientFixedUpdate() {
 		base.ServerAndClientFixedUpdate();
+
 		if (App.shared.timeCounter % 10 == 0) {
 			PositionJets(); // these are just for show - we don't use them for force calcs
 		}

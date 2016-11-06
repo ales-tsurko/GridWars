@@ -125,6 +125,14 @@ public class Fortress : MonoBehaviour {
 
 	}
 
+	public void Unhide() {
+		float dt = 0f;
+		foreach (var tower in towers.Shuffled()) {
+			tower.UnhideIn(dt);
+			dt += 0.3f;
+		}
+	}
+
 	PowerSource powerSourcePrefab {
 		get {
 			return GameUnit.Load<PowerSource>().GetComponent<PowerSource>();

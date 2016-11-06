@@ -21,7 +21,6 @@ public class Blockify : MonoBehaviour {
 		float dMass = rb.mass / (xDivisions * yDivisions * zDivisions);
 		Vector3 partSize = new Vector3(dx, dy, dz);
 
-
 		float r = UnityEngine.Random.value;
 
 		for (int x = 0; x < xDivisions; x++) {
@@ -32,19 +31,15 @@ public class Blockify : MonoBehaviour {
 					Vector3 partCenter = gameObject.transform.position + localCenter; 
 
 					GameObject part = CreatePart(partCenter, partSize, dMass);
-
-
 					Rigidbody partRb = part.GetComponent<Rigidbody>();
 					//localCenter.z += 5f;
 					Vector3 force = localCenter.normalized * (1000f + 500 * r + 1000f * UnityEngine.Random.value);
 					partRb.AddForce(force);
-
 				}
 			}
 		}
 
 		Destroy(gameObject);
-
 	}
 
 	GameObject CreatePart(Vector3 center, Vector3 size, float mass) {
@@ -79,7 +74,7 @@ public class Blockify : MonoBehaviour {
 		//Debug.Log(test);
 
 		FadeAway w = cube.AddComponent<FadeAway>();
-		w.SetFadePeriod(4f);
+		w.SetFadePeriod(5f);
 
 		/*
 		BrightFadeInGeneric fadein = cube.AddComponent<BrightFadeInGeneric>();

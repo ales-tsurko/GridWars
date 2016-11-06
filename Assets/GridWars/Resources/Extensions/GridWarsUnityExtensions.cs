@@ -7,17 +7,26 @@ using System.Linq;
 public static class GridWarsUnityExtensions {
 
 	/*
-	public static GameObject FindObject(this GameObject parent, string name)
-	{
+	public static GameObject FindObject(this GameObject parent, string name) {
 		Transform[] trs = parent.GetComponentsInChildren(typeof(Transform), true);
 
-		foreach(Transform t in trs){
+		foreach(Transform t in trs) {
 			if(t.name == name) {
 				return t.gameObject;
 			}
 		}
 
 		return null;
+	}
+	*/
+
+	/*
+	public static void HideMesh(this GameObject self){
+		self.GetComponent<MeshFilter>().enabled = false;
+	}
+
+	public static void UnhideMesh(this GameObject self){
+		self.GetComponent<MeshFilter>().enabled = true;
 	}
 	*/
 
@@ -33,6 +42,21 @@ public static class GridWarsUnityExtensions {
 	}
 	*/
 
+	public static List<T> Shuffled<T>(this IList<T> list) {  
+		List<T> input = new List<T>(list);
+		List<T> output = new List<T>();
+
+		int max = list.Count;
+		while (input.Count > 0) {
+			int j = (int)(UnityEngine.Random.value * (float)input.Count);
+			var value = input[j];
+			input.RemoveAt(j);
+			output.Add(value);
+		}
+
+		return output;
+	}
+		
 	public static void AddIfAbsent<T>(this IList<T> self, T v) {
 		if (self.Contains(v) == false) {
 			self.Add(v);
@@ -41,6 +65,10 @@ public static class GridWarsUnityExtensions {
 
 	public static T PickRandom<T>(this IList<T> self)
 	{
+		if (self.Count == 0) {
+			return default (T);
+		}
+
 		int i = (int)Mathf.Floor(self.Count * UnityEngine.Random.value);
 		return self[i];
 	}
