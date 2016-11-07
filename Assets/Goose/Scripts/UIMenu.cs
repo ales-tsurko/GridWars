@@ -286,6 +286,7 @@ public class UIMenu : UIElement {
 	*/
 
 	void Update() {
+        return;
 		if (hasFocus) {
 			if (orientation == MenuOrientation.Vertical) {
 				if (inputs.upItem.WasPressed) {
