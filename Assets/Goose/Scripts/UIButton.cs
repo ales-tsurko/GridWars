@@ -122,6 +122,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnDeselected() {
+        menu.Deselect();
 		isSelected = false;
 	}
 

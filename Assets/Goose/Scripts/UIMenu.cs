@@ -223,6 +223,12 @@ public class UIMenu : UIElement {
 		}
 	}
 
+    public void Deselect(){
+        if (!UnityEngine.EventSystems.EventSystem.current.alreadySelecting) {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
 	public void Focus() {
         if (selectableItems.Count > 0) {
 			selectedItem = selectableItems[0];
@@ -286,7 +292,7 @@ public class UIMenu : UIElement {
 	*/
 
 	void Update() {
-		if (hasFocus) {
+        if (isNavigable && hasFocus) {
 			if (orientation == MenuOrientation.Vertical) {
 				if (inputs.upItem.WasPressed) {
 					//App.shared.Log("inputs.upItem.WasPressed", this);

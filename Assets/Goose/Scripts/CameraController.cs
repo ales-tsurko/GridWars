@@ -199,7 +199,7 @@ public class CameraController : MonoBehaviour {
 		}
 		#endif
 
-		if (!menuHasFocus && Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
+		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
 			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast (vRay, out hit, 3000)) {
@@ -210,7 +210,7 @@ public class CameraController : MonoBehaviour {
 			}
 		}
         //check for Joystick input for FPS Mode
-        if (!menuHasFocus && isInFirstPersonMode) {
+        if (isInFirstPersonMode) {
             if (inputs.goBack.WasPressed || inputs.exitFPS.WasPressed) {
                 FindObjectOfType<CameraController>().ResetCamera();
                 return;
@@ -218,7 +218,7 @@ public class CameraController : MonoBehaviour {
             FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
             FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
         }
-        if (!menuHasFocus && !isInFirstPersonMode && App.shared.inputs.enterFPS.WasPressed) {
+        if (!isInFirstPersonMode && App.shared.inputs.enterFPS.WasPressed) {
             EnterFPSModeFromJoystick();
         }
 
@@ -227,10 +227,7 @@ public class CameraController : MonoBehaviour {
         }
         //check for Camera position change
         if (!isInFirstPersonMode && (inputs.camPrev.WasPressed || inputs.camNext.WasPressed)) {
-            if (!menuHasFocus) {
-                print(menuHasFocus);
-                NextPosition(inputs.camNext.WasPressed);
-            }
+            NextPosition(inputs.camNext.WasPressed);
         }
 
 		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
@@ -328,18 +325,19 @@ public class CameraController : MonoBehaviour {
 
     public void NextPosition (bool next = true) {
 		//print ("Next Called");
-        int dir = next ? 1 : -1;
+        int _dir = next ? 1 : -1;
 		actionMode = false;
 		if (mouseLook != null) {
 			mouseLook.enabled = false;
 		}
 
 		cam.parent = null;
-        pos += dir;
-		var transform = gamePositions[pos % gamePositions.Count];
-		keyIconRotation = positions[pos % positions.Count].GetComponent<KeyIconRotation>();
-		targetPos = transform.position;
-		targetRot = transform.rotation;
+        pos += _dir;
+        var _position = Mathf.Abs(pos % gamePositions.Count);
+        var _transform = gamePositions[_position];
+        keyIconRotation = positions[_position].GetComponent<KeyIconRotation>();
+		targetPos = _transform.position;
+		targetRot = _transform.rotation;
 		moving = true;
         App.shared.prefs.camPosition = pos;
 
