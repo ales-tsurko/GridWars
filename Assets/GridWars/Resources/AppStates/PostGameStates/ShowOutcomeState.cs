@@ -67,12 +67,6 @@ public class ShowOutcomeState : PostGameSubState {
 		TransitionTo(new ReceivedRematchRequestState());
 	}
 
-	public override void Disconnected() {
-		//base.Disconnected(); don't use default behavior
-
-		ShowMenu(false);
-	}
-
 	public override void GameCancelled() {
 		//base.GameCancelled(); don't use default behavior
 

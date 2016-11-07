@@ -65,7 +65,10 @@ public class PlayingGameState : AppState {
 	}
 
 	public void GameCancelled() {
-		ShowLostConnection();
+		if (battlefield.isInternetPVP) {
+			network.Reset();
+			ShowLostConnection();
+		}
 	}
 
 	//NetworkDelegate

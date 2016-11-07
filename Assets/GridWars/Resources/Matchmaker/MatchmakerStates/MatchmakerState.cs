@@ -60,6 +60,10 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void MatchmakerErrored() {
 		app.Log("MatchmakerErrored", this);
+
+		matchmaker.Disconnect();
+
+		TransitionTo(new MatchmakerDisconnectedState());
 	}
 
 	public virtual void MatchmakerReceivedMessage(JSONObject message) {

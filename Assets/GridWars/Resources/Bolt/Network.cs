@@ -15,8 +15,6 @@ public class Network : Bolt.GlobalEventListener {
 
 
 	public void Reset() {
-		Debug.Log(BoltNetwork.isRunning);
-		Debug.Log(isShuttingDown);
 		if (BoltNetwork.isRunning) {
 			ShutdownBolt();
 			networkDelegate = null;

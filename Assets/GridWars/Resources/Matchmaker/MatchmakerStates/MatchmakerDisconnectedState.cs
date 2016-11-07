@@ -5,12 +5,21 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 
 	// AppState
 
+	bool isConnecting = false;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		app.account.ResetPlayerList();
-		//TODO: countdown?
-		matchmaker.Connect();
+		Connect();
+	}
+
+	void Connect() {
+		if (!isConnecting) {
+			app.account.ResetPlayerList();
+			//TODO: countdown?
+			matchmaker.Connect();
+			isConnecting = true;
+		}
 	}
 
 	//MatchmakerDelegate
@@ -19,11 +28,25 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 		TransitionTo(new MatchmakerPreAuthState());
 	}
 
-	public override void MatchmakerErrored() {
-		base.MatchmakerErrored();
+	public override void MatchmakerDisconnected() {
+		//base.MatchmakerDisconnected(); Don't call base
 
-		//TODO: show retrying with countdown?
-		TransitionTo(this);
+		app.Log("MatchmakerDisconnected", this);
+
+		app.StartCoroutine(ReconnectCoroutine());
+	}
+
+	public override void MatchmakerErrored() {
+		//base.MatchmakerErrored(); Don't call base
+
+		app.Log("MatchmakerErrored", this);
+
+		app.StartCoroutine(ReconnectCoroutine());
+	}
+
+	IEnumerator ReconnectCoroutine() {
+		yield return new WaitForSeconds(0.25f);
+		Connect();
 	}
 
 	// MatchmakerMenuDelegate

@@ -14,10 +14,6 @@ public class PostGameSubState : AppState {
 	public virtual void ReceivedAcceptRematch() {
 	}
 
-	public virtual void Disconnected() {
-		ShowOpponentLeft();
-	}
-
 	public virtual void GameCancelled() {
 		ShowOpponentLeft();
 	}

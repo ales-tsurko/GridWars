@@ -28,6 +28,11 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		postGateState.GameCancelled();
 	}
 
+	public override void MatchmakerErrored() {
+		base.MatchmakerDisconnected();
+		postGateState.GameCancelled();
+	}
+
 	public void HandleGameCancelled(JSONObject data) {
 		if (data.GetField("id").str == app.account.game.id) {
 			postGateState.GameCancelled();

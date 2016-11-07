@@ -82,23 +82,43 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 	void Leave() {
 		network.Reset();
 		TransitionTo(new MatchmakerPostAuthState());
+
+		if (app.state is PlayingGameState || app.state is PostGameState) {
+			app.state.TransitionTo(new MainMenuState());
+		}
 	}
 
 	// MatchmakerDelegate
 
+	public override void MatchmakerDisconnected() {
+		base.MatchmakerDisconnected();
+
+		Leave();
+	}
+
+	public override void MatchmakerErrored() {
+		base.MatchmakerErrored();
+
+		Leave();
+	}
+
 	public void HandleGameCancelled(JSONObject data) {
 		if (data.GetField("id").str == app.account.game.id) {
-			matchmaker.menu.Reset();
-			matchmaker.menu.AddNewText()
-				.SetText("Opponent left.");
-			matchmaker.menu.AddNewButton()
-				.SetText("Leave")
-				.SetAction(Leave);
-			matchmaker.menu.Show();
+			OpponentLeft();
 		}
 	}
 
 	public void HandleStartGame(JSONObject data) {
 		TransitionTo(new MatchmakerPlayingGameState());
+	}
+
+	void OpponentLeft() {
+		matchmaker.menu.Reset();
+		matchmaker.menu.AddNewText()
+			.SetText("Opponent left.");
+		matchmaker.menu.AddNewButton()
+			.SetText("Leave")
+			.SetAction(Leave);
+		matchmaker.menu.Show();
 	}
 }
