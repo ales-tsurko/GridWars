@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Analytics;
+using System.Collections.Generic;
 
 public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
@@ -25,16 +27,24 @@ public class MainMenuState : AppState {
 	}
 	
 	void InternetPvpClicked() {
-		//return PlayerInputs..BoundTo.Device.GetControl(InputControlType.Action1).Handle;
-		battlefield.isInternetPVP = true;
+        //return PlayerInputs..BoundTo.Device.GetControl(InputControlType.Action1).Handle;
+        battlefield.isInternetPVP = true;
 
-		TransitionTo(new MatchmakerState());
-	}
+        Analytics.CustomEvent("InternetPvPClicked", new Dictionary<string, object>
+            {
+                { "playTime", Time.timeSinceLevelLoad }
+            });
+    
+        TransitionTo(new MatchmakerState());
+    }
 
 	void SharedScreenPvpClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = true;
-
+        Analytics.CustomEvent("SharedScreenPvPClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
 		TransitionTo(new BindInputsToPlayersState());
 	}
 
@@ -43,6 +53,11 @@ public class MainMenuState : AppState {
 		battlefield.player2.isLocal = false;
 
 		battlefield.player2.npcModeOn = true;
+
+        Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
 
 		TransitionTo(new WaitForBoltState());
 	}
@@ -54,10 +69,20 @@ public class MainMenuState : AppState {
 		battlefield.player1.npcModeOn = true;
 		battlefield.player2.npcModeOn = true;
 
+        Analytics.CustomEvent("CompVsCompClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
+
 		TransitionTo(new WaitForBoltState());
 	}
 
 	void ChatClicked() {
+        Analytics.CustomEvent("ChatClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
+
 		Application.OpenURL("http://slack.baremetalgame.com/");
 	}
 
@@ -72,10 +97,20 @@ public class MainMenuState : AppState {
 		battlefield.player2.npcModeOn = true;
 		battlefield.player2.isTutorialMode = true;
 
+        Analytics.CustomEvent("TutorialClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
+
 		TransitionTo(new WaitForBoltState());
 	}
 
     void OptionsClicked() {
+        Analytics.CustomEvent("OptionsClicked", new Dictionary<string, object>
+                {
+                    { "playTime", Time.timeSinceLevelLoad }
+                });
+
         TransitionTo(new OptionsMenuState());
     }
 
