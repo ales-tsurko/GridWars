@@ -16,8 +16,6 @@ public class MatchmakerMenu : UIMenu {
 	public void Open() {
 		isOpen = true;
 
-		Debug.Log("MatchmakerMenu Open");
-
 		SetAnchor(MenuAnchor.MiddleCenter);
 		selectsOnShow = true;
 		UseDefaultBackgroundColor();
@@ -36,7 +34,6 @@ public class MatchmakerMenu : UIMenu {
 	}
 
 	void ConfigureForClosed() {
-		Debug.Log("MatchmakerMenu ConfigureForClosed");
 		this.SetAnchor(MenuAnchor.TopCenter);
 		selectsOnShow = false;
 		backgroundColor = Color.clear;
