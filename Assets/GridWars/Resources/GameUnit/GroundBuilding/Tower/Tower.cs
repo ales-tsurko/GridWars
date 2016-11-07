@@ -10,8 +10,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 	//public Mesh theMesh;
 	[HideInInspector]
+
+	// for death from tanker hit explosion fx
 	private bool _dieWithBlockify = false;
 
+    // for warp in fx
+	public bool isWarpedIn = false;
 	public GameObject cube;
 
 	public bool npcModeOn {
@@ -86,6 +90,9 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		keyIcon.SetActive(false);
 
 		App.shared.cameraController.cameraControllerDelegates.Add(this);
+
+		gameUnitState.AddCallback("isWarpedIn", IsWarpedInChanged);
+
 	}
 
 	public override void ServerJoinedGame() {
@@ -144,25 +151,41 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		HideMesh();
 	}
 
-	public void UnhideIn(float dt) {
-		// float dt = 0.5f * UnityEngine.Random.value;
-		App.shared.timerCenter.NewTimer().SetTimeout(dt).SetTarget(this).SetMethod("UnhideMesh").Start();
+	// hide / unhide for warp in
+
+	public void IsWarpedInChanged() {
+		if (isWarpedIn) {
+			UnhideMesh();
+		}
 	}
+
+	public void UnhideIn(float dt) {
+		App.shared.timerCenter.NewTimer().SetTimeout(dt).SetTarget(this).SetMethod("Unhide").Start();
+	}
+
+	public void Unhide() {
+		isWarpedIn = true;
+		// bolt will now call IsWarpedInChanged() on server and client
+	}
+
+	// hide / unhide mesh
 
 	public void HideMesh() {
 		cube.GetComponent<MeshRenderer>().enabled = false;
 	}
 
 	public void UnhideMesh() {
-		if (cube.GetComponent<MeshRenderer>().enabled == false) {
-			cube.GetComponent<MeshRenderer>().enabled = true;
+		MeshRenderer mr = cube.GetComponent<MeshRenderer>();
+		if (mr.enabled == false) {
+			mr.enabled = true;
 			var fader = cube.AddComponent<BrightFadeInGeneric>();
 			fader.period = 0.35f;
-			//App.shared.PlayOneShot(iconUnit.birthSound, 0.2f);
-			App.shared.PlayAppSoundNamedAtVolume("TowerBirth", 0.35f);
+			App.shared.PlayAppSoundNamedAtVolume("TowerBirth", 0.3f);
 			fader.OnEnable();
 		}
 	}
+
+	// ---------------------------
 
 	public override void ServerFixedUpdate () {
 		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.

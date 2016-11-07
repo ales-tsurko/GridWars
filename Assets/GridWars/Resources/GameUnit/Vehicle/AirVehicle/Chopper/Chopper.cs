@@ -44,7 +44,7 @@ public class Chopper : AirVehicle {
 		SetAllowFriendlyFire(false);
 
 		if (Minigun()) {
-			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.6f);
+			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.5f);
 			Minigun().damageAdjustments.Add(typeof(Tower), 0.4f);
 		}
 	}
@@ -238,7 +238,7 @@ public class Chopper : AirVehicle {
 	}
 
 	private void DieIfOverAccelerated() {
-		if (rigidBody().velocity.magnitude > 30f) {
+		if (rigidBody().velocity.magnitude > 25f) {
 			Die();
 		}
 	}
