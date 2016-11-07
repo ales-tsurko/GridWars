@@ -150,7 +150,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void HideMesh() {
-		cube.GetComponent<MeshRenderer>().enabled = false;
+		//cube.GetComponent<MeshRenderer>().enabled = false;
 	}
 
 	public void UnhideMesh() {

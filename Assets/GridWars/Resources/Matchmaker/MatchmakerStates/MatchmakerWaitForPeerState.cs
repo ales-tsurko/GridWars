@@ -12,7 +12,6 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		network.networkDelegate = this;
 
 		if (app.state is PlayingGameState || app.state is PostGameState) {
-			battlefield.SoftReset();
 			network.ShutdownBolt();
 		}
 		else {

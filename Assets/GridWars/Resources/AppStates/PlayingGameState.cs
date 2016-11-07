@@ -21,7 +21,7 @@ public class PlayingGameState : AppState {
 
 		ShowInGameMenus();
 
-		Battlefield.current.StartGame();
+		battlefield.StartGame();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 

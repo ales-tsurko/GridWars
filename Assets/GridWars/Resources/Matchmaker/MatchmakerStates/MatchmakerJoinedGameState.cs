@@ -45,7 +45,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		account.isReadyForGame = true;
 		matchmaker.Send("readyForGame");
 		if (account.isOpponentReadyForGame) {
-			TransitionTo(new MatchmakerWaitForPeerState());
+			WaitForPeer();
 		}
 		else {
 			MatchmakerMenuOpened();
@@ -82,15 +82,19 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		account.isOpponentReadyForGame = true;
 
 		if (account.isReadyForGame) {
-			if (account.isHost) {
-				TransitionTo(new MatchmakerWaitForClientState());
-			}
-			else {
-				TransitionTo(new MatchmakerWaitForServerState());
-			}
+			WaitForPeer();
 		}
 		else {
 			MatchmakerMenuOpened();
+		}
+	}
+
+	void WaitForPeer() {
+		if (account.isHost) {
+			TransitionTo(new MatchmakerWaitForClientState());
+		}
+		else {
+			TransitionTo(new MatchmakerWaitForServerState());
 		}
 	}
 }

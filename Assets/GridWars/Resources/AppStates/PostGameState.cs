@@ -7,8 +7,8 @@ public class PostGameState : AppState, AppStateOwner {
 	// LeaveGame
 
 	public void Leave(bool cancelGame) {
-		if (cancelGame) {
-			matchmaker.Send("cancelGame");
+		if (cancelGame && matchmaker.state is MatchmakerAfterGameState) {
+			(matchmaker.state as MatchmakerAfterGameState).CancelGame();
 		}
 
 		TransitionTo(new MainMenuState());
@@ -39,7 +39,6 @@ public class PostGameState : AppState, AppStateOwner {
 		subState.WillExit();
 		menu.backgroundColor = new Color(0, 0, 0, 1);
 		Object.FindObjectOfType<CameraController>().EndOrbit();
-		battlefield.SoftReset();
 	}
 
 	// Network

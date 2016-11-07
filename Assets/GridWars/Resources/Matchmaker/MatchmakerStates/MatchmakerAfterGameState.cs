@@ -14,6 +14,11 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		matchmaker.menu.Hide();
 	}
 
+	public void CancelGame() {
+		matchmaker.Send("cancelGame");
+		TransitionTo(new MatchmakerPostAuthState());
+	}
+
 	public void HandleOpponentRequestedRematch(JSONObject data) {
 		postGateState.ReceivedRematchRequest();
 	}
