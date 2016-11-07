@@ -45,6 +45,17 @@ public class Account {
 		}
 	}
 
+	public Account opponent {
+		get {
+			if (game == null) {
+				return null;
+			}
+			else {
+				return isHost ? game.client : game.host;
+			}
+		}
+	}
+
 	public List<Account>otherPlayers {
 		get {
 			return playerList.FindAll(account => account != this);

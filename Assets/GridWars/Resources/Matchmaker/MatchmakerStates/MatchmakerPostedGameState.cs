@@ -16,7 +16,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
-			.SetText("Searching for Game ...")
+			.SetText("Searching for Opponent")
 			.SetAction(matchmaker.menu.Open);
 		matchmaker.menu.Show();
 		matchmaker.menu.Focus();
@@ -27,13 +27,15 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 
+		matchmaker.menu.AddNewIndicator()
+			.SetText("Searching for Opponent.  ");
+
 		matchmaker.menu.AddNewButton()
-			.SetText("Stop Searching")
-			.SetAction(StopSearching)
-			.SetIsBackItem(true);
+			.SetText("Cancel Search")
+			.SetAction(StopSearching);
 		
 		matchmaker.menu.AddNewButton()
-			.SetText("Close")
+			.SetText("Back")
 			.SetAction(matchmaker.menu.Close)
 			.SetIsBackItem(true);
 

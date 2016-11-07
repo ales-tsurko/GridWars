@@ -17,14 +17,12 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 
 		string text;
 
-		if (account.isOpponentReadyForGame) {
-			text = "Opponent is Ready";
+		if (account.isReadyForGame) {
+			matchmaker.menu.AddNewIndicator().SetText("Waiting for " + account.opponent.screenName);
 		}
 		else {
-			text = "Waiting for Opponent";
+			matchmaker.menu.AddNewText().SetText(account.opponent.screenName + " accepted your challenge.");
 		}
-
-		matchmaker.menu.AddNewText().SetText(text);
 
 		if (!account.isReadyForGame) {
 			matchmaker.menu.AddNewButton()
