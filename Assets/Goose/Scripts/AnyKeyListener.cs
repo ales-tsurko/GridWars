@@ -29,6 +29,9 @@ public class AnyKeyListener : MonoBehaviour {
             Destroy(gameObject, 0.2f);
             yield break;
         }
+        if (Input.GetMouseButton(0)) {
+            yield return new WaitForSeconds(.2f);
+        }
         onAnyKey.Invoke();
         Destroy(gameObject, 0.2f);
         yield break;
