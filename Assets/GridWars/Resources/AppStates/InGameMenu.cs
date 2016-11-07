@@ -87,7 +87,7 @@ public class InGameMenu {
 		else {
 			title = "Concede";
 		}
-
+        menu.isNavigable = false;
 		concedeItem = new InGameMenuItem();
 		concedeItem.title = title;
 		concedeItem.inGameMenu = this;
