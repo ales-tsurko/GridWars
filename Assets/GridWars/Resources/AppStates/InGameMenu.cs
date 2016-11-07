@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class InGameMenu {
 	public PlayingGameState playingGameState;
@@ -47,7 +48,7 @@ public class InGameMenu {
 			firstPersonCameraItem.ReadInput();
 		}
 
-		if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPersonMode) {
+		/*if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPersonMode) {
 			if (menu.hasFocus) {
 				menu.LoseFocus();
 			}
@@ -55,7 +56,7 @@ public class InGameMenu {
                 MonoBehaviour.FindObjectOfType<CameraController>().menuHasFocus = true;
 				menu.SelectNextItem();
 			}
-		}
+		}*/
 	}
 
 	UIMenu menu;
@@ -88,7 +89,7 @@ public class InGameMenu {
 		else {
 			title = "Concede";
 		}
-
+        menu.isNavigable = false;
 		concedeItem = new InGameMenuItem();
 		concedeItem.title = title;
 		concedeItem.inGameMenu = this;
@@ -137,7 +138,12 @@ public class InGameMenu {
 	}
 
 
+
 	void HandleConcede() {
+        GameObject listener = new GameObject();
+        listener.name = "AnyKeyListener";
+        AnyKeyListener anyKeyListener = listener.AddComponent<AnyKeyListener>();
+        anyKeyListener.Listen(inputs, ReallyConcede, Reset, inputs.concede);
 		menu.Destroy();
 
 		menu = UI.Menu();
@@ -218,3 +224,4 @@ public class InGameMenuItem {
 
 	UIButton _menuItem;
 }
+

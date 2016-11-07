@@ -265,6 +265,12 @@ public class UIMenu : UIElement {
 		}
 	}
 
+    public void Deselect(){
+        if (!UnityEngine.EventSystems.EventSystem.current.alreadySelecting) {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
 	public void Focus() {
 		SelectFirstItem();
 	}

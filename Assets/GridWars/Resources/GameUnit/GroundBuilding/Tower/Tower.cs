@@ -307,7 +307,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
-		if (player.inGameMenu != null && !player.inGameMenu.hasFocus) {
+		
 			if (releaseAction.WasPressed) {
 				ReleaseUnitDown();
 			}
@@ -315,7 +315,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 			if (releaseAction.WasReleased) {
 				ReleaseUnitUp();
 			}
-		}
+		
 
 		ReleaseUnitUpdate();
 	}
@@ -483,13 +483,13 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	}
 
 	public void KeyPressed() {
-		if (!npcModeOn && !inGameMenuIsFocused) {
+		if (!npcModeOn) {
 			SendAttemptQueueUnit();
 		}
 	}
 
 	public void KeyLongPressed() {
-		if (!npcModeOn && !inGameMenuIsFocused) {
+		if (!npcModeOn) {
 			SendAttemptQueueUnit(1);
 		}
 	}
