@@ -94,7 +94,6 @@ public class PlayingGameState : AppState {
 	void ShowLostConnection() {
 		HideInGameMenus();
 
-		menu.backgroundColor = Color.clear;
 		menu.AddNewText().SetText("Lost Connection");
 		menu.AddNewButton().SetText("Leave").SetAction(Leave);
 		menu.Show();

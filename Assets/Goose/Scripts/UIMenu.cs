@@ -41,7 +41,7 @@ public class UIMenu : UIElement {
 	public Color backgroundColor {
 		get {
 			if (image == null) {
-				return new Color(0, 0, 0, 0);
+				return Color.clear;
 			}
 			else {
 				return image.color;
@@ -53,6 +53,16 @@ public class UIMenu : UIElement {
 				image.color = value;
 			}
 		}
+	}
+
+	public Color defaultBackgroundColor {
+		get {
+			return new Color(0, 0, 0, 0.3f);
+		}
+	}
+
+	public void UseDefaultBackgroundColor() {
+		backgroundColor = defaultBackgroundColor;
 	}
 
 	PlayerInputs _inputs;
@@ -97,7 +107,7 @@ public class UIMenu : UIElement {
 
 		image = gameObject.AddComponent<Image>();
 		image.raycastTarget = false;
-		backgroundColor = new Color(0, 0, 0, 1);
+		UseDefaultBackgroundColor();
 		RectTransform t = GetComponent<RectTransform>();
 		t.anchorMin = new Vector2(0, 0);
 		t.anchorMax = new Vector2(1, 1);

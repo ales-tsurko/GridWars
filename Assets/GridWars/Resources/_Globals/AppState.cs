@@ -97,14 +97,12 @@ public class AppState : MatchmakerMenuDelegate {
 	public virtual void MatchmakerMenuOpened() {
 		app.Log("MatchmakerMenuOpened", this);
 		this.menu.Hide();
-		matchmaker.menu.backgroundColor = new Color(0, 0, 0, 1);
 		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
 		DisconnectMatchmakerMenu();
 	}
 
 	public virtual void MatchmakerMenuClosed() {
 		app.Log("MatchmakerMenuClosed", this);
-		matchmaker.menu.backgroundColor = new Color(0, 0, 0, 0);
 		var selectsOnShow = this.menu.selectsOnShow;
 		this.menu.selectsOnShow = false;
 		this.menu.Show();

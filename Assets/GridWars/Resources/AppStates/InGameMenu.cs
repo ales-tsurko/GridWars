@@ -14,19 +14,22 @@ public class InGameMenu {
 	}
 
 	public void Show() {
+		App.shared.matchmaker.menu.RemoveDelegate(App.shared.state);
 		App.shared.ResetMenu();
-
+		App.shared.menu.Hide();
 		Reset();
 	}
 
 	public void Hide() {
 		if (menu != null) {
-			App.shared.Log("Hide menu", this);
+			App.shared.matchmaker.menu.AddDelegate(App.shared.state);
 			menu.Destroy();
 			menu = null;
 			player.inGameMenu = null;
 			player = null;
 		}
+
+		App.shared.menu.Show();
 	}
 
 	public void ReadInput () {
@@ -78,6 +81,7 @@ public class InGameMenu {
 		}
 
 		menu = UI.Menu();
+
 		menu.backgroundColor = Color.clear;
 
 		string title;
@@ -144,14 +148,13 @@ public class InGameMenu {
         listener.name = "AnyKeyListener";
         AnyKeyListener anyKeyListener = listener.AddComponent<AnyKeyListener>();
         anyKeyListener.Listen(inputs, ReallyConcede, Reset, inputs.concede);
-		menu.Destroy();
 
-		menu = UI.Menu();
+
+		menu.Reset();
 		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
 		menu.AddItem(UI.MenuItem("Cancel", Reset), true);
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuPlacement);
-		menu.backgroundColor = new Color(0, 0, 0, 0);
 		menu.selectsOnShow = true;
 		menu.inputs = inputs;
 		menu.Show();

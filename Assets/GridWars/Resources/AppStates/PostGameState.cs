@@ -27,8 +27,6 @@ public class PostGameState : AppState, AppStateOwner {
 
 		Object.FindObjectOfType<CameraController>().StartOrbit();
 
-		menu.backgroundColor = new Color(0, 0, 0, 0);
-
 		subState = new ShowOutcomeState();
 		subState.owner = this;
 		subState.EnterFrom(null);
@@ -37,7 +35,6 @@ public class PostGameState : AppState, AppStateOwner {
 	public override void WillExit() {
 		base.WillExit();
 		subState.WillExit();
-		menu.backgroundColor = new Color(0, 0, 0, 1);
 		Object.FindObjectOfType<CameraController>().EndOrbit();
 	}
 

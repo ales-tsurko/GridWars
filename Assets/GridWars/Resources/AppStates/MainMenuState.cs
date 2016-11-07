@@ -22,7 +22,6 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Chat", ChatClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
-		menu.backgroundColor = new Color(0, 0, 0, 1);
 
 		matchmaker.menu.Show();
 

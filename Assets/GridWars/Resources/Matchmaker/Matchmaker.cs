@@ -34,7 +34,6 @@ public class Matchmaker : AppStateOwner {
 		socket.On("message", Receive);
 
 		menu = new GameObject().AddComponent<MatchmakerMenu>();
-		menu.backgroundColor = new Color(0, 0, 0, 0);
 		state = new MatchmakerDisconnectedState();
 		state.matchmaker = this;
 		state.owner = this;
