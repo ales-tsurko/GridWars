@@ -68,11 +68,19 @@ public class MainMenuState : AppState {
 	}
 
 	public void MatchmakerConnected() {
+		var wasSelected = menu.selectedItem == internetPvpButton;
 		internetPvpButton.UseDefaultStyle();
+		if (wasSelected) {
+			menu.SelectItem(internetPvpButton);
+		}
 	}
 
 	public void MatchmakerDisconnected() {
+		var wasSelected = menu.selectedItem == internetPvpButton;
 		internetPvpButton.UseAlertStyle();
+		if (wasSelected) {
+			menu.SelectItem(internetPvpButton);
+		}
 	}
 
 	void SharedScreenPvpClicked() {
@@ -148,5 +156,16 @@ public class MainMenuState : AppState {
 		#if UNITY_EDITOR
 		UnityEditor.EditorApplication.isPlaying = false;
 		#endif
+	}
+
+	// MatchmakerMenu
+
+	public override void ConfigureMatchmakerMenu() {
+		DisconnectMatchmakerMenu();
+	}
+
+	public override void MatchmakerMenuClosed() {
+		menu.Show();
+		matchmaker.menu.isNavigable = false; //its set to true when Internet PVP is selected
 	}
 }

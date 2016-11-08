@@ -35,6 +35,9 @@ public class UIButton : UIElement {
 			_text = value;
 			textComponent.text = value.ToUpper();
             SizeToFit();
+			if (menu != null) {
+				menu.OrderMenu();
+			}
         }
     }
 
@@ -157,7 +160,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnDeselected() {
-        menu.Deselect();
+        //menu.Deselect();
 		isSelected = false;
 		menu.ItemDeselected(this);
 	}

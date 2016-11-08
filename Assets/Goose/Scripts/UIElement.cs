@@ -58,7 +58,7 @@ public class UIElement : MonoBehaviour {
 		gameObject.SetActive (true);
 	}
 
-	public void Hide () {
+	public virtual void Hide () {
 		gameObject.SetActive (false);
 	}
 

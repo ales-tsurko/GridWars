@@ -18,8 +18,6 @@ public class MatchmakerPostedGameState : MatchmakerState {
 		matchmaker.menu.AddNewButton()
 			.SetText("Searching for Opponent")
 			.SetAction(matchmaker.menu.Open);
-		matchmaker.menu.Show();
-		matchmaker.menu.Focus();
 	}
 
 	public override void MatchmakerMenuOpened() {
@@ -38,8 +36,6 @@ public class MatchmakerPostedGameState : MatchmakerState {
 			.SetText("Back")
 			.SetAction(matchmaker.menu.Close)
 			.SetIsBackItem(true);
-
-		matchmaker.menu.Show();
 	}
 
 	// MatchmakerDelegate

@@ -22,8 +22,6 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		matchmaker.menu.Reset();
 		button = matchmaker.menu.AddNewButton().SetAction(SearchForOpponent);
 		UpdateText();
-		matchmaker.menu.Show();
-		matchmaker.menu.Focus();
 	}
 
 	void UpdateText() {

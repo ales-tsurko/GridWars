@@ -68,11 +68,9 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			.SetText("Close")
 			.SetAction(matchmaker.menu.Close)
 			.SetIsBackItem(true);
-		matchmaker.menu.Show();
 	}
 
 	public override void MatchmakerMenuClosed() {
-		Debug.Log("MatchmakerMenuClosed");
 		base.MatchmakerMenuClosed();
 
 		matchmaker.menu.Reset();
@@ -81,7 +79,5 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			.SetTextColor(Color.red)
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();
-		matchmaker.menu.Show();
-		matchmaker.menu.Focus();
 	}
 }
