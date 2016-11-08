@@ -51,9 +51,15 @@ public class UIButton : UIElement {
 	}
 
 	public RuntimeAnimatorController alertStyleController;
+	public RuntimeAnimatorController defaultStyleController;
 
 	public UIButton UseAlertStyle() {
 		this.GetComponent<Animator>().runtimeAnimatorController = alertStyleController;
+		return this;
+	}
+
+	public UIButton UseDefaultStyle() {
+		this.GetComponent<Animator>().runtimeAnimatorController = defaultStyleController;
 		return this;
 	}
 

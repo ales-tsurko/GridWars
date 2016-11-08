@@ -10,6 +10,11 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		MainMenuState mainMenuState = app.state as MainMenuState;
+		if (mainMenuState != null) {
+			mainMenuState.MatchmakerDisconnected();
+		}
+
 		Connect();
 	}
 
@@ -21,6 +26,8 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			isConnecting = true;
 		}
 	}
+
+	//app.state
 
 	//MatchmakerDelegate
 
@@ -65,11 +72,12 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	}
 
 	public override void MatchmakerMenuClosed() {
+		Debug.Log("MatchmakerMenuClosed");
 		base.MatchmakerMenuClosed();
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
-			.SetText("CONNECT TO SERVER")
+			.SetText("Offline")
 			.SetTextColor(Color.red)
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();

@@ -27,8 +27,8 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 
-		matchmaker.menu.AddNewIndicator()
-			.SetText("Searching for Opponent.  ");
+		matchmaker.menu.AddNewText()
+			.SetText("We'll notify you when we've found an opponent.");
 
 		matchmaker.menu.AddNewButton()
 			.SetText("Cancel Search")

@@ -45,6 +45,21 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		//app.Log("MatchmakerMenuClosed", this);
 	}
 
+	//MainMenu
+
+	public virtual void MainMenuInternetPvpClicked() {
+		matchmaker.menu.Open();
+	}
+
+	public virtual void MainMenuEntered() {
+		matchmaker.menu.isNavigable = false;
+		Debug.Log(matchmaker.menu.isNavigable);
+	}
+
+	public virtual void MainMenuExited() {
+		matchmaker.menu.isNavigable = true;
+	}
+
 	//MatchmakerDelegate
 
 	public virtual void MatchmakerConnected() {

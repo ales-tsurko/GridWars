@@ -282,7 +282,9 @@ public class UIMenu : UIElement {
     }
 
 	public void Focus() {
-		SelectFirstItem();
+		if (canFocus) {
+			SelectFirstItem();
+		}
 	}
 
 	public void LoseFocus() {
@@ -305,7 +307,7 @@ public class UIMenu : UIElement {
 
 	public bool canFocus {
 		get {
-			return selectableItems.Count > 0;
+			return selectableItems.Count > 0 && isNavigable;
 		}
 	}
 

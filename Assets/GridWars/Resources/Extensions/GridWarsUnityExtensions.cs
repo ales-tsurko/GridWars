@@ -318,6 +318,13 @@ public static class GridWarsUnityExtensions {
 		return self;
 	}
 
+	public static Color ToDisabled(this Color self) {
+		self.r = 0.3f;
+		self.g = 0.3f;
+		self.b = 0.3f;
+		return self;
+	}
+
 	public static Bounds BoxBounds(this GameObject self) {
 		BoxCollider bc = self.GetComponent<BoxCollider>();
 		Bounds b = new Bounds();

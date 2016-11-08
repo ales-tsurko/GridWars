@@ -4,6 +4,8 @@ using UnityEngine.Analytics;
 using System.Collections.Generic;
 
 public class MainMenuState : AppState {
+	UIButton internetPvpButton;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -14,7 +16,28 @@ public class MainMenuState : AppState {
 		battlefield.player1.isLocal = false;
 		battlefield.player2.isLocal = false;
 
+		ShowMainMenu();
+
+		matchmaker.matchmakerState.MainMenuEntered();
+		Debug.Log(matchmaker.menu.isNavigable);
+		matchmaker.menu.Show();
+
+		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
+	}
+
+	public override void WillExit() {
+		base.WillExit();
+
+		matchmaker.matchmakerState.MainMenuExited();
+	}
+
+	void ShowMainMenu() {
 		app.ResetMenu();
+		internetPvpButton = menu.AddNewButton().SetText("Internet PVP").SetAction(InternetPvpClicked);
+		if (!matchmaker.isConnected) {
+			internetPvpButton.SetTextColor(Color.red);
+			internetPvpButton.UseAlertStyle();
+		}
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
@@ -23,9 +46,34 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
-		matchmaker.menu.Show();
+	}
 
-		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
+	void InternetPvpClicked() {
+		Analytics.CustomEvent("InternetPvpClicked", new Dictionary<string, object> {
+			{ "playTime", Time.timeSinceLevelLoad }
+		});
+
+		if (matchmaker.isConnected) {
+			matchmaker.matchmakerState.MainMenuInternetPvpClicked();
+		}
+		else {
+			menu.Reset();
+			menu.AddNewText()
+				.SetText("Unable to connect to the server.\n\nInternet matches disabled.");
+			menu.AddNewButton()
+				.SetText("Close")
+				.SetAction(ShowMainMenu)
+				.SetIsBackItem(true);
+			menu.Show();
+		}
+	}
+
+	public void MatchmakerConnected() {
+		internetPvpButton.UseDefaultStyle();
+	}
+
+	public void MatchmakerDisconnected() {
+		internetPvpButton.UseAlertStyle();
 	}
 
 	void SharedScreenPvpClicked() {

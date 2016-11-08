@@ -40,7 +40,20 @@ public class MatchmakerPreAuthState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
-			.SetText("Connecting to server ...");
+			.SetText("Connecting to server");
+		matchmaker.menu.Show();
+		matchmaker.menu.Focus();
+	}
+
+	public override void MatchmakerMenuOpened() {
+		base.MatchmakerMenuOpened();
+
+		matchmaker.menu.Reset();
+		matchmaker.menu.AddNewIndicator()
+			.SetText("Connecting to server");
+		matchmaker.menu.AddNewButton()
+			.SetText("OK")
+			.SetAction(matchmaker.menu.Close);
 		matchmaker.menu.Show();
 		matchmaker.menu.Focus();
 	}
