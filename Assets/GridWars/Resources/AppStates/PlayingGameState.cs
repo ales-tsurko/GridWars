@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PlayingGameState : AppState {
@@ -21,13 +22,23 @@ public class PlayingGameState : AppState {
 
 		ShowInGameMenus();
 
-		battlefield.StartGame();
-
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
 		App.shared.PlayAppSoundNamed("GameStart");
 
 		menu.Hide();
+
+		battlefield.SoftReset();
+
+		app.StartCoroutine(StartGameAfterBattlefieldEmpty());
+	}
+
+	IEnumerator StartGameAfterBattlefieldEmpty() {
+		while (BoltNetwork.isServer && battlefield.livingPlayers.Count > 0) {
+			yield return null;
+		}
+
+		battlefield.StartGame();
 	}
 
 	public override void WillExit() {

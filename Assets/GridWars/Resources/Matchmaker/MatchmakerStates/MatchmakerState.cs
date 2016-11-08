@@ -53,7 +53,6 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void MainMenuEntered() {
 		matchmaker.menu.isNavigable = false;
-		Debug.Log(matchmaker.menu.isNavigable);
 	}
 
 	public virtual void MainMenuExited() {

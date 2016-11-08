@@ -19,7 +19,6 @@ public class MainMenuState : AppState {
 		ShowMainMenu();
 
 		matchmaker.matchmakerState.MainMenuEntered();
-		Debug.Log(matchmaker.menu.isNavigable);
 		matchmaker.menu.Show();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
