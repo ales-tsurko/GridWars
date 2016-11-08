@@ -66,6 +66,10 @@ public class BrightFadeInGeneric : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		if (enabled == false) {
+			return;
+		}
+
 		if (App.shared.timeCounter % 6 == 0) {
 			float t = TimerRatioDone();
 			UpdateForValue(t);

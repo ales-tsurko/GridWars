@@ -411,6 +411,7 @@ public class GameUnit : NetworkObject {
 		if (releaseZone != null) {
 			releaseZone.hiddenUnit = null;
 		}
+
 	}
 
 	public override void ClientJoinedGame() {
@@ -673,39 +674,6 @@ public class GameUnit : NetworkObject {
 
 		// cycler setup --------------
 
-		/*
-		var cycler = gameObject.GetComponent<ColorCycleFX>();
-		if (cycler != null) {
-			cycler.enabled = false;
-			Destroy(cycler);
-		}
-
-		cycler = gameObject.AddComponent<ColorCycleFX>();
-		cycler.onMaterialName = "SecondaryColor";
-		cycler.OnEnable();
-		cycler.cyclePeriod = 1f;
-		cycler.delayTime = 0f;
-		*/
-
-		// ------------------------------------
-
-		Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.35f);
-
-		//Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.white, 0.1f);
-		if (veteranLevel == 1) {
-			PaintPrimaryColor(darkPrimaryColor);
-			PaintSecondaryColor(darkPrimaryColor);
-			//cycler.startColor = Color.Lerp(darkPrimaryColor, Color.yellow, 0.15f);
-		} else if (veteranLevel == 2) {
-			PaintPrimaryColor(Color.black);
-			//PaintSecondaryColor(Color.Lerp(player.primaryColor, Color.white, 0.1f));
-			PaintSecondaryColor(player.primaryColor);
-			//PaintSecondaryColor(Color.Lerp(player.primaryColor, Color.white, 0.35f));
-			//cycler.startColor = darkPrimaryColor;
-			//cycler.startColor = Color.white;
-			//cycler.startColor = Color.Lerp(player.primaryColor, player.secondaryColor, 1f);
-		}
-
 		// remove brightfade if present
 		var brightFade = GetComponent<BrightFadeInGeneric>();
 		if (brightFade != null) {
@@ -713,8 +681,25 @@ public class GameUnit : NetworkObject {
 			Destroy(brightFade);
 		}
 
-		var fader = gameObject.AddComponent<ColorCycleInFX>();
-		fader.OnEnable();
+		// ------------------------------------
+
+		if (veteranLevel == 1) {
+			Color darkPrimaryColor = Color.Lerp(player.primaryColor, Color.black, 0.35f);
+			PaintPrimaryColor(darkPrimaryColor);
+			PaintSecondaryColor(darkPrimaryColor);
+		} else if (veteranLevel == 2) {
+			PaintPrimaryColor(Color.black);
+			PaintSecondaryColor(player.primaryColor);
+		}
+
+		ColorCycleInFX cycler = gameObject.GetComponent<ColorCycleInFX>();
+		if (cycler != null) {
+			cycler.enabled = false;
+			Destroy(cycler);
+		}
+
+		cycler = gameObject.AddComponent<ColorCycleInFX>();
+		cycler.OnEnable();
 	}
 
 	// --- Vet Upgrading Stats Helpers ---

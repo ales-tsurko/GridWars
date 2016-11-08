@@ -9,7 +9,7 @@ public class ColorCycleInFX : MonoBehaviour {
 	public float cycles = 10f;
 
 	private Color startColor = Color.white;
-	private Dictionary<Material, Color> materialColors = null;
+	public Dictionary<Material, Color> materialColors = null;
 
 	void Start () {
 		SetupMaterialColorsIfNeeded();
