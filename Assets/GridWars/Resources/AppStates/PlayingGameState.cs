@@ -62,6 +62,10 @@ public class PlayingGameState : AppState {
 		}
 	}
 
+	public void RestartGame() {
+		TransitionTo(new PlayingGameState());
+	}
+
 	public void EndGame(Player victor) {
 		if (battlefield.isInternetPVP) {
 			(matchmaker.state as MatchmakerPlayingGameState).EndGame(victor);

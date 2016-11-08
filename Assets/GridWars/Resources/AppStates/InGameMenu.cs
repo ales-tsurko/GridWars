@@ -151,7 +151,14 @@ public class InGameMenu {
 
 
 		menu.Reset();
-		menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
+		if (App.shared.battlefield.isAiVsAi) { //AIvAI
+			menu.AddItem(UI.MenuItem("Leave", ReallyConcede));
+			menu.AddItem(UI.MenuItem("Rematch", Rematch));
+		}
+		else {
+			menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
+		}
+
 		menu.AddItem(UI.MenuItem("Cancel", Reset), true);
 		menu.SetOrientation(MenuOrientation.Horizontal);
 		menu.SetAnchor(menuPlacement);
@@ -160,8 +167,17 @@ public class InGameMenu {
 		menu.Show();
 	}
 
+	void Rematch() {
+		playingGameState.RestartGame();
+	}
+
 	void ReallyConcede() {
-		playingGameState.EndGame(player.opponent);
+		if (App.shared.battlefield.isAiVsAi) {
+			playingGameState.Leave();
+		}
+		else {
+			playingGameState.EndGame(player.opponent);
+		}
 	}
 
 	//TODO: different for each player?
