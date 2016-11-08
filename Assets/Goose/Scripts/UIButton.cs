@@ -9,6 +9,9 @@ using UnityEngine.EventSystems;
 [System.Serializable]
 public class UIButton : UIElement {
 
+	public float startTime = 0;
+	public float charactersPerSecond = 10f;
+
 	public static UIButton Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
@@ -35,6 +38,7 @@ public class UIButton : UIElement {
 			_text = value;
 			textComponent.text = value.ToUpper();
             SizeToFit();
+			textComponent.text = "";
         }
     }
 
@@ -136,6 +140,24 @@ public class UIButton : UIElement {
 		entry.eventID = EventTriggerType.PointerEnter;
 		entry.callback.AddListener(data => OnPointerEnter());
 		eventTrigger.triggers.Add(entry);
+	}
+
+	public void Update () {
+		//base.Update();
+		Debug.Log("UIButton Update");
+		if (textComponent.text != _text) {
+
+			if (startTime == 0) {
+				startTime = Time.time;
+				textComponent.text = "";
+				charactersPerSecond = 20;
+			}
+
+			int n = (int)((Time.time - startTime) * charactersPerSecond);
+			n = Mathf.Clamp(n, 0, _text.Length);
+			textComponent.text = _text.Substring(0, n).ToUpper() + new string(' ', _text.Length - n);
+			SizeToFit();
+		}
 	}
 		
 	public void OnClick (){
