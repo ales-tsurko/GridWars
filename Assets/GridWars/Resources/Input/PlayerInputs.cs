@@ -177,10 +177,10 @@ public class PlayerInputs : PlayerActionSet {
 	}
 
 	public void AddLocalPlayer2KeyBindings() {
-		releaseChopper.AddDefaultBinding(Key.E);
-		releaseTanker.AddDefaultBinding(Key.R);
-		releaseTank.AddDefaultBinding(Key.U);
-		releaseMobileSam.AddDefaultBinding(Key.I);
+		releaseChopper.AddDefaultBinding(Key.P);
+		releaseTanker.AddDefaultBinding(Key.LeftBracket);
+		releaseTank.AddDefaultBinding(Key.RightBracket);
+		releaseMobileSam.AddDefaultBinding(Key.Backslash);
 	}
 
 	public string ControlDescription(DeviceBindingSource control) {
