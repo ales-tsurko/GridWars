@@ -30,6 +30,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		if (app.state is MainMenuState) {
 			if (app.account.otherPlayers.Count > 0) {
 				text = app.account.otherPlayers.Count + " Online";
+				App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
 			}
 			else {
 				text = "Online";
@@ -39,6 +40,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 			text = "Play PVP";
 			if (app.account.otherPlayers.Count > 0) {
 				text += ": " + app.account.otherPlayers.Count + " Online";
+				App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
 			}
 		}
 			

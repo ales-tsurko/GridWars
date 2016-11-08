@@ -4,6 +4,33 @@ using System.Collections;
 public class AppState : MatchmakerMenuDelegate {
 	public AppStateOwner owner;
 
+	public string openSoundName = null;
+	public string openSoundtrackName = null;
+
+	// --- sounds ---
+
+	void HandleOpenSounds() {
+		Debug.Log("HandleOpenSounds");
+
+		if (openSoundtrackName != null) {
+			App.shared.SoundtrackNamed(openSoundtrackName).Play();
+		}
+
+		if (openSoundName == null) {
+			App.shared.PlayAppSoundNamedAtVolume(openSoundName, 1f);
+		}
+	}
+
+	void HandleCloseSounds() {
+		Debug.Log("HandleCloseSounds");
+
+		if (openSoundtrackName != null) {
+			App.shared.SoundtrackNamed(openSoundtrackName).FadeOut();
+		}
+	}
+
+	// -----------------
+
 	public string name {
 		get {
 			return this.GetType().ToString();
@@ -27,9 +54,11 @@ public class AppState : MatchmakerMenuDelegate {
 
 		matchmaker.menu.AddDelegate(this);
 		ConfigureMatchmakerMenu();
+		HandleOpenSounds();
 	}
 
 	public virtual void WillExit() {
+		HandleCloseSounds();
 		matchmaker.menu.RemoveDelegate(this);
 	}
 
