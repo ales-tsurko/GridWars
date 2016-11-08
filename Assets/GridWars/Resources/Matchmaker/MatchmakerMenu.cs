@@ -17,12 +17,13 @@ public class MatchmakerMenu : UIMenu {
 		isOpen = true;
 
 		SetAnchor(MenuAnchor.MiddleCenter);
-		selectsOnShow = true;
 		UseDefaultBackgroundColor();
 
 		foreach (var del in new List<MatchmakerMenuDelegate>(delegates)) {
 			del.MatchmakerMenuOpened();
 		}
+
+		Focus();
 	}
 
 	public void Close() {

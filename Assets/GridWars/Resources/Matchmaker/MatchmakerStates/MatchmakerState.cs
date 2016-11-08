@@ -48,6 +48,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	//MainMenu
 
 	public virtual void MainMenuInternetPvpClicked() {
+		matchmaker.menu.isNavigable = true;
 		matchmaker.menu.Open();
 	}
 

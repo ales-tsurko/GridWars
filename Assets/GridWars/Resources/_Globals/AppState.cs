@@ -62,7 +62,8 @@ public class AppState : MatchmakerMenuDelegate {
 		matchmaker.menu.RemoveDelegate(this);
 	}
 
-	public virtual void Update() {}
+	public virtual void Update() {
+	}
 
 	protected App app {
 		get {
@@ -125,7 +126,7 @@ public class AppState : MatchmakerMenuDelegate {
 
 	public virtual void MatchmakerMenuOpened() {
 		app.Log("MatchmakerMenuOpened", this);
-		this.menu.Hide();
+		menu.Hide();
 		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
 		DisconnectMatchmakerMenu();
 	}
@@ -133,9 +134,9 @@ public class AppState : MatchmakerMenuDelegate {
 	public virtual void MatchmakerMenuClosed() {
 		app.Log("MatchmakerMenuClosed", this);
 		var selectsOnShow = this.menu.selectsOnShow;
-		this.menu.selectsOnShow = false;
-		this.menu.Show();
-		this.menu.selectsOnShow = selectsOnShow;
+		menu.selectsOnShow = false;
+		menu.Show();
+		menu.selectsOnShow = selectsOnShow;
 		ConnectMatchmakerMenu();
 	}
 

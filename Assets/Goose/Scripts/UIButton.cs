@@ -39,6 +39,9 @@ public class UIButton : UIElement {
 			textComponent.text = value.ToUpper();
             SizeToFit();
 			textComponent.text = "";
+			if (menu != null) {
+				menu.OrderMenu();
+			}
         }
     }
 
@@ -144,13 +147,16 @@ public class UIButton : UIElement {
 
 	public void Update () {
 		//base.Update();
-		Debug.Log("UIButton Update");
 		if (textComponent.text != _text) {
 
 			if (startTime == 0) {
 				startTime = Time.time;
 				textComponent.text = "";
-				charactersPerSecond = 20;
+				if (_text.Length < 20) {
+					charactersPerSecond = 20f;
+				} else {
+					charactersPerSecond = _text.Length / 1f;
+				}
 			}
 
 			int n = (int)((Time.time - startTime) * charactersPerSecond);
@@ -179,7 +185,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnDeselected() {
-        menu.Deselect();
+        //menu.Deselect();
 		isSelected = false;
 		menu.ItemDeselected(this);
 	}

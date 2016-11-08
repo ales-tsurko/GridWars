@@ -123,6 +123,7 @@ public class UIMenu : UIElement {
         _item.isBackItem = isBackItem;
 		_item.Show();
 		_item.menu = this;
+		OrderMenu();
 	}
 
 	public UIButton AddNewButton() {
@@ -248,12 +249,12 @@ public class UIMenu : UIElement {
 		return textObj;
 	}
    
-    public override void Show () {
+    public override void Show() {
         base.Show();
 
 		this.gameObject.SetActive(true);
 
-		if (isNavigable && selectsOnShow) {
+		if (selectsOnShow) {
 			Focus();
 		}
 
@@ -268,18 +269,13 @@ public class UIMenu : UIElement {
 
 	public void SelectItem(UIButton item) {
 		if (item != null) {
+			//Debug.Log("SelectItem");
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
 			selectedItem = item;
 			//lastSelectionTime = Time.time;
 		}
 	}
-
-    public void Deselect(){
-        if (!UnityEngine.EventSystems.EventSystem.current.alreadySelecting) {
-            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
-        }
-    }
 
 	public void Focus() {
 		if (canFocus) {
@@ -288,9 +284,12 @@ public class UIMenu : UIElement {
 	}
 
 	public void LoseFocus() {
-        FindObjectOfType<CameraController>().menuHasFocus = false;
-		UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
-		selectedItem = null;
+		//Debug.Log("LoseFocus");
+		if (hasFocus) {
+			FindObjectOfType<CameraController>().menuHasFocus = false;
+			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+			selectedItem = null;
+		}
 	}
 
 	public int selectedItemIndex {
@@ -307,7 +306,7 @@ public class UIMenu : UIElement {
 
 	public bool canFocus {
 		get {
-			return selectableItems.Count > 0 && isNavigable;
+			return selectableItems.Count > 0 && isNavigable && isActiveAndEnabled;
 		}
 	}
 
@@ -361,6 +360,12 @@ public class UIMenu : UIElement {
 			}
 		}
 		SelectItem(selectableItems[previousIndex]);
+	}
+
+	public override void Hide() {
+		base.Hide();
+
+		LoseFocus();
 	}
   
     public void SetButtonFillColors(Color _color, ButtonColorType type = ButtonColorType.Normal){

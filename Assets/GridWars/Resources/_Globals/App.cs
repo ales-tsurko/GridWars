@@ -115,7 +115,21 @@ public class App : MonoBehaviour, AppStateOwner {
 	void Update() {
 		matchmaker.Update();
 		state.Update();
-		keys.Update();
+		//keys.Update();
+		UpdateMenuFocus();
+	}
+
+	void UpdateMenuFocus() {
+		if (inputs.downItem.WasPressed || inputs.upItem.WasPressed) {
+			if (!menu.hasFocus && !matchmaker.menu.hasFocus) {
+				if (menu.canFocus) {
+					menu.Focus();
+				}
+				else {
+					matchmaker.menu.Focus();
+				}
+			}
+		}
 	}
 
 	void OnDestroy() {
