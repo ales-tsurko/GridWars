@@ -342,6 +342,17 @@ public static class GridWarsUnityExtensions {
 		return self.Substring(0, 1).ToUpper() + self.Substring(1);
 	}
 
+	public static string ReplacedNonWhiteSpaceWithSpaces(this string self) {
+		string s = "";
+		for (int i = 0; i < self.Length; i ++) {
+			s += self[i] == "\n"[0] ? "\n" : " ";
+		}
+	
+		return s;
+	}
+
+
+
 	/*
 	public static string Repeat(this char c, int n)
 	{
