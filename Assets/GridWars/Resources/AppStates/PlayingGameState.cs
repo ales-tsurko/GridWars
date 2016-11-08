@@ -174,18 +174,4 @@ public class PlayingGameState : AppState {
 
 		}
 	}
-
-	// Matchmaker
-
-	public override void ConnectMatchmakerMenu() {
-		if (primaryInGameMenu != null) {
-			primaryInGameMenu.ConnectMatchmakerMenu();
-		}
-	}
-
-	public override void DisconnectMatchmakerMenu() {
-		if (primaryInGameMenu != null) {
-			primaryInGameMenu.DisconnectMatchmakerMenu();
-		}
-	}
 }

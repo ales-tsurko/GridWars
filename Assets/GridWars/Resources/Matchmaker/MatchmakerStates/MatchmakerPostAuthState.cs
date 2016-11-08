@@ -16,9 +16,8 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	}
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuClosed() {
-		base.MatchmakerMenuClosed();
-
+	public override void ConfigureForClosed() {
+		base.ConfigureForClosed();
 		matchmaker.menu.Reset();
 		button = matchmaker.menu.AddNewButton().SetAction(SearchForOpponent);
 		UpdateText();
@@ -43,7 +42,6 @@ public class MatchmakerPostAuthState : MatchmakerState {
 				App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
 			}
 		}
-			
 
 		button.text = text;
 	}
