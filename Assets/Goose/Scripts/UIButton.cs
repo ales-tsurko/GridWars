@@ -161,7 +161,13 @@ public class UIButton : UIElement {
 
 			int n = (int)((Time.time - startTime) * charactersPerSecond);
 			n = Mathf.Clamp(n, 0, _text.Length);
-			textComponent.text = _text.Substring(0, n).ToUpper() + new string(' ', _text.Length - n);
+			if (n < _text.Length) {
+				//textComponent.text = _text.Substring(0, n).ToUpper() + "▏" + new string(' ', _text.Length - n);
+				//textComponent.text = _text.Substring(0, n).ToUpper() + "|" + new string(' ', (_text.Length - 1) - n);
+				textComponent.text = _text.Substring(0, n).ToUpper() + new string(' ', _text.Length - n);
+			} else {
+				textComponent.text = _text.ToUpper();
+			}
 			SizeToFit();
 		}
 	}
