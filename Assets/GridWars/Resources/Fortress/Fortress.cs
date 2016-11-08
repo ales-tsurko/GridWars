@@ -5,6 +5,7 @@ public class Fortress : MonoBehaviour {
 	public Player player;
 	public PowerSource powerSource;
 	public List<Tower> towers;
+
 	public float towerSpacing {
 		get {
 			return 0.7f*Tower.size.x;

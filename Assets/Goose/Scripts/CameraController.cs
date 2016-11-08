@@ -137,8 +137,10 @@ public class CameraController : MonoBehaviour {
         foreach (PowerSource _powerSource in GameObject.FindObjectsOfType<PowerSource>()){
             _powerSource.gameStart = true;
         }
-		foreach(var player in App.shared.battlefield.players) {
-			player.fortress.Unhide();
+		if (BoltNetwork.isServer) {
+			foreach(var player in App.shared.battlefield.players) {
+					player.fortress.Unhide();
+			}
 		}
 		yield break;
     }
