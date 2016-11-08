@@ -12,10 +12,27 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	[HideInInspector]
 
 	// for death from tanker hit explosion fx
-	private bool _dieWithBlockify = false;
+	public bool dieWithBlockify {
+		get {
+			return entity.GetState<ITowerState>().dieWithBlockify;
+		}
+
+		set {
+			entity.GetState<ITowerState>().dieWithBlockify = value;
+		}
+	}
 
     // for warp in fx
-	public bool isWarpedIn = false;
+	public bool isWarpedIn {
+		get {
+			return entity.GetState<ITowerState>().isWarpedIn;
+		}
+
+		set {
+			entity.GetState<ITowerState>().isWarpedIn = value;
+		}
+	}
+
 	public GameObject cube;
 
 	public bool npcModeOn {
@@ -171,7 +188,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	// hide / unhide mesh
 
 	public void HideMesh() {
-		//cube.GetComponent<MeshRenderer>().enabled = false;
+		cube.GetComponent<MeshRenderer>().enabled = false;
 	}
 
 	public void UnhideMesh() {
@@ -519,13 +536,13 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 
 
 	public void DieWithBlockify() {
-		_dieWithBlockify = true;
+		dieWithBlockify = true;
 	}
 
 	public override GameObject ShowFxExplosion() {
 		var explosion = base.ShowFxExplosion();
 
-		if (_dieWithBlockify) {
+		if (dieWithBlockify) {
 			Blockify b = explosion.GetComponent<Blockify>();
 			b.enabled = true;
 		}

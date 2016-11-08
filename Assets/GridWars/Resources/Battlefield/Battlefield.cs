@@ -93,8 +93,6 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		SoftReset();
-
 		App.shared.cameraController.InitCamera();
 
 		foreach (var player in players) {
