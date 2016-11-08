@@ -198,6 +198,12 @@ public static class PlayerInputsExtensions {
 		{ "circle", "◯" }
 	};
 
+	public static Dictionary<string, string> KeynameToKey = new Dictionary<string, string>() {
+		{ "Backslash", "\\"},
+		{ "Right Bracket",  "]"},
+		{ "Left Bracket", "[" }
+	};
+
 	public static string HotkeyDescription(this DeviceBindingSource self) {
 		var handle = self.BoundTo.Device.GetControl(self.Control).Handle;
 		foreach (var pair in PlayerInputsExtensions.ControlHandleNormalizations) {
