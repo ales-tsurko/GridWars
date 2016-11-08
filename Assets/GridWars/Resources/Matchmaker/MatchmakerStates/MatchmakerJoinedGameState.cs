@@ -14,8 +14,9 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 	public override void MatchmakerMenuOpened() {
 		base.MatchmakerMenuOpened();
 		matchmaker.menu.Reset();
+		openSoundtrackName = "Ready";
 
-		string text;
+		//string text;
 
 		if (account.isReadyForGame) {
 			matchmaker.menu.AddNewIndicator().SetText("Waiting for " + account.opponent.screenName);
