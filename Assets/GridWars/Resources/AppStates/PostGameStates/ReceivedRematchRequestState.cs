@@ -4,12 +4,17 @@ using System.Collections;
 public class ReceivedRematchRequestState : PostGameSubState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
+		openSoundtrackName = "Rematch";
 
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("Opponent Requests a Rematch"));
 		menu.AddItem(UI.MenuItem("Accept", AcceptRematch));
 		menu.AddItem(UI.MenuItem("Decline", postGameState.Leave));
 		menu.Show();
+	}
+
+	void RejectRematch() {
+		postGameState.Leave();
 	}
 
 	void AcceptRematch() {

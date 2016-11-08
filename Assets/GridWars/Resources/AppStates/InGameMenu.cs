@@ -7,6 +7,8 @@ public class InGameMenu {
 	public Player player;
 	public MenuAnchor menuPlacement;
 
+
+
 	public bool hasFocus {
 		get {
 			return menu.hasFocus;
@@ -19,7 +21,7 @@ public class InGameMenu {
 		App.shared.menu.Hide();
 		Reset();
 	}
-
+		
 	public void Hide() {
 		if (menu != null) {
 			App.shared.matchmaker.menu.AddDelegate(App.shared.state);
