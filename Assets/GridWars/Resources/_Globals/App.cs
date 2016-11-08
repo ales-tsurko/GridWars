@@ -66,6 +66,8 @@ public class App : MonoBehaviour, AppStateOwner {
 	public void Start() {
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
+		menu = UI.Menu();
+
 		prefs = new Prefs();
 
 		stepCache = new AssemblyCSharp.StepCache();
@@ -95,8 +97,6 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs = new PlayerInputs();
 		inputs.AddControllerBindings();
 		inputs.AddLocalPlayer1KeyBindings();
-
-		menu = UI.Menu();
 
 		//*
 		var mainMenuState = new MainMenuState();

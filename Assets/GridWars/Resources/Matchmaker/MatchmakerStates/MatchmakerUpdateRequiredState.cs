@@ -5,8 +5,8 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuOpened() {
-		base.MatchmakerMenuOpened();
+	public override void ConfigureForOpen() {
+		base.ConfigureForOpen();
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
@@ -21,8 +21,8 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 		matchmaker.menu.Show();
 	}
 
-	public override void MatchmakerMenuClosed() {
-		base.MatchmakerMenuClosed();
+	public override void ConfigureForClosed() {
+		base.ConfigureForClosed();
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()

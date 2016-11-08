@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AppState : MatchmakerMenuDelegate {
+public class AppState {
 	public AppStateOwner owner;
 
 	public string openSoundName = null;
@@ -10,8 +10,6 @@ public class AppState : MatchmakerMenuDelegate {
 	// --- sounds ---
 
 	void HandleOpenSounds() {
-		Debug.Log("HandleOpenSounds");
-
 		if (openSoundtrackName != null) {
 			App.shared.SoundtrackNamed(openSoundtrackName).Play();
 		}
@@ -22,8 +20,6 @@ public class AppState : MatchmakerMenuDelegate {
 	}
 
 	void HandleCloseSounds() {
-		Debug.Log("HandleCloseSounds");
-
 		if (openSoundtrackName != null) {
 			App.shared.SoundtrackNamed(openSoundtrackName).FadeOut();
 		}
@@ -52,14 +48,11 @@ public class AppState : MatchmakerMenuDelegate {
 			app.Log("EnterFrom null", this);
 		}
 
-		matchmaker.menu.AddDelegate(this);
-		ConfigureMatchmakerMenu();
 		HandleOpenSounds();
 	}
 
 	public virtual void WillExit() {
 		HandleCloseSounds();
-		matchmaker.menu.RemoveDelegate(this);
 	}
 
 	public virtual void Update() {
@@ -112,53 +105,6 @@ public class AppState : MatchmakerMenuDelegate {
 
 		set {
 			_matchmaker = value;
-		}
-	}
-
-	public virtual void ConfigureMatchmakerMenu() {
-		if (matchmaker.menu.isOpen) {
-			DisconnectMatchmakerMenu();
-		}
-		else {
-			ConnectMatchmakerMenu();
-		}
-	}
-
-	public virtual void MatchmakerMenuOpened() {
-		app.Log("MatchmakerMenuOpened", this);
-		menu.Hide();
-		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
-		DisconnectMatchmakerMenu();
-	}
-
-	public virtual void MatchmakerMenuClosed() {
-		app.Log("MatchmakerMenuClosed", this);
-		var selectsOnShow = this.menu.selectsOnShow;
-		menu.selectsOnShow = false;
-		menu.Show();
-		menu.selectsOnShow = selectsOnShow;
-		ConnectMatchmakerMenu();
-	}
-
-	public virtual void ConnectMatchmakerMenu() {
-		matchmaker.menu.nextMenu = menu;
-		matchmaker.menu.previousMenu = menu;
-		matchmaker.menu.orientation = MenuOrientation.Vertical;
-
-		if (menu != null) {
-			menu.previousMenu = matchmaker.menu;
-			menu.nextMenu = matchmaker.menu;
-		}
-	}
-
-	public virtual void DisconnectMatchmakerMenu() {
-		matchmaker.menu.nextMenu = null;
-		matchmaker.menu.previousMenu = null;
-		matchmaker.menu.orientation = MenuOrientation.Vertical;
-
-		if (menu != null) {
-			menu.previousMenu = null;
-			menu.nextMenu = null;
 		}
 	}
 }

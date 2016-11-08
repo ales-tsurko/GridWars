@@ -16,7 +16,6 @@ public class InGameMenu {
 	}
 
 	public void Show() {
-		App.shared.matchmaker.menu.RemoveDelegate(App.shared.state);
 		App.shared.ResetMenu();
 		App.shared.menu.Hide();
 		Reset();
@@ -24,7 +23,6 @@ public class InGameMenu {
 		
 	public void Hide() {
 		if (menu != null) {
-			App.shared.matchmaker.menu.AddDelegate(App.shared.state);
 			menu.Destroy();
 			menu = null;
 			player.inGameMenu = null;

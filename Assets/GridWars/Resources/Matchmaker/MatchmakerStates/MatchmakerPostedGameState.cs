@@ -11,8 +11,8 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuClosed() {
-		base.MatchmakerMenuClosed();
+	public override void ConfigureForClosed() {
+		base.ConfigureForClosed();
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewButton()
@@ -20,8 +20,8 @@ public class MatchmakerPostedGameState : MatchmakerState {
 			.SetAction(matchmaker.menu.Open);
 	}
 
-	public override void MatchmakerMenuOpened() {
-		base.MatchmakerMenuOpened();
+	public override void ConfigureForOpen() {
+		base.ConfigureForOpen();
 
 		matchmaker.menu.Reset();
 

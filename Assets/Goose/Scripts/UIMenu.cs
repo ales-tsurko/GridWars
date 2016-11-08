@@ -13,7 +13,6 @@ public class UIMenu : UIElement {
 	public float spacing;
     private RectTransform _panel;
     [HideInInspector]
-    public  MenuAnchor currentAnchor = MenuAnchor.MiddleCenter;
     public RectTransform panel {
         get {
             if (_panel == null) {
@@ -30,6 +29,7 @@ public class UIMenu : UIElement {
     }
 
 	public UIButton selectedItem;
+	UIButton previouslySelectedItem;
 
 	public bool isNavigable = true;
 
@@ -91,7 +91,21 @@ public class UIMenu : UIElement {
 			var oldValue = _orientation;
 			_orientation = value;
 			if (oldValue != value) {
-				OrderMenu();
+				ApplyLayout();
+			}
+		}
+	}
+
+	bool _isInteractible;
+	public bool isInteractible {
+		get {
+			return _isInteractible;
+		}
+
+		set {
+			_isInteractible = value;
+			foreach (var item in items) {
+				item.isInteractible = value;
 			}
 		}
 	}
@@ -100,6 +114,7 @@ public class UIMenu : UIElement {
 	//public AudioSource audioSource;
 
 	public virtual void Awake() {
+		_isInteractible = true;
 		gameObject.name = "Menu";
 		UI.AssignToCanvas(gameObject);
 		//add graphic options here re skins
@@ -115,7 +130,7 @@ public class UIMenu : UIElement {
 		t.offsetMax = new Vector2(0, 0);
 	}
 
-    public void AddItem (UIButton _item, bool isBackItem = false){
+    public void AddItem(UIButton _item, bool isBackItem = false){
 		RectTransform _i = _item.GetComponent<RectTransform> ();
         _i.SetParent(panel);
         _item.transform.localScale = Vector3.one;
@@ -123,26 +138,25 @@ public class UIMenu : UIElement {
         _item.isBackItem = isBackItem;
 		_item.Show();
 		_item.menu = this;
-		OrderMenu();
+		_item.isInteractible = isInteractible;
+		ApplyLayout();
 	}
 
 	public UIButton AddNewButton() {
 		var button = UIButton.Instantiate();
-		button.containingMenu = this;
 		AddItem(button);
 		return button;
 	}
 
 	public UIButton AddNewText() {
 		var button = AddNewButton();
-		button.isInteractible = false;
+		button.allowsInteraction = false;
 		button.matchesNeighborSize = false;
 		return button;
 	}
 
 	public UIActivityIndicator AddNewIndicator() {
 		var indicator = UIActivityIndicator.Instantiate();
-		indicator.containingMenu = this;
 		AddItem(indicator);
 		return indicator;
 	}
@@ -152,7 +166,7 @@ public class UIMenu : UIElement {
 		return this;
 	}
 
-    public void OrderMenu(){
+    public void ApplyLayout() {
 		bool isVertical = (orientation == MenuOrientation.Vertical);
 		Vector2 pivot;
 		Vector2 layoutDirection;
@@ -205,12 +219,37 @@ public class UIMenu : UIElement {
 
 		nextPosition -= Vector2.Scale(itemSpacing, layoutDirection);
 
+		panel.localScale = Vector3.one;
 		panel.sizeDelta = new Vector2(Mathf.Max(maxX, Mathf.Abs(nextPosition.x)), Mathf.Max(maxY, Mathf.Abs(nextPosition.y)));
 
-		this.SetAnchor(currentAnchor);
+		switch (anchor) {
+		case MenuAnchor.MiddleCenter:
+			panel.anchorMin = new Vector2(.5f, .5f);
+			panel.anchorMax = new Vector2(.5f, .5f);
+			panel.anchoredPosition = new Vector3(0f, 0f, 0f);
+			break;
+		case MenuAnchor.TopCenter:
+			panel.anchorMin = new Vector2(.5f, 1f);
+			panel.anchorMax = new Vector2(.5f, 1f);
+			panel.pivot = new Vector2(0.5f, 0.5f);
+			panel.anchoredPosition = new Vector2(0, -panel.sizeDelta.y);
+			break;
+		case MenuAnchor.TopLeft:
+			panel.anchorMin = new Vector2(0f, 1f);
+			panel.anchorMax = new Vector2(0f, 1f);
+			panel.pivot = new Vector2(0f, 0.5f);
+			panel.anchoredPosition = new Vector2(18f, -panel.sizeDelta.y);
+			break;
+		case MenuAnchor.TopRight:
+			panel.anchorMin = new Vector2(1f, 1f);
+			panel.anchorMax = new Vector2(1f, 1f);
+			panel.pivot = new Vector2(1f, 0.5f);
+			panel.anchoredPosition = new Vector2(-18f, -panel.sizeDelta.y);
+			break;
+		}
     }
 
-    Vector2 GetMaxSizeDelta (MenuOrientation orientation) {
+    Vector2 GetMaxSizeDelta(MenuOrientation orientation) {
         bool isVertical = orientation == MenuOrientation.Vertical;
 
         float maxSize = 0;
@@ -224,16 +263,15 @@ public class UIMenu : UIElement {
         return vec * 1.01f;
     }
 
-	public void Reset () {
-       // Destroy(gameObject);
-       // return;
+	public void Reset() {
 		foreach (Transform child in panel.transform) {
 			Destroy(child.gameObject);
 		}
 		items = new List<UIButton> ();
+		ApplyLayout();
 	}
 
-	public override Text SetText (string s, bool allcaps = false, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
+	public override Text SetText(string s, bool allcaps = false, float offset = 10f, UIFont _font = UI.DEFAULTFONT) {
 		Text textObj = null;
 		RectTransform _t = GetComponent<RectTransform> ();
 		textObj = GetComponentInChildren<Text> ();	
@@ -258,7 +296,7 @@ public class UIMenu : UIElement {
 			Focus();
 		}
 
-		OrderMenu();
+		ApplyLayout();
     }
 
 	public List<UIButton>selectableItems {
@@ -272,6 +310,7 @@ public class UIMenu : UIElement {
 			//Debug.Log("SelectItem");
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
+			previouslySelectedItem = selectedItem;
 			selectedItem = item;
 			//lastSelectionTime = Time.time;
 		}
@@ -279,7 +318,17 @@ public class UIMenu : UIElement {
 
 	public void Focus() {
 		if (canFocus) {
-			SelectFirstItem();
+			if (selectedItem == null) {
+				if (previouslySelectedItem == null) {
+					SelectFirstItem();
+				}
+				else {
+					SelectItem(previouslySelectedItem);
+				}
+			}
+			else {
+				SelectItem(selectedItem);
+			}
 		}
 	}
 
@@ -378,7 +427,7 @@ public class UIMenu : UIElement {
             b.SetBorderColor(_color);
         }
     }
-    public void SetButtonTextColors (Color _color){
+    public void SetButtonTextColors(Color _color){
         foreach (UIButton b in items) {
             b.SetTextColor(_color);
         }
@@ -445,38 +494,21 @@ public class UIMenu : UIElement {
 		}
 	}
 
-	public void SetAnchor (MenuAnchor anchor){
-		RectTransform _t = panel;
-		currentAnchor = anchor;
-        switch (anchor) {
-            case MenuAnchor.MiddleCenter:
-                _t.anchorMin = new Vector2(.5f, .5f);
-                _t.anchorMax = new Vector2(.5f, .5f);
-                _t.localScale = Vector3.one;
-                _t.localPosition = new Vector3(0f, 0f, 0f);
-                break;
-            case MenuAnchor.TopCenter:
-                _t.anchorMin = new Vector2(.5f, 1f);
-                _t.anchorMax = new Vector2(.5f, 1f);
-                _t.pivot = new Vector2(0.5f, 0.5f);
-                _t.localScale = Vector3.one;
-                _t.anchoredPosition = new Vector2(0, -_t.sizeDelta.y);
-                break;
-            case MenuAnchor.TopLeft:
-                _t.anchorMin = new Vector2(0f, 1f);
-                _t.anchorMax = new Vector2(0f, 1f);
-                _t.pivot = new Vector2(0f, 0.5f);
-                _t.localScale = Vector3.one;
-                _t.anchoredPosition = new Vector2(18f, -_t.sizeDelta.y);
-                break;
-            case MenuAnchor.TopRight:
-                _t.anchorMin = new Vector2(1f, 1f);
-                _t.anchorMax = new Vector2(1f, 1f);
-                _t.pivot = new Vector2(1f, 0.5f);
-                _t.localScale = Vector3.one;
-                _t.anchoredPosition = new Vector2(-18f, -_t.sizeDelta.y);
-                break;
-        }
+	MenuAnchor _anchor;
+	public MenuAnchor anchor {
+		get {
+			return _anchor;
+		}
+
+		set {
+			_anchor = value;
+			ApplyLayout();
+		}
+	}
+
+	public UIMenu SetAnchor(MenuAnchor anchor) {
+		this.anchor = anchor;
+		return this;
 	}
 }
 

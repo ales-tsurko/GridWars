@@ -60,8 +60,8 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuOpened() {
-		base.MatchmakerMenuOpened();
+	public override void ConfigureForOpen() {
+		base.ConfigureForOpen();
 
 		matchmaker.menu.Reset();
 

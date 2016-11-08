@@ -21,7 +21,6 @@ public class UIButton : UIElement {
 
 	UnityEvent method;
 
-	public UIMenu containingMenu;
 	public Text textComponent {
 		get {
 			return GetComponentInChildren<Text>();
@@ -38,9 +37,9 @@ public class UIButton : UIElement {
 			_text = value;
 			textComponent.text = value.ToUpper();
             SizeToFit();
-			textComponent.text = "";
+			//textComponent.text = "";
 			if (menu != null) {
-				menu.OrderMenu();
+				menu.ApplyLayout();
 			}
         }
     }
@@ -83,7 +82,21 @@ public class UIButton : UIElement {
 		}
 
 		set {
-			buttonComponent.interactable = value;
+			buttonComponent.interactable = value && allowsInteraction;
+		}
+	}
+
+	bool _allowsInteraction;
+	public bool allowsInteraction {
+		get {
+			return _allowsInteraction;
+		}
+
+		set {
+			_allowsInteraction = value;
+			if (!value) {
+				isInteractible = false;
+			}
 		}
 	}
 
@@ -112,6 +125,8 @@ public class UIButton : UIElement {
 	public bool isSelected;
 
     void Awake () {
+		allowsInteraction = true;
+
 		if (GetComponentInChildren<Text> () == null) {
 			UI.CreateTextObj (GetComponent<RectTransform>(), UIFont.Army);
 		}
@@ -145,8 +160,9 @@ public class UIButton : UIElement {
 		eventTrigger.triggers.Add(entry);
 	}
 
-	public void Update () {
+	public virtual void Update () {
 		//base.Update();
+		return;
 		if (textComponent.text != _text) {
 
 			if (startTime == 0) {
@@ -173,7 +189,7 @@ public class UIButton : UIElement {
 	}
 		
 	public void OnClick (){
-        if (action != null) {
+		if (action != null && isInteractible) {
 			App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
             action.Invoke();
         }

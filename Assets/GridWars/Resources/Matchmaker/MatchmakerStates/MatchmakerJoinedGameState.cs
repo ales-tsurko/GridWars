@@ -11,8 +11,8 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 
 	// MatchmakerMenuDelegate
 
-	public override void MatchmakerMenuOpened() {
-		base.MatchmakerMenuOpened();
+	public override void ConfigureForOpen() {
+		base.ConfigureForOpen();
 		matchmaker.menu.Reset();
 		openSoundtrackName = "Ready";
 
@@ -47,7 +47,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 			WaitForPeer();
 		}
 		else {
-			MatchmakerMenuOpened();
+			ConfigureForOpen();
 		}
 	}
 
@@ -84,7 +84,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 			WaitForPeer();
 		}
 		else {
-			MatchmakerMenuOpened();
+			ConfigureForOpen();
 		}
 	}
 

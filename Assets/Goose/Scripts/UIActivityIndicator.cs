@@ -18,7 +18,7 @@ public class UIActivityIndicator : UIButton {
 
 	void Awake() {
 		matchesNeighborSize = false;
-		isInteractible = false;
+		allowsInteraction = false;
 	}
 
 	public override string text {
@@ -38,7 +38,7 @@ public class UIActivityIndicator : UIButton {
 		showTime = Time.time;
 	}
 
-	void Update () {
+	public override void Update () {
 		var newDotCount = Mathf.FloorToInt(Time.time - showTime) % (maxDots + 1);
 
 		if (dotCount != newDotCount) {

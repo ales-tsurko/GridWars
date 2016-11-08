@@ -30,7 +30,7 @@ public static class UI {
 			image = button.GetComponent<Image> ();
 		}
 		if (type == MenuItemType.ButtonTextOnly) {
-			button.isInteractible = false;
+			button.allowsInteraction = false;
 			button.matchesNeighborSize = false;
 		} else {
 			//Sprite sprite = Resources.Load<Sprite> (SKINDIR + skin + type.ToString ());
@@ -76,7 +76,7 @@ public static class UI {
             case MenuItemType.ButtonSquare:
             case MenuItemType.ButtonTextOnly:
 				var button = ButtonPrefab(title, null);
-				button.isInteractible = false;
+			button.allowsInteraction = false;
 				button.matchesNeighborSize = false;
 				return button;
             case MenuItemType.ButtonPrefab:
