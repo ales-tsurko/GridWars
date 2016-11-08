@@ -18,6 +18,8 @@ public class PlayingGameState : AppState {
 		if (battlefield.isInternetPVP) {
 			battlefield.player1.isLocal = BoltNetwork.isServer;
 			battlefield.player2.isLocal = BoltNetwork.isClient;
+			battlefield.player1.npcModeOn = false;
+			battlefield.player2.npcModeOn = false;
 		}
 
 		ShowInGameMenus();

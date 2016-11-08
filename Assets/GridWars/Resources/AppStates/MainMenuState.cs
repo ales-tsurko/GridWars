@@ -13,8 +13,9 @@ public class MainMenuState : AppState {
 		network.Reset();
 
 		battlefield.isInternetPVP = false;
-		battlefield.player1.isLocal = false;
-		battlefield.player2.isLocal = false;
+		battlefield.isAiVsAi = false;
+		battlefield.player1.npcModeOn = false;
+		battlefield.player2.npcModeOn = false;
 
 		ShowMainMenu();
 
@@ -86,6 +87,9 @@ public class MainMenuState : AppState {
 	void SharedScreenPvpClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = true;
+		battlefield.player2.npcModeOn = false;
+		battlefield.player2.npcModeOn = false;
+
         Analytics.CustomEvent("SharedScreenPvPClicked", new Dictionary<string, object>
                 {
                     { "playTime", Time.timeSinceLevelLoad }
@@ -96,8 +100,8 @@ public class MainMenuState : AppState {
 	void PlayerVsCompClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = false;
-
 		battlefield.player2.npcModeOn = true;
+		battlefield.player2.npcModeOn = false;
 
         Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
                 {
