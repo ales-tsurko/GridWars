@@ -35,9 +35,16 @@ public class UIButton : UIElement {
 
         set {
 			_text = value;
+
+			bool shouldType = !value.Contains("<") && !value.Contains("\n");
+
 			textComponent.text = value.ToUpper();
-            SizeToFit();
-			//textComponent.text = "";
+			SizeToFit();
+
+			if (shouldType) {
+				textComponent.text = "";
+			}
+
 			if (menu != null) {
 				menu.ApplyLayout();
 			}
@@ -170,7 +177,6 @@ public class UIButton : UIElement {
 
 	public virtual void Update () {
 		//base.Update();
-		return;
 		if (textComponent.text != _text) {
 
 			if (startTime == 0) {
@@ -185,7 +191,15 @@ public class UIButton : UIElement {
 
 			int n = (int)((Time.time - startTime) * charactersPerSecond);
 			n = Mathf.Clamp(n, 0, _text.Length);
-			textComponent.text = _text.Substring(0, n).ToUpper() + new string(' ', _text.Length - n);
+			if (n < _text.Length) {
+				string typed = _text.Substring(0, n).ToUpper();
+				//string remaining = _text.Substring(n, _text.Length - n).ReplacedNonWhiteSpaceWithSpaces();
+				string remaining = new string(' ', _text.Length - n);
+				textComponent.text = typed + remaining;
+			} else {
+				textComponent.text = _text.ToUpper();
+			}
+
 			SizeToFit();
 		}
 	}

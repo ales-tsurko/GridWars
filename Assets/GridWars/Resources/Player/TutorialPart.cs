@@ -80,14 +80,7 @@ public class TutorialPart : MonoBehaviour {
 	public string VisibleText() {
 		string s = _formattedText;
 		int max = Mathf.Clamp(counter / countsPerCharacter, 0, s.Length);
-
-		string outs = s.Substring(0, max);
-
-		for (int i = max; i < s.Length; i ++) {
-			outs += s[i] == "\n"[0] ? "\n" : " ";
-		}
-
-		return outs;
+		return s.Substring(0, max).ReplacedNonWhiteSpaceWithSpaces();
 	}
 
 	void Next() {

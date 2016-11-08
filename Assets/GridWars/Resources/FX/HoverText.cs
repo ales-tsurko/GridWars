@@ -5,8 +5,8 @@ using System.Collections;
 
 public class HoverText : MonoBehaviour {
 
-	public Transform target;			// Object that this label should follow
-	//Vector3 offset = Vector3.up * 5f;	// Units in world space to offset; 1 unit above object by default
+	/*
+	public Transform target; // Object that this label should follow
 	public Camera cam = null;
 
 	public void Start () {
@@ -14,11 +14,12 @@ public class HoverText : MonoBehaviour {
 			cam = Camera.main;
 		}
 	}
+	*/
 
 	public void Update () {
+		Camera cam = Camera.main;
 		Vector3 directionToCam = Camera.main.transform.position - transform.position; 
 		transform.rotation = Quaternion.LookRotation(directionToCam);
-
 		//transform.rotation = Quaternion.LookRotation(n) * Quaternion.Euler(0, 90, 0);
 	}
 }
