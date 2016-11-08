@@ -6,7 +6,7 @@ public class MobileSAM : GroundVehicle {
 
 	public override void Awake() {
 		base.Awake();
-		powerCostPerLevel = new float[] { 8f, 14f, float.MaxValue };
+		powerCostPerLevel = new float[] { 8f, 8f*2f, float.MaxValue };
 	}
 
 	//NetworkObject

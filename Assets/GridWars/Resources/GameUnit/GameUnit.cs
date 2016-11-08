@@ -697,7 +697,6 @@ public class GameUnit : NetworkObject {
 			cycler.enabled = false;
 			Destroy(cycler);
 		}
-
 		cycler = gameObject.AddComponent<ColorCycleInFX>();
 		cycler.OnEnable();
 	}
