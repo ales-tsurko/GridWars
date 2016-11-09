@@ -551,6 +551,20 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
             if (binding.BindingSourceType == lastInputType) {
                 var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
                 textMesh.text = binding.HotkeyDescription();
+
+				if (PlayerInputsExtensions.KeynameToKey.ContainsKey(textMesh.text)) {
+					textMesh.text = PlayerInputsExtensions.KeynameToKey[textMesh.text];
+				}
+				/*
+				if (textMesh.text == "Backslash") {
+					textMesh.text = "\\";
+				} else if (textMesh.text == "Right Bracket") {
+					textMesh.text = "]";
+				} else if (textMesh.text == "Left Bracket") {
+					textMesh.text = "[";
+				} 
+				*/
+
                 if (textMesh.text == "△") {
                     textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
                     textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
@@ -567,6 +581,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
                     textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
                     textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
                 }
+
             }
         }
     }
