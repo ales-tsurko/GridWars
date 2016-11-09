@@ -100,8 +100,8 @@ public class MainMenuState : AppState {
 	void PlayerVsCompClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = false;
+		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = true;
-		battlefield.player2.npcModeOn = false;
 
         Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
                 {
