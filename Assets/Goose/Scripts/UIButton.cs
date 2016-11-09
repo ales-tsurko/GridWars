@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using InControl;
+
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
@@ -19,7 +21,9 @@ public class UIButton : UIElement {
 		return button;
 	}
 
+    PlayerAction playerAction;
 	UnityEvent method;
+    string baseText;
 
 	public Text textComponent {
 		get {
@@ -52,7 +56,8 @@ public class UIButton : UIElement {
     }
 
 	public UIButton SetText(string text) {
-		this.text = text;
+		baseText = this.text = text;
+        StartCoroutine(UpdateTextForHotkeys());
 		return this;
 	}
 
@@ -62,6 +67,64 @@ public class UIButton : UIElement {
 		this.isBackItem = isBackItem;
 		return this;
 	}
+
+    public void DoUpdateTextForHotkeys(){
+        StartCoroutine(UpdateTextForHotkeys());
+    }
+
+    public IEnumerator UpdateTextForHotkeys(){
+        yield return new WaitForEndOfFrame();
+        bool hotKeysOn = App.shared.prefs.keyIconsVisible;
+
+        if (playerAction == null || !hotKeysOn) {
+            this.text = baseText;
+            yield break;
+        }
+
+        BindingSourceType lastInputType = FindObjectOfType<Player>().inputs.LastInputType;
+        string s = "";
+
+        foreach (var binding in playerAction.Bindings) {
+            if (binding.BindingSourceType == lastInputType) {
+                        
+                s = binding.HotkeyDescription();
+
+                if (PlayerInputsExtensions.KeynameToKey.ContainsKey(s)) {
+                    s = PlayerInputsExtensions.KeynameToKey[s];
+                }
+                    
+               
+                /*
+                        if (textMesh.text == "△") {
+                            textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+                            textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
+                        }
+                        else if (textMesh.text == "▢") {
+                            textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+                            textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
+                        }
+                        else if (textMesh.text == "◯") {
+                            textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                            textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
+                        }
+                        else {
+                            textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
+                            textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
+                        }
+*/
+
+            }
+        }
+        if (s == "") {
+            yield break;
+        }
+        this.text = baseText + " (" + s + ")";
+    }
+
+    public void SetPlayerAction (PlayerAction _playerAction){
+        this.playerAction = _playerAction;
+        StartCoroutine(UpdateTextForHotkeys());
+    }
 
 	public RuntimeAnimatorController alertStyleController;
 	public RuntimeAnimatorController defaultStyleController;
@@ -286,5 +349,6 @@ public class UIButton : UIElement {
         t.color = _color;
 		return this;
     }
+
 }
 public enum ButtonColorType { Normal, Pressed, Hover, Disabled, All }
