@@ -29,6 +29,8 @@ public class MainMenuState : AppState {
 		base.WillExit();
 
 		matchmaker.matchmakerState.MainMenuExited();
+		matchmaker.menu.Close();
+		matchmaker.menu.Hide();
 	}
 
 	void ShowMainMenu() {
@@ -76,7 +78,6 @@ public class MainMenuState : AppState {
 	}
 
 	public void MatchmakerDisconnected() {
-		var wasSelected = menu.selectedItem == internetPvpButton;
 		internetPvpButton.UseAlertStyle();
 		if (menu.hasFocus) {
 			menu.Focus(); //reselect to update style
