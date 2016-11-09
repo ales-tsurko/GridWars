@@ -83,8 +83,6 @@ public class UIButton : UIElement {
 		return this;
 	}
 
-	public object data;
-
 	public UIButton SetData(object data) {
 		this.data = data;
 		return this;

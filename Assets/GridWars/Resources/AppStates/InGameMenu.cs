@@ -7,15 +7,8 @@ public class InGameMenu {
 	public Player player;
 	public MenuAnchor menuPlacement;
 
-
-
-	public bool hasFocus {
-		get {
-			return menu.hasFocus;
-		}
-	}
-
 	public void Show() {
+		player.inGameMenu = this;
 		App.shared.ResetMenu();
 		App.shared.menu.Hide();
 		Reset();
@@ -33,41 +26,24 @@ public class InGameMenu {
 	}
 
 	public void ReadInput () {
-		concedeItem.ReadInput();
-
-		if (hotkeysItem != null) {
-			hotkeysItem.ReadInput();
+		if (inputs.toggleMenu.WasPressed) {
+			ToggleMenuActivated();
 		}
 
-		if (previousCameraItem != null) {
-			previousCameraItem.ReadInput();
+		if (inputs.concede.WasPressed) {
+			ConcedeActivated();
 		}
 
-		if (nextCameraItem != null) {
-			nextCameraItem.ReadInput();
+		if (inputs.toggleHotkeys.WasPressed) {
+			HotkeysActivated();
 		}
 
-		if (firstPersonCameraItem != null) {
-			firstPersonCameraItem.ReadInput();
+		if (inputs.nextCamera.WasPressed) {
+			ChangeCameraActivated();
 		}
-
-		/*if (inputs.toggleMenu.WasPressed && !App.shared.cameraController.isInFirstPersonMode) {
-			if (menu.hasFocus) {
-				menu.LoseFocus();
-			}
-			else {
-                MonoBehaviour.FindObjectOfType<CameraController>().menuHasFocus = true;
-				menu.SelectNextItem();
-			}
-		}*/
 	}
 
 	UIMenu menu;
-	InGameMenuItem concedeItem;
-	InGameMenuItem hotkeysItem;
-	InGameMenuItem nextCameraItem;
-	InGameMenuItem previousCameraItem;
-	InGameMenuItem firstPersonCameraItem;
 
 	PlayerInputs inputs {
 		get {
@@ -84,51 +60,8 @@ public class InGameMenu {
 
 		menu.backgroundColor = Color.clear;
 
-		string title;
+		ShowOptionsButton();
 
-		//TODO: detect which player conceded in shared screen pvp
-		if (App.shared.battlefield.isAiVsAi) { //AIvAI
-			title = "Quit";
-		}
-		else {
-			title = "Concede";
-		}
-        menu.isNavigable = false;
-		concedeItem = new InGameMenuItem();
-		concedeItem.title = title;
-		concedeItem.inGameMenu = this;
-		concedeItem.playerAction = inputs.concede;
-		concedeItem.menuAction = HandleConcede;
-		menu.AddItem(concedeItem.menuItem);
-
-		if (!App.shared.battlefield.isAiVsAi) {
-			hotkeysItem = new InGameMenuItem();
-			hotkeysItem.title = "Hotkeys";
-			hotkeysItem.inGameMenu = this;
-			hotkeysItem.playerAction = inputs.toggleHotkeys;
-			hotkeysItem.menuAction = HandleHotkeys;
-			menu.AddItem(hotkeysItem.menuItem);
-		}
-
-		if (inputs.nextCamera.Bindings.Count > 0) {
-			/*
-			previousCameraItem = new InGameMenuItem();
-			previousCameraItem.inGameMenu = this;
-			previousCameraItem.title = "< Camera";
-			previousCameraItem.menuAction = HandlePreviousCamera;
-			menu.AddItem(previousCameraItem.menuItem);
-			*/
-
-			nextCameraItem = new InGameMenuItem();
-			nextCameraItem.inGameMenu = this;
-			nextCameraItem.playerAction = inputs.nextCamera;
-			nextCameraItem.title = "Camera";
-			nextCameraItem.menuAction = HandleCamera;
-			menu.AddItem(nextCameraItem.menuItem);
-		}
-
-		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(menuPlacement);
 		menu.selectsOnShow = false;
 		menu.inputs = inputs;
 		menu.Show();
@@ -141,37 +74,86 @@ public class InGameMenu {
 		}
 	}
 
-
-
-	void HandleConcede() {
-        GameObject listener = new GameObject();
-        listener.name = "AnyKeyListener";
-        AnyKeyListener anyKeyListener = listener.AddComponent<AnyKeyListener>();
-        anyKeyListener.Listen(inputs, ReallyConcede, Reset, inputs.concede);
-
-
-		menu.Reset();
-		if (App.shared.battlefield.isAiVsAi) { //AIvAI
-			menu.AddItem(UI.MenuItem("Leave", ReallyConcede));
-			menu.AddItem(UI.MenuItem("Rematch", Rematch));
+	void ToggleMenuActivated() {
+		if (isOpen) {
+			Close();
 		}
 		else {
-			menu.AddItem(UI.MenuItem("Confirm", ReallyConcede));
+			Open();
+		}
+	}
+
+	public bool isOpen = false;
+
+	void Open() {
+		if (player.opponent.inGameMenu != null) {
+			if (player.opponent.inGameMenu.isOpen) {
+				return;
+			}
+			else {
+				player.opponent.inGameMenu.menu.Hide();
+			}
+		}
+			
+		isOpen = true;
+
+		menu.Reset();
+		menu.UseDefaultBackgroundColor();
+		menu.anchor = MenuAnchor.MiddleCenter;
+
+		string text;
+		if (App.shared.battlefield.isAiVsAi) { //AIvAI
+			text = "Quit";
+		}
+		else {
+			text = "Concede";
 		}
 
-		menu.AddItem(UI.MenuItem("Cancel", Reset), true);
-		menu.SetOrientation(MenuOrientation.Horizontal);
-		menu.SetAnchor(menuPlacement);
-		menu.selectsOnShow = true;
-		menu.inputs = inputs;
-		menu.Show();
+		menu.AddNewButton().SetText(text).SetAction(ConcedeActivated);
+		menu.AddNewButton().SetText("Hotkeys").SetAction(HotkeysActivated);
+		menu.AddNewButton().SetText("Change Camera").SetAction(ChangeCameraActivated);
+		menu.AddNewButton().SetText("Close").SetAction(CloseActivated);
+
+		menu.Focus();
 	}
 
-	void Rematch() {
-		playingGameState.RestartGame();
+	void Close() {
+		if (player.opponent.inGameMenu != null) {
+			player.opponent.inGameMenu.menu.Show();
+		}
+
+		isOpen = false;
+		ShowOptionsButton();
 	}
 
-	void ReallyConcede() {
+	void ShowOptionsButton() {
+		menu.Reset();
+		menu.backgroundColor = Color.clear;
+		menu.anchor = menuPlacement;
+		menu.AddNewButton().SetText("Options").SetAction(OptionsActivated);
+	}
+
+	void OptionsActivated() {
+		Open();
+	}
+
+	void ConcedeActivated() {
+		menu.Reset();
+
+		if (App.shared.battlefield.isAiVsAi) { //AIvAI
+			menu.AddNewButton().SetText("Leave").SetAction(ConfirmConcedeActivated);
+			menu.AddNewButton().SetText("Rematch").SetAction(RematchActivated);
+		}
+		else {
+			menu.AddNewButton().SetText("Confirm").SetAction(ConfirmConcedeActivated);
+		}
+
+		menu.AddNewButton().SetText("Cancel").SetAction(CancelConcedeActivated);
+
+		menu.Focus();
+	}
+
+	void ConfirmConcedeActivated() {
 		if (App.shared.battlefield.isAiVsAi) {
 			playingGameState.Leave();
 		}
@@ -180,67 +162,54 @@ public class InGameMenu {
 		}
 	}
 
-	//TODO: different for each player?
-	void HandleHotkeys() {
-		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
-        foreach (Tower _tower in GameObject.FindObjectsOfType<Tower>()) {
-            _tower.UpdateHotKeys();
-        }
+	void RematchActivated() {
+		playingGameState.RestartGame();
 	}
 
-	void HandleCamera() {
+	void CancelConcedeActivated() {
+		CloseActivated();
+	}
+
+	void HotkeysActivated() {
+		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
+		foreach (Tower _tower in GameObject.FindObjectsOfType<Tower>()) {
+			_tower.UpdateHotKeys();
+		}
+	}
+
+	void ChangeCameraActivated() {
 		App.shared.cameraController.NextPosition();
+	}
+
+	void CloseActivated() {
+		Close();
 	}
 
 	//Matchmaker Menu
 
 	public void ConnectMatchmakerMenu() {
+		/*
 		App.shared.Log("ConnectMatchmakerMenu: " + menu, this);
 		App.shared.matchmaker.menu.nextMenu = menu;
 		App.shared.matchmaker.menu.previousMenu = menu;
-		App.shared.matchmaker.menu.orientation = MenuOrientation.Horizontal;
 
 		if (menu != null) {
 			menu.previousMenu = App.shared.matchmaker.menu;
 			menu.nextMenu = App.shared.matchmaker.menu;
 		}
+		*/
 	}
 
 	public void DisconnectMatchmakerMenu() {
+		/*
 		App.shared.Log("DisconnectMatchmakerMenu: " + menu, this);
 		App.shared.matchmaker.menu.nextMenu = null;
 		App.shared.matchmaker.menu.previousMenu = null;
-		App.shared.matchmaker.menu.orientation = MenuOrientation.Vertical;
 
 		if (menu != null) {
 			menu.previousMenu = null;
 			menu.nextMenu = null;
 		}
+		*/
 	}
 }
-
-public class InGameMenuItem {
-	public InGameMenu inGameMenu;
-	public string title;
-	public InControl.PlayerAction playerAction;
-	public System.Action menuAction;
-
-	public UIButton menuItem {
-		get {
-			if (_menuItem == null) {
-				_menuItem = UI.MenuItem(title, menuAction);
-			}
-
-			return _menuItem;
-		}
-	}
-
-	public void ReadInput() {
-		if (playerAction.WasPressed) {
-			menuAction();
-		}
-	}
-
-	UIButton _menuItem;
-}
-

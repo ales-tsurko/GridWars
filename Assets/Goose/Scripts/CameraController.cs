@@ -199,6 +199,7 @@ public class CameraController : MonoBehaviour {
 		}
 		#endif
 
+		/* DISABLE FOR NOW
 		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
 			Ray vRay = cam.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
@@ -209,6 +210,8 @@ public class CameraController : MonoBehaviour {
 				}
 			}
 		}
+		*/
+
         //check for Joystick input for FPS Mode
         if (isInFirstPersonMode) {
             if (inputs.goBack.WasPressed || inputs.exitFPS.WasPressed) {
@@ -226,9 +229,13 @@ public class CameraController : MonoBehaviour {
             return;
         }
         //check for Camera position change
+
+		/*
+		 * DISABLE UNTIL WE RETHINK FIRST PERSON
         if (!isInFirstPersonMode && (inputs.camPrev.WasPressed || inputs.camNext.WasPressed)) {
             NextPosition(inputs.camNext.WasPressed);
         }
+        */
 
 		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
 	//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {

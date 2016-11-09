@@ -226,6 +226,7 @@ public class UIMenu : UIElement {
 		case MenuAnchor.MiddleCenter:
 			panel.anchorMin = new Vector2(.5f, .5f);
 			panel.anchorMax = new Vector2(.5f, .5f);
+			panel.pivot = new Vector2(0.5f, 0.5f);
 			panel.anchoredPosition = new Vector3(0f, 0f, 0f);
 			break;
 		case MenuAnchor.TopCenter:
@@ -268,6 +269,8 @@ public class UIMenu : UIElement {
 			Destroy(child.gameObject);
 		}
 		items = new List<UIButton> ();
+		previouslySelectedItem = null;
+		selectedItem = null;
 		ApplyLayout();
 	}
 
@@ -307,7 +310,6 @@ public class UIMenu : UIElement {
 
 	public void SelectItem(UIButton item) {
 		if (item != null) {
-			//Debug.Log("SelectItem");
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
 			previouslySelectedItem = selectedItem;
@@ -361,7 +363,6 @@ public class UIMenu : UIElement {
 
 	public void ItemDeselected(UIButton item) {
 		if (selectedItem == item) {
-			//App.shared.Log("ItemDeselected", item);
 			selectedItem = null;
 		}
 	}
@@ -381,7 +382,6 @@ public class UIMenu : UIElement {
 	public void SelectNextItem() {
 		var nextIndex = selectedItemIndex + 1;
 		if (nextIndex >= selectableItems.Count) {
-			//App.shared.Log(nextMenu, this);
 			if (nextMenu != null && nextMenu.canFocus) {
 				StartCoroutine(this.OnEndOfFrame(() => { //otherwise menu might read input again
 					nextMenu.SelectFirstItem();
@@ -442,30 +442,25 @@ public class UIMenu : UIElement {
 		if (hasFocus) {
 			if (orientation == MenuOrientation.Vertical) {
 				if (inputs.upItem.WasPressed) {
-					//App.shared.Log("inputs.upItem.WasPressed", this);
 					SelectPreviousItem();
 				}
 
 				if (inputs.downItem.WasPressed) {
-					//App.shared.Log("inputs.downItem.WasPressed", this);
 					SelectNextItem();
 				}
 			}
 			else {
 				if (inputs.leftItem.WasPressed) {
-					//App.shared.Log("inputs.leftItem.WasPressed", this);
 					SelectPreviousItem();
 				}
 
 				if (inputs.rightItem.WasPressed) {
-					//App.shared.Log("inputs.rightItem.WasPressed", this);
 					SelectNextItem();
 				}
 			}
 
 			if (inputs.selectItem.WasPressed) {
 				if (selectedItem != null) {
-					//App.shared.Log("selectedItem.OnClick();", this);
 					selectedItem.OnClick();
 				}
 			}

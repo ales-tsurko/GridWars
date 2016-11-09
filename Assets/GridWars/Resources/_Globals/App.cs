@@ -116,7 +116,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		matchmaker.Update();
 		state.Update();
 		//keys.Update();
-		UpdateMenuFocus();
+		//UpdateMenuFocus();
 	}
 
 	void UpdateMenuFocus() {

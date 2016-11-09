@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Linq;
 using InControl;
 
-public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
+public class Tower : GroundBuilding, CameraControllerDelegate {
 
 	public GameObject iconPlacement;
 
@@ -347,7 +347,10 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
-		
+		if (player.inGameMenu == null || player.inGameMenu.isOpen) {
+			return;
+		}
+
 			if (releaseAction.WasPressed) {
 				ReleaseUnitDown();
 			}
@@ -507,31 +510,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate, KeyDelegate {
 		}
 
 		return e;
-	}
-
-	// KeyDelegate
-
-	bool inGameMenuIsFocused {
-		get {
-			if (App.shared.state.inheritsFrom(typeof(PlayingGameState))) {
-				return (App.shared.state as PlayingGameState).InGameMenuForPlayer(player).hasFocus;
-			}
-			else {
-				return false;
-			}
-		}
-	}
-
-	public void KeyPressed() {
-		if (!npcModeOn) {
-			SendAttemptQueueUnit();
-		}
-	}
-
-	public void KeyLongPressed() {
-		if (!npcModeOn) {
-			SendAttemptQueueUnit(1);
-		}
 	}
 
 

@@ -158,8 +158,6 @@ public class PlayingGameState : AppState {
 		inGameMenu.menuPlacement = player.localNumber == 2 ? MenuAnchor.TopRight : MenuAnchor.TopLeft;
 		inGameMenu.Show();
 
-		player.inGameMenu = inGameMenu;
-
 		inGameMenus.Add(inGameMenu);
 	}
 
