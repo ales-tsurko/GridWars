@@ -121,9 +121,10 @@ public class UIButton : UIElement {
         this.text = baseText + " (" + s + ")";
     }
 
-    public void SetPlayerAction (PlayerAction _playerAction){
+    public UIButton SetPlayerAction (PlayerAction _playerAction){
         this.playerAction = _playerAction;
         StartCoroutine(UpdateTextForHotkeys());
+        return this;
     }
 
 	public RuntimeAnimatorController alertStyleController;
