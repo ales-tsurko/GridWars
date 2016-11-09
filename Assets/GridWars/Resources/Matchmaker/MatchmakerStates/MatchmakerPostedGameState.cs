@@ -15,9 +15,10 @@ public class MatchmakerPostedGameState : MatchmakerState {
 		base.ConfigureForClosed();
 
 		matchmaker.menu.Reset();
-		matchmaker.menu.AddNewButton()
+		UIButton b = matchmaker.menu.AddNewButton()
 			.SetText("Searching for Opponent")
 			.SetAction(matchmaker.menu.Open);
+		b.doesType = true;
 	}
 
 	public override void ConfigureForOpen() {

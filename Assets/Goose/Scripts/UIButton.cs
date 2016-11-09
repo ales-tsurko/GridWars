@@ -11,6 +11,8 @@ public class UIButton : UIElement {
 
 	public float startTime = 0;
 	public float charactersPerSecond = 10f;
+	public bool doesType = false;
+	private bool finishedTyping = false;
 
 	public static UIButton Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
@@ -36,7 +38,8 @@ public class UIButton : UIElement {
         set {
 			_text = value;
 
-			bool shouldType = !value.Contains("<") && !value.Contains("\n");
+
+			bool shouldType = doesType && (!value.Contains("<") && !value.Contains("\n"));
 
 			textComponent.text = value.ToUpper();
 			SizeToFit();
@@ -175,7 +178,7 @@ public class UIButton : UIElement {
 
 	public virtual void Update () {
 		//base.Update();
-		if (textComponent.text != _text) {
+		if (doesType && !finishedTyping) {
 
 			if (startTime == 0) {
 				startTime = Time.time;
@@ -196,6 +199,7 @@ public class UIButton : UIElement {
 				textComponent.text = typed + remaining;
 			} else {
 				textComponent.text = _text.ToUpper();
+				finishedTyping = true;
 			}
 
 			SizeToFit();
