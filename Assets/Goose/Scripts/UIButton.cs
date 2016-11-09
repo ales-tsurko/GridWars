@@ -204,9 +204,15 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
 		if (action != null && isInteractible) {
-			App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
-            action.Invoke();
+			StartCoroutine(ActivateCoroutine());
         }
+	}
+
+	IEnumerator ActivateCoroutine() {
+		yield return new WaitForEndOfFrame(); // If action selects a new menu item, it won't be activated.
+		//App.shared.Log("OnClick: " + text, this);
+		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
+		action.Invoke();
 	}
 
 	public void OnPointerEnter() {
