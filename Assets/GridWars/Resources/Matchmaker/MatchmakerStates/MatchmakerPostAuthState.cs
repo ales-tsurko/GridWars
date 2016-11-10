@@ -13,6 +13,9 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		if (mainMenuState != null) {
 			mainMenuState.MatchmakerConnected();
 		}
+		else {
+			matchmaker.menu.Hide();
+		}
 	}
 	// MatchmakerMenuDelegate
 

@@ -9,6 +9,13 @@ public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		if (QualitySettings.vSyncCount > 0) {
+			QualitySettings.vSyncCount = 2;
+		}
+		else {
+			Application.targetFrameRate = 30;
+		}
+
 		app.battlefield.SoftReset();
 		network.Reset();
 
@@ -28,7 +35,16 @@ public class MainMenuState : AppState {
 	public override void WillExit() {
 		base.WillExit();
 
+		if (QualitySettings.vSyncCount > 0) {
+			QualitySettings.vSyncCount = 1;
+		}
+		else {
+			Application.targetFrameRate = 60;
+		}
+
 		matchmaker.matchmakerState.MainMenuExited();
+		matchmaker.menu.Close();
+		matchmaker.menu.Hide();
 	}
 
 	void ShowMainMenu() {
@@ -76,7 +92,6 @@ public class MainMenuState : AppState {
 	}
 
 	public void MatchmakerDisconnected() {
-		var wasSelected = menu.selectedItem == internetPvpButton;
 		internetPvpButton.UseAlertStyle();
 		if (menu.hasFocus) {
 			menu.Focus(); //reselect to update style
@@ -99,8 +114,8 @@ public class MainMenuState : AppState {
 	void PlayerVsCompClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = false;
+		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = true;
-		battlefield.player2.npcModeOn = false;
 
         Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
                 {

@@ -109,10 +109,10 @@ public class InGameMenu {
 			text = "Concede";
 		}
 
-		menu.AddNewButton().SetText(text).SetAction(ConcedeActivated);
-		menu.AddNewButton().SetText("Hotkeys").SetAction(HotkeysActivated);
-		menu.AddNewButton().SetText("Change Camera").SetAction(ChangeCameraActivated);
-		menu.AddNewButton().SetText("Close").SetAction(CloseActivated);
+        menu.AddNewButton().SetText(text).SetAction(ConcedeActivated).SetPlayerAction(player.inputs.concede);
+        menu.AddNewButton().SetText("Hotkeys").SetAction(HotkeysActivated).SetPlayerAction(player.inputs.toggleHotkeys);
+        menu.AddNewButton().SetText("Change Camera").SetAction(ChangeCameraActivated).SetPlayerAction(player.inputs.nextCamera);
+        menu.AddNewButton().SetText("Close").SetAction(CloseActivated);
 
 		menu.Focus();
 	}
@@ -130,7 +130,8 @@ public class InGameMenu {
 		menu.Reset();
 		menu.backgroundColor = Color.clear;
 		menu.anchor = menuPlacement;
-		menu.AddNewButton().SetText("Options").SetAction(OptionsActivated);
+        menu.AddNewButton().SetText("Options").SetAction(OptionsActivated).SetPlayerAction(player.inputs.toggleMenu);
+
 	}
 
 	void OptionsActivated() {
@@ -139,6 +140,9 @@ public class InGameMenu {
 
 	void ConcedeActivated() {
 		menu.Reset();
+		menu.anchor = MenuAnchor.MiddleCenter;
+
+		menu.AddNewText().SetText("Are you sure?");
 
 		if (App.shared.battlefield.isAiVsAi) { //AIvAI
 			menu.AddNewButton().SetText("Leave").SetAction(ConfirmConcedeActivated);
@@ -172,9 +176,6 @@ public class InGameMenu {
 
 	void HotkeysActivated() {
 		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
-		foreach (Tower _tower in GameObject.FindObjectsOfType<Tower>()) {
-			_tower.UpdateHotKeys();
-		}
 	}
 
 	void ChangeCameraActivated() {

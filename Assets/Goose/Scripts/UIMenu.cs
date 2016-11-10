@@ -312,6 +312,7 @@ public class UIMenu : UIElement {
 		if (item != null) {
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
+			//App.shared.Log("ItemSelected: " + item.text);
 			previouslySelectedItem = selectedItem;
 			selectedItem = item;
 			//lastSelectionTime = Time.time;
@@ -362,7 +363,9 @@ public class UIMenu : UIElement {
 	}
 
 	public void ItemDeselected(UIButton item) {
+		//App.shared.Log("ItemDeselected: " + item.text);
 		if (selectedItem == item) {
+			//App.shared.Log("selectedItem = null: " + item.text);
 			selectedItem = null;
 		}
 	}

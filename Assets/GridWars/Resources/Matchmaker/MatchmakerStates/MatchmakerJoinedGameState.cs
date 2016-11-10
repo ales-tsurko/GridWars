@@ -31,9 +31,17 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 				.SetAction(Ready);
 		}
 
-		matchmaker.menu.AddNewButton()
-			.SetText("Leave")
-			.SetAction(Leave);
+		if (account.isReadyForGame) {
+			matchmaker.menu.AddNewButton()
+				.SetText("Cancel")
+				.SetAction(Leave);
+		}
+		else {
+			matchmaker.menu.AddNewButton()
+				.SetText("Decline")
+				.SetAction(Leave);
+		}
+
 
 		matchmaker.menu.Show();
 

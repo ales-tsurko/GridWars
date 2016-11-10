@@ -45,7 +45,7 @@ public class BindInputsToPlayersState : AppState {
 	*/
 
 	void Continue() {
-		if (InputManager.ActiveDevice.Action1.WasPressed && InputManager.ActiveDevice != assignedDevice) {
+		if (app.inputs.LastInputType == BindingSourceType.DeviceBindingSource && InputManager.ActiveDevice != assignedDevice) {
 			assignedDevice = InputManager.ActiveDevice;
 			player.inputs = new PlayerInputs();
 			player.inputs.LastInputType = BindingSourceType.DeviceBindingSource;
@@ -59,7 +59,7 @@ public class BindInputsToPlayersState : AppState {
 				NextState();
 			}
 		}
-		else if (Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.Return)) {
+		else if (app.inputs.LastInputType == BindingSourceType.KeyBindingSource || app.inputs.LastInputType == BindingSourceType.MouseBindingSource) {
 			player.inputs = new PlayerInputs();
 			player.inputs.LastInputType = BindingSourceType.KeyBindingSource;
 

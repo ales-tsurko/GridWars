@@ -76,9 +76,14 @@ public class PlayingGameState : AppState {
 	}
 
 	public void GameEnded(Player victor) {
-		var state = new PostGameState();
-		state.victoriousPlayer = victor;
-		TransitionTo(state);
+		if (battlefield.isAiVsAi) {
+			TransitionTo(new PlayingGameState());
+		}
+		else {
+			var state = new PostGameState();
+			state.victoriousPlayer = victor;
+			TransitionTo(state);
+		}
 	}
 
 	public void GameCancelled() {

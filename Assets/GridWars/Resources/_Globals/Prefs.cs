@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class Prefs {
+	public static string PrefsKeyIconsVisibleChangedNotification = "PrefsKeyIconsVisibleChangedNotification";
+
 	public bool keyIconsVisible {
 		get {
             return GetBool("keyIconsVisible");
@@ -9,6 +11,7 @@ public class Prefs {
 
 		set {
 			SetBool("keyIconsVisible", value);
+			App.shared.notificationCenter.Post(PrefsKeyIconsVisibleChangedNotification, this);
 		}
 	}
 

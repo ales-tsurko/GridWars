@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using InControl;
+
 
 [RequireComponent(typeof(Image))]
 [RequireComponent(typeof(Button))]
@@ -20,8 +22,9 @@ public class UIButton : UIElement {
 		UIButton button = go.GetComponent<UIButton>();
 		return button;
 	}
-
+		
 	UnityEvent method;
+    string baseText;
 
 	public Text textComponent {
 		get {
@@ -30,6 +33,7 @@ public class UIButton : UIElement {
 	}
 
 	string _text;
+	string _textSuffix = "";
     public virtual string text {
         get {
 			return _text;
@@ -47,10 +51,6 @@ public class UIButton : UIElement {
 			if (shouldType) {
 				textComponent.text = "";
 			}
-
-			if (menu != null) {
-				menu.ApplyLayout();
-			}
         }
     }
 
@@ -65,6 +65,23 @@ public class UIButton : UIElement {
 		this.isBackItem = isBackItem;
 		return this;
 	}
+
+	PlayerAction _playerAction;
+	public PlayerAction playerAction {
+		get {
+			return _playerAction;
+		}
+
+		set {
+			_playerAction = value;
+			UpdateSuffix();
+		}
+	}
+
+    public UIButton SetPlayerAction (PlayerAction _playerAction){
+        playerAction = _playerAction;
+        return this;
+    }
 
 	public RuntimeAnimatorController alertStyleController;
 	public RuntimeAnimatorController defaultStyleController;
@@ -174,31 +191,65 @@ public class UIButton : UIElement {
 		entry.eventID = EventTriggerType.PointerEnter;
 		entry.callback.AddListener(data => OnPointerEnter());
 		eventTrigger.triggers.Add(entry);
+
+		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+	}
+
+	void OnDestroy() {
+		if (App.shared.notificationCenter != null) {
+			App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+		}
+	}
+
+	void PrefsKeyIconsVisibleChanged(Notification notification) {
+		UpdateSuffix();
+	}
+
+	void UpdateSuffix() {
+		if (playerAction != null) {
+			var previousTextSuffix = _textSuffix;
+
+			var description = playerAction.HotkeyDescription();
+
+			if (description == "" || !App.shared.prefs.keyIconsVisible) {
+				_textSuffix = "";
+			}
+			else {
+				_textSuffix = " (" + description + ")";
+			}
+
+			if (previousTextSuffix != _textSuffix) {
+				textComponent.text = "";
+				startTime = 0;
+			}
+		}
 	}
 
 	public virtual void Update () {
 		//base.Update();
 		if (doesType && !finishedTyping) {
 
+			var fullText = _text + _textSuffix;
+
 			if (startTime == 0) {
 				startTime = Time.time;
 				textComponent.text = "";
-				if (_text.Length < 20) {
+				if (fullText.Length < 20) {
 					charactersPerSecond = 20f;
 				} else {
-					charactersPerSecond = _text.Length / 1f;
+					charactersPerSecond = fullText.Length / 1f;
 				}
 			}
 
 			int n = (int)((Time.time - startTime) * charactersPerSecond);
-			n = Mathf.Clamp(n, 0, _text.Length);
-			if (n < _text.Length) {
-				string typed = _text.Substring(0, n).ToUpper();
-				//string remaining = _text.Substring(n, _text.Length - n).ReplacedNonWhiteSpaceWithSpaces();
-				string remaining = new string(' ', _text.Length - n);
+			n = Mathf.Clamp(n, 0, fullText.Length);
+			if (n < fullText.Length) {
+				string typed = fullText.Substring(0, n).ToUpper();
+				//string remaining = fullText.Substring(n, fullText.Length - n).ReplacedNonWhiteSpaceWithSpaces();
+				string remaining = new string(' ', fullText.Length - n);
 				textComponent.text = typed + remaining;
 			} else {
-				textComponent.text = _text.ToUpper();
+				textComponent.text = fullText.ToUpper();
 				finishedTyping = true;
 			}
 
@@ -208,9 +259,15 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
 		if (action != null && isInteractible) {
-			App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
-            action.Invoke();
+			StartCoroutine(ActivateCoroutine());
         }
+	}
+
+	IEnumerator ActivateCoroutine() {
+		yield return new WaitForEndOfFrame(); // If action selects a new menu item, it won't be activated.
+		//App.shared.Log("OnClick: " + text, this);
+		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
+		action.Invoke();
 	}
 
 	public void OnPointerEnter() {
@@ -240,6 +297,10 @@ public class UIButton : UIElement {
 			w + textComponent.font.fontSize*innerMargins.x*2,
 			h + textComponent.font.fontSize*innerMargins.y*2
 		);
+
+		if (menu != null) {
+			menu.ApplyLayout();
+		}
     }
 
     public void SetMenuSize (Vector2 size){
@@ -284,5 +345,6 @@ public class UIButton : UIElement {
         t.color = _color;
 		return this;
     }
+
 }
 public enum ButtonColorType { Normal, Pressed, Hover, Disabled, All }

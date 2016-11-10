@@ -177,9 +177,10 @@ public static class PlayerInputsExtensions {
 	};
 
 	public static Dictionary<string, string> KeynameToKey = new Dictionary<string, string>() {
-		{ "Backslash", "\\"},
-		{ "Right Bracket",  "]"},
-		{ "Left Bracket", "[" }
+		{ "backslash", "\\" },
+		{ "right bracket",  "]" },
+		{ "left bracket", "[" },
+		{ "escape", "esc" }
 	};
 
 	public static string HotkeyDescription(this DeviceBindingSource self) {
@@ -193,14 +194,46 @@ public static class PlayerInputsExtensions {
 	}
 
 	public static string HotkeyDescription(this KeyBindingSource self) {
-		return self.Control.ToString();
+		var handle = self.Control.ToString();
+
+		foreach (var pair in PlayerInputsExtensions.KeynameToKey) {
+			if (handle.ToLower().StartsWith(pair.Key)) {
+				return pair.Value;
+			}
+		}
+		return handle.Substring(0, 1);
+	}
+
+	public static BindingSource LastBindingSource(this PlayerAction self) {
+		BindingSource defaultBindingSource = null;
+
+		foreach (var binding in self.Bindings) {
+			if (binding is KeyBindingSource) {
+				defaultBindingSource = binding;
+			}
+			if (binding.BindingSourceType == self.LastInputType) {
+				return binding;
+			}
+		}
+
+		return defaultBindingSource;
+	}
+
+	public static string HotkeyDescription(this PlayerAction self) {
+		var bindingSource = self.LastBindingSource();
+		if (bindingSource == null) {
+			return "";
+		}
+		else {
+			return bindingSource.HotkeyDescription();
+		}
 	}
 
 	public static string HotkeyDescription(this BindingSource self) {
-		if (self.inheritsFrom(typeof(KeyBindingSource))) {
+		if (self is KeyBindingSource) {
 			return (self as KeyBindingSource).HotkeyDescription();
 		}
-		else if (self.inheritsFrom(typeof(DeviceBindingSource))) {
+		else if (self is DeviceBindingSource) {
 			return (self as DeviceBindingSource).HotkeyDescription();
 		}
 		else {
