@@ -26,6 +26,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Prefs prefs;
 	public AppState state { get; set; }
 	public UIMenu menu;
+	public NotificationCenter notificationCenter;
 
 	public Matchmaker matchmaker;
 	public Network network;
@@ -34,6 +35,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Keys keys;
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
+	public bool isExiting;
 
 	public string version {
 		get {
@@ -65,6 +67,8 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	public void Start() {
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
+
+		notificationCenter = new NotificationCenter();
 
 		menu = UI.Menu();
 
@@ -130,10 +134,6 @@ public class App : MonoBehaviour, AppStateOwner {
 				}
 			}
 		}
-	}
-
-	void OnDestroy() {
-		inputs.Destroy();
 	}
 
 	// --- Menu --------------------
@@ -366,6 +366,9 @@ public class App : MonoBehaviour, AppStateOwner {
 		return v;
 	}
 
+	void OnApplicationQuit() {
+		isExiting = true;
+	}
 }
 
 

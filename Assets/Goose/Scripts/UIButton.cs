@@ -20,8 +20,7 @@ public class UIButton : UIElement {
 		UIButton button = go.GetComponent<UIButton>();
 		return button;
 	}
-
-    PlayerAction playerAction;
+		
 	UnityEvent method;
     string baseText;
 
@@ -32,6 +31,7 @@ public class UIButton : UIElement {
 	}
 
 	string _text;
+	string _textSuffix = "";
     public virtual string text {
         get {
 			return _text;
@@ -48,16 +48,11 @@ public class UIButton : UIElement {
 			if (shouldType) {
 				textComponent.text = "";
 			}
-
-			if (menu != null) {
-				menu.ApplyLayout();
-			}
         }
     }
 
 	public UIButton SetText(string text) {
-		baseText = this.text = text;
-        StartCoroutine(UpdateTextForHotkeys());
+		this.text = text;
 		return this;
 	}
 
@@ -68,62 +63,20 @@ public class UIButton : UIElement {
 		return this;
 	}
 
-    public void DoUpdateTextForHotkeys(){
-        StartCoroutine(UpdateTextForHotkeys());
-    }
+	PlayerAction _playerAction;
+	public PlayerAction playerAction {
+		get {
+			return _playerAction;
+		}
 
-    public IEnumerator UpdateTextForHotkeys(){
-        yield return new WaitForEndOfFrame();
-        bool hotKeysOn = App.shared.prefs.keyIconsVisible;
-
-        if (playerAction == null || !hotKeysOn) {
-            this.text = baseText;
-            yield break;
-        }
-
-        BindingSourceType lastInputType = FindObjectOfType<Player>().inputs.LastInputType;
-        string s = "";
-
-        foreach (var binding in playerAction.Bindings) {
-            if (binding.BindingSourceType == lastInputType) {
-                        
-                s = binding.HotkeyDescription();
-
-                if (PlayerInputsExtensions.KeynameToKey.ContainsKey(s)) {
-                    s = PlayerInputsExtensions.KeynameToKey[s];
-                }
-                    
-               
-                /*
-                        if (textMesh.text == "△") {
-                            textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                            textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
-                        }
-                        else if (textMesh.text == "▢") {
-                            textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                            textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
-                        }
-                        else if (textMesh.text == "◯") {
-                            textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                            textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
-                        }
-                        else {
-                            textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
-                            textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
-                        }
-*/
-
-            }
-        }
-        if (s == "") {
-            yield break;
-        }
-        this.text = baseText + " (" + s + ")";
-    }
+		set {
+			_playerAction = value;
+			UpdateSuffix();
+		}
+	}
 
     public UIButton SetPlayerAction (PlayerAction _playerAction){
-        this.playerAction = _playerAction;
-        StartCoroutine(UpdateTextForHotkeys());
+        playerAction = _playerAction;
         return this;
     }
 
@@ -235,31 +188,63 @@ public class UIButton : UIElement {
 		entry.eventID = EventTriggerType.PointerEnter;
 		entry.callback.AddListener(data => OnPointerEnter());
 		eventTrigger.triggers.Add(entry);
+
+		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+	}
+
+	void OnDestroy() {
+		if (App.shared.notificationCenter != null) {
+			App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+		}
+	}
+
+	void PrefsKeyIconsVisibleChanged(Notification notification) {
+		UpdateSuffix();
+	}
+
+	void UpdateSuffix() {
+		if (playerAction != null) {
+			var previousTextSuffix = _textSuffix;
+
+			var description = playerAction.HotkeyDescription();
+
+			if (description == "" || !App.shared.prefs.keyIconsVisible) {
+				_textSuffix = "";
+			}
+			else {
+				_textSuffix = " (" + description + ")";
+			}
+
+			if (previousTextSuffix != _textSuffix) {
+				textComponent.text = "";
+				startTime = 0;
+			}
+		}
 	}
 
 	public virtual void Update () {
 		//base.Update();
-		if (textComponent.text != _text) {
-
+		var fullText = _text + _textSuffix;
+		if (textComponent.text != fullText) {
 			if (startTime == 0) {
 				startTime = Time.time;
 				textComponent.text = "";
-				if (_text.Length < 20) {
+				if (fullText.Length < 20) {
 					charactersPerSecond = 20f;
 				} else {
-					charactersPerSecond = _text.Length / 1f;
+					charactersPerSecond = fullText.Length / 1f;
 				}
 			}
 
 			int n = (int)((Time.time - startTime) * charactersPerSecond);
-			n = Mathf.Clamp(n, 0, _text.Length);
-			if (n < _text.Length) {
-				string typed = _text.Substring(0, n).ToUpper();
-				//string remaining = _text.Substring(n, _text.Length - n).ReplacedNonWhiteSpaceWithSpaces();
-				string remaining = new string(' ', _text.Length - n);
+			n = Mathf.Clamp(n, 0, fullText.Length);
+			if (n < fullText.Length) {
+				string typed = fullText.Substring(0, n).ToUpper();
+				//string remaining = fullText.Substring(n, fullText.Length - n).ReplacedNonWhiteSpaceWithSpaces();
+				string remaining = new string(' ', fullText.Length - n);
 				textComponent.text = typed + remaining;
 			} else {
-				textComponent.text = _text.ToUpper();
+				textComponent.text = fullText.ToUpper();
 			}
 
 			SizeToFit();
@@ -306,6 +291,10 @@ public class UIButton : UIElement {
 			w + textComponent.font.fontSize*innerMargins.x*2,
 			h + textComponent.font.fontSize*innerMargins.y*2
 		);
+
+		if (menu != null) {
+			menu.ApplyLayout();
+		}
     }
 
     public void SetMenuSize (Vector2 size){

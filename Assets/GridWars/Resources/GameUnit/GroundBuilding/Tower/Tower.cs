@@ -165,6 +165,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
         }
         WriteHotKeysBasedOnInput();
 
+		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.UpdateHotKeys);
+
 		HideMesh();
 	}
 
@@ -246,6 +248,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		base.ServerAndClientLeftGame();
 
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
+
+		App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.UpdateHotKeys);
 	}
 
 	// HUD
@@ -540,50 +544,32 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 			} 
 		}
 	}
-
-    public void UpdateHotKeys(){
+		
+	public void UpdateHotKeys(Notification notification){
         keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
     }
 
     public void WriteHotKeysBasedOnInput() {
-        lastInputType = player.inputs.LastInputType;
-        foreach (var binding in releaseAction.Bindings) {
-            if (binding.BindingSourceType == lastInputType) {
-                var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
-                textMesh.text = binding.HotkeyDescription();
+		var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
 
-				if (PlayerInputsExtensions.KeynameToKey.ContainsKey(textMesh.text)) {
-					textMesh.text = PlayerInputsExtensions.KeynameToKey[textMesh.text];
-				}
-				/*
-				if (textMesh.text == "Backslash") {
-					textMesh.text = "\\";
-				} else if (textMesh.text == "Right Bracket") {
-					textMesh.text = "]";
-				} else if (textMesh.text == "Left Bracket") {
-					textMesh.text = "[";
-				} 
-				*/
+		textMesh.text = releaseAction.HotkeyDescription();
 
-                if (textMesh.text == "△") {
-                    textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                    textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
-                }
-                else if (textMesh.text == "▢") {
-                    textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-                    textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
-                }
-                else if (textMesh.text == "◯") {
-                    textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                    textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
-                }
-                else {
-                    textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
-                    textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
-                }
-
-            }
-        }
+		if (textMesh.text == "△") {
+			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+			textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
+		}
+		else if (textMesh.text == "▢") {
+			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+			textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
+		}
+		else if (textMesh.text == "◯") {
+			textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+			textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
+		}
+		else {
+			textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
+			textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
+		}
     }
 
 }

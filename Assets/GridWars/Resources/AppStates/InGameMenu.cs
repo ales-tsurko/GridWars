@@ -112,7 +112,7 @@ public class InGameMenu {
         menu.AddNewButton().SetText(text).SetAction(ConcedeActivated).SetPlayerAction(player.inputs.concede);
         menu.AddNewButton().SetText("Hotkeys").SetAction(HotkeysActivated).SetPlayerAction(player.inputs.toggleHotkeys);
         menu.AddNewButton().SetText("Change Camera").SetAction(ChangeCameraActivated).SetPlayerAction(player.inputs.nextCamera);
-        menu.AddNewButton().SetText("Close").SetAction(CloseActivated).SetPlayerAction(player.inputs.goBack);
+        menu.AddNewButton().SetText("Close").SetAction(CloseActivated);
 
 		menu.Focus();
 	}
@@ -140,6 +140,9 @@ public class InGameMenu {
 
 	void ConcedeActivated() {
 		menu.Reset();
+		menu.anchor = MenuAnchor.MiddleCenter;
+
+		menu.AddNewText().SetText("Are you sure?");
 
 		if (App.shared.battlefield.isAiVsAi) { //AIvAI
 			menu.AddNewButton().SetText("Leave").SetAction(ConfirmConcedeActivated);
@@ -173,12 +176,6 @@ public class InGameMenu {
 
 	void HotkeysActivated() {
 		App.shared.prefs.keyIconsVisible = !App.shared.prefs.keyIconsVisible;
-		foreach (Tower _tower in GameObject.FindObjectsOfType<Tower>()) {
-			_tower.UpdateHotKeys();
-		}
-        foreach (UIButton _button in GameObject.FindObjectsOfType<UIButton>()) {
-            _button.DoUpdateTextForHotkeys();
-        }
 	}
 
 	void ChangeCameraActivated() {
