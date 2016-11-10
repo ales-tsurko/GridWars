@@ -14,6 +14,9 @@ public class UIButton : UIElement {
 	public float startTime = 0;
 	public float charactersPerSecond = 10f;
 	public bool doesType = false;
+	public bool wasActivatedByMouse;
+
+
 	private bool finishedTyping = false;
 
 	public static UIButton Instantiate() {
@@ -215,6 +218,8 @@ public class UIButton : UIElement {
 			.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
 			.SetAction(PrefsKeyIconsVisibleChanged)
 			.Add();
+
+		wasActivatedByMouse = false;
 	}
 
 	void OnDestroy() {
@@ -289,6 +294,7 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
 		if (action != null && isInteractible) {
+			wasActivatedByMouse = true;
 			StartCoroutine(ActivateCoroutine());
         }
 	}
@@ -298,6 +304,7 @@ public class UIButton : UIElement {
 		//App.shared.Log("OnClick: " + text, this);
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
 		action.Invoke();
+		wasActivatedByMouse = false;
 	}
 
 	public void OnPointerEnter() {
