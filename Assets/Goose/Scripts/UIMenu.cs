@@ -28,6 +28,8 @@ public class UIMenu : UIElement {
         }
     }
 
+	public bool soundsEnabled = true;
+
 	public UIButton selectedItem;
 	UIButton previouslySelectedItem;
 

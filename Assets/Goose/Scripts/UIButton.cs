@@ -302,7 +302,9 @@ public class UIButton : UIElement {
 	IEnumerator ActivateCoroutine() {
 		yield return new WaitForEndOfFrame(); // If action selects a new menu item, it won't be activated.
 		//App.shared.Log("OnClick: " + text, this);
-		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
+		if (menu != null && menu.soundsEnabled) {
+			App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
+		}
 		action.Invoke();
 		wasActivatedByMouse = false;
 	}
@@ -314,7 +316,9 @@ public class UIButton : UIElement {
 	}
 
 	public void OnSelected() {
-		App.shared.PlayAppSoundNamedAtVolume("MenuItemSelected", 0.1f);
+		if (menu != null && menu.soundsEnabled) {
+			App.shared.PlayAppSoundNamedAtVolume("MenuItemSelected", 0.1f);
+		}
 		isSelected = true;
 	}
 

@@ -50,10 +50,6 @@ public class MainMenuState : AppState {
 	void ShowMainMenu() {
 		app.ResetMenu();
 		internetPvpButton = menu.AddNewButton().SetText("Internet PVP").SetAction(InternetPvpClicked);
-		if (!matchmaker.isConnected) {
-			internetPvpButton.SetTextColor(Color.red);
-			internetPvpButton.UseAlertStyle();
-		}
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
@@ -85,16 +81,24 @@ public class MainMenuState : AppState {
 	}
 
 	public void MatchmakerConnected() {
-		internetPvpButton.UseDefaultStyle();
-		if (menu.hasFocus) {
-			menu.Focus(); //reselect to update style
+		if (internetPvpButton != null) {
+			internetPvpButton.UseDefaultStyle();
+			if (menu.hasFocus) {
+				menu.soundsEnabled = false;
+				menu.Focus(); //reselect to update style
+				menu.soundsEnabled = true;
+			}
 		}
 	}
 
 	public void MatchmakerDisconnected() {
-		internetPvpButton.UseAlertStyle();
-		if (menu.hasFocus) {
-			menu.Focus(); //reselect to update style
+		if (internetPvpButton != null) {
+			internetPvpButton.UseAlertStyle();
+			if (menu.hasFocus) {
+				menu.soundsEnabled = false;
+				menu.Focus(); //reselect to update style
+				menu.soundsEnabled = true;
+			}
 		}
 	}
 
