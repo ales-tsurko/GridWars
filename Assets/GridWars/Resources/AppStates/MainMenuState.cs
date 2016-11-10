@@ -9,6 +9,13 @@ public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		if (QualitySettings.vSyncCount > 0) {
+			QualitySettings.vSyncCount = 2;
+		}
+		else {
+			Application.targetFrameRate = 30;
+		}
+
 		app.battlefield.SoftReset();
 		network.Reset();
 
@@ -27,6 +34,13 @@ public class MainMenuState : AppState {
 
 	public override void WillExit() {
 		base.WillExit();
+
+		if (QualitySettings.vSyncCount > 0) {
+			QualitySettings.vSyncCount = 1;
+		}
+		else {
+			Application.targetFrameRate = 60;
+		}
 
 		matchmaker.matchmakerState.MainMenuExited();
 		matchmaker.menu.Close();
