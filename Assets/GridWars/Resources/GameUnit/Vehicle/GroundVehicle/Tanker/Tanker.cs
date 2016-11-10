@@ -8,6 +8,16 @@ using System.Collections.Generic;
 public class Tanker : GroundVehicle {
 	public Explosion prefabBombExplosion;
 
+	public float distanceToTarget {
+		get {
+			return entity.GetState<ITankerState>().distanceToTarget;
+		}
+
+		set {
+			entity.GetState<ITankerState>().distanceToTarget = value;
+		}
+	}
+
 	public override void Awake() {
 		base.Awake();
 		powerCostPerLevel = new float[] { 15f, 20f, float.MaxValue };
@@ -38,6 +48,14 @@ public class Tanker : GroundVehicle {
 
 	public override void ServerFixedUpdate() {
 		base.ServerFixedUpdate();
+
+		if (target == null) {
+			distanceToTarget = float.MaxValue;
+		}
+		else {
+			distanceToTarget = TargetDistance();
+		}
+
 
 		if (IsInStandoffRange()) {
 			Die();
@@ -103,9 +121,9 @@ public class Tanker : GroundVehicle {
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
 
-		if (target != null) {
+		if (distanceToTarget < 1000f) {
 			var period = 1f;
-			float dist = TargetDistance();
+			float dist = distanceToTarget;
 			float r = period * dist / 30f;
 			float p = 0.03f + r * r;
 
