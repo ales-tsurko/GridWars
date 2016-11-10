@@ -10,7 +10,7 @@ public class Tanker : GroundVehicle {
 
 	public override void Awake() {
 		base.Awake();
-		powerCostPerLevel = new float[] { 15f, float.MaxValue, float.MaxValue };
+		powerCostPerLevel = new float[] { 15f, 20f, float.MaxValue };
 	}
 
 	public override void ServerAndClientInit() {
@@ -136,6 +136,10 @@ public class Tanker : GroundVehicle {
 		counters.Add(typeof(Tanker));
 		counters.Add(typeof(Chopper));
 		return counters;
+	}
+
+	public override void UpgradeVeterancy() {
+		thrust *= 1.2f;
 	}
 
 }

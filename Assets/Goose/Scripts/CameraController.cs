@@ -39,6 +39,10 @@ public class CameraController : MonoBehaviour {
 	float zoomRate = 0.05f;
 	float rotationRate = 0.05f;
 
+	//float currentZoomRate;
+	//float currentRotationRate;
+
+
 	void Start () {
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
@@ -183,11 +187,7 @@ public class CameraController : MonoBehaviour {
 		rotationRate = 0.03f;
 	}
 
-	void Update () {
-		if (!initComplete) {
-			return;
-		}
-        PlayerInputs inputs = App.shared.inputs;
+	void UpdateResolution() {
 		#if UNITY_EDITOR
 		if (Time.frameCount % 10 == 0){
 			thisScreenRes = GetMainGameViewSize();
@@ -198,7 +198,10 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 		#endif
+	}
 
+	void CheckForFPSMode() {
+		PlayerInputs inputs = App.shared.inputs;
 		/* DISABLE FOR NOW
 		if (Input.GetMouseButtonDown (0) && Input.GetKey(KeyCode.LeftShift)) {
 			RaycastHit hit;
@@ -212,23 +215,23 @@ public class CameraController : MonoBehaviour {
 		}
 		*/
 
-        //check for Joystick input for FPS Mode
-        if (isInFirstPersonMode) {
-            if (inputs.goBack.WasPressed || inputs.exitFPS.WasPressed) {
-                FindObjectOfType<CameraController>().ResetCamera();
-                return;
-            }
-            FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
-            FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
-        }
-        if (!isInFirstPersonMode && App.shared.inputs.enterFPS.WasPressed) {
-            EnterFPSModeFromJoystick();
-        }
+		//check for Joystick input for FPS Mode
+		if (isInFirstPersonMode) {
+			if (inputs.goBack.WasPressed || inputs.exitFPS.WasPressed) {
+				FindObjectOfType<CameraController>().ResetCamera();
+				return;
+			}
+			FPSindex += (inputs.unitNext.WasPressed || inputs.rightItem.WasPressed) ? ChangeFPSUnit(1) : 0;
+			FPSindex += (inputs.unitPrev.WasPressed || inputs.leftItem.WasPressed) ? ChangeFPSUnit(-1) : 0;
+		}
+		if (!isInFirstPersonMode && App.shared.inputs.enterFPS.WasPressed) {
+			EnterFPSModeFromJoystick();
+		}
 
-        if (cam == null) {
-            return;
-        }
-        //check for Camera position change
+		if (cam == null) {
+			return;
+		}
+		//check for Camera position change
 
 		/*
 		 * DISABLE UNTIL WE RETHINK FIRST PERSON
@@ -236,9 +239,11 @@ public class CameraController : MonoBehaviour {
             NextPosition(inputs.camNext.WasPressed);
         }
         */
+	}
 
+	void DetectStoppedMoving() {
 		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
-	//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
+		//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 
 		if (Vector3.Distance (cam.localPosition, targetPos) < .05f*600f 
 			&& Quaternion.Angle(cam.localRotation, targetRot) < .1f*600f) {
@@ -249,34 +254,36 @@ public class CameraController : MonoBehaviour {
 			moving = false;
 			ResetZoomRates();
 		}
+	}
 
-		float pf = zoomRate; // 0.05f;
-		float rf = rotationRate; //0.05f;
-
-		// adjust target pos & rot
-
-		if (isOrbiting) {
-			float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
-
-			//orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
-			orbitAngle = 2f * Mathf.PI * Time.time / orbitPeriod;
-			targetPos = new Vector3( 
-				orbitRadius * Mathf.Cos(orbitAngle), 
-				orbitHeight * v,
-				orbitRadius * Mathf.Sin(orbitAngle)
-			);
-				
-			var rotationLookAt = Quaternion.LookRotation(orbitCenter - cam.position);
-			targetRot = Quaternion.Slerp(cam.rotation, rotationLookAt, 1f);
-
-			if (Vector3.Distance(cam.position, targetPos) > 0.1f) {
-				pf = 0.005f;
-			} else {
-				rf = 0.2f;
-			}
+	void Update () {
+		if (!initComplete) {
+			UpdateForMainMenu();
+			return;
 		}
 
-		// move towards target position & rotation
+		UpdateResolution();
+		//CheckForFPSMode();
+		DetectStoppedMoving();
+
+		if (isOrbiting) {
+			UpdateForOrbit(); 
+		} else {
+			UpdateForInGame();
+		}
+	}
+
+	// --- update modes: main menu, in game, orbit
+
+	void UpdateForMainMenu() {
+		Vector3 e = cam.transform.eulerAngles;
+		e.y += 0.1f;
+		cam.transform.eulerAngles = e;
+	}
+
+	void UpdateForInGame() {
+		float pf = zoomRate; // 0.05f;
+		float rf = rotationRate; //0.05f;
 
 		if (App.shared.testEndOfGameMode) {
 			pf = 1.0f;
@@ -285,7 +292,35 @@ public class CameraController : MonoBehaviour {
 
 		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
+	}
 
+	void UpdateForOrbit() {
+		float pf = zoomRate; // 0.05f;
+		float rf = rotationRate; //0.05f;
+
+		// adjust target pos & rot
+
+		float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
+
+		//orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
+		orbitAngle = 2f * Mathf.PI * Time.time / orbitPeriod;
+		targetPos = new Vector3( 
+			orbitRadius * Mathf.Cos(orbitAngle), 
+			orbitHeight * v,
+			orbitRadius * Mathf.Sin(orbitAngle)
+		);
+			
+		var rotationLookAt = Quaternion.LookRotation(orbitCenter - cam.position);
+		targetRot = Quaternion.Slerp(cam.rotation, rotationLookAt, 1f);
+
+		if (Vector3.Distance(cam.position, targetPos) > 0.1f) {
+			pf = 0.005f;
+		} else {
+			rf = 0.2f;
+		}
+			
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
+		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 	}
 
     void EnterFPSModeFromJoystick () {
