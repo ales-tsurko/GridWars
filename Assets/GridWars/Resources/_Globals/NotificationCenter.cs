@@ -18,15 +18,19 @@ public class NotificationCenter {
 		ActionListFor(notificationName).Remove(observerAction);
 	}
 
+	public void Post(Notification notification) {
+		foreach(var observerAction in new List<Action<Notification>>(ActionListFor(notificationName))) {
+			observerAction(notification);
+		}
+	}
+
 	public void Post(string notificationName, object sender, object data) {
 		var notification = new Notification();
 		notification.sender = sender;
 		notification.data = data;
 		notification.name = notificationName;
 
-		foreach(var observerAction in new List<Action<Notification>>(ActionListFor(notificationName))) {
-			observerAction(notification);
-		}
+		Post(notification);
 	}
 
 	public void Post(string notificationName, object sender) {
