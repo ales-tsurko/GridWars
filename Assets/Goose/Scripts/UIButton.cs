@@ -51,8 +51,22 @@ public class UIButton : UIElement {
 			if (shouldType) {
 				textComponent.text = "";
 			}
+			else {
+				UpdateDisplayedText();
+			}
         }
     }
+
+	void UpdateDisplayedText() {
+		textComponent.text = displayedText;
+		SizeToFit();
+	}
+
+	string displayedText {
+		get {
+			return (_text + _textSuffix).ToUpper();
+		}
+	}
 
 	public UIButton SetText(string text) {
 		this.text = text;
@@ -219,8 +233,13 @@ public class UIButton : UIElement {
 			}
 
 			if (previousTextSuffix != _textSuffix) {
-				textComponent.text = "";
-				startTime = 0;
+				if (doesType) {
+					textComponent.text = "";
+					startTime = 0;
+				}
+				else {
+					UpdateDisplayedText();
+				}
 			}
 		}
 	}
@@ -229,7 +248,7 @@ public class UIButton : UIElement {
 		//base.Update();
 		if (doesType && !finishedTyping) {
 
-			var fullText = _text + _textSuffix;
+			var fullText = this.displayedText; //perf opt
 
 			if (startTime == 0) {
 				startTime = Time.time;
