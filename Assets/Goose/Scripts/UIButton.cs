@@ -14,6 +14,9 @@ public class UIButton : UIElement {
 	public float startTime = 0;
 	public float charactersPerSecond = 10f;
 	public bool doesType = false;
+	public bool wasActivatedByMouse;
+
+
 	private bool finishedTyping = false;
 
 	public static UIButton Instantiate() {
@@ -51,8 +54,22 @@ public class UIButton : UIElement {
 			if (shouldType) {
 				textComponent.text = "";
 			}
+			else {
+				UpdateDisplayedText();
+			}
         }
     }
+
+	void UpdateDisplayedText() {
+		textComponent.text = displayedText;
+		SizeToFit();
+	}
+
+	string displayedText {
+		get {
+			return (_text + _textSuffix).ToUpper();
+		}
+	}
 
 	public UIButton SetText(string text) {
 		this.text = text;
@@ -74,8 +91,13 @@ public class UIButton : UIElement {
 
 		set {
 			_playerAction = value;
+			_playerAction.Owner.OnLastInputTypeChanged += LastInputTypeChanged;
 			UpdateSuffix();
 		}
+	}
+
+	void LastInputTypeChanged(BindingSourceType type) {
+		UpdateSuffix();
 	}
 
     public UIButton SetPlayerAction (PlayerAction _playerAction){
@@ -192,12 +214,21 @@ public class UIButton : UIElement {
 		entry.callback.AddListener(data => OnPointerEnter());
 		eventTrigger.triggers.Add(entry);
 
-		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
+			.SetAction(PrefsKeyIconsVisibleChanged)
+			.Add();
+
+		wasActivatedByMouse = false;
 	}
 
 	void OnDestroy() {
+		if (playerAction != null) {
+			_playerAction.Owner.OnLastInputTypeChanged -= LastInputTypeChanged;
+		}
+
 		if (App.shared.notificationCenter != null) {
-			App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+			App.shared.notificationCenter.RemoveObserver(this);
 		}
 	}
 
@@ -208,7 +239,6 @@ public class UIButton : UIElement {
 	void UpdateSuffix() {
 		if (playerAction != null) {
 			var previousTextSuffix = _textSuffix;
-
 			var description = playerAction.HotkeyDescription();
 
 			if (description == "" || !App.shared.prefs.keyIconsVisible) {
@@ -219,8 +249,13 @@ public class UIButton : UIElement {
 			}
 
 			if (previousTextSuffix != _textSuffix) {
-				textComponent.text = "";
-				startTime = 0;
+				if (doesType) {
+					textComponent.text = "";
+					startTime = 0;
+				}
+				else {
+					UpdateDisplayedText();
+				}
 			}
 		}
 	}
@@ -229,7 +264,7 @@ public class UIButton : UIElement {
 		//base.Update();
 		if (doesType && !finishedTyping) {
 
-			var fullText = _text + _textSuffix;
+			var fullText = this.displayedText; //perf opt
 
 			if (startTime == 0) {
 				startTime = Time.time;
@@ -259,6 +294,7 @@ public class UIButton : UIElement {
 		
 	public void OnClick (){
 		if (action != null && isInteractible) {
+			wasActivatedByMouse = true;
 			StartCoroutine(ActivateCoroutine());
         }
 	}
@@ -268,6 +304,7 @@ public class UIButton : UIElement {
 		//App.shared.Log("OnClick: " + text, this);
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
 		action.Invoke();
+		wasActivatedByMouse = false;
 	}
 
 	public void OnPointerEnter() {
