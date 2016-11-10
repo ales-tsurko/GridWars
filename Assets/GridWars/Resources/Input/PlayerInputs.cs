@@ -75,7 +75,6 @@ public class PlayerInputs : PlayerActionSet {
         exitFPS = CreatePlayerAction("Exit FPS Mode");
         unitNext = CreatePlayerAction("Next Unit");
         unitPrev = CreatePlayerAction("Previous Unit");
-
 	}
 
 	public void AddControllerBindings() {
@@ -89,6 +88,7 @@ public class PlayerInputs : PlayerActionSet {
 		concede.AddDefaultBinding(InputControlType.LeftTrigger);
 		toggleHotkeys.AddDefaultBinding(InputControlType.RightTrigger);
 
+		nextCamera.AddDefaultBinding(InputControlType.RightBumper);
 		firstPersonCamera.AddDefaultBinding(InputControlType.DPadDown);
 
 		upItem.AddDefaultBinding(InputControlType.LeftStickUp);
@@ -160,12 +160,6 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTank.AddDefaultBinding(Key.RightBracket);
 		releaseMobileSam.AddDefaultBinding(Key.Backslash);
 	}
-
-	public string ControlDescription(DeviceBindingSource control) {
-		//device.OnDetached = 
-		//Debug.Log(device.Controls[0].Handle);
-		return null;
-	}
 }
 
 public static class PlayerInputsExtensions {
@@ -173,7 +167,12 @@ public static class PlayerInputsExtensions {
 		{ "cross", "X" },
 		{ "triangle", "△" },
 		{ "square", "▢" },
-		{ "circle", "◯" }
+		{ "circle", "◯" },
+		{ "left trigger", "L2" },
+		{ "right trigger", "R2" },
+		{ "left bumper", "L1" },
+		{ "right bumper", "R1" },
+		{ "command", "" }
 	};
 
 	public static Dictionary<string, string> KeynameToKey = new Dictionary<string, string>() {
@@ -185,6 +184,7 @@ public static class PlayerInputsExtensions {
 
 	public static string HotkeyDescription(this DeviceBindingSource self) {
 		var handle = self.BoundTo.Device.GetControl(self.Control).Handle;
+		Debug.Log(handle);
 		foreach (var pair in PlayerInputsExtensions.ControlHandleNormalizations) {
 			if (handle.ToLower().StartsWith(pair.Key)) {
 				return pair.Value;
@@ -208,10 +208,10 @@ public static class PlayerInputsExtensions {
 		BindingSource defaultBindingSource = null;
 
 		foreach (var binding in self.Bindings) {
-			if (binding is KeyBindingSource) {
+			if (binding.BindingSourceType == BindingSourceType.KeyBindingSource) {
 				defaultBindingSource = binding;
 			}
-			if (binding.BindingSourceType == self.LastInputType) {
+			if (binding.BindingSourceType == self.Owner.LastInputType) {
 				return binding;
 			}
 		}
@@ -221,6 +221,7 @@ public static class PlayerInputsExtensions {
 
 	public static string HotkeyDescription(this PlayerAction self) {
 		var bindingSource = self.LastBindingSource();
+		Debug.Log(bindingSource);
 		if (bindingSource == null) {
 			return "";
 		}
@@ -230,7 +231,7 @@ public static class PlayerInputsExtensions {
 	}
 
 	public static string HotkeyDescription(this BindingSource self) {
-		if (self is KeyBindingSource) {
+		if (self is KeyBindingSource || self is MouseBindingSource) {
 			return (self as KeyBindingSource).HotkeyDescription();
 		}
 		else if (self is DeviceBindingSource) {

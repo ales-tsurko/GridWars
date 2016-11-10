@@ -157,15 +157,10 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 		keyIcon.EachRenderer(r => r.enabled = true);
 
-        keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
-
         gameObject.name = "Tower Player" + player.playerNumber + " " + unitPrefab.name;
         if (player.inputs.LastInputType == BindingSourceType.None) {
             player.inputs.LastInputType = BindingSourceType.KeyBindingSource;
         }
-        WriteHotKeysBasedOnInput();
-
-		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.UpdateHotKeys);
 
 		HideMesh();
 	}
@@ -175,6 +170,13 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	public void IsWarpedInChanged() {
 		if (isWarpedIn) {
 			UnhideMesh();
+			UpdateHotKeys(null);
+			App.shared.notificationCenter.NewObservation()
+				.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
+				.SetAction(UpdateHotKeys)
+				.Add();
+
+			player.inputs.OnLastInputTypeChanged += LastInputTypeChanged;
 		}
 	}
 
@@ -224,13 +226,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		}
 	}
 
-	BindingSourceType lastInputType = BindingSourceType.None;
-
 	public override void ServerAndClientUpdate() {
 		base.ServerAndClientUpdate();
-        if (player.inputs.LastInputType != lastInputType) {
-            WriteHotKeysBasedOnInput();
-        }
 
         iconObject.SetActive(CanQueueUnit(0));
 		
@@ -250,7 +247,13 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 		App.shared.cameraController.cameraControllerDelegates.Remove(this);
 
-		App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.UpdateHotKeys);
+		App.shared.notificationCenter.RemoveObserver(this);
+
+		player.inputs.OnLastInputTypeChanged -= LastInputTypeChanged;
+	}
+
+	void LastInputTypeChanged(BindingSourceType type) {
+		UpdateHotkeyText();
 	}
 
 	// HUD
@@ -548,9 +551,10 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		
 	public void UpdateHotKeys(Notification notification){
         keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
+		UpdateHotkeyText();
     }
 
-    public void WriteHotKeysBasedOnInput() {
+    public void UpdateHotkeyText() {
 		var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
 
 		textMesh.text = releaseAction.HotkeyDescription();

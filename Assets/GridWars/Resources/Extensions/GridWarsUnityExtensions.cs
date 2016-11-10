@@ -56,6 +56,10 @@ public static class GridWarsUnityExtensions {
 
 		return output;
 	}
+
+	public static List<T> Copied<T>(this List<T> list) {
+		return new List<T>(list);
+	}
 		
 	public static void AddIfAbsent<T>(this IList<T> self, T v) {
 		if (self.Contains(v) == false) {

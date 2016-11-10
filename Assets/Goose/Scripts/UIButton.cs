@@ -88,8 +88,13 @@ public class UIButton : UIElement {
 
 		set {
 			_playerAction = value;
+			_playerAction.Owner.OnLastInputTypeChanged += LastInputTypeChanged;
 			UpdateSuffix();
 		}
+	}
+
+	void LastInputTypeChanged(BindingSourceType type) {
+		UpdateSuffix();
 	}
 
     public UIButton SetPlayerAction (PlayerAction _playerAction){
@@ -206,12 +211,19 @@ public class UIButton : UIElement {
 		entry.callback.AddListener(data => OnPointerEnter());
 		eventTrigger.triggers.Add(entry);
 
-		App.shared.notificationCenter.Add(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
+			.SetAction(PrefsKeyIconsVisibleChanged)
+			.Add();
 	}
 
 	void OnDestroy() {
+		if (playerAction != null) {
+			_playerAction.Owner.OnLastInputTypeChanged -= LastInputTypeChanged;
+		}
+
 		if (App.shared.notificationCenter != null) {
-			App.shared.notificationCenter.Remove(Prefs.PrefsKeyIconsVisibleChangedNotification, this.PrefsKeyIconsVisibleChanged);
+			App.shared.notificationCenter.RemoveObserver(this);
 		}
 	}
 
@@ -222,7 +234,6 @@ public class UIButton : UIElement {
 	void UpdateSuffix() {
 		if (playerAction != null) {
 			var previousTextSuffix = _textSuffix;
-
 			var description = playerAction.HotkeyDescription();
 
 			if (description == "" || !App.shared.prefs.keyIconsVisible) {
