@@ -58,12 +58,24 @@ public class TutorialPart : MonoBehaviour {
 
 		_textMesh = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
 		_formattedText = hoverText.Replace("NEWLINE", "\n").ToUpper();
+		_formattedText = _formattedText.Replace("CONTINUEHOTKEY", App.shared.inputs.continueTutorial.HotkeyDescription(20)).ToUpper();
+
+		string replacement;
+		if (App.shared.inputs.LastInputType == InControl.BindingSourceType.DeviceBindingSource) {
+			App.shared.battlefield.player1.isLocal = true;
+			App.shared.prefs.keyIconsVisible = true;
+			replacement = "press your towers button";
+		}
+		else {
+			replacement = "click your towers";
+		}
+		_formattedText = _formattedText.Replace("CLICKYOURTOWERS", replacement).ToUpper();
 		_hasBegun = true;
 	}
-	
-	void FixedUpdate () {
+
+	void Update() {
 		if (_hasBegun) {
-			if (Input.GetKeyDown("space")) {
+			if (App.shared.inputs.continueTutorial.WasPressed) {
 				_hasBegun = false;
 				App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
 				//Next();

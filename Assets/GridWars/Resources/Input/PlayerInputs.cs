@@ -18,6 +18,7 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction rightItem;
 	public PlayerAction selectItem;
 	public PlayerAction goBack;
+	public PlayerAction continueTutorial;
 
 	PlayerAction lookLeft;
 	PlayerAction lookRight;
@@ -66,6 +67,8 @@ public class PlayerInputs : PlayerActionSet {
 		selectItem = CreatePlayerAction("Select Item");
 		goBack = CreatePlayerAction("Go Back");
 
+		continueTutorial = CreatePlayerAction("Continue Tutorial");
+
 		lookLeft = CreatePlayerAction("Look Left");
 		lookRight = CreatePlayerAction("Look Right");
 		lookUp = CreatePlayerAction("Look Up");
@@ -110,6 +113,8 @@ public class PlayerInputs : PlayerActionSet {
 		selectItem.AddDefaultBinding(InputControlType.Action1);
 		goBack.AddDefaultBinding(InputControlType.Action2);
 
+		continueTutorial.AddDefaultBinding(InputControlType.Action1);
+
 		lookLeft.AddDefaultBinding(InputControlType.LeftStickLeft);
 		lookLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 		lookRight.AddDefaultBinding(InputControlType.LeftStickRight);
@@ -139,6 +144,8 @@ public class PlayerInputs : PlayerActionSet {
 		selectItem.AddDefaultBinding(Key.PadEnter);
 
 		goBack.AddDefaultBinding(Key.Escape);
+
+		continueTutorial.AddDefaultBinding(Key.Space);
 
 		concede.AddDefaultBinding(Key.Q);
 		toggleHotkeys.AddDefaultBinding(Key.H);
@@ -182,18 +189,17 @@ public static class PlayerInputsExtensions {
 		{ "escape", "esc" }
 	};
 
-	public static string HotkeyDescription(this DeviceBindingSource self) {
+	public static string HotkeyDescription(this DeviceBindingSource self, int maxLength = 1) {
 		var handle = self.BoundTo.Device.GetControl(self.Control).Handle;
-		Debug.Log(handle);
 		foreach (var pair in PlayerInputsExtensions.ControlHandleNormalizations) {
 			if (handle.ToLower().StartsWith(pair.Key)) {
 				return pair.Value;
 			}
 		}
-		return handle.Substring(0, 1);
+		return handle.Substring(0, Mathf.Min(maxLength, handle.Length));
 	}
 
-	public static string HotkeyDescription(this KeyBindingSource self) {
+	public static string HotkeyDescription(this KeyBindingSource self, int maxLength = 1) {
 		var handle = self.Control.ToString();
 
 		foreach (var pair in PlayerInputsExtensions.KeynameToKey) {
@@ -201,7 +207,7 @@ public static class PlayerInputsExtensions {
 				return pair.Value;
 			}
 		}
-		return handle.Substring(0, 1);
+		return handle.Substring(0, Mathf.Min(maxLength, handle.Length));
 	}
 
 	public static BindingSource LastBindingSource(this PlayerAction self) {
@@ -219,23 +225,22 @@ public static class PlayerInputsExtensions {
 		return defaultBindingSource;
 	}
 
-	public static string HotkeyDescription(this PlayerAction self) {
+	public static string HotkeyDescription(this PlayerAction self, int maxLength = 1) {
 		var bindingSource = self.LastBindingSource();
-		Debug.Log(bindingSource);
 		if (bindingSource == null) {
 			return "";
 		}
 		else {
-			return bindingSource.HotkeyDescription();
+			return bindingSource.HotkeyDescription(maxLength);
 		}
 	}
 
-	public static string HotkeyDescription(this BindingSource self) {
+	public static string HotkeyDescription(this BindingSource self, int maxLength = 1) {
 		if (self is KeyBindingSource || self is MouseBindingSource) {
-			return (self as KeyBindingSource).HotkeyDescription();
+			return (self as KeyBindingSource).HotkeyDescription(maxLength);
 		}
 		else if (self is DeviceBindingSource) {
-			return (self as DeviceBindingSource).HotkeyDescription();
+			return (self as DeviceBindingSource).HotkeyDescription(maxLength);
 		}
 		else {
 			return "";
