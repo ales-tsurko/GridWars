@@ -119,8 +119,21 @@ public class App : MonoBehaviour, AppStateOwner {
 	void Update() {
 		matchmaker.Update();
 		state.Update();
+		ShowHideCursor();
 		//keys.Update();
 		//UpdateMenuFocus();
+	}
+
+	float mouseMoveTime = 0f;
+	float mouseIdleTime = 3f;
+	void ShowHideCursor() {
+		if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0) {
+			mouseMoveTime = Time.time;
+			Cursor.visible = true;
+		}
+		if (Time.time - mouseMoveTime > mouseIdleTime) {
+			Cursor.visible = false;
+		}
 	}
 
 	void UpdateMenuFocus() {
