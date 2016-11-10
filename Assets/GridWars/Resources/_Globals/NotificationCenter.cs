@@ -19,7 +19,7 @@ public class NotificationCenter {
 	}
 
 	public void Post(Notification notification) {
-		foreach(var observerAction in new List<Action<Notification>>(ActionListFor(notificationName))) {
+		foreach(var observerAction in new List<Action<Notification>>(ActionListFor(notification.name))) {
 			observerAction(notification);
 		}
 	}
