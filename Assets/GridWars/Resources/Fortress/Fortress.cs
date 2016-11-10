@@ -130,7 +130,7 @@ public class Fortress : MonoBehaviour {
 		float dt = 0f;
 		foreach (var tower in towers.Shuffled()) {
 			tower.UnhideIn(dt);
-			dt += 0.3f;
+			dt += 0.15f;
 		}
 	}
 

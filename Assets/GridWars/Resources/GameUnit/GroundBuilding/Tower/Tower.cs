@@ -198,7 +198,8 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 		if (mr.enabled == false) {
 			mr.enabled = true;
 			var fader = cube.AddComponent<BrightFadeInGeneric>();
-			fader.period = 0.35f;
+			//fader.period = 0.35f;
+			fader.period = 0.25f;
 			App.shared.PlayAppSoundNamedAtVolume("TowerBirth", 0.3f);
 			fader.OnEnable();
 		}

@@ -80,7 +80,7 @@ public class TutorialPart : MonoBehaviour {
 	public string VisibleText() {
 		string s = _formattedText;
 		int max = Mathf.Clamp(counter / countsPerCharacter, 0, s.Length);
-		return s.Substring(0, max).ReplacedNonWhiteSpaceWithSpaces();
+		return s.Substring(0, max) + s.Substring(max, s.Length - max).ReplacedNonWhiteSpaceWithSpaces();
 	}
 
 	void Next() {
