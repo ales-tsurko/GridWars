@@ -57,7 +57,8 @@ public class UIMenu : UIElement {
 
 	public Color defaultBackgroundColor {
 		get {
-			return new Color(0, 0, 0, 0.3f);
+			//return new Color(0, 0, 0, 0.3f);
+			return new Color(0, 0, 0, 0.0f);
 		}
 	}
 
