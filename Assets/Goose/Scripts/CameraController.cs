@@ -349,10 +349,13 @@ public class CameraController : MonoBehaviour {
 
 	void PickMainCameraLocation() {
 		Vector2 r = Random.insideUnitCircle * 1200f;
-		mainTargetPos = new Vector3(r.x, 200f + 200f * UnityEngine.Random.value, r.y);
+		//mainTargetPos = new Vector3(r.x, 200f + 200f * UnityEngine.Random.value, r.y);
+		mainTargetPos = new Vector3(r.x, 200f, r.y);
 		mainTargetRot = Quaternion.LookRotation(-mainTargetPos); // look at zero
+		Vector3 e = mainTargetRot.eulerAngles;
+		e.x = -10;
+		mainTargetRot.eulerAngles = e;
 	}
-
 
 	void UpdateForMainMenu() {		
 		if (mainTargetPos == Vector3.zero) {
