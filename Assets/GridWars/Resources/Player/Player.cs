@@ -165,6 +165,8 @@ public class Player : MonoBehaviour {
 		fortress.StartGame();
 
 		isInGame = true;
+		firstTutorial = null;
+
 	}
 
 	//Painting

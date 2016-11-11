@@ -22,20 +22,48 @@ public class TutorialPart : MonoBehaviour {
 	private TextMesh _textMesh = null;
 	private string _formattedText = null;
 
+	private Observation exitObservation = null;
+
 	void Start () {
+
 	}
+
+	void ObserveExit () {
+		if (exitObservation == null) {
+			exitObservation = App.shared.notificationCenter.NewObservation();
+			exitObservation.SetNotificationName("AppStateChangedNotification");
+			exitObservation.SetAction(AppStateChangedNotification);
+			exitObservation.Add();
+		}
+	}
+
+	public void AppStateChangedNotification(Notification note) {
+		if (App.shared.state is MainMenuState) {
+			WillExit();
+		}
+
+	}
+
+	public void WillExit() {
+		TurnOff();
+	}
+
 
 	public GameObject Target() {
 		return GameObject.Find(targetName);
 	}
 
 	public void Begin() {
+
 		if (Target() == null) {
 			Debug.Log("missing target on " + gameObject.name);
 			return;
 		}
 
+		ObserveExit();
+
 		enabled = true;
+		counter = 0;
 		TutorialLabel().GetComponent<HoverText>().enabled = true;
 		nextTime = Time.time + timeout;
 
@@ -44,10 +72,6 @@ public class TutorialPart : MonoBehaviour {
 		transform.position = transform.position - diff * fractionToTarget;
 
 		App.shared.cameraController.targetPos = transform.position;
-
-		//App.shared.cameraController.targetRot = transform.rotation;
-		//App.shared.cameraController.targetRot = Quaternion.LookRotation(transform.position - Target().transform.position);
-
 		App.shared.cameraController.targetRot = Quaternion.LookRotation(Target().transform.position - transform.position);
 
 		Vector3 p = Target().transform.position;
@@ -96,8 +120,7 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	void Next() {
-		enabled = false;
-		SetTutorialLabelText("");
+		TurnOff();
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
 
 		if (nextPart != null) {
@@ -106,6 +129,11 @@ public class TutorialPart : MonoBehaviour {
 			TutorialLabel().GetComponent<HoverText>().enabled = false;
 			DoneTutorial();
 		}
+	}
+
+	void TurnOff() {
+		enabled = false;
+		SetTutorialLabelText("");
 	}
 
 	public GameObject TutorialLabel() {
