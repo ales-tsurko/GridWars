@@ -71,7 +71,15 @@ public class Battlefield : MonoBehaviour {
 	public bool isAiVsAi;
 	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
+	void SetupResolution() {
+		Resolution[] res = Screen.resolutions;
+		Resolution r = res[res.Length - 1];
+
+		Screen.SetResolution(r.width, r.height, true); // last arg is bool for fullscreen
+	}
+
 	void Start() {
+		SetupResolution();
 		Application.runInBackground = true;
 
 		App.shared.enabled = true; //Load App so Start gets called
