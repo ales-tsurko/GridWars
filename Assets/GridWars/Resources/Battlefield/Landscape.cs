@@ -21,10 +21,11 @@ public class Landscape : MonoBehaviour {
 		Rect fieldRect = new Rect(-140, -140, 250, 250);
 
 		// ground
-		for (int i = 0; i < 120; i++) {
+		for (int i = 0; i < 120; i++) { // 120
 			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
-			chunkRect.x = RandNeg(xMax*1.3f);
-			chunkRect.y = RandNeg(zMax*1.3f);
+			float spread = 1.3f;
+			chunkRect.x = RandNeg(xMax * spread);
+			chunkRect.y = RandNeg(zMax * spread);
 
 			if (chunkRect.Overlaps(fieldRect) == false) {
 				var chunk = CreateChunk(chunkRect, 5f + Rand(10f), material, 3);
@@ -50,6 +51,40 @@ public class Landscape : MonoBehaviour {
 				chunk.layer = LayerMask.NameToLayer("Terrain");
 			}
 		}
+
+
+		// ground
+		for (int i = 0; i < 120; i++) { // 120
+			Rect chunkRect = RandRect(200f, 700f, 100f, 200f);
+			float spread = 3f;
+			chunkRect.x = RandNeg(xMax * spread);
+			chunkRect.y = RandNeg(zMax * spread);
+
+			if (chunkRect.Overlaps(fieldRect) == false) {
+				var chunk = CreateChunk(chunkRect, 5f + Rand(10f), material, 3);
+
+				/*
+				if (UnityEngine.Random.value < 0.2) {
+					if (UnityEngine.Random.value < 0.5) {
+						chunk.SetRotY(30);
+					} else {
+						chunk.SetRotY(-30);
+					}
+				}
+
+
+				if (chunk.GetComponent<Renderer>().bounds.Intersects(fieldBox) == true) {
+					chunk.SetRotY(0);
+					//Destroy(chunk);
+				}
+				*/
+
+				chunk.name = "wide ground";
+				chunk.isStatic = true;
+				chunk.layer = LayerMask.NameToLayer("Terrain");
+			}
+		}
+
 
 		/*
 		// clouds

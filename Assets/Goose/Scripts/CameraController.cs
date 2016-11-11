@@ -26,6 +26,13 @@ public class CameraController : MonoBehaviour {
     int FPSindex = 0;
 
 
+	private List <GameObject> camLocations; 
+
+
+	// camera modes
+
+	private bool isInMainMenu = false;
+
 	// orbits
 
 	private bool isOrbiting = false;
@@ -42,14 +49,50 @@ public class CameraController : MonoBehaviour {
 	//float currentZoomRate;
 	//float currentRotationRate;
 
+	Vector3 gamePositionPosAt(int index) {
+		return gamePositions[index].position;
+	}
+
+	void SetupCamLocations() {
+		camLocations = new List <GameObject>();
+		GameObject obj = null;
+
+		// 1
+		obj = new GameObject();
+		obj.transform.position = new Vector3(-5.6f, 52f, -1.5f);
+		obj.transform.rotation = Quaternion.Euler(90, 0, 90);
+
+		// 2
+		obj = new GameObject();
+		obj.transform.position = new Vector3(-4.1f, 85f, -6.8f);
+		obj.transform.rotation = Quaternion.Euler(90, 0, 0);
+
+		// 3
+		obj = new GameObject();
+		obj.transform.position = new Vector3(-3.4f, 46f, -57.7f);
+		obj.transform.rotation = Quaternion.Euler(45.4f, 0, 0);
+
+		// 4
+		obj = new GameObject();
+		obj.transform.position = new Vector3(0, 50, 0);
+		obj.transform.rotation = Quaternion.Euler(90, 0, 90);
+
+		// 5
+		obj = new GameObject();
+		obj.transform.position = new Vector3(45f, 32.2f, 0);
+		obj.transform.rotation = Quaternion.Euler(33.4f, -90f, 0);
+	}
 
 	void Start () {
+
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
 		cameraControllerDelegates = new List<CameraControllerDelegate>();
 		//DontDestroyOnLoad (gameObject);
 	}
+
 	public void InitCamera () {
+		SetupCamLocations();
 		cameraControllerDelegates = new List<CameraControllerDelegate>();
 		StartCoroutine (WaitForTowers ());
 	}
@@ -72,59 +115,58 @@ public class CameraController : MonoBehaviour {
 		InitCamera (closest.transform);
 	}
 
-	public void InitCamera (Transform _base){
-		if (_base == null) {
-			throw new System.Exception("Tower is null, can't init camera positions");
-		}
-		gamePositions = new List<SerializedTransform>();
-		foreach (var transform in positions) {
-			var gamePosition = new SerializedTransform(transform);
-			gamePositions.Add(gamePosition);
+	private bool didInit = false;
+	public void InitCamera (Transform _base) {
+		//isInMainMenu = true;
+		if (!didInit) {
 
-			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
-				Vector3 mirrorAxis;
-				var keyIconRotation = transform.GetComponent<KeyIconRotation>();
-
-				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
-					mirrorAxis = new Vector3(1, 1, -1);
-				}
-				else {
-					mirrorAxis = new Vector3(-1, 1, 1);
-				}
-				
-				keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
-
-				gamePosition.position = Vector3.Scale(gamePosition.position, mirrorAxis);
-				gamePosition.rotation = Quaternion.Euler(gamePosition.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
+			if (_base == null) {
+				throw new System.Exception("Tower is null, can't init camera positions");
 			}
+			gamePositions = new List<SerializedTransform>();
+			foreach (var transform in positions) {
+				var gamePosition = new SerializedTransform(transform);
+				gamePositions.Add(gamePosition);
 
-			cam.position = gamePosition.position;
-			cam.rotation = gamePosition.rotation;
+				if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
+					Vector3 mirrorAxis;
+					var keyIconRotation = transform.GetComponent<KeyIconRotation>();
 
-			float mod = 0;
-			#if UNITY_EDITOR
-                thisScreenRes = lastScreenRes = GetMainGameViewSize();
-			#endif
-			while (true) {
-				Vector3 screenPoint = cam.GetComponent<Camera> ().WorldToViewportPoint (_base.transform.position);
-				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f +mod && screenPoint.x < .9f-mod && screenPoint.y > 0.1f+mod && screenPoint.y < .9f-mod) {
-					gamePosition.position = cam.position;
-					break;
-				} else {
-					cam.transform.position -= cam.transform.forward;
+					if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
+						mirrorAxis = new Vector3(1, 1, -1);
+					} else {
+						mirrorAxis = new Vector3(-1, 1, 1);
+					}
+					
+					keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
+
+					gamePosition.position = Vector3.Scale(gamePosition.position, mirrorAxis);
+					gamePosition.rotation = Quaternion.Euler(gamePosition.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
+				}
+
+				cam.position = gamePosition.position;
+				cam.rotation = gamePosition.rotation;
+
+				float mod = 0;
+				#if UNITY_EDITOR
+				thisScreenRes = lastScreenRes = GetMainGameViewSize();
+				#endif
+				while (true) {
+					Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(_base.transform.position);
+					if (screenPoint.z > 0.1f && screenPoint.x > 0.1f + mod && screenPoint.x < .9f - mod && screenPoint.y > 0.1f + mod && screenPoint.y < .9f - mod) {
+						gamePosition.position = cam.position;
+						break;
+					} else {
+						cam.transform.position -= cam.transform.forward;
+					}
 				}
 			}
+			didInit = true;
 		}
 
-		//cam.position = gamePositions[0].position;
-		//cam.rotation = gamePositions[0].rotation;
 
-		//Transform startView = GameObject.Find("StartView").transform;
-
-		Vector2 r = Random.insideUnitCircle * 1200f;
-		cam.position = new Vector3(r.x, 500f + 200f*UnityEngine.Random.value, r.y);
-		cam.rotation = Quaternion.LookRotation(-cam.position);
-		UseSlowZoomRate();
+		//PickMainCameraLocation();
+		//UseSlowZoomRate();
 
         pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
@@ -132,7 +174,7 @@ public class CameraController : MonoBehaviour {
 		initComplete = true;
         menuHasFocus = false;
 	}
-
+		
     IEnumerator MonitorInitialCamMovement () {
         yield return new WaitForEndOfFrame();
         while (moving) {
@@ -160,6 +202,31 @@ public class CameraController : MonoBehaviour {
 		return (Vector2)Res;
 	}
 
+	// --- game state notifications ------------------
+
+	public void MainMenuEntered() {
+		isInMainMenu = true;
+		UseSlowZoomRate();
+		EndOrbit();
+		PickMainCameraLocation();
+		Debug.Log("CameraController - MainMenuEntered");
+	}
+
+	public void GameStarted() {
+		isInMainMenu = false;
+		EndOrbit();
+		Debug.Log("CameraController - GameStarted");
+	}
+
+	public void GameEnded() {
+		isInMainMenu = false;
+		StartOrbit();
+		Debug.Log("CameraController - GameEnded");
+	}
+
+	// --- orbit ---------------------------------------
+
+
 	public void StartOrbit() {
 		isOrbiting = true;
 	}
@@ -171,6 +238,8 @@ public class CameraController : MonoBehaviour {
 			NextPosition();
 		}
 	}
+
+	// --- zoom rates ---------------------------------------
 
 	void ResetZoomRates() {
 		zoomRate = 0.05f;
@@ -257,7 +326,7 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (!initComplete) {
+		if (isInMainMenu) {
 			UpdateForMainMenu();
 			return;
 		}
@@ -275,10 +344,38 @@ public class CameraController : MonoBehaviour {
 
 	// --- update modes: main menu, in game, orbit
 
-	void UpdateForMainMenu() {
-		Vector3 e = cam.transform.eulerAngles;
+	private Vector3 mainTargetPos = Vector3.zero;
+	private Quaternion mainTargetRot = Quaternion.identity;
+
+	void PickMainCameraLocation() {
+		Vector2 r = Random.insideUnitCircle * 1200f;
+		mainTargetPos = new Vector3(r.x, 200f + 200f * UnityEngine.Random.value, r.y);
+		mainTargetRot = Quaternion.LookRotation(-mainTargetPos); // look at zero
+	}
+
+
+	void UpdateForMainMenu() {		
+		if (mainTargetPos == Vector3.zero) {
+			PickMainCameraLocation();
+
+		}
+
+		float pf = zoomRate; // 0.05f;
+		float rf = rotationRate; //0.05f;
+
+		/*
+		targetPos = new Vector3(0, 60f, 0);
+		Vector3 e = targetRot.eulerAngles;
+		e.x = 0f;
 		e.y += 0.1f;
-		cam.transform.eulerAngles = e;
+		e.z = 0f;
+		targetRot.eulerAngles = e;
+		*/
+		targetPos = mainTargetPos;
+		targetRot = mainTargetRot;
+
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
+		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 	}
 
 	void UpdateForInGame() {
@@ -294,6 +391,10 @@ public class CameraController : MonoBehaviour {
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 	}
 
+	float DistanceToCamTarget() {
+		return Vector3.Distance(cam.position, targetPos);
+	}
+
 	void UpdateForOrbit() {
 		float pf = zoomRate; // 0.05f;
 		float rf = rotationRate; //0.05f;
@@ -302,7 +403,6 @@ public class CameraController : MonoBehaviour {
 
 		float v = 1f + 0.95f * Mathf.Sin(Time.time / 20f);
 
-		//orbitAngle += 2f * Mathf.PI * Time.deltaTime / orbitPeriod;
 		orbitAngle = 2f * Mathf.PI * Time.time / orbitPeriod;
 		targetPos = new Vector3( 
 			orbitRadius * Mathf.Cos(orbitAngle), 
@@ -313,7 +413,8 @@ public class CameraController : MonoBehaviour {
 		var rotationLookAt = Quaternion.LookRotation(orbitCenter - cam.position);
 		targetRot = Quaternion.Slerp(cam.rotation, rotationLookAt, 1f);
 
-		if (Vector3.Distance(cam.position, targetPos) > 0.1f) {
+		// slowly move into orbit if we're not in it yet
+		if (DistanceToCamTarget() > 0.1f) {
 			pf = 0.005f;
 		} else {
 			rf = 0.2f;
@@ -333,7 +434,7 @@ public class CameraController : MonoBehaviour {
         }
     }
 
-    int ChangeFPSUnit (int x){
+    int ChangeFPSUnit (int x) {
         int index = FPSindex + x;
         List<GameUnit> units = GetUnits();
         units.RemoveAll(i => i == null || i.gameObject.layer == 10);
@@ -346,7 +447,7 @@ public class CameraController : MonoBehaviour {
         return index - FPSindex;
     }
 
-   List<GameUnit> GetUnits (){
+   List<GameUnit> GetUnits () {
         Player[] players = FindObjectsOfType<Player>();
         foreach (Player player in players){
             if (player.isLocalPlayer1){

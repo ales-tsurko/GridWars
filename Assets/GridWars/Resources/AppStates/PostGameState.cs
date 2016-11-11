@@ -25,7 +25,7 @@ public class PostGameState : AppState, AppStateOwner {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		Object.FindObjectOfType<CameraController>().StartOrbit();
+		Object.FindObjectOfType<CameraController>().GameEnded();
 
 		subState = new ShowOutcomeState();
 		subState.owner = this;
@@ -35,7 +35,6 @@ public class PostGameState : AppState, AppStateOwner {
 	public override void WillExit() {
 		base.WillExit();
 		subState.WillExit();
-		Object.FindObjectOfType<CameraController>().EndOrbit();
 	}
 
 	// Network

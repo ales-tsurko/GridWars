@@ -9,6 +9,9 @@ public class MainMenuState : AppState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		CameraController cc = Object.FindObjectOfType<CameraController>();
+		cc.MainMenuEntered();
+
 		if (QualitySettings.vSyncCount > 0) {
 			QualitySettings.vSyncCount = 2;
 		}
