@@ -12,8 +12,8 @@ public class Prefs {
 		set {
 			SetBool("keyIconsVisible", value);
 			App.shared.notificationCenter.NewNotification()
-				.setName(PrefsKeyIconsVisibleChangedNotification)
-				.setSender(this)
+				.SetName(PrefsKeyIconsVisibleChangedNotification)
+				.SetSender(this)
 				.Post();
 		}
 	}

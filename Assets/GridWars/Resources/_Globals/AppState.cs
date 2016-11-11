@@ -7,6 +7,8 @@ public class AppState {
 	public string openSoundName = null;
 	public string openSoundtrackName = null;
 
+	public static string AppStateChangedNotification = "AppStateChangedNotification";
+
 	// --- sounds ---
 
 	void HandleOpenSounds() {
@@ -38,6 +40,10 @@ public class AppState {
 		state.owner = owner;
 		this.WillExit();
 		state.EnterFrom(this);
+		app.notificationCenter.NewNotification()
+			.SetName(AppStateChangedNotification)
+			.SetSender(state)
+			.Post();
 	}
 
 	public virtual void EnterFrom(AppState state) {

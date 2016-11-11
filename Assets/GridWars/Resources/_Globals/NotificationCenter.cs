@@ -61,19 +61,19 @@ public class Notification {
 	public NotificationCenter notificationCenter;
 
 	public string name;
-	public Notification setName(string name) {
+	public Notification SetName(string name) {
 		this.name = name;
 		return this;
 	}
 
 	public object sender;
-	public Notification setSender(object sender) {
+	public Notification SetSender(object sender) {
 		this.sender = sender;
 		return this;
 	}
 
 	public object data;
-	public Notification setData(object data) {
+	public Notification SetData(object data) {
 		this.data = data;
 		return this;
 	}
