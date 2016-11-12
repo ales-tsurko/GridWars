@@ -11,6 +11,12 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		data.AddField("version", App.shared.version);
 
 		var credentials = new JSONObject(JSONObject.Type.OBJECT);
+
+		if (app.prefs.accessToken != null) {
+			credentials.AddField("screenName", app.prefs.screenName);
+			credentials.AddField("accessToken", app.prefs.accessToken);
+		}
+
 		data.AddField("credentials", credentials);
 
 		matchmaker.Send("authenticate", data);
@@ -21,12 +27,23 @@ public class MatchmakerPreAuthState : MatchmakerState {
 	public void HandleAuthenticate(JSONObject data) {
 		app.account.screenName = data.GetField("screenName").str;
 		app.account.accessToken = data.GetField("accessToken").str;
+
+		app.prefs.screenName = app.account.screenName;
+		app.prefs.accessToken = app.account.accessToken;
+
 		foreach (var obj in data.GetField("players").list) {
 			var account = new Account();
 			account.screenName = obj.GetField("screenName").str;
 			app.account.playerList.Add(account);
 		}
 		TransitionTo(new MatchmakerPostAuthState());
+	}
+
+	public void HandleAuthenticateFailed(JSONObject data) {
+		app.prefs.screenName = "";
+		app.prefs.accessToken = "";
+
+		TransitionTo(new MatchmakerPreAuthState());
 	}
 
 	public void HandleUpdateRequired(JSONObject data) {

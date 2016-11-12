@@ -18,6 +18,26 @@ public class Prefs {
 		}
 	}
 
+	public string screenName {
+		get {
+			return PlayerPrefs.GetString("screenName");
+		}
+
+		set {
+			PlayerPrefs.SetString("screenName", value);
+		}
+	}
+
+	public string accessToken {
+		get {
+			return PlayerPrefs.GetString("accessToken");
+		}
+
+		set {
+			PlayerPrefs.SetString("accessToken", value);
+		}
+	}
+
 	public SerializedTransform cameraPosition {
 		get {
 			var json = PlayerPrefs.GetString("cameraPosition");
