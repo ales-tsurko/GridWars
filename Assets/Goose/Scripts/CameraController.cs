@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour {
-	
+	public static string CameraControllerBeganTransitionNotification = "CameraControllerBeganTransitionNotification";
+
 	public List<Transform> referencePositions = new List<Transform>();
 	public List<GameObject> finalPositions = new List<GameObject>();
 
@@ -20,7 +21,6 @@ public class CameraController : MonoBehaviour {
 	bool actionMode;
 	public bool initComplete = false;
 	public KeyIconRotation keyIconRotation;
-	public List<CameraControllerDelegate> cameraControllerDelegates;
 	public bool isInFirstPersonMode;
     public bool menuHasFocus;
     int FPSindex = 0;
@@ -49,12 +49,10 @@ public class CameraController : MonoBehaviour {
 
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
-		cameraControllerDelegates = new List<CameraControllerDelegate>();
 		//DontDestroyOnLoad (gameObject);
 	}
 
 	public void InitCamera () {
-		cameraControllerDelegates = new List<CameraControllerDelegate>();
 		SetupFinalPositions();
 
 		pos = App.shared.prefs.camPosition - 1;
@@ -434,9 +432,10 @@ public class CameraController : MonoBehaviour {
 		moving = true;
         App.shared.prefs.camPosition = pos;
 
-		foreach (var cameraControllerDelegate in cameraControllerDelegates) {
-			cameraControllerDelegate.CameraControllerBeganTransition();
-		}
+		App.shared.notificationCenter.NewNotification()
+			.SetName(CameraControllerBeganTransitionNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	public void ResetCamera () {
@@ -461,8 +460,4 @@ public class CameraController : MonoBehaviour {
 		UnlockCursor();
     }
 
-}
-
-public interface CameraControllerDelegate {
-	void CameraControllerBeganTransition();
 }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Linq;
 using InControl;
 
-public class Tower : GroundBuilding, CameraControllerDelegate {
+public class Tower : GroundBuilding {
 
 	public GameObject iconPlacement;
 
@@ -106,7 +106,11 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 		keyIcon.SetActive(false);
 
-		App.shared.cameraController.cameraControllerDelegates.Add(this);
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(CameraController.CameraControllerBeganTransitionNotification)
+			.SetAction(CameraControllerBeganTransition)
+			.Add();
 
 		gameUnitState.AddCallback("isWarpedIn", IsWarpedInChanged);
 
@@ -245,8 +249,6 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	public override void ServerAndClientLeftGame() {
 		base.ServerAndClientLeftGame();
 
-		App.shared.cameraController.cameraControllerDelegates.Remove(this);
-
 		App.shared.notificationCenter.RemoveObserver(this);
 
 		player.inputs.OnLastInputTypeChanged -= LastInputTypeChanged;
@@ -264,7 +266,12 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 
 	// CameraController
 
-	public void CameraControllerBeganTransition() {
+	public void CameraControllerBeganTransition(Notification notification) {
+		Debug.Log("CameraControllerBeganTransition: " + Quaternion.Euler(App.shared.cameraController.keyIconRotation.rotation));
+		SetKeyIconRotation();
+	}
+
+	void SetKeyIconRotation() {
 		keyIcon.transform.rotation = Quaternion.Euler(App.shared.cameraController.keyIconRotation.rotation);
 	}
 
@@ -552,6 +559,7 @@ public class Tower : GroundBuilding, CameraControllerDelegate {
 	public void UpdateHotKeys(Notification notification){
         keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
 		UpdateHotkeyText();
+		SetKeyIconRotation();
     }
 
     public void UpdateHotkeyText() {
