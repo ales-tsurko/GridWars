@@ -108,8 +108,12 @@ public class MainMenuState : AppState {
 	void SharedScreenPvpClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = true;
+
 		battlefield.player2.npcModeOn = false;
 		battlefield.player2.npcModeOn = false;
+
+		battlefield.player1.isTutorialMode = false;
+		battlefield.player2.isTutorialMode = false;
 
         Analytics.CustomEvent("SharedScreenPvPClicked", new Dictionary<string, object>
                 {
@@ -121,8 +125,12 @@ public class MainMenuState : AppState {
 	void PlayerVsCompClicked() {
 		battlefield.player1.isLocal = true;
 		battlefield.player2.isLocal = false;
+
 		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = true;
+
+		battlefield.player1.isTutorialMode = false;
+		battlefield.player2.isTutorialMode = false;
 
         Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
                 {
@@ -136,8 +144,12 @@ public class MainMenuState : AppState {
 		battlefield.isAiVsAi = true;
 		battlefield.player1.isLocal = false;
 		battlefield.player2.isLocal = false;
+
 		battlefield.player1.npcModeOn = true;
 		battlefield.player2.npcModeOn = true;
+
+		battlefield.player1.isTutorialMode = false;
+		battlefield.player2.isTutorialMode = false;
 
         Analytics.CustomEvent("CompVsCompClicked", new Dictionary<string, object>
                 {
