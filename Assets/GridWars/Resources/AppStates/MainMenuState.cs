@@ -50,6 +50,8 @@ public class MainMenuState : AppState {
 		matchmaker.menu.Hide();
 	}
 
+	private static bool _firstRun = true;
+
 	void ShowMainMenu() {
 		app.ResetMenu();
 		internetPvpButton = menu.AddNewButton().SetText("Internet PVP").SetAction(InternetPvpClicked);
@@ -61,6 +63,11 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
+		if (_firstRun) {
+			menu.backgroundColor = Color.black;
+			menu.targetBackgroundColor = Color.clear;
+			_firstRun = false;
+		}
 	}
 
 	void InternetPvpClicked() {
