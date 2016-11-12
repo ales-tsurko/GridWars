@@ -40,6 +40,8 @@ public class UIMenu : UIElement {
 	public UIMenu nextMenu;
 	public UIMenu previousMenu;
 
+	public Color targetBackgroundColor = Color.clear;
+
 	public Color backgroundColor {
 		get {
 			if (image == null) {
@@ -445,6 +447,10 @@ public class UIMenu : UIElement {
 	*/
 
 	protected virtual void Update() {
+		if (backgroundColor != targetBackgroundColor) {
+			backgroundColor = Color.Lerp(backgroundColor, targetBackgroundColor, 0.015f);
+		}
+
 		if (hasFocus) {
 			if (orientation == MenuOrientation.Vertical) {
 				if (inputs.upItem.WasPressed) {
