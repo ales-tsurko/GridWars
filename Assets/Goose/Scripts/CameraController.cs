@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour {
 	
-	public List<Transform> positions = new List<Transform>();
-	public List<SerializedTransform> gamePositions = new List<SerializedTransform>();
+	public List<Transform> referencePositions = new List<Transform>();
+	public List<GameObject> finalPositions = new List<GameObject>();
 
     [HideInInspector]
 
@@ -24,10 +24,6 @@ public class CameraController : MonoBehaviour {
 	public bool isInFirstPersonMode;
     public bool menuHasFocus;
     int FPSindex = 0;
-
-
-	private List <GameObject> camLocations; 
-
 
 	// camera modes
 
@@ -49,40 +45,6 @@ public class CameraController : MonoBehaviour {
 	//float currentZoomRate;
 	//float currentRotationRate;
 
-	Vector3 gamePositionPosAt(int index) {
-		return gamePositions[index].position;
-	}
-
-	void SetupCamLocations() {
-		camLocations = new List <GameObject>();
-		GameObject obj = null;
-
-		// 1
-		obj = new GameObject();
-		obj.transform.position = new Vector3(-5.6f, 52f, -1.5f);
-		obj.transform.rotation = Quaternion.Euler(90, 0, 90);
-
-		// 2
-		obj = new GameObject();
-		obj.transform.position = new Vector3(-4.1f, 85f, -6.8f);
-		obj.transform.rotation = Quaternion.Euler(90, 0, 0);
-
-		// 3
-		obj = new GameObject();
-		obj.transform.position = new Vector3(-3.4f, 46f, -57.7f);
-		obj.transform.rotation = Quaternion.Euler(45.4f, 0, 0);
-
-		// 4
-		obj = new GameObject();
-		obj.transform.position = new Vector3(0, 50, 0);
-		obj.transform.rotation = Quaternion.Euler(90, 0, 90);
-
-		// 5
-		obj = new GameObject();
-		obj.transform.position = new Vector3(45f, 32.2f, 0);
-		obj.transform.rotation = Quaternion.Euler(33.4f, -90f, 0);
-	}
-
 	void Start () {
 
 		initComplete = false;
@@ -92,87 +54,92 @@ public class CameraController : MonoBehaviour {
 	}
 
 	public void InitCamera () {
-		SetupCamLocations();
 		cameraControllerDelegates = new List<CameraControllerDelegate>();
-		StartCoroutine (WaitForTowers ());
-	}
+		SetupFinalPositions();
 
-	IEnumerator WaitForTowers () {
-		Tower[] towers = FindObjectsOfType<Tower> ();
-        while (towers.Length == 0 || App.shared == null) {
-			towers = FindObjectsOfType<Tower> ();
-			yield return null;
-		}
-		Tower closest = towers[0];
-		float closestDist = Mathf.Infinity;
-		foreach (Tower tower in towers) {
-			float thisDist = Vector3.Distance (tower.transform.position, cam.transform.position);
-			if (thisDist < closestDist) {
-				closestDist = thisDist;
-				closest = tower;
-			}
-		}
-		InitCamera (closest.transform);
-	}
-
-	private bool didInit = false;
-	public void InitCamera (Transform _base) {
-		//isInMainMenu = true;
-		if (!didInit) {
-
-			if (_base == null) {
-				throw new System.Exception("Tower is null, can't init camera positions");
-			}
-			gamePositions = new List<SerializedTransform>();
-			foreach (var transform in positions) {
-				var gamePosition = new SerializedTransform(transform);
-				gamePositions.Add(gamePosition);
-
-				if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
-					Vector3 mirrorAxis;
-					var keyIconRotation = transform.GetComponent<KeyIconRotation>();
-
-					if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
-						mirrorAxis = new Vector3(1, 1, -1);
-					} else {
-						mirrorAxis = new Vector3(-1, 1, 1);
-					}
-					
-					keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
-
-					gamePosition.position = Vector3.Scale(gamePosition.position, mirrorAxis);
-					gamePosition.rotation = Quaternion.Euler(gamePosition.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
-				}
-
-				cam.position = gamePosition.position;
-				cam.rotation = gamePosition.rotation;
-
-				float mod = 0;
-				#if UNITY_EDITOR
-				thisScreenRes = lastScreenRes = GetMainGameViewSize();
-				#endif
-				while (true) {
-					Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(_base.transform.position);
-					if (screenPoint.z > 0.1f && screenPoint.x > 0.1f + mod && screenPoint.x < .9f - mod && screenPoint.y > 0.1f + mod && screenPoint.y < .9f - mod) {
-						gamePosition.position = cam.position;
-						break;
-					} else {
-						cam.transform.position -= cam.transform.forward;
-					}
-				}
-			}
-			didInit = true;
-		}
-
-
-		//PickMainCameraLocation();
-		//UseSlowZoomRate();
-
-        pos = App.shared.prefs.camPosition - 1;
+		pos = App.shared.prefs.camPosition - 1;
 		ResetCamera();
-        StartCoroutine(MonitorInitialCamMovement());
+		StartCoroutine(MonitorInitialCamMovement());
 		initComplete = true;
-        menuHasFocus = false;
+		menuHasFocus = false;
+	}
+		
+	public void SetupFinalPositions () {
+		var towerPlacements = App.shared.battlefield.localPlayer1.fortress.towerPlacements;
+
+		if (finalPositions.Count == 0) {
+			foreach (var transform in referencePositions) {
+				var obj = new GameObject();
+				obj.name = transform.name + " (Final)";
+				obj.transform.parent = transform.parent;
+				finalPositions.Add(obj);
+			}
+		}
+
+		var savedCamPosition = cam.transform.position;
+		var savedCamRotation = cam.transform.rotation;
+
+		var i = 0;
+		foreach (var transform in referencePositions) {
+			var finalPosition = finalPositions[i];
+
+			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
+				Vector3 mirrorAxis;
+				var keyIconRotation = transform.GetComponent<KeyIconRotation>();
+
+				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
+					mirrorAxis = new Vector3(1, 1, -1);
+				}
+				else {
+					mirrorAxis = new Vector3(-1, 1, 1);
+				}
+
+				keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
+
+				finalPosition.transform.position = Vector3.Scale(transform.position, mirrorAxis);
+				finalPosition.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
+			}
+			else {
+				finalPosition.transform.position = transform.position;
+				finalPosition.transform.rotation = transform.rotation;
+			}
+
+			var sorted = new List<GameObject>(towerPlacements);
+				
+			sorted.Sort((a, b) => {
+				var aSqrMag = (a.transform.position - finalPosition.transform.position).sqrMagnitude;
+				var bSqrMag = (b.transform.position - finalPosition.transform.position).sqrMagnitude;
+
+				return aSqrMag.CompareTo(bSqrMag);
+			});
+
+			var closest = sorted[0];
+
+			float mod = 0;
+			var steps = 0;
+
+			cam.transform.position = finalPosition.transform.position;
+			cam.transform.rotation = finalPosition.transform.rotation;
+			while (steps < 100) {
+				Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(closest.transform.position);
+
+				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f + mod && screenPoint.x < .9f - mod && screenPoint.y > 0.1f + mod && screenPoint.y < .9f - mod) {
+					break;
+				}
+				else {
+					cam.transform.position -= cam.transform.forward;
+				}
+				steps ++;
+			}
+
+			finalPosition.transform.position = cam.transform.position;
+			finalPosition.transform.rotation = cam.transform.rotation;
+
+			i ++;
+		}
+
+		cam.transform.position = savedCamPosition;
+		cam.transform.rotation = savedCamRotation;
 	}
 		
     IEnumerator MonitorInitialCamMovement () {
@@ -190,17 +157,6 @@ public class CameraController : MonoBehaviour {
 		}
 		yield break;
     }
-
-
-    [HideInInspector]
-    Vector2 lastScreenRes, thisScreenRes;
-	public static Vector2 GetMainGameViewSize()
-	{
-		System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
-		System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView",System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-		System.Object Res = GetSizeOfMainGameView.Invoke(null,null);
-		return (Vector2)Res;
-	}
 
 	// --- game state notifications ------------------
 
@@ -254,19 +210,6 @@ public class CameraController : MonoBehaviour {
 	void UseSlowZoomRate() {
 		zoomRate = 0.03f;
 		rotationRate = 0.03f;
-	}
-
-	void UpdateResolution() {
-		#if UNITY_EDITOR
-		if (Time.frameCount % 10 == 0){
-			thisScreenRes = GetMainGameViewSize();
-			if (thisScreenRes != lastScreenRes){
-				lastScreenRes = thisScreenRes;
-				//InitCamera();
-				return;
-			}
-		}
-		#endif
 	}
 
 	void CheckForFPSMode() {
@@ -330,8 +273,7 @@ public class CameraController : MonoBehaviour {
 			UpdateForMainMenu();
 			return;
 		}
-
-		UpdateResolution();
+			
 		//CheckForFPSMode();
 		DetectStoppedMoving();
 
@@ -484,9 +426,9 @@ public class CameraController : MonoBehaviour {
 
 		cam.parent = null;
         pos += _dir;
-        var _position = Mathf.Abs(pos % gamePositions.Count);
-        var _transform = gamePositions[_position];
-        keyIconRotation = positions[_position].GetComponent<KeyIconRotation>();
+		var _position = Mathf.Abs(pos % finalPositions.Count);
+		var _transform = finalPositions[_position].transform;
+        keyIconRotation = referencePositions[_position].GetComponent<KeyIconRotation>();
 		targetPos = _transform.position;
 		targetRot = _transform.rotation;
 		moving = true;

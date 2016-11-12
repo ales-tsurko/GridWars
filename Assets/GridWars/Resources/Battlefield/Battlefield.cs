@@ -101,11 +101,11 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		App.shared.cameraController.InitCamera();
-
 		foreach (var player in players) {
 			player.StartGame();
 		}
+
+		App.shared.cameraController.InitCamera(); //depends on fortress.  call after StartGame
 	}
 
 	void AddPlayer() {
@@ -156,7 +156,7 @@ public class Battlefield : MonoBehaviour {
 			"Canvas",
 			"Directional Light",
 			"Battlefield",
-			"CameraPositions",
+			"CameraController",
 			"KeyboardUICanvas",
 			"EventSystem",
 			"Network",

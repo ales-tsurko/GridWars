@@ -51,14 +51,14 @@ public class Fortress : MonoBehaviour {
 	*/
 
 
-	private GameObject placement = null;
+	private GameObject fortressPlacement = null;
 
 	void CreatePlacement() {
 		//Bolt Entities must be root transforms.  Use this object to position things relative to Fortress / the powerSource
-		placement = new GameObject();
-		placement.transform.parent = transform;
-		placement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
-		placement.transform.localRotation = Quaternion.identity;
+		fortressPlacement = new GameObject();
+		fortressPlacement.transform.parent = transform;
+		fortressPlacement.transform.localPosition = new Vector3(0f, 0f, powerSourcePrefab.bounds.z/2);
+		fortressPlacement.transform.localRotation = Quaternion.identity;
 	}
 
 	// Use this for initialization
@@ -71,11 +71,12 @@ public class Fortress : MonoBehaviour {
 			//*/
 		}
 
+		CreatePlacement();
+
 		if (BoltNetwork.isServer) {
-			CreatePlacement();
 			PlacePowerSource();
 			PlaceUnitTowers();
-			Destroy(placement);
+			Destroy(fortressPlacement);
 		}
 	}
 
@@ -96,34 +97,43 @@ public class Fortress : MonoBehaviour {
 	}
 	*/
 
-	void PlaceUnitTowers() {
-		towers = new List<Tower>();
-		var towerNum = 0;
-		var z = placement.transform.localPosition.z;
-		foreach (var unitType in unitTypes) {
-			float tx = -bounds.x / 2 + Tower.size.x / 2 + towerNum * (Tower.size.x + towerSpacing);
-			float tz = z + powerSourcePrefab.bounds.z / 2 + towerToPowerSpacing + Tower.size.z / 2;
-			placement.transform.localPosition = new Vector3(tx, 0f, tz);
-			placement.transform.localRotation = Quaternion.identity;
+	List<GameObject> _towerPlacements;
+	public List<GameObject>towerPlacements {
+		get {
+			if (_towerPlacements == null) {
+				_towerPlacements = new List<GameObject>();
+				var i = 0;
+				var z = fortressPlacement.transform.localPosition.z;
+				foreach (var unitType in unitTypes) {
+					float tx = -bounds.x / 2 + Tower.size.x / 2 + i * (Tower.size.x + towerSpacing);
+					float tz = z + powerSourcePrefab.bounds.z / 2 + towerToPowerSpacing + Tower.size.z / 2;
+					var placement = new GameObject();
+					placement.name = "TowerPlacement";
+					placement.transform.parent = transform;
+					placement.transform.localPosition = new Vector3(tx, 0f, tz);
+					placement.transform.localRotation = Quaternion.identity;
+					towerPlacements.Add(placement);
 
-			var tower = GameUnit.Instantiate<Tower>();
-			tower.player = player;
-			tower.unitPrefabPath = App.shared.PrefabPathForUnitType(unitType);
-			tower.transform.position = placement.transform.position;
-			tower.transform.rotation = placement.transform.rotation;
-			towers.Add(tower);
-			towerNum ++;
+					i ++;
+				}
+			}
+
+			return _towerPlacements;
 		}
 	}
 
-	void PlacePointDefenseTowers() {
-		var tower = GameUnit.Instantiate<PointDefenseTower>();
-		tower.player = player;
-		tower.unitPrefabPath = App.shared.PrefabPathForUnitType(typeof(PointDefense));
-		placement.transform.localPosition = new Vector3(0f, 0f, 4f);
-		tower.transform.position = placement.transform.position;
-		tower.transform.rotation = placement.transform.rotation;
-
+	void PlaceUnitTowers() {
+		towers = new List<Tower>();
+		var i = 0;
+		foreach (var placement in towerPlacements) {
+			var tower = GameUnit.Instantiate<Tower>();
+			tower.player = player;
+			tower.unitPrefabPath = App.shared.PrefabPathForUnitType(unitTypes[i]);
+			tower.transform.position = placement.transform.position;
+			tower.transform.rotation = placement.transform.rotation;
+			towers.Add(tower);
+			i ++;
+		}
 	}
 
 	public void Unhide() {
