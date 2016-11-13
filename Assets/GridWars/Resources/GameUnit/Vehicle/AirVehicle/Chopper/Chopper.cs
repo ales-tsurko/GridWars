@@ -44,7 +44,7 @@ public class Chopper : AirVehicle {
 		SetAllowFriendlyFire(false);
 
 		if (Minigun()) {
-			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.5f);
+			Minigun().damageAdjustments.Add(typeof(MobileSAM), 0.7f);
 			Minigun().damageAdjustments.Add(typeof(Tower), 0.4f);
 		}
 	}

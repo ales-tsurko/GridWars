@@ -3,8 +3,8 @@ using System.Collections;
 
 public class ReceivedRematchRequestState : PostGameSubState {
 	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
 		openSoundtrackName = "Rematch";
+		base.EnterFrom(state);
 
 		app.ResetMenu();
 		menu.AddItem(UI.ActivityIndicator("Opponent Requests a Rematch"));
