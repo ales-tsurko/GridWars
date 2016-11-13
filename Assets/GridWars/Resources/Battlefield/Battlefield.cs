@@ -67,6 +67,14 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	public bool isEmpty {
+		get {
+			return players.TrueForAll((p) => {
+				return (p.units.Count == 0) && (p.fortress == null || p.fortress.powerSource == null);
+			});
+		}
+	}
+
 	public bool isInternetPVP;
 	public bool isAiVsAi;
 	public bool canCheckGameOver; //don't check game over until a unit is received from server

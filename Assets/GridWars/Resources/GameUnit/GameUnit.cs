@@ -22,7 +22,10 @@ public class GameUnit : NetworkObject {
 
 	public Player player {
 		get {
-			if (gameUnitState.playerNumber > 0) {
+			if (gameUnitState == null) {
+				return null;
+			}
+			else if (gameUnitState.playerNumber > 0) {
 				return Battlefield.current.PlayerNumbered(gameUnitState.playerNumber);
 			}
 			else {
@@ -323,16 +326,19 @@ public class GameUnit : NetworkObject {
 	public IGameUnitState gameUnitState;
 
 	public virtual GameUnit Instantiate() {
+		/*
 		var unit = cache.ForKeyPop(cacheKey);
 		if (unit == null) {
+		*/
 			return BoltNetwork.Instantiate(gameObject).GetComponent<GameUnit>();
+		/*
 		}
 		else {
 			unit.entity.Freeze(false);
 			unit.GetComponent<NetworkedGameUnit>().Attached();
 			return unit;
 		}
-
+		*/
 	}
 
 	public static GameUnit Instantiate(System.Type unitType) {
@@ -528,13 +534,21 @@ public class GameUnit : NetworkObject {
 			player.units.Remove(this);
 
 			//Don't explode when units are removed at the end of the game
-			if (App.shared.battlefield.livingPlayers.Count == 2) {
+			if (entity.isAttached && (App.shared.battlefield.livingPlayers.Count == 2)) {
 				ShowFxExplosion();
 				PlayDeathSound();
 			}
 		}
 
 		ResetFirstPersonCamera();
+	}
+
+	protected override void OnDestroy() {
+		base.OnDestroy();
+
+		if (destroySelfTimer != null) {
+			destroySelfTimer.Cancel();
+		}
 	}
 
 	// Thinking
@@ -1086,28 +1100,21 @@ public class GameUnit : NetworkObject {
 
 	public virtual void DestroySelf() {
 		//Debug.Log("Add to Cache");
+		/*
 		if (cache.ForKeyPush(cacheKey, this)) {
 			gameUnitState.RemoveAllCallbacks();
 			entity.Freeze(true);
 		}
 		else {
+		*/
+			App.shared.Log("BoltNetwork.Destroy", this);
 			BoltNetwork.Destroy(gameObject);
 
 			foreach (var comp in gameObject.GetComponents<AudioSource>())
 			{
 				Destroy(comp);
 			}
-		}
-	}
-
-	protected override void OnDestroy() {
-		base.OnDestroy();
-
-		ResetFirstPersonCamera();
-
-		if (destroySelfTimer != null) {
-			destroySelfTimer.Cancel();
-		}
+		//}
 	}
 
 	void ResetFirstPersonCamera() {

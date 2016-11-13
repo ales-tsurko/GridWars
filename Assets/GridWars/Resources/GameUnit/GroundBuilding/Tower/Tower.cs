@@ -14,7 +14,12 @@ public class Tower : GroundBuilding {
 	// for death from tanker hit explosion fx
 	public bool dieWithBlockify {
 		get {
-			return entity.GetState<ITowerState>().dieWithBlockify;
+			if (entity == null) {
+				return false;
+			}
+			else {
+				return entity.GetState<ITowerState>().dieWithBlockify;
+			}
 		}
 
 		set {
@@ -249,7 +254,11 @@ public class Tower : GroundBuilding {
 	public override void ServerAndClientLeftGame() {
 		base.ServerAndClientLeftGame();
 
-		App.shared.notificationCenter.RemoveObserver(this);
+		//App.shared.Log("ServerAndClientLeftGame", this);
+
+		if (App.shared.notificationCenter != null) {
+			App.shared.notificationCenter.RemoveObserver(this);
+		}
 
 		player.inputs.OnLastInputTypeChanged -= LastInputTypeChanged;
 	}
@@ -267,7 +276,6 @@ public class Tower : GroundBuilding {
 	// CameraController
 
 	public void CameraControllerBeganTransition(Notification notification) {
-		Debug.Log("CameraControllerBeganTransition: " + Quaternion.Euler(App.shared.cameraController.keyIconRotation.rotation));
 		SetKeyIconRotation();
 	}
 
