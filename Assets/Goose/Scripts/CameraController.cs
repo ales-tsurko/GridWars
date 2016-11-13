@@ -77,6 +77,7 @@ public class CameraController : MonoBehaviour {
 				var obj = new GameObject();
 				obj.name = transform.name + " (Final)";
 				obj.transform.parent = transform.parent;
+				obj.AddComponent<KeyIconRotation>();
 				finalPositions.Add(obj);
 			}
 		}
@@ -88,9 +89,10 @@ public class CameraController : MonoBehaviour {
 		foreach (var transform in referencePositions) {
 			var finalPosition = finalPositions[i];
 
+			var keyIconRotation = transform.GetComponent<KeyIconRotation>();
+
 			if (App.shared.battlefield.localPlayers.Count == 1 && App.shared.battlefield.PlayerNumbered(2).isLocal) {
 				Vector3 mirrorAxis;
-				var keyIconRotation = transform.GetComponent<KeyIconRotation>();
 
 				if (transform.gameObject.name == "TopDownBackView" || transform.gameObject.name == "MainBackView") {
 					mirrorAxis = new Vector3(1, 1, -1);
@@ -98,13 +100,14 @@ public class CameraController : MonoBehaviour {
 				else {
 					mirrorAxis = new Vector3(-1, 1, 1);
 				}
-
-				keyIconRotation.rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
+					
+				finalPosition.GetComponent<KeyIconRotation>().rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
 
 				finalPosition.transform.position = Vector3.Scale(transform.position, mirrorAxis);
 				finalPosition.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
 			}
 			else {
+				finalPosition.GetComponent<KeyIconRotation>().rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z);
 				finalPosition.transform.position = transform.position;
 				finalPosition.transform.rotation = transform.rotation;
 			}
@@ -433,7 +436,7 @@ public class CameraController : MonoBehaviour {
         pos += _dir;
 		var _position = Mathf.Abs(pos % finalPositions.Count);
 		var _transform = finalPositions[_position].transform;
-        keyIconRotation = referencePositions[_position].GetComponent<KeyIconRotation>();
+		keyIconRotation = finalPositions[_position].GetComponent<KeyIconRotation>();
 		targetPos = _transform.position;
 		targetRot = _transform.rotation;
 		moving = true;

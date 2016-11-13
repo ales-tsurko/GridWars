@@ -35,7 +35,7 @@ public class PlayingGameState : AppState {
 	}
 
 	IEnumerator StartGameAfterBattlefieldEmpty() {
-		while (BoltNetwork.isServer && battlefield.livingPlayers.Count > 0) {
+		while (BoltNetwork.isServer && !battlefield.isEmpty) {
 			yield return null;
 		}
 
@@ -53,6 +53,7 @@ public class PlayingGameState : AppState {
 	public override void Update() {
 		base.Update();
 
+		//TODO: what about a tie?
 		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
 			EndGame(battlefield.livingPlayers[0]);
 		}
