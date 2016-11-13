@@ -161,5 +161,7 @@ public class TutorialPart : MonoBehaviour {
 		App.shared.cameraController.ResetCamera();
 		App.shared.cameraController.pos = 0;
 		App.shared.cameraController.NextPosition();
+
+		PlayerPrefs.SetInt("HasPlayedTutorial", 1);
 	}
 }
