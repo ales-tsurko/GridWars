@@ -63,7 +63,14 @@ public class CameraController : MonoBehaviour {
 	}
 		
 	public void SetupFinalPositions () {
-		var towerPlacements = App.shared.battlefield.localPlayer1.fortress.towerPlacements;
+		List<GameObject> towerPlacements;
+		if (App.shared.battlefield.localPlayer1 == null) {
+			towerPlacements = App.shared.battlefield.player1.fortress.towerPlacements;
+		}
+		else {
+			towerPlacements = App.shared.battlefield.localPlayer1.fortress.towerPlacements;
+		}
+			
 
 		if (finalPositions.Count == 0) {
 			foreach (var transform in referencePositions) {
