@@ -131,7 +131,7 @@ public class MainMenuState : AppState {
 
 	void PlayerVsCompClicked() {
 
-		if (UnityEngine.Random.value < 1.0f) { //Turn off until we can figure out what this broke
+		if (UnityEngine.Random.value < 0.5f) {
 			battlefield.player1.isLocal = true;
 			battlefield.player2.isLocal = false;
 
