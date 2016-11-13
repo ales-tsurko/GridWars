@@ -430,11 +430,13 @@ public class UIMenu : UIElement {
             b.SetFillColor(_color, type);
         }
     }
+
     public void SetButtonBorderColors(Color _color){
         foreach (UIButton b in items) {
             b.SetBorderColor(_color);
         }
     }
+
     public void SetButtonTextColors(Color _color){
         foreach (UIButton b in items) {
             b.SetTextColor(_color);

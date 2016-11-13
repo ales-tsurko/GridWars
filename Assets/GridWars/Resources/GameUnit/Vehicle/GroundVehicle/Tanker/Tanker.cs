@@ -157,6 +157,7 @@ public class Tanker : GroundVehicle {
 	}
 
 	public override void UpgradeVeterancy() {
+		base.UpgradeVeterancy();
 		thrust *= 1.2f;
 	}
 

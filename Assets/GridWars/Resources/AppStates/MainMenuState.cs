@@ -50,7 +50,7 @@ public class MainMenuState : AppState {
 		matchmaker.menu.Hide();
 	}
 
-	private static bool _firstRun = true;
+	private static bool _globalIsFirstRun = true;
 
 	void ShowMainMenu() {
 		app.ResetMenu();
@@ -63,10 +63,10 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
-		if (_firstRun) {
+		if (_globalIsFirstRun) {
 			menu.backgroundColor = Color.black;
 			menu.targetBackgroundColor = Color.clear;
-			_firstRun = false;
+			_globalIsFirstRun = false;
 		}
 	}
 
@@ -130,11 +130,20 @@ public class MainMenuState : AppState {
 	}
 
 	void PlayerVsCompClicked() {
-		battlefield.player1.isLocal = true;
-		battlefield.player2.isLocal = false;
 
-		battlefield.player1.npcModeOn = false;
-		battlefield.player2.npcModeOn = true;
+		if (UnityEngine.Random.value < 0.5f) {
+			battlefield.player1.isLocal = true;
+			battlefield.player2.isLocal = false;
+
+			battlefield.player1.npcModeOn = false;
+			battlefield.player2.npcModeOn = true;
+		} else {
+			battlefield.player1.isLocal = false;
+			battlefield.player2.isLocal = true;
+
+			battlefield.player1.npcModeOn = true;
+			battlefield.player2.npcModeOn = false;
+		}
 
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
