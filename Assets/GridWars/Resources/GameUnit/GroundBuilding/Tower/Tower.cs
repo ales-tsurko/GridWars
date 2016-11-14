@@ -518,24 +518,34 @@ public class Tower : GroundBuilding {
 	public float aiStyle = 0;
 
 	public float Effectiveness() {
+		if (player.playerNumber == 1) {
+			return CountBasedEffectiveness();
+		} 
+		return CostBasedEffectiveness();
+	}
+
+	public float CountBasedEffectiveness() {
 		float wc = 0;
 		float cu = 0;
 		float c  = 0;
 		float e = 0;
 		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
+		wc = CountOfEnemyUnitsWeCanCounter();
+		cu = CountOfEnemyUnitsThatCounterUs();
+		e = ( (wc) / (1f + cu) ) / unitCost;
+		return e;
+	}
 
-		if (player.playerNumber == 1) {
-			wc = CountOfEnemyUnitsWeCanCounter();
-			cu = CountOfEnemyUnitsThatCounterUs();
-			//c  = CountOfTowerUnits();
-			//float e = ( (wc - c) / (1 + cu) ) / unitCost;
-			e = ( (wc) / (1f + cu) ) / unitCost;
-		} else {
-			wc = CostOfEnemyUnitsWeCanCounter();
-			cu = CostOfEnemyUnitsThatCounterUs();
-			c  = CostOfTowerUnits();
-			e = ( (wc - c/2f) / (1f + cu) ) / unitCost;
-		}
+	public float CostBasedEffectiveness() {
+		float wc = 0;
+		float cu = 0;
+		float c  = 0;
+		float e = 0;
+		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
+		wc = CostOfEnemyUnitsWeCanCounter();
+		cu = CostOfEnemyUnitsThatCounterUs();
+		c  = CostOfTowerUnits(); 
+		e = ( (wc - c/2f) / (1f + cu) ) / unitCost;
 
 		return e;
 	}
@@ -555,9 +565,9 @@ public class Tower : GroundBuilding {
 
 		return explosion;
 	}
-
+		
 	public void NpcStep () {
-
+		/*
 		if (npcModeOn) {
 			if (player.powerSource.PowerRatio() > 0.3f) {
 				if (Random.value < 0.001f * Effectiveness()) {
@@ -567,6 +577,7 @@ public class Tower : GroundBuilding {
 				}
 			} 
 		}
+		*/
 	}
 		
 	public void UpdateHotKeys(Notification notification){

@@ -219,7 +219,7 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public Player Enemy() {
+	public Player EnemyPlayer() {
 		return enemyPlayers[0];
 	}
 
@@ -246,7 +246,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public virtual List<GameUnit> EnemyUnitsOfType(System.Type aType) {
-		return Enemy().units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
+		return EnemyPlayer().units.Where(unit => unit.IsOfType(aType)).ToList<GameUnit>();
 	}
 
 	public List <GameUnit> UnitsTargetingObj(GameObject targetObj) {
@@ -297,27 +297,35 @@ public class Player : MonoBehaviour {
 		return 1f;
 	}
 
+	private bool useCostEffectiveness = true;
+	private float minPowerRatio = 0.0f;
+
+	private void SetupAI() {
+		useCostEffectiveness = (playerNumber == 1);
+
+	}
 	private void AI() {
 		if (isTutorialMode) {
 			TutorialStep();
 			return;
 		}
 
-		float minPowerRatio = 0.0f;
 
 		if (EnemyObjects().Count == 0) {
 			return;
 		}
 
+		// conserve power unless enemies are near
 		if (playerNumber == 2) {
+			bool enemyIsCloseToBase = fortress.DistanceRatioOfClosestEnemy() < 0.4f;
+			bool weAreCloseToEnemy = EnemyPlayer().fortress.DistanceRatioOfClosestEnemy() < 0.4f;
 
-			float r = fortress.DistanceRatioOfClosestEnemy();
-
-			if (r < 0.4f) {
+			if (enemyIsCloseToBase || weAreCloseToEnemy) {
 				minPowerRatio = 0f;
 			} else {
 				minPowerRatio = 1f;
 			}
+
 		}
 
 		if ( powerSource.PowerRatio() >= minPowerRatio) {
@@ -325,7 +333,8 @@ public class Player : MonoBehaviour {
 			Tower bestTower = null;
 			float bestEffectiveness = 0f;
 			foreach (var tower in fortress.towers) {
-				float e = tower.Effectiveness();
+				float e = useCostEffectiveness ? tower.CostBasedEffectiveness() : tower.CountBasedEffectiveness();
+
 				if (e > bestEffectiveness) {
 					bestTower = tower;
 					bestEffectiveness = e;
@@ -333,6 +342,14 @@ public class Player : MonoBehaviour {
 			}
 
 			if (bestEffectiveness > 0f) {
+				//float r = UnityEngine.Random.value;
+				if (powerSource.IsAtMax() && (bestTower.name.Contains("Tank") ||  bestTower.name.Contains("Chopper"))) {
+					Debug.Log("mass tank release");
+					bestTower.SendAttemptQueueUnit();
+					bestTower.SendAttemptQueueUnit();
+					bestTower.SendAttemptQueueUnit();
+				}
+
 				bestTower.SendAttemptQueueUnit();
 			} else if (powerSource.IsAtMax()) {
 				Tower aTower = fortress.towers.PickRandom();

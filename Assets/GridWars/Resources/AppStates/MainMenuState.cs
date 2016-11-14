@@ -50,7 +50,9 @@ public class MainMenuState : AppState {
 		matchmaker.menu.Hide();
 	}
 
-	private static bool _globalIsFirstRun = true;
+
+
+	private static bool _needsInitialFadeIn = true;
 
 	void ShowMainMenu() {
 		app.ResetMenu();
@@ -63,10 +65,15 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
-		if (_globalIsFirstRun) {
+		if (_needsInitialFadeIn) {
 			menu.backgroundColor = Color.black;
 			menu.targetBackgroundColor = Color.clear;
-			_globalIsFirstRun = false;
+			_needsInitialFadeIn = false;
+
+			//PlayerPrefs.DeleteAll();
+			if (ShouldPlayTutorial()) {
+				Tutorial();
+			}
 		}
 	}
 
@@ -184,7 +191,12 @@ public class MainMenuState : AppState {
 		Application.OpenURL("http://slack.baremetalgame.com/");
 	}
 
+	bool ShouldPlayTutorial() {
+		return PlayerPrefs.GetInt("HasPlayedTutorial", 0) == 0;
+	}
+
 	void Tutorial() {
+
 		battlefield.isAiVsAi = true;
 
 		battlefield.player1.isLocal = false;
