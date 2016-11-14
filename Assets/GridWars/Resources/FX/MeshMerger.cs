@@ -14,7 +14,7 @@ public class MeshMerger : MonoBehaviour {
 			return;
 		}
 
-		string goName = gameObject.name;
+		//string goName = gameObject.name;
 		Debug.Log(gameObject.name + " MeshMerger");
 
 		Vector3 origPos = transform.position;

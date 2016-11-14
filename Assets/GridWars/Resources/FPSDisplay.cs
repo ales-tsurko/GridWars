@@ -3,6 +3,7 @@ using System.Collections;
 
 public class FPSDisplay : MonoBehaviour
 {
+	/*
 	float lastTime;
 	int count;
 	int sampleCount = 60;
@@ -17,7 +18,6 @@ public class FPSDisplay : MonoBehaviour
 
 	void Update()
 	{
-		/*
 		count++; 
 
 		if (count == sampleCount) {
@@ -39,7 +39,6 @@ public class FPSDisplay : MonoBehaviour
 			TM().text = msg;
 			lastTime = Time.time;
 		}
-		*/
 	}
 
 	int GameObjectCount() {
@@ -47,4 +46,5 @@ public class FPSDisplay : MonoBehaviour
 		//GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
 		return allObjects.Length;
 	}
+	*/
 }

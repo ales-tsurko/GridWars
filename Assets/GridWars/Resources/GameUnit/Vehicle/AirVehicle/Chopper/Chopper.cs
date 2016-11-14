@@ -130,7 +130,7 @@ public class Chopper : AirVehicle {
 
 	// client position jets
 
-	private float lastForwardSpeed = 0f;
+	//private float lastForwardSpeed = 0f;
 
 	public void PositionJets() {
 		float speed = ClientForwardSpeed();
@@ -149,7 +149,7 @@ public class Chopper : AirVehicle {
 		Object_setRotX(leftJet, xr);
 		Object_setRotX(rightJet, xr);
 
-		lastForwardSpeed = speed;
+		//lastForwardSpeed = speed;
 	}
 
 	/*

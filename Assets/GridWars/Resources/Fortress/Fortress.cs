@@ -102,9 +102,8 @@ public class Fortress : MonoBehaviour {
 		get {
 			if (_towerPlacements == null) {
 				_towerPlacements = new List<GameObject>();
-				var i = 0;
 				var z = fortressPlacement.transform.localPosition.z;
-				foreach (var unitType in unitTypes) {
+				for (int  i = 0; i < unitTypes.Length; i++) {
 					float tx = -bounds.x / 2 + Tower.size.x / 2 + i * (Tower.size.x + towerSpacing);
 					float tz = z + powerSourcePrefab.bounds.z / 2 + towerToPowerSpacing + Tower.size.z / 2;
 					var placement = new GameObject();
@@ -113,8 +112,6 @@ public class Fortress : MonoBehaviour {
 					placement.transform.localPosition = new Vector3(tx, 0f, tz);
 					placement.transform.localRotation = Quaternion.identity;
 					towerPlacements.Add(placement);
-
-					i ++;
 				}
 			}
 
