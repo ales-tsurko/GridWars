@@ -33,10 +33,12 @@ public class MatchmakerPostedGameState : MatchmakerState {
 			.SetText("Cancel Search")
 			.SetAction(StopSearching);
 		
-		matchmaker.menu.AddNewButton()
+		var back = matchmaker.menu.AddNewButton()
 			.SetText("Back")
 			.SetAction(matchmaker.menu.Close)
 			.SetIsBackItem(true);
+
+		matchmaker.menu.SelectItem(back);
 	}
 
 	// MatchmakerDelegate

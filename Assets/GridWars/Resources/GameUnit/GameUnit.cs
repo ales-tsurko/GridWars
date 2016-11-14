@@ -534,7 +534,7 @@ public class GameUnit : NetworkObject {
 			player.units.Remove(this);
 
 			//Don't explode when units are removed at the end of the game
-			if (entity.isAttached && !App.shared.battlefield.GameOver()) {
+			if (entity.isAttached && player.isInGame) {
 				ShowFxExplosion();
 				PlayDeathSound();
 			}
@@ -545,6 +545,8 @@ public class GameUnit : NetworkObject {
 
 	protected override void OnDestroy() {
 		base.OnDestroy();
+
+		//App.shared.Log("OnDestroy: " + (destroySelfTimer == null).ToString(), this);
 
 		if (destroySelfTimer != null) {
 			destroySelfTimer.Cancel();
@@ -1088,6 +1090,10 @@ public class GameUnit : NetworkObject {
 
 	Timer destroySelfTimer;
 	public virtual void RemoveFromGame() {
+		if (!isInGame) {
+			return;
+		}
+
 		destroySelfTimer = App.shared.timerCenter.NewTimer();
 		destroySelfTimer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
 		destroySelfTimer.action = DestroySelf;
@@ -1107,7 +1113,7 @@ public class GameUnit : NetworkObject {
 		}
 		else {
 		*/
-			App.shared.Log("BoltNetwork.Destroy", this);
+			//App.shared.Log("DestroySelf", this);
 			BoltNetwork.Destroy(gameObject);
 
 			foreach (var comp in gameObject.GetComponents<AudioSource>())
@@ -1123,33 +1129,6 @@ public class GameUnit : NetworkObject {
 			App.shared.cameraController.ResetCamera();
 		}
 	}
-
-	public virtual GameObject ShowUnitExplosion() {
-		if (showsUnitExplosion && deathExplosionPrefab != null) {
-			var unitExplosion = deathExplosionPrefab.GameUnit();
-			if (unitExplosion != null) {
-				var explosion = deathExplosionPrefab.GetComponent<GameUnit>().Instantiate();
-				explosion.player = player;
-				explosion.transform.position = _t.position;
-				explosion.transform.rotation = _t.rotation;
-				var rb = rigidBody(); 
-				var erb = explosion.GetComponent<Rigidbody>(); 
-				if (erb != null && rb != null) {
-
-					erb.velocity = rb.velocity;
-					erb.drag = rb.drag;
-
-					erb.angularVelocity = rb.angularVelocity;
-					erb.angularDrag = rb.angularDrag;
-
-					erb.mass = rb.mass;
-				}
-				return explosion.gameObject;
-			}
-		}
-		return null;
-	}
-
 
 	public virtual GameObject ShowFxExplosion() {
 		if (showsUnitExplosion && deathExplosionPrefab != null) {

@@ -117,8 +117,6 @@ public class Tower : GroundBuilding {
 			.SetAction(CameraControllerBeganTransition)
 			.Add();
 
-		gameUnitState.AddCallback("isWarpedIn", IsWarpedInChanged);
-
 	}
 
 	public override void ServerJoinedGame() {
@@ -172,6 +170,13 @@ public class Tower : GroundBuilding {
         }
 
 		HideMesh();
+
+		if (isWarpedIn) {
+			IsWarpedInChanged();
+		}
+		else {
+			gameUnitState.AddCallback("isWarpedIn", IsWarpedInChanged);
+		}
 	}
 
 	// hide / unhide for warp in
