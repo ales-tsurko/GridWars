@@ -546,6 +546,8 @@ public class GameUnit : NetworkObject {
 	protected override void OnDestroy() {
 		base.OnDestroy();
 
+		//App.shared.Log("OnDestroy: " + (destroySelfTimer == null).ToString(), this);
+
 		if (destroySelfTimer != null) {
 			destroySelfTimer.Cancel();
 		}
@@ -1088,6 +1090,10 @@ public class GameUnit : NetworkObject {
 
 	Timer destroySelfTimer;
 	public virtual void RemoveFromGame() {
+		if (!isInGame) {
+			return;
+		}
+
 		destroySelfTimer = App.shared.timerCenter.NewTimer();
 		destroySelfTimer.timeout = 6*1f/20; //wait 6 network updates to be sure client gets updated
 		destroySelfTimer.action = DestroySelf;
@@ -1107,7 +1113,7 @@ public class GameUnit : NetworkObject {
 		}
 		else {
 		*/
-			App.shared.Log("BoltNetwork.Destroy", this);
+			//App.shared.Log("DestroySelf", this);
 			BoltNetwork.Destroy(gameObject);
 
 			foreach (var comp in gameObject.GetComponents<AudioSource>())

@@ -135,7 +135,7 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public void SoftReset() {
-		App.shared.timerCenter.CancelAllTimers();
+		//App.shared.timerCenter.CancelAllTimers();
 		App.shared.stepCache.Reset();
 		DestroyEntities();
 		DestroyChaff();
