@@ -190,7 +190,9 @@ public class Tower : GroundBuilding {
 				.SetAction(UpdateHotKeys)
 				.Add();
 
-			player.inputs.OnLastInputTypeChanged += LastInputTypeChanged;
+			if (player.inputs != null) {
+				player.inputs.OnLastInputTypeChanged += LastInputTypeChanged;
+			}
 		}
 	}
 
@@ -265,7 +267,9 @@ public class Tower : GroundBuilding {
 			App.shared.notificationCenter.RemoveObserver(this);
 		}
 
-		player.inputs.OnLastInputTypeChanged -= LastInputTypeChanged;
+		if (player.inputs != null) {
+			player.inputs.OnLastInputTypeChanged -= LastInputTypeChanged;
+		}
 	}
 
 	void LastInputTypeChanged(BindingSourceType type) {
