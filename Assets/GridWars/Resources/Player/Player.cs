@@ -139,7 +139,7 @@ public class Player : MonoBehaviour {
 
 	}
 
-	// NPC Handicaping
+	// --- NPC Handicaping --------------------------------------
 
 	public void DidWin() {
 		if (IsNpcPlayingHuman()) {
@@ -156,29 +156,31 @@ public class Player : MonoBehaviour {
 	public bool IsNpcPlayingHuman() {
 		return npcModeOn && !opponent.npcModeOn;
 	}
-
+		
 	public void DecreaseNpcHandicap() {
-		SetNpcHandicap(NpcHandicap() * 1.2f);
+		SetNpcHandicap(NpcHandicap() + 0.16f);
 	}
 
 	public void IncreaseNpcHandicap() {
-		SetNpcHandicap(NpcHandicap() * 0.9f);
+		SetNpcHandicap(NpcHandicap() - 0.16f);
 	}
 
 	public void SetNpcHandicap(float v) {
 		PlayerPrefs.SetFloat("NcpHandicap", Mathf.Clamp(v, 0, 1)); 
 	}
-		
+
 	public float NpcHandicap() {
 		return PlayerPrefs.GetFloat("NcpHandicap", 1f); 
 	}
 
-	void SetupNpcHandicap() {
+	void SetupNpcHandicap() { 
 		float maxHandicap = 0.5f;
 		float h = 1f - NpcHandicap() * maxHandicap;
+		Debug.Log("NpcHandicap " + NpcHandicap() + " generationRateAdjustment " + h);
 		fortress.powerSource.generationRateAdjustment = h;
 	}
 			
+	// -----------------------------------------------------------------
 
 	void UpdateColors() {
 		primaryMaterial.color = primaryColor;
