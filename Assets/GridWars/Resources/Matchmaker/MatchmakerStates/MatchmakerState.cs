@@ -44,17 +44,17 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 
 	public virtual void MatchmakerMenuOpened() {
-		app.Log("MatchmakerMenuOpened", this);
+		//app.Log("MatchmakerMenuOpened", this);
 		ConfigureForOpen();
 	}
 
 	public virtual void MatchmakerMenuClosed() {
-		app.Log("MatchmakerMenuClosed", this);
+		//app.Log("MatchmakerMenuClosed", this);
 		ConfigureForClosed();
 	}
 
 	public virtual void ConfigureForOpen() {
-		app.Log("ConfigureForOpen", this);
+		//app.Log("ConfigureForOpen", this);
 		DisconnectMatchmakerMenu();
 		app.menu.Hide();
 		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
@@ -63,7 +63,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public virtual void ConfigureForClosed() {
-		app.Log("ConfigureForClosed", this);
+		//app.Log("ConfigureForClosed", this);
 		ConnectMatchmakerMenu();
 		matchmaker.menu.SetAnchor(MenuAnchor.TopCenter);
 		matchmaker.menu.backgroundColor = Color.clear;
