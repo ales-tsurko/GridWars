@@ -5,13 +5,13 @@ public class Soundtrack : MonoBehaviour {
 	public float targetVolume = 1f;
 	public float maxVolume = 0.5f;
 	public string trackName;
-	AssemblyCSharp.Timer fadeTimer = null;
 	AudioClip clip;
 
 	public void Play() {
 		if (audioSource.isPlaying == false) {
 			audioSource.loop = true;
-			audioSource.volume = maxVolume;
+			audioSource.volume = 0f;
+			targetVolume = maxVolume;
 			audioSource.clip = clip;
 			audioSource.Play();
 			audioSource.time = 0;
@@ -40,38 +40,22 @@ public class Soundtrack : MonoBehaviour {
 	public void SetTargetVolume(float v) {
 		targetVolume = v;
 	}
-
-	public void SetVolume(float v) {
-		audioSource.volume = maxVolume * v;
+		
+	private void StopIfZeroVolume() {
 		if (Mathf.Approximately(audioSource.volume, 0f)) {
 			audioSource.Stop();
 		}
 	}
 
-	public float AdjustedVolume() {
-		return audioSource.volume / maxVolume;
-	}
-
 	public void FixedUpdate() {
-		if (fadeTimer != null) {
-			SetVolume(fadeTimer.RatioDone());
-		}
-
-		float v = AdjustedVolume();
-		if (Mathf.Approximately(targetVolume, v) == false) {
-			v += (targetVolume - v) * 0.05f;
-			if (Mathf.Abs(v - targetVolume) < 0.001) {
-				v = targetVolume;
-			}
-			SetVolume(v);
+		if (audioSource.isPlaying == true) {
+			audioSource.volume = Mathf.Lerp(audioSource.volume, targetVolume, 0.05f);
+			StopIfZeroVolume();
 		}
 	}
 
 	public void FadeOut() {
-		if (fadeTimer == null) {
-			fadeTimer = App.shared.timerCenter.NewTimer().SetTimeout(3.0f).SetTarget(this).SetMethod("DoneFade").Start();
-		}
-
+		targetVolume = 0f;
 	}
 
 	public void DoneFade() {

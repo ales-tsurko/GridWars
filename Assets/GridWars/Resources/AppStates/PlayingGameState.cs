@@ -54,7 +54,7 @@ public class PlayingGameState : AppState {
 		base.Update();
 
 		//TODO: what about a tie?
-		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.livingPlayers.Count == 1) {
+		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.GameOver()) {
 			EndGame(battlefield.livingPlayers[0]);
 		}
 		else {

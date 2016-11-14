@@ -136,7 +136,49 @@ public class Player : MonoBehaviour {
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
 
 		//gameObject.tag = "Player" + playerNumber;
+
 	}
+
+	// NPC Handicaping
+
+	public void DidWin() {
+		if (IsNpcPlayingHuman()) {
+			DecreaseNpcHandicap();
+		}
+	}
+
+	public void DidLose() {
+		if (IsNpcPlayingHuman()) {
+			IncreaseNpcHandicap();
+		}
+	}
+
+	public bool IsNpcPlayingHuman() {
+		return npcModeOn && !opponent.npcModeOn;
+	}
+
+	public void DecreaseNpcHandicap() {
+		SetNpcHandicap(NpcHandicap() * 1.1f);
+	}
+
+	public void IncreaseNpcHandicap() {
+		SetNpcHandicap(NpcHandicap() * 0.9f);
+	}
+
+	public void SetNpcHandicap(float v) {
+		PlayerPrefs.SetFloat("NcpHandicap", Mathf.Clamp(v, 0, 1)); 
+	}
+		
+	public float NpcHandicap() {
+		return PlayerPrefs.GetFloat("NcpHandicap", 1f); 
+	}
+
+	void SetupNpcHandicap() {
+		float maxHandicap = 0.5f;
+		float h = 1f - NpcHandicap() * maxHandicap;
+		fortress.powerSource.generationRateAdjustment = h;
+	}
+			
 
 	void UpdateColors() {
 		primaryMaterial.color = primaryColor;
@@ -166,6 +208,11 @@ public class Player : MonoBehaviour {
 
 		isInGame = true;
 		firstTutorial = null;
+
+
+		if (npcModeOn) {
+			SetupNpcHandicap();
+		}
 
 	}
 
@@ -288,7 +335,7 @@ public class Player : MonoBehaviour {
 		//|| Input.GetKey(KeyCode.Space)
 		if (npcModeOn && BoltNetwork.isServer && isInGame) {
 			if (App.shared.timeCounter % npcThinkFrequency == 0) {
-					AI();
+				AI();
 			}
 		}
 	}
@@ -302,14 +349,15 @@ public class Player : MonoBehaviour {
 
 	private void SetupAI() {
 		useCostEffectiveness = (playerNumber == 1);
-
 	}
+
 	private void AI() {
+		SetupAI();
+
 		if (isTutorialMode) {
 			TutorialStep();
 			return;
 		}
-
 
 		if (EnemyObjects().Count == 0) {
 			return;
@@ -328,7 +376,7 @@ public class Player : MonoBehaviour {
 
 		}
 
-		if ( powerSource.PowerRatio() >= minPowerRatio) {
+		if (powerSource.PowerRatio() >= minPowerRatio) {
 			
 			Tower bestTower = null;
 			float bestEffectiveness = 0f;
@@ -343,7 +391,8 @@ public class Player : MonoBehaviour {
 
 			if (bestEffectiveness > 0f) {
 				//float r = UnityEngine.Random.value;
-				if (powerSource.IsAtMax() && (bestTower.name.Contains("Tank") ||  bestTower.name.Contains("Chopper"))) {
+				if (powerSource.IsAtMax() && 
+					(bestTower.name.Contains("Tank") ||  bestTower.name.Contains("Chopper"))) {
 					Debug.Log("mass tank release");
 					bestTower.SendAttemptQueueUnit();
 					bestTower.SendAttemptQueueUnit();
@@ -357,12 +406,6 @@ public class Player : MonoBehaviour {
 					aTower.SendAttemptQueueUnit();
 				}
 			}
-		}
-	}
-
-	private void SimpleAI() {
-		foreach (var tower in fortress.towers) {
-			tower.NpcStep();
 		}
 	}
 

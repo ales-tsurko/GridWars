@@ -61,6 +61,10 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	public bool GameOver() {
+		return livingPlayers.Count == 1;
+	}
+
 	public List <Player> livingPlayers {
 		get {
 			return players.FindAll(p => !p.IsDead());

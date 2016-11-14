@@ -534,7 +534,7 @@ public class GameUnit : NetworkObject {
 			player.units.Remove(this);
 
 			//Don't explode when units are removed at the end of the game
-			if (entity.isAttached && (App.shared.battlefield.livingPlayers.Count == 2)) {
+			if (entity.isAttached && !App.shared.battlefield.GameOver()) {
 				ShowFxExplosion();
 				PlayDeathSound();
 			}

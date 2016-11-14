@@ -16,6 +16,7 @@ namespace AssemblyCSharp {
 		// optional ivars for attaching info to the timer 
 		public string label; 
 		public object info;
+		public bool isCancelled = false;
 
 		public Timer() {
 		}
@@ -63,6 +64,7 @@ namespace AssemblyCSharp {
 		}
 
 		public Timer Start() {
+			isCancelled = false;
 			startTime = Time.time;
 			fireTime = startTime + timeout;
 			timerCenter.AddTimer(this);
@@ -78,6 +80,7 @@ namespace AssemblyCSharp {
 		}
 
 		public void Cancel() {
+			isCancelled = true;
 			timerCenter.RemoveTimer(this);
 		}
 

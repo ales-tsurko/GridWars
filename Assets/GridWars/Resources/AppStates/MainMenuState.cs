@@ -49,9 +49,7 @@ public class MainMenuState : AppState {
 		matchmaker.menu.Close();
 		matchmaker.menu.Hide();
 	}
-
-
-
+		
 	private static bool _needsInitialFadeIn = true;
 
 	void ShowMainMenu() {

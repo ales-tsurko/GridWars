@@ -24,6 +24,7 @@ public class PowerSource : GroundBuilding {
 	public float baseSegmentWidth = 10f;
 	public float baseSegmentLength = 10f;
 	public int segmentCount = 20;
+	public float generationRateAdjustment = 1f;
 
 	public GameObject prefab;
 
@@ -69,6 +70,7 @@ public class PowerSource : GroundBuilding {
         gameStart = false;
 		bounds = new Vector3(0f, 1.0f, 2.5f);
 		generationRate = 1.3f;
+		generationRateAdjustment = 1f;
 	}
 
 	public override void ServerAndClientInit() {
@@ -129,7 +131,7 @@ public class PowerSource : GroundBuilding {
 		float r = power / maxPower;
 		rate *= (1 + r / 2);
 
-		power = Mathf.Clamp(power + Time.fixedDeltaTime * rate, 0f, maxPower);
+		power = Mathf.Clamp(power + Time.fixedDeltaTime * rate * generationRateAdjustment, 0f, maxPower);
 	}
 
 	public override void Think() {
