@@ -531,7 +531,6 @@ public class Tower : GroundBuilding {
 	public float CountBasedEffectiveness() {
 		float wc = 0;
 		float cu = 0;
-		float c  = 0;
 		float e = 0;
 		float unitCost = gameUnit.PowerCost(gameUnit.veteranLevel) / player.powerSource.maxPower;
 		wc = CountOfEnemyUnitsWeCanCounter();
