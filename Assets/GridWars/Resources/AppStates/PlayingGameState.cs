@@ -54,8 +54,14 @@ public class PlayingGameState : AppState {
 		base.Update();
 
 		//TODO: what about a tie?
-		if (BoltNetwork.isServer && battlefield.canCheckGameOver && battlefield.GameOver()) {
-			EndGame(battlefield.livingPlayers[0]);
+		if (BoltNetwork.isServer && battlefield.canCheckGameOver && 
+			battlefield.GameOver()) {
+			Player winner = battlefield.livingPlayers[0];
+			Player loser = battlefield.player1 == winner ? battlefield.player2 : battlefield.player1;
+			winner.DidWin();
+			loser.DidLose();
+			EndGame(winner);
+
 		}
 		else {
 			foreach (var inGameMenu in inGameMenus) {

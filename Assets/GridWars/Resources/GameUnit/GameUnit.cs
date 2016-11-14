@@ -645,7 +645,6 @@ public class GameUnit : NetworkObject {
 			else {
 				return 0;
 			}
-
 		}
 
 		set {

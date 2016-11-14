@@ -158,7 +158,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void DecreaseNpcHandicap() {
-		SetNpcHandicap(NpcHandicap() * 1.1f);
+		SetNpcHandicap(NpcHandicap() * 1.2f);
 	}
 
 	public void IncreaseNpcHandicap() {
