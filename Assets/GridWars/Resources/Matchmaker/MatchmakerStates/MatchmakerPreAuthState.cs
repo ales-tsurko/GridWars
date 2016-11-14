@@ -4,6 +4,8 @@ using System.Collections;
 public class MatchmakerPreAuthState : MatchmakerState {
 	// AppState
 
+	bool storesCredentials = true;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -12,7 +14,7 @@ public class MatchmakerPreAuthState : MatchmakerState {
 
 		var credentials = new JSONObject(JSONObject.Type.OBJECT);
 
-		if (app.prefs.accessToken != null) {
+		if (storesCredentials && app.prefs.accessToken != null) {
 			credentials.AddField("screenName", app.prefs.screenName);
 			credentials.AddField("accessToken", app.prefs.accessToken);
 		}
@@ -28,8 +30,10 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		app.account.screenName = data.GetField("screenName").str;
 		app.account.accessToken = data.GetField("accessToken").str;
 
-		app.prefs.screenName = app.account.screenName;
-		app.prefs.accessToken = app.account.accessToken;
+		if (storesCredentials) {
+			app.prefs.screenName = app.account.screenName;
+			app.prefs.accessToken = app.account.accessToken;
+		}
 
 		foreach (var obj in data.GetField("players").list) {
 			var account = new Account();
