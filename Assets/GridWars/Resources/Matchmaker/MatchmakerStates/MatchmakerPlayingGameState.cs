@@ -14,6 +14,7 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		matchmaker.menu.Hide();
 
 		battlefield.isInternetPVP = true;
+		battlefield.isAiVsAi = false;
 		app.state.TransitionTo(new PlayingGameState());
 	}
 
