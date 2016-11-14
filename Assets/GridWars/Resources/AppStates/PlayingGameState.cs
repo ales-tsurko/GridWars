@@ -57,7 +57,7 @@ public class PlayingGameState : AppState {
 		if (BoltNetwork.isServer && battlefield.canCheckGameOver && 
 			battlefield.GameOver()) {
 			Player winner = battlefield.livingPlayers[0];
-			Player loser = battlefield.player1 == winner ? battlefield.player2 : battlefield.player1;
+			Player loser = winner.EnemyPlayer();
 			winner.DidWin();
 			loser.DidLose();
 			EndGame(winner);
