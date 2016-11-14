@@ -17,7 +17,7 @@ public class HoverText : MonoBehaviour {
 	*/
 
 	public void Update () {
-		Camera cam = Camera.main;
+		//Camera cam = Camera.main;
 		Vector3 directionToCam = Camera.main.transform.position - transform.position; 
 		transform.rotation = Quaternion.LookRotation(directionToCam);
 		//transform.rotation = Quaternion.LookRotation(n) * Quaternion.Euler(0, 90, 0);

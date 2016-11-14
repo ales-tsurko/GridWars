@@ -4,7 +4,7 @@ using System.Collections;
 public class MatchmakerPreAuthState : MatchmakerState {
 	// AppState
 
-	bool storesCredentials = true;
+	bool storesCredentials = false;
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);

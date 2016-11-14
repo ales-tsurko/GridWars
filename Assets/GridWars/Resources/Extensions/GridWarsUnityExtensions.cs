@@ -46,7 +46,6 @@ public static class GridWarsUnityExtensions {
 		List<T> input = new List<T>(list);
 		List<T> output = new List<T>();
 
-		int max = list.Count;
 		while (input.Count > 0) {
 			int j = (int)(UnityEngine.Random.value * (float)input.Count);
 			var value = input[j];
