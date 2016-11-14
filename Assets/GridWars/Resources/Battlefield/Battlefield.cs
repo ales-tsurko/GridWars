@@ -136,13 +136,13 @@ public class Battlefield : MonoBehaviour {
 
 	public void SoftReset() {
 		//App.shared.timerCenter.CancelAllTimers();
+		foreach(var player in players) {
+			player.isInGame = false;
+		}
 		App.shared.stepCache.Reset();
 		DestroyEntities();
 		DestroyChaff();
 		gameUnitCache.Reset();
-		foreach(var player in players) {
-			player.isInGame = false;
-		}
 	}
 
 	void DestroyEntities() {

@@ -534,7 +534,7 @@ public class GameUnit : NetworkObject {
 			player.units.Remove(this);
 
 			//Don't explode when units are removed at the end of the game
-			if (entity.isAttached && (App.shared.battlefield.livingPlayers.Count == 2)) {
+			if (entity.isAttached && player.isInGame) {
 				ShowFxExplosion();
 				PlayDeathSound();
 			}
@@ -1129,33 +1129,6 @@ public class GameUnit : NetworkObject {
 			App.shared.cameraController.ResetCamera();
 		}
 	}
-
-	public virtual GameObject ShowUnitExplosion() {
-		if (showsUnitExplosion && deathExplosionPrefab != null) {
-			var unitExplosion = deathExplosionPrefab.GameUnit();
-			if (unitExplosion != null) {
-				var explosion = deathExplosionPrefab.GetComponent<GameUnit>().Instantiate();
-				explosion.player = player;
-				explosion.transform.position = _t.position;
-				explosion.transform.rotation = _t.rotation;
-				var rb = rigidBody(); 
-				var erb = explosion.GetComponent<Rigidbody>(); 
-				if (erb != null && rb != null) {
-
-					erb.velocity = rb.velocity;
-					erb.drag = rb.drag;
-
-					erb.angularVelocity = rb.angularVelocity;
-					erb.angularDrag = rb.angularDrag;
-
-					erb.mass = rb.mass;
-				}
-				return explosion.gameObject;
-			}
-		}
-		return null;
-	}
-
 
 	public virtual GameObject ShowFxExplosion() {
 		if (showsUnitExplosion && deathExplosionPrefab != null) {
