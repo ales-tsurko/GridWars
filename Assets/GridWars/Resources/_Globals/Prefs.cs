@@ -73,6 +73,16 @@ public class Prefs {
 
     }
 
+    public Resolution GetResolution (){
+        int _width = PlayerPrefs.GetInt("ResolutionWidth", 0);
+        int _height = PlayerPrefs.GetInt("ResolutionHeight", 0);
+        return new Resolution(){ height = _height, width = _width };
+    }
+    public void SetResolution(Resolution res){
+        PlayerPrefs.SetInt("ResolutionWidth", res.width);
+        PlayerPrefs.SetInt("ResolutionHeight", res.height);
+    }
+
 	bool GetBool(string name) {
 		return PlayerPrefs.GetInt(name) == 1;
 	}
