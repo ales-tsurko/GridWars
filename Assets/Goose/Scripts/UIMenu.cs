@@ -147,6 +147,15 @@ public class UIMenu : UIElement {
 		ApplyLayout();
 	}
 
+    public GameObject AddNewScrollingMenu(string type){
+        GameObject _menu = (GameObject)Instantiate(Resources.Load("Options/" + type + "ScrollingMenu"));
+        _menu.transform.SetParent(panel);
+        _menu.transform.localScale = Vector3.one;
+        _menu.transform.localPosition = new Vector3(Screen.width * .25f, 0, 0);
+        _menu.GetComponent<RectTransform>().sizeDelta = new Vector2(300, Screen.height * .8f);
+        return _menu;
+    }
+
 	public UIButton AddNewButton() {
 		var button = UIButton.Instantiate();
 		AddItem(button);

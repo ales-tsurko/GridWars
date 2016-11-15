@@ -73,7 +73,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		menu = UI.Menu();
 
 		prefs = new Prefs();
-
+        SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
 		_destroyQueue = new List<GameObject>();
 		soundtracks = new List<Soundtrack>();
@@ -109,6 +109,16 @@ public class App : MonoBehaviour, AppStateOwner {
 		mainMenuState.EnterFrom(null);
 		//*/
 	}
+
+    void SetupResolution() {
+        Resolution[] res = Screen.resolutions;
+        Resolution r = res[res.Length - 1];
+        Resolution savedRes = App.shared.prefs.GetResolution();
+        if (savedRes.width != 0 && savedRes.height != 0) {
+            r = savedRes;
+        }
+        Screen.SetResolution(r.width, r.height, true); // last arg is bool for fullscreen
+    }
 
 	public void FixedUpdate() {
 		timerCenter.Step();

@@ -61,6 +61,7 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Tutorial", Tutorial));
 		menu.AddItem(UI.MenuItem("Chat", ChatClicked));
 		menu.AddItem(UI.MenuItem("Account", AccountClicked));
+        menu.AddItem(UI.MenuItem("Options", OptionsClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
@@ -197,7 +198,11 @@ public class MainMenuState : AppState {
 
 		TransitionTo(new AccountMenuState());
 	}
-		
+
+    void OptionsClicked(){
+        TransitionTo(new OptionsMenuState());
+    }
+
 	bool ShouldPlayTutorial() {
 		return PlayerPrefs.GetInt("HasPlayedTutorial", 0) == 0;
 	}
