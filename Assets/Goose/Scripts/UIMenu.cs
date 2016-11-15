@@ -153,6 +153,12 @@ public class UIMenu : UIElement {
 		return button;
 	}
 
+	public UIInput AddNewInput() {
+		var input = UIInput.Instantiate();
+		AddItem(input);
+		return input;
+	}
+
 	public UIButton AddNewText() {
 		var button = AddNewButton();
 		button.allowsInteraction = false;
@@ -188,7 +194,7 @@ public class UIMenu : UIElement {
 		}
 
 		//size items equally
-		var sizeEquallyItems = items.FindAll(item => item.matchesNeighborSize);
+		var sizeEquallyItems = visibleItems.FindAll(item => item.matchesNeighborSize);
 		var maxX = 0f;
 		var maxY = 0f;
 		foreach (var item in sizeEquallyItems) {
@@ -205,7 +211,7 @@ public class UIMenu : UIElement {
 		var nextPosition = Vector2.zero;
 		maxX = 0f;
 		maxY = 0f;
-		foreach (var item in items) {
+		foreach (var item in visibleItems) {
 			var transform = item.GetComponent<RectTransform>();
 
 			//*
@@ -255,20 +261,6 @@ public class UIMenu : UIElement {
 		}
     }
 
-    Vector2 GetMaxSizeDelta(MenuOrientation orientation) {
-        bool isVertical = orientation == MenuOrientation.Vertical;
-
-        float maxSize = 0;
-        Vector2 vec = new Vector2();
-        foreach (UIButton i in items) {
-            if ((isVertical ? i.GetComponent<RectTransform>().sizeDelta.x : i.GetComponent<RectTransform>().sizeDelta.y)  > maxSize) {
-                maxSize = (isVertical ? i.GetComponent<RectTransform>().sizeDelta.x : i.GetComponent<RectTransform>().sizeDelta.y);
-                vec = i.GetComponent<RectTransform>().sizeDelta;
-            }
-        }
-        return vec * 1.01f;
-    }
-
 	public void Reset() {
 		foreach (Transform child in panel.transform) {
 			Destroy(child.gameObject);
@@ -309,7 +301,13 @@ public class UIMenu : UIElement {
 
 	public List<UIButton>selectableItems {
 		get {
-			return items.FindAll(item => item.isInteractible);
+			return items.FindAll(item => (item.isInteractible));
+		}
+	}
+
+	public List<UIButton>visibleItems {
+		get {
+			return items.FindAll(item => (item.isActiveAndEnabled));
 		}
 	}
 
@@ -424,24 +422,6 @@ public class UIMenu : UIElement {
 
 		LoseFocus();
 	}
-  
-    public void SetButtonFillColors(Color _color, ButtonColorType type = ButtonColorType.Normal){
-        foreach (UIButton b in items) {
-            b.SetFillColor(_color, type);
-        }
-    }
-
-    public void SetButtonBorderColors(Color _color){
-        foreach (UIButton b in items) {
-            b.SetBorderColor(_color);
-        }
-    }
-
-    public void SetButtonTextColors(Color _color){
-        foreach (UIButton b in items) {
-            b.SetTextColor(_color);
-        }
-    }
 
 	/*
 	public float controllerPeriod = 0.25f;

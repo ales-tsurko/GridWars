@@ -8,6 +8,8 @@ public class UIActivityIndicator : UIButton {
 	int dotCount = 0;
 	float showTime = 0f;
 
+	public bool showsDotsInline = false;
+
 	public static new UIActivityIndicator Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject(UI.BUTTONPREFAB));
 		UI.AssignToCanvas(go);
@@ -16,7 +18,8 @@ public class UIActivityIndicator : UIButton {
 		return indicator;
 	}
 
-	void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		matchesNeighborSize = false;
 		allowsInteraction = false;
 	}
@@ -27,7 +30,11 @@ public class UIActivityIndicator : UIButton {
 		}
 
 		set {
-			prefix = value.ToUpper() + "\n";
+			prefix = value.ToUpper();
+			if (!showsDotsInline) {
+				prefix += "\n";
+			}
+
 			base.text = prefix;
 		}
 	}

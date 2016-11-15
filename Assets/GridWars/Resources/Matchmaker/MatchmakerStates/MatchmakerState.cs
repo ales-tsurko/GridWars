@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDelegate {
+	public static string MatchmakerSaveAccountNotification = "MatchmakerSaveAccountNotification";
+
 
 	public Account account {
 		get {
@@ -176,5 +178,13 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void HandlePlayerDisconnected(JSONObject data) {
 		account.PlayerDisconnected(data);
+	}
+
+	public void HandleSaveAccount(JSONObject data) {
+		app.notificationCenter.NewNotification()
+			.SetName(MatchmakerSaveAccountNotification)
+			.SetSender(this)
+			.SetData(data)
+			.Post();
 	}
 }

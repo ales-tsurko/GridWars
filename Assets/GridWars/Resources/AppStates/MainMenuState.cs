@@ -60,6 +60,7 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Tutorial", Tutorial));
 		menu.AddItem(UI.MenuItem("Chat", ChatClicked));
+		menu.AddItem(UI.MenuItem("Account", AccountClicked));
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
@@ -189,6 +190,14 @@ public class MainMenuState : AppState {
 		Application.OpenURL("http://slack.baremetalgame.com/");
 	}
 
+	void AccountClicked() {
+		Analytics.CustomEvent("AccountClicked", new Dictionary<string, object>{
+			{ "playTime", Time.timeSinceLevelLoad }
+		});
+
+		TransitionTo(new AccountMenuState());
+	}
+		
 	bool ShouldPlayTutorial() {
 		return PlayerPrefs.GetInt("HasPlayedTutorial", 0) == 0;
 	}

@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 using InControl;
 
 
-[RequireComponent(typeof(Image))]
-[RequireComponent(typeof(Button))]
 [System.Serializable]
 public class UIButton : UIElement {
 
@@ -133,11 +131,11 @@ public class UIButton : UIElement {
 
 	public bool isInteractible {
 		get {
-			return buttonComponent.interactable;
+			return selectableComponent.interactable;
 		}
 
 		set {
-			buttonComponent.interactable = value && allowsInteraction;
+			selectableComponent.interactable = value && allowsInteraction;
 		}
 	}
 
@@ -157,45 +155,49 @@ public class UIButton : UIElement {
 
 	public Vector2 innerMargins = new Vector2(1, 1); //ratio of font height
 
-    Button buttonComponent {
+	Selectable selectableComponent {
         get {
-            return GetComponent<Button>();
+			return GetComponent<Selectable>();
         }
     }
 
-    RectTransform rectTransform {
+	Button buttonComponent {
+		get {
+			return GetComponent<Button>();
+		}
+	}
+
+    protected RectTransform rectTransform {
         get {
             return GetComponent<RectTransform>();
         }
     }
+
     [HideInInspector]
     public Vector2 menuSize = Vector2.zero;
 
 	public UIMenu menu;
 
 	public void Select() {
-		buttonComponent.Select();
+		selectableComponent.Select();
 	}
 
 	public bool isSelected;
 
-    void Awake () {
-		allowsInteraction = true;
-
-		if (GetComponentInChildren<Text> () == null) {
-			UI.CreateTextObj (GetComponent<RectTransform>(), UIFont.Army);
+	protected EventTrigger eventTrigger {
+		get {
+			return GetComponent<EventTrigger>();
 		}
-		/*
-        Animator[] anims = GetComponentsInChildren<Animator>();
-        foreach (Animator anim in anims) {
-            anim.SetTrigger("Play");
-        }
-        */
-
 	}
 
-	void Start () {
-		GetComponent<Button>().onClick.AddListener(OnClick);
+    protected virtual void Awake () {
+		allowsInteraction = true;
+	}
+
+	protected virtual void Start () {
+		if (buttonComponent != null) {
+			buttonComponent.onClick.AddListener(OnClick);
+		}
 
 		var eventTrigger = gameObject.AddComponent<EventTrigger>();
 
@@ -291,17 +293,19 @@ public class UIButton : UIElement {
 			SizeToFit();
 		}
 	}
-		
-	public void OnClick (){
-		if (action != null && isInteractible) {
+
+	int clickFrame = -1; //fire event only 1x per frame
+
+	public void OnClick() {
+		if (action != null && isInteractible && clickFrame != Time.frameCount) {
 			wasActivatedByMouse = true;
+			clickFrame = Time.frameCount;
 			StartCoroutine(ActivateCoroutine());
         }
 	}
 
 	IEnumerator ActivateCoroutine() {
 		yield return new WaitForEndOfFrame(); // If action selects a new menu item, it won't be activated.
-		//App.shared.Log("OnClick: " + text, this);
 		if (menu != null && menu.soundsEnabled) {
 			App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", .5f);
 		}
@@ -328,7 +332,15 @@ public class UIButton : UIElement {
 		menu.ItemDeselected(this);
 	}
 
-    public void SizeToFit() {
+	void OnDisabled() {
+		menu.ApplyLayout();
+	}
+
+	void OnEnabled() {
+		menu.ApplyLayout();
+	}
+
+	public virtual void SizeToFit() {
 		var w = textComponent.preferredWidth;
 
 		var lineCount = textComponent.text.Split('\n').Length;
@@ -350,7 +362,7 @@ public class UIButton : UIElement {
     }
 
 	public UIButton SetFillColor (Color _color, ButtonColorType type = ButtonColorType.Normal){
-        ColorBlock c = GetComponent<Button>().colors;
+		ColorBlock c = selectableComponent.colors;
         switch (type) {
             case ButtonColorType.Normal:
                 c.normalColor = _color;
@@ -369,10 +381,10 @@ public class UIButton : UIElement {
 			SetFillColor(_color, ButtonColorType.Hover);
 			SetFillColor(_color, ButtonColorType.Pressed);
 			SetFillColor(_color, ButtonColorType.Disabled);
-			buttonComponent.image.color = _color;
+			selectableComponent.image.color = _color;
 			break;
         }
-        GetComponent<Button>().colors = c;
+		selectableComponent.colors = c;
 		return this;
     }
 
@@ -386,6 +398,5 @@ public class UIButton : UIElement {
         t.color = _color;
 		return this;
     }
-
 }
 public enum ButtonColorType { Normal, Pressed, Hover, Disabled, All }
