@@ -9,15 +9,15 @@ public static class EnvironmentConfigController {
 
     public static string path = Application.dataPath + "/EnvironmentConfig/";
     public static string editorFile = path + "Editor.json";
-    public static string developmentFile=path + "Development.json";
-    public static string productionFile=path + "Production.json";
+    public static string debugFile=path + "Debug.json";
+    public static string releaseFile=path + "Release.json";
 
     public static EnvironmentConfig Init(){
         string filename = "";
-        if (PlayerPrefs.GetInt("DevelopmentBuild", 0) == 0 ? false : true) {
-            filename = developmentFile;
+        if (PlayerPrefs.GetInt("DebugBuild", 0) == 0 ? false : true) {
+            filename = debugFile;
         } else {
-            filename = productionFile;
+            filename = releaseFile;
         }
         #if UNITY_EDITOR
         filename = editorFile;
@@ -33,11 +33,11 @@ public static class EnvironmentConfigController {
     [PostProcessBuildAttribute(1)]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
         if (Debug.isDebugBuild) {
-            SetEnvironment("DevelopmentBuild");
-            Debug.Log("Development build");
+            SetEnvironment("DebugBuild");
+            Debug.Log("Debug Build");
         } else {
-            SetEnvironment("ProductionBuild");
-            Debug.Log("Production build");
+            SetEnvironment("ReleaseBuild");
+            Debug.Log("Release Build");
         }
         if (target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXIntel) {
             Debug.Log(Directory.GetParent(pathToBuiltProject) + " Enviro Files Copied.");
@@ -51,10 +51,10 @@ public static class EnvironmentConfigController {
     }
         
     public static void SetEnvironment(string enviro){
-        if (enviro == "Development") {
-            PlayerPrefs.SetInt("DevelopmentBuild", 1);
+        if (enviro == "DebugBuild") {
+            PlayerPrefs.SetInt("DebugBuild", 1);
         } else {
-            PlayerPrefs.SetInt("DevelopmentBuild", 0);
+            PlayerPrefs.SetInt("DebugBuild", 0);
         }
     }
     #endif 
