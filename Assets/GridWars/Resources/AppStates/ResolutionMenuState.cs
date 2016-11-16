@@ -6,19 +6,17 @@ using System.Linq;
 
 public class ResolutionMenuState : AppState {
 
-    private static bool _needsInitialFadeIn = true;
-   
     public override void EnterFrom(AppState state) {
         base.EnterFrom(state);
 
-        ShowGraphicsOptionsMenu();
+        ShowResolutionOptionsMenu();
     }
 
     public override void WillExit() {
         base.WillExit();
     }
 
-    void ShowGraphicsOptionsMenu() {
+    void ShowResolutionOptionsMenu() {
         app.ResetMenu();
         List<Resolution> resList = new List<Resolution>();
         foreach (Resolution _res in Screen.resolutions) {
@@ -52,7 +50,7 @@ public class ResolutionMenuState : AppState {
     }
 
     void GoBackToGraphicsMenu(){
-        TransitionTo (new OptionsMenuState ());
+        TransitionTo (new GraphicsOptionsState ());
     }
 }
 
