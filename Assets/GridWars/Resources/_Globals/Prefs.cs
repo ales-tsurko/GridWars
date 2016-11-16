@@ -83,6 +83,13 @@ public class Prefs {
         PlayerPrefs.SetInt("ResolutionHeight", res.height);
     }
 
+    public int GetAA(){
+        return PlayerPrefs.GetInt("Antialiasing", 0);
+    }
+    public void SetAA(int aa){
+        PlayerPrefs.SetInt("Antialiasing", aa);
+    }
+
 	bool GetBool(string name) {
 		return PlayerPrefs.GetInt(name) == 1;
 	}
