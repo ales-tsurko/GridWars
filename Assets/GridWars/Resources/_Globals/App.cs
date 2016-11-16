@@ -36,6 +36,8 @@ public class App : MonoBehaviour, AppStateOwner {
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
 	public bool isExiting;
+    public EnvironmentConfig config;
+
 
 	public string version {
 		get {
@@ -66,6 +68,9 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Start() {
+        config = EnvironmentConfigController.Init();
+        Debug.Log("Enviro Config: " + config.prefsPrefix + "  " + config.serverHost);
+
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
 		notificationCenter = new NotificationCenter();
@@ -73,6 +78,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		menu = UI.Menu();
 
 		prefs = new Prefs();
+
         SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
 		_destroyQueue = new List<GameObject>();

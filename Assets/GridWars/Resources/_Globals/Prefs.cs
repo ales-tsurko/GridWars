@@ -3,10 +3,11 @@ using System.Collections;
 
 public class Prefs {
 	public static string PrefsKeyIconsVisibleChangedNotification = "PrefsKeyIconsVisibleChangedNotification";
-
-	public bool keyIconsVisible {
+    public static string prefix = "";
+	
+    public bool keyIconsVisible {
 		get {
-            return GetBool("keyIconsVisible");
+            return GetBool(prefix + "keyIconsVisible");
 		}
 
 		set {
@@ -20,27 +21,27 @@ public class Prefs {
 
 	public string screenName {
 		get {
-			return PlayerPrefs.GetString("screenName");
+            return PlayerPrefs.GetString(prefix + "screenName");
 		}
 
 		set {
-			PlayerPrefs.SetString("screenName", value);
+            PlayerPrefs.SetString(prefix + "screenName", value);
 		}
 	}
 
 	public string accessToken {
 		get {
-			return PlayerPrefs.GetString("accessToken");
+            return PlayerPrefs.GetString(prefix + "accessToken");
 		}
 
 		set {
-			PlayerPrefs.SetString("accessToken", value);
+            PlayerPrefs.SetString(prefix + "accessToken", value);
 		}
 	}
 
 	public SerializedTransform cameraPosition {
 		get {
-			var json = PlayerPrefs.GetString("cameraPosition");
+            var json = PlayerPrefs.GetString(prefix + "cameraPosition");
 			if (json == null) {
 				return null;
 			}
@@ -50,51 +51,51 @@ public class Prefs {
 		}
 
 		set {
-			PlayerPrefs.SetString("cameraPosition", JsonUtility.ToJson(value));
+            PlayerPrefs.SetString(prefix + "cameraPosition", JsonUtility.ToJson(value));
 		}
 	}
    
     public int camPosition {
         get {
-            return PlayerPrefs.GetInt("camPosition", 0);
+            return PlayerPrefs.GetInt(prefix + "camPosition", 0);
         }
 
         set {
-            PlayerPrefs.SetInt("camPosition", value);
+            PlayerPrefs.SetInt(prefix + "camPosition", value);
         }
     }
 
     public static string GetKeyMappings () {
-        return PlayerPrefs.GetString("keyMappings", "empty");
+        return PlayerPrefs.GetString(prefix + "keyMappings", "empty");
     }
 
     public static void SetKeyMappings (string s) {
-        PlayerPrefs.SetString("keyMappings", s);
+        PlayerPrefs.SetString(prefix + "keyMappings", s);
 
     }
 
     public Resolution GetResolution (){
-        int _width = PlayerPrefs.GetInt("ResolutionWidth", 0);
-        int _height = PlayerPrefs.GetInt("ResolutionHeight", 0);
+        int _width = PlayerPrefs.GetInt(prefix + "ResolutionWidth", 0);
+        int _height = PlayerPrefs.GetInt(prefix + "ResolutionHeight", 0);
         return new Resolution(){ height = _height, width = _width };
     }
     public void SetResolution(Resolution res){
-        PlayerPrefs.SetInt("ResolutionWidth", res.width);
-        PlayerPrefs.SetInt("ResolutionHeight", res.height);
+        PlayerPrefs.SetInt(prefix + "ResolutionWidth", res.width);
+        PlayerPrefs.SetInt(prefix + "ResolutionHeight", res.height);
     }
 
     public int GetAA(){
-        return PlayerPrefs.GetInt("Antialiasing", 0);
+        return PlayerPrefs.GetInt(prefix + "Antialiasing", 0);
     }
     public void SetAA(int aa){
-        PlayerPrefs.SetInt("Antialiasing", aa);
+        PlayerPrefs.SetInt(prefix + "Antialiasing", aa);
     }
 
 	bool GetBool(string name) {
-		return PlayerPrefs.GetInt(name) == 1;
+        return PlayerPrefs.GetInt(prefix + name) == 1;
 	}
 
 	void SetBool(string name, bool value) {
-		PlayerPrefs.SetInt(name, value ? 1 : 0);
+        PlayerPrefs.SetInt(prefix + name, value ? 1 : 0);
 	}
 }

@@ -101,7 +101,7 @@ namespace SocketIO
 
 			var host = "gw-matchmaker.herokuapp.com";
 			//host = "localhost:8080";
-			url = "ws://" + host + "/socket.io/?EIO=4&transport=websocket";
+            url = "ws://" + EnvironmentConfigController.Init().serverHost + "/socket.io/?EIO=4&transport=websocket";
 
 			ws = new WebSocket(url);
 			ws.OnOpen += OnOpen;
