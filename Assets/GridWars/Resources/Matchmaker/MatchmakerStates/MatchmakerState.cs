@@ -138,8 +138,6 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public virtual void MatchmakerReceivedMessage(JSONObject message) {
-		app.Log("MatchmakerReceivedMessage: " + message.ToString(), this);
-
 		HandleMessage(message.GetField("name").str, message.GetField("data"));
 	}
 
@@ -156,7 +154,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	protected void HandleUnexpectedMessage(string name, JSONObject data) {
-		app.Log("Unexpected Message: " + name + ": " + data, this);
+		//app.Log("Unexpected Message: " + name + ": " + data, this);
 	}
 
 	public virtual void HandleGamePosted(JSONObject data) {

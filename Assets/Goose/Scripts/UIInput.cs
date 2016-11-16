@@ -52,6 +52,7 @@ public class UIInput : UIButton {
 
 		matchesNeighborSize = false;
 		doesType = false;
+		characterLimit = 64;
 	}
 
 	protected override void Start() {
@@ -83,5 +84,4 @@ public class UIInput : UIButton {
 
 	public void OnEndEdit() {
 	}
-
 }

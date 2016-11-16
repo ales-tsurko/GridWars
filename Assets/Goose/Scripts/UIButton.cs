@@ -178,6 +178,23 @@ public class UIButton : UIElement {
 
 	public UIMenu menu;
 
+	public override void Show() {
+		base.Show();
+
+		if (menu != null) {
+			menu.ApplyLayout();
+		}
+
+	}
+
+	public override void Hide() {
+		base.Hide();
+
+		if (menu != null) {
+			menu.ApplyLayout();
+		}
+	}
+
 	public void Select() {
 		selectableComponent.Select();
 	}
@@ -330,14 +347,6 @@ public class UIButton : UIElement {
         //menu.Deselect();
 		isSelected = false;
 		menu.ItemDeselected(this);
-	}
-
-	void OnDisabled() {
-		menu.ApplyLayout();
-	}
-
-	void OnEnabled() {
-		menu.ApplyLayout();
 	}
 
 	public virtual void SizeToFit() {
