@@ -113,11 +113,13 @@ public class App : MonoBehaviour, AppStateOwner {
     void SetupResolution() {
         Resolution[] res = Screen.resolutions;
         Resolution r = res[res.Length - 1];
-        Resolution savedRes = App.shared.prefs.GetResolution();
+        Resolution savedRes = prefs.GetResolution();
         if (savedRes.width != 0 && savedRes.height != 0) {
             r = savedRes;
         }
         Screen.SetResolution(r.width, r.height, true); // last arg is bool for fullscreen
+
+        QualitySettings.antiAliasing = prefs.GetAA();
     }
 
 	public void FixedUpdate() {
