@@ -14,6 +14,10 @@ public class Matchmaker : AppStateOwner {
 	public Network network;
 	public MatchmakerDelegate matchmakerDelegate;
 
+	public static string MatchmakerConnectedNotification = "MatchmakerConnectedNotification";
+	public static string MatchmakerDisconnectedNotification = "MatchmakerDisconnectedNotification";
+	public static string MatchmakerErroredNotification = "MatchmakerErroredNotification";
+
 	public bool isConnected;
 
 	public MatchmakerMenu menu;
@@ -69,6 +73,10 @@ public class Matchmaker : AppStateOwner {
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerConnected();
 		}
+		App.shared.notificationCenter.NewNotification()
+			.SetName(MatchmakerConnectedNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	void SocketDisconnected(SocketIOEvent e) {
@@ -77,6 +85,10 @@ public class Matchmaker : AppStateOwner {
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerDisconnected();
 		}
+		App.shared.notificationCenter.NewNotification()
+			.SetName(MatchmakerDisconnectedNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	bool receivedError = false;
@@ -100,6 +112,10 @@ public class Matchmaker : AppStateOwner {
 			if (matchmakerDelegate != null) {
 				matchmakerDelegate.MatchmakerErrored();
 			}
+			App.shared.notificationCenter.NewNotification()
+				.SetName(MatchmakerErroredNotification)
+				.SetSender(this)
+				.Post();
 		}
 
 	}

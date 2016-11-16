@@ -70,9 +70,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		matchmaker.menu.SetAnchor(MenuAnchor.TopCenter);
 		matchmaker.menu.backgroundColor = Color.clear;
 		app.menu.Show();
-		if (app.state is MainMenuState) {
-			DisableMatchmakerMenuInteraction();
-		}
+		DisableMatchmakerMenuInteraction();
 	}
 
 	public virtual void ConnectMatchmakerMenu() {
@@ -106,14 +104,6 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		matchmaker.menu.isNavigable = true;
 		matchmaker.menu.isInteractible = true;
 		matchmaker.menu.Open();
-	}
-
-	public virtual void MainMenuEntered() {
-		DisableMatchmakerMenuInteraction();
-	}
-
-	public virtual void MainMenuExited() {
-		EnableMatchmakerMenuInteraction();
 	}
 
 	void DisableMatchmakerMenuInteraction() {

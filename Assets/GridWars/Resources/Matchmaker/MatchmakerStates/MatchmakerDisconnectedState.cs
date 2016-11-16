@@ -10,8 +10,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		NotifyMainMenu();
-
 		Connect();
 	}
 
@@ -21,13 +19,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			//TODO: countdown?
 			matchmaker.Connect();
 			isConnecting = true;
-		}
-	}
-
-	void NotifyMainMenu() {
-		MainMenuState mainMenuState = app.state as MainMenuState;
-		if (mainMenuState != null) {
-			mainMenuState.MatchmakerDisconnected();
 		}
 	}
 
@@ -44,8 +35,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 
 		app.Log("MatchmakerDisconnected", this);
 
-		NotifyMainMenu();
-
 		app.StartCoroutine(ReconnectCoroutine());
 	}
 
@@ -53,8 +42,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 		//base.MatchmakerErrored(); Don't call base
 
 		app.Log("MatchmakerErrored", this);
-
-		NotifyMainMenu();
 
 		app.StartCoroutine(ReconnectCoroutine());
 	}

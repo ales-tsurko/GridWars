@@ -11,6 +11,7 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		matchmaker.menu.Close();
 		matchmaker.menu.Hide();
 
 		battlefield.isInternetPVP = true;

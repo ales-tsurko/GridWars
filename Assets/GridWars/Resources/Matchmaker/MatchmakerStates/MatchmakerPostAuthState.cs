@@ -8,14 +8,6 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Close();
-
-		MainMenuState mainMenuState = app.state as MainMenuState;
-		if (mainMenuState != null) {
-			mainMenuState.MatchmakerConnected();
-		}
-		else {
-			matchmaker.menu.Hide();
-		}
 	}
 	// MatchmakerMenuDelegate
 
@@ -29,6 +21,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	void UpdateText() {
 		string text;
 
+		/*
 		if (app.state is MainMenuState) {
 			if (app.account.otherPlayers.Count > 0) {
 				text = app.account.otherPlayers.Count + " Online";
@@ -45,20 +38,17 @@ public class MatchmakerPostAuthState : MatchmakerState {
 				App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
 			}
 		}
+		*/
+
+		if (app.account.otherPlayers.Count > 0) {
+			text = app.account.otherPlayers.Count + " Online";
+			App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
+		}
+		else {
+			text = "Online";
+		}
 
 		button.text = text;
-	}
-
-	public override void MainMenuEntered() {
-		base.MainMenuEntered();
-
-		UpdateText();
-	}
-
-	public override void MainMenuExited() {
-		base.MainMenuExited();
-
-		UpdateText();
 	}
 
 	void SearchForOpponent() {

@@ -9,6 +9,7 @@ public class PlayingGameState : AppState {
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
+
 		Object.FindObjectOfType<CameraController>().GameStarted();
 
 		battlefield.canCheckGameOver = false;
