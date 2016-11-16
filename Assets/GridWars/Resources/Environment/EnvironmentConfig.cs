@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 #endif
 using UnityEngine;
-
 using System.IO;
 using System;
 public static class EnvironmentConfigController {
@@ -33,6 +32,13 @@ public static class EnvironmentConfigController {
     #if UNITY_EDITOR
     [PostProcessBuildAttribute(1)]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
+        if (Debug.isDebugBuild) {
+            SetEnvironment("DevelopmentBuild");
+            Debug.Log("Development build");
+        } else {
+            SetEnvironment("ProductionBuild");
+            Debug.Log("Production build");
+        }
         if (target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXIntel) {
             Debug.Log(Directory.GetParent(pathToBuiltProject) + " Enviro Files Copied.");
             DirectoryCopy (Application.dataPath + "/EnvironmentConfig", pathToBuiltProject + "/Contents/EnvironmentConfig", true);
@@ -43,17 +49,6 @@ public static class EnvironmentConfigController {
         }
 
     }
-
-
-    [MenuItem ("Enviro/Set To Development Build")]
-    static void SetDev () {
-        SetEnvironment("Development");
-    }
-
-    [MenuItem ("Enviro/Set To Production Build")]
-    static void SetProd () {
-        SetEnvironment("Production");
-    }
         
     public static void SetEnvironment(string enviro){
         if (enviro == "Development") {
@@ -61,7 +56,6 @@ public static class EnvironmentConfigController {
         } else {
             PlayerPrefs.SetInt("DevelopmentBuild", 0);
         }
-        PopupEnviro.Popup();
     }
     #endif 
     public static string ReadFile (string file){
@@ -114,33 +108,3 @@ public class EnvironmentConfig {
     public string prefsPrefix;
     public string serverHost;
 }
-#if UNITY_EDITOR
-public class PopupEnviro : EditorWindow
-{
-    public static double close;
-    static PopupEnviro window;
-    public static void Popup()
-    {
-        window = ScriptableObject.CreateInstance<PopupEnviro>();
-        window.position = new Rect(Screen.width / 4, Screen.height / 4, 250, 150);
-        window.ShowPopup();
-        window.Focus();
-        close = EditorApplication.timeSinceStartup + 2;
-    }
-
-    void OnGUI() {
-        window.Focus();
-        if (EditorApplication.timeSinceStartup > close) {
-            this.Close();
-            return;
-        }
-
-        EditorGUILayout.LabelField((PlayerPrefs.GetInt("DevelopmentBuild", 0) == 0 ? "Production Build" : "Development Build") + " set.", EditorStyles.wordWrappedLabel);
-        GUILayout.Space(70);
-        if (GUILayout.Button("Continue")) {
-            this.Close();
-        }
-        
-    }
-}
-#endif
