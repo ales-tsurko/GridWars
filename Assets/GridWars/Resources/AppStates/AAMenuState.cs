@@ -41,7 +41,7 @@ public class AAMenuState : AppState {
                 butt.SetText((butt.data as AAData).GetString());
             }
         }
-        menu.selectedItem.SetText("✓" + _res.GetString());
+        menu.selectedItem.SetText("✓ " + _res.GetString());
     }
 
     void GoBackToGraphicsMenu(){
@@ -54,7 +54,7 @@ public class AAData {
     public string GetString(bool withCheckMark = false){
         string s = "";
         if (withCheckMark) {
-            s += (aa == QualitySettings.antiAliasing ? "✓" : "");
+            s += (aa == QualitySettings.antiAliasing ? "✓ " : "");
         }
         if (aa == 0) {
             return s + "Off";

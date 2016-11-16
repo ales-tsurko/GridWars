@@ -65,12 +65,12 @@ public static class ResolutionExtension {
     /// <returns>Formatted String for Menu</returns>
     /// <param name="res">Res.</param>
     public static string MenuString(this Resolution res){
-        return ((Screen.height == res.height && Screen.width == res.width) ? "✓" : "") + res.width + "x" + res.height;
+        return ((Screen.height == res.height && Screen.width == res.width) ? "✓ " : "") + res.width + "x" + res.height;
     }
     public static string PlainString(this Resolution res){
         return res.width + "x" + res.height;
     }
     public static string CheckedString(this Resolution res){
-        return "✓" + res.width + "x" + res.height;
+        return "✓ " + res.width + "x" + res.height;
     }
 }

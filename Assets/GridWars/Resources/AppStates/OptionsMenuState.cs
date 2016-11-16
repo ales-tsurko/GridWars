@@ -4,8 +4,6 @@ using UnityEngine.Analytics;
 using System.Collections.Generic;
 
 public class OptionsMenuState : AppState {
-   
-    private static bool _needsInitialFadeIn = true;
 
     public override void EnterFrom(AppState state) {
         base.EnterFrom(state);
@@ -21,12 +19,6 @@ public class OptionsMenuState : AppState {
         menu.AddItem(UI.MenuItem("Graphics", ShowGraphicsOptions));
         menu.AddItem(UI.MenuItem("Back", GoBackToMain));
         menu.Show();
-
-        if (_needsInitialFadeIn) {
-            menu.backgroundColor = Color.black;
-            menu.targetBackgroundColor = Color.clear;
-            _needsInitialFadeIn = false;
-        }
     }
 
     void ShowGraphicsOptions(){

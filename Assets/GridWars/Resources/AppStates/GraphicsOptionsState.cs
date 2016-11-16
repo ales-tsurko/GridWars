@@ -4,9 +4,6 @@ using UnityEngine.Analytics;
 using System.Collections.Generic;
 
 public class GraphicsOptionsState : AppState {
-
-    private static bool _needsInitialFadeIn = true;
-
     public override void EnterFrom(AppState state) {
         base.EnterFrom(state);
         ShowGraphicsOptionsMenu();
@@ -22,12 +19,6 @@ public class GraphicsOptionsState : AppState {
         menu.AddItem(UI.MenuItem("Antialiasing", ShowAntiAliasingMenu));
         menu.AddItem(UI.MenuItem("Back", GoBackToOptions));
         menu.Show();
-
-        if (_needsInitialFadeIn) {
-            menu.backgroundColor = Color.black;
-            menu.targetBackgroundColor = Color.clear;
-            _needsInitialFadeIn = false;
-        }
     }
 
     void ShowAntiAliasingMenu() {
