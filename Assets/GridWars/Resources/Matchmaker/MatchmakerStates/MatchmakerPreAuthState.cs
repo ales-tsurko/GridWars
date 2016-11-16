@@ -4,7 +4,7 @@ using System.Collections;
 public class MatchmakerPreAuthState : MatchmakerState {
 	// AppState
 
-	bool storesCredentials = true;
+	bool sendsCredentials = true;
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
@@ -14,7 +14,7 @@ public class MatchmakerPreAuthState : MatchmakerState {
 
 		var credentials = new JSONObject(JSONObject.Type.OBJECT);
 
-		if (storesCredentials && app.prefs.accessToken != null) {
+		if (sendsCredentials && app.prefs.accessToken != null) {
 			credentials.AddField("screenName", app.prefs.screenName);
 			credentials.AddField("accessToken", app.prefs.accessToken);
 		}
@@ -27,25 +27,24 @@ public class MatchmakerPreAuthState : MatchmakerState {
 	//MatchmakerDelegate
 
 	public void HandleAuthenticate(JSONObject data) {
-		app.account.screenName = data.GetField("screenName").str;
-		app.account.accessToken = data.GetField("accessToken").str;
-
-		if (storesCredentials) {
-			app.prefs.screenName = app.account.screenName;
-			app.prefs.accessToken = app.account.accessToken;
-		}
+		account.email = data.GetField("email").str;
+		account.screenName = data.GetField("screenName").str;
+		account.accessToken = data.GetField("accessToken").str;
+		account.SaveToPrefs();
 
 		foreach (var obj in data.GetField("players").list) {
-			var account = new Account();
-			account.screenName = obj.GetField("screenName").str;
-			app.account.playerList.Add(account);
+			var playerAccount = new Account();
+			playerAccount.screenName = obj.GetField("screenName").str;
+			app.account.playerList.Add(playerAccount);
 		}
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 
 	public void HandleAuthenticateFailed(JSONObject data) {
-		app.prefs.screenName = "";
-		app.prefs.accessToken = "";
+		account.email = "";
+		account.screenName = "";
+		account.accessToken = "";
+		account.SaveToPrefs();
 
 		TransitionTo(new MatchmakerPreAuthState());
 	}

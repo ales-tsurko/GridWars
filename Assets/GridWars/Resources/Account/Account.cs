@@ -84,4 +84,9 @@ public class Account {
 	public void PlayerDisconnected(JSONObject accountData) {
 		playerList.Remove(AccountNamed(accountData.GetField("screenName").str));
 	}
+
+	public void SaveToPrefs() {
+		App.shared.prefs.screenName = screenName;
+		App.shared.prefs.accessToken = accessToken;
+	}
 }

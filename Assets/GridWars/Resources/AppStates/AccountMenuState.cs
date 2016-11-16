@@ -20,7 +20,7 @@ public class AccountMenuState : AppState {
 		emailInput = menu.AddNewInput();
 		emailInput.characterLimit = 64;
 		emailInput.inputComponent.contentType = UnityEngine.UI.InputField.ContentType.EmailAddress;
-		emailInput.text = app.prefs.email;
+		emailInput.text = app.account.email;
 
 		menu.AddNewText().SetText("Screen Name:");
 
@@ -28,7 +28,7 @@ public class AccountMenuState : AppState {
 		screenNameInput.capitalizes = true;
 		screenNameInput.characterLimit = 20;
 		screenNameInput.inputComponent.contentType = UnityEngine.UI.InputField.ContentType.Alphanumeric;
-		screenNameInput.text = app.prefs.screenName;
+		screenNameInput.text = app.account.screenName;
 
 		saveButton = menu.AddNewButton().SetText("Save").SetAction(SaveActivated);
 		saveIndicator = menu.AddNewIndicator();
@@ -36,7 +36,7 @@ public class AccountMenuState : AppState {
 		saveIndicator.showsDotsInline = true;
 		saveIndicator.Hide();
 
-		menu.AddNewButton().SetText("Back").SetAction(BackActivated).SetIsBackItem(true);
+		backButton = menu.AddNewButton().SetText("Back").SetAction(BackActivated).SetIsBackItem(true);
 
 		menu.Show();
 
@@ -81,8 +81,9 @@ public class AccountMenuState : AppState {
 
 		if (data.GetField("success").b) {
 			title.text = "Account Updated";
-			app.prefs.email = data.GetField("email").str;
-			app.prefs.screenName = data.GetField("screenName").str;
+			app.account.email = data.GetField("email").str;
+			app.account.screenName = data.GetField("email").str;
+			app.account.SaveToPrefs();
 			menu.SelectItem(backButton);
 		}
 		else {

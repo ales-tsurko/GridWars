@@ -28,16 +28,6 @@ public class Prefs {
 		}
 	}
 
-	public string email {
-		get {
-			return PlayerPrefs.GetString("email");
-		}
-
-		set {
-			PlayerPrefs.SetString("email", value);
-		}
-	}
-
 	public string accessToken {
 		get {
 			return PlayerPrefs.GetString("accessToken");
