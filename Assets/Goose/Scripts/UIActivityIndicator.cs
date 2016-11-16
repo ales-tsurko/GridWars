@@ -22,6 +22,7 @@ public class UIActivityIndicator : UIButton {
 		base.Awake();
 		matchesNeighborSize = false;
 		allowsInteraction = false;
+		text = "";
 	}
 
 	public override string text {

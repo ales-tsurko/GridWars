@@ -160,10 +160,12 @@ public class PlayMenuState : AppState {
 	}
 
 	bool ShouldPlayTutorial() {
-		return PlayerPrefs.GetInt("HasPlayedTutorial", 0) == 0;
+		return !app.prefs.hasPlayedTutorial;
 	}
 
 	void Tutorial() {
+		app.prefs.hasPlayedTutorial = true;
+
 		battlefield.isAiVsAi = true;
 
 		battlefield.player1.isLocal = false;

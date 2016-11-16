@@ -137,5 +137,15 @@ public class Matchmaker : AppStateOwner {
 	public void Receive(SocketIOEvent e) {
 		App.shared.Log("Receive: " + e.data.GetField("name").str + ": " + e.data.GetField("data"), this);
 		matchmakerDelegate.MatchmakerReceivedMessage(e.data);
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(ReceivedMessageNotificationName(e.data.GetField("name").str))
+			.SetSender(this)
+			.SetData(e.data.GetField("data"))
+			.Post();
+	}
+
+	public string ReceivedMessageNotificationName(string messageName) {
+		return "MatchmakerReceived" + messageName.Capitalized() + "Notification";
 	}
 }

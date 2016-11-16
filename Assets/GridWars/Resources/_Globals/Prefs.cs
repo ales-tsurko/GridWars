@@ -7,7 +7,7 @@ public class Prefs {
 	
     public bool keyIconsVisible {
 		get {
-            return GetBool(prefix + "keyIconsVisible");
+            return GetBool("keyIconsVisible");
 		}
 
 		set {
@@ -21,81 +21,111 @@ public class Prefs {
 
 	public string screenName {
 		get {
-            return PlayerPrefs.GetString(prefix + "screenName");
+            return GetString("screenName");
 		}
 
 		set {
-            PlayerPrefs.SetString(prefix + "screenName", value);
+            SetString("screenName", value);
 		}
 	}
 
 	public string accessToken {
 		get {
-            return PlayerPrefs.GetString(prefix + "accessToken");
+            return GetString("accessToken");
 		}
 
 		set {
-            PlayerPrefs.SetString(prefix + "accessToken", value);
+            SetString("accessToken", value);
 		}
 	}
 
-	public SerializedTransform cameraPosition {
+	public bool hasPlayedTutorial {
 		get {
-            var json = PlayerPrefs.GetString(prefix + "cameraPosition");
-			if (json == null) {
-				return null;
+			return GetBool("hasPlayedTutorial");
+		}
+
+		set {
+			SetBool("hasPlayedTutorial", value);
+		}
+	}
+
+	public float npcHandicap {
+		get {
+			if (HasPref("npcHandicap")) {
+				return GetFloat("npcHandicap");
 			}
 			else {
-				return JsonUtility.FromJson<SerializedTransform>(json);
+				return 1.0f;
 			}
 		}
 
 		set {
-            PlayerPrefs.SetString(prefix + "cameraPosition", JsonUtility.ToJson(value));
+			SetFloat("npcHandicap", value);
 		}
 	}
    
     public int camPosition {
         get {
-            return PlayerPrefs.GetInt(prefix + "camPosition", 0);
+            return GetInt("camPosition");
         }
 
         set {
-            PlayerPrefs.SetInt(prefix + "camPosition", value);
+            SetInt("camPosition", value);
         }
     }
 
-    public static string GetKeyMappings () {
-        return PlayerPrefs.GetString(prefix + "keyMappings", "empty");
-    }
-
-    public static void SetKeyMappings (string s) {
-        PlayerPrefs.SetString(prefix + "keyMappings", s);
-
-    }
-
     public Resolution GetResolution (){
-        int _width = PlayerPrefs.GetInt(prefix + "ResolutionWidth", 0);
-        int _height = PlayerPrefs.GetInt(prefix + "ResolutionHeight", 0);
-        return new Resolution(){ height = _height, width = _width };
+		return new Resolution(){ height = GetInt("ResolutionWidth"), width = GetInt("ResolutionHeight") };
     }
     public void SetResolution(Resolution res){
-        PlayerPrefs.SetInt(prefix + "ResolutionWidth", res.width);
-        PlayerPrefs.SetInt(prefix + "ResolutionHeight", res.height);
+        PlayerPrefs.SetInt("ResolutionWidth", res.width);
+        PlayerPrefs.SetInt("ResolutionHeight", res.height);
     }
 
     public int GetAA(){
-        return PlayerPrefs.GetInt(prefix + "Antialiasing", 0);
+        return GetInt("Antialiasing");
     }
     public void SetAA(int aa){
-        PlayerPrefs.SetInt(prefix + "Antialiasing", aa);
+        SetInt("Antialiasing", aa);
     }
 
-	bool GetBool(string name) {
-        return PlayerPrefs.GetInt(prefix + name) == 1;
+	string PrefixedKey(string key) {
+		return prefix + "/" + key;
 	}
 
-	void SetBool(string name, bool value) {
-        PlayerPrefs.SetInt(prefix + name, value ? 1 : 0);
+	bool HasPref(string key) {
+		return PlayerPrefs.HasKey(PrefixedKey(key));
+	}
+
+	string GetString(string key) {
+		return PlayerPrefs.GetString(PrefixedKey(key));
+	}
+
+	void SetString(string key, string value) {
+		PlayerPrefs.SetString(PrefixedKey(key), value);
+	}
+
+	int GetInt(string key) {
+		return PlayerPrefs.GetInt(PrefixedKey(key));
+	}
+
+	void SetInt(string key, int value) {
+		PlayerPrefs.SetInt(PrefixedKey(key), value);
+	}
+
+	float GetFloat(string key) {
+		return PlayerPrefs.GetFloat(PrefixedKey(key));
+	}
+
+	void SetFloat(string key, float value) {
+		PlayerPrefs.SetFloat(PrefixedKey(key), value);
+	}
+
+	bool GetBool(string key) {
+		return PlayerPrefs.GetInt(PrefixedKey(key)) == 1;
+	}
+
+	void SetBool(string key, bool value) {
+		PlayerPrefs.SetInt(PrefixedKey(key), value ? 1 : 0);
 	}
 }

@@ -48,28 +48,6 @@ public static class UI {
 		return button;
     }
 
-    public static UIButton ButtonPrefabKeyMap(KeyData _keyData, bool utilKey = false, string utilText = "", System.Action action = null){
-		var _button = UIButtonRemapKey.Instantiate();
-
-        if (_keyData != null) {
-            _button.joyKey = _keyData.code.GetButton();
-            _button.keyKey = _keyData.key;
-            _button.code = _keyData.code;
-        }
-        if (utilKey) {
-			_button.text = utilText;
-        } else {
-			_button.text = _keyData.description + ": " + _button.keyKey.ToString() + " or " + _button.joyKey.ToString();
-        }
-        if (action == null) {
-			_button.action = _button.OnClick;
-        } else {
-			_button.action = action;
-        }
-
-        return _button;
-    }
-
     public static UIButton MenuItem (string title = "Button", System.Action  action = null, MenuItemType type = MenuItemType.ButtonPrefab, string skin = "Default", bool animated = true, bool allCaps = true){
         switch (type) {
             case MenuItemType.ButtonRound:
