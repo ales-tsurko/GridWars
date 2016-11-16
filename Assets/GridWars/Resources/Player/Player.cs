@@ -166,11 +166,11 @@ public class Player : MonoBehaviour {
 	}
 
 	public void SetNpcHandicap(float v) {
-		PlayerPrefs.SetFloat("NcpHandicap", Mathf.Clamp(v, 0, 1)); 
+		App.shared.prefs.npcHandicap = Mathf.Clamp(v, 0, 1);
 	}
 
 	public float NpcHandicap() {
-		return PlayerPrefs.GetFloat("NcpHandicap", 1f); 
+		return App.shared.prefs.npcHandicap;
 	}
 
 	void SetupNpcHandicap() { 

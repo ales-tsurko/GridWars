@@ -32,7 +32,6 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Network network;
 	public Battlefield battlefield;
 	public CameraController cameraController;
-	public Keys keys;
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
 	public bool isExiting;
@@ -101,8 +100,6 @@ public class App : MonoBehaviour, AppStateOwner {
 
 		cameraController = GameObject.FindObjectOfType<CameraController>();
 		cameraController.enabled = true;
-
-		keys = new Keys();
 
 		inputs = new PlayerInputs();
 		inputs.AddControllerBindings();
