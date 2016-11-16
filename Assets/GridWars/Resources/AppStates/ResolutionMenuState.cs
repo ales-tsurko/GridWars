@@ -27,7 +27,8 @@ public class ResolutionMenuState : AppState {
             }
             resList.Add(_res);
         }
-        foreach (Resolution res in resList.Where((x, i) => i % ((int)(resList.Count / 6)) == 0)) {
+        float ratio = resList[resList.Count - 1].width / resList[resList.Count - 1].height;
+        foreach (Resolution res in resList.Where(r => Mathf.Abs((r.width/r.height)-ratio)<.1f)) {
             menu.AddItem(UI.MenuItem(res.MenuString(), ChangeRes).SetData(new ResolutionData(){ resolution = res }));
         }
         menu.AddItem(UI.MenuItem("Back", GoBackToGraphicsMenu));
