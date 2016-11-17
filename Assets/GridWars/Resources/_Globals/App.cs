@@ -36,11 +36,12 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Account account;
 	public bool isExiting;
 
-    EnvController _config;
-    public EnvController config {
+	EnvConfig _config;
+	public EnvConfig config {
 		get {
 			if (_config == null) {
-                _config = Resources.Load<EnvController>("EnvironmentController");
+				_config = new EnvController().config;
+				//Debug.Log(_config.name);
 			}
 			return _config;
 		}

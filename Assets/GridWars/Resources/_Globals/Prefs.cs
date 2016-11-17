@@ -160,25 +160,11 @@ public class Prefs {
 			.Post();
 	}
 
-	string environmentName {
-		get {
-			if (Application.isEditor) {
-				return "Editor";
-			}
-			else if (Debug.isDebugBuild) {
-				return "Debug";
-			}
-			else {
-				return "Release";
-			}
-		}
-	}
-
 	string envPath {
 		get {
 			return System.IO.Path.Combine(
 				System.IO.Path.Combine(Application.persistentDataPath, "Environment"),
-				environmentName
+				App.shared.config.name
 			);
 		}
 	}

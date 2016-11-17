@@ -1,54 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu]
-public class EnvController : ScriptableObject {
+public class EnvController {
 
-    public EnvConfig debug, developer, editor, release;
+	public EnvConfig config {
+		get {
+			var developer = LoadConfigNamed("Developer");
+			if (developer == null || !developer.hasPriority) {
+				if (Application.isEditor) {
+					return LoadConfigNamed("Editor");
+				}
+				else if (Debug.isDebugBuild) {
+					return LoadConfigNamed("Debug");
+				}
+				else {
+					return LoadConfigNamed("Release");
+				}
+			}
+			else {
+				return developer;
+			}
+		}
+	}
 
-    public string serverHost {
-        get {
-            if (!Debug.isDebugBuild) {
-                return release.serverHost;
-            }
-            if (developer.hasPriority) {
-                return developer.serverHost;
-            }
-            if (Application.isEditor) {
-                return editor.serverHost;
-            }
-            return debug.serverHost;
-        }
-    }
-
-    public string prefsPrefix {
-        get {
-            if (!Debug.isDebugBuild) {
-                return release.prefsPrefix;
-            }
-            if (developer.hasPriority) {
-                return developer.prefsPrefix;
-            }
-            if (Application.isEditor) {
-                return editor.prefsPrefix;
-            }
-            return debug.prefsPrefix;
-        }
-    }
-
-    public string envName {
-        get {
-            if (!Debug.isDebugBuild) {
-                return release.name;
-            }
-            if (developer.hasPriority) {
-                return developer.name;
-            }
-            if (Application.isEditor) {
-                return editor.name;
-            }
-            return debug.name;
-        }
-    }
-
+	EnvConfig LoadConfigNamed(string name) {
+		return Resources.Load<EnvConfig>("Environment/" + name);
+	}
+		
 }
