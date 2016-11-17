@@ -36,13 +36,6 @@ public static class EnvironmentConfigController {
     #if UNITY_EDITOR
     [PostProcessBuildAttribute(1)]
     public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject) {
-        if (Debug.isDebugBuild) {
-            SetEnvironment("DebugBuild");
-            Debug.Log("Debug Build");
-        } else {
-            SetEnvironment("ReleaseBuild");
-            Debug.Log("Release Build");
-        }
         if (target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXIntel) {
             Debug.Log(Directory.GetParent(pathToBuiltProject) + " Enviro Files Copied.");
             DirectoryCopy (Application.dataPath + "/EnvironmentConfig", pathToBuiltProject + "/Contents/EnvironmentConfig", true);
@@ -53,14 +46,7 @@ public static class EnvironmentConfigController {
         }
 
     }
-        
-    public static void SetEnvironment(string enviro){
-        if (enviro == "DebugBuild") {
-            PlayerPrefs.SetInt("DebugBuild", 1);
-        } else {
-            PlayerPrefs.SetInt("DebugBuild", 0);
-        }
-    }
+    
     #endif 
     public static string ReadFile (string file){
         StreamReader reader = File.OpenText(file);

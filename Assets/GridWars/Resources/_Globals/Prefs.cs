@@ -76,14 +76,16 @@ public class Prefs {
     public Resolution GetResolution (){
 		return new Resolution(){ height = GetInt("ResolutionWidth"), width = GetInt("ResolutionHeight") };
     }
+
     public void SetResolution(Resolution res){
-        PlayerPrefs.SetInt("ResolutionWidth", res.width);
-        PlayerPrefs.SetInt("ResolutionHeight", res.height);
+        SetInt("ResolutionWidth", res.width);
+        SetInt("ResolutionHeight", res.height);
     }
 
     public int GetAA(){
         return GetInt("Antialiasing");
     }
+
     public void SetAA(int aa){
         SetInt("Antialiasing", aa);
     }
@@ -102,6 +104,7 @@ public class Prefs {
 
 	void SetString(string key, string value) {
 		PlayerPrefs.SetString(PrefixedKey(key), value);
+		PlayerPrefs.Save();
 	}
 
 	int GetInt(string key) {
@@ -110,6 +113,7 @@ public class Prefs {
 
 	void SetInt(string key, int value) {
 		PlayerPrefs.SetInt(PrefixedKey(key), value);
+		PlayerPrefs.Save();
 	}
 
 	float GetFloat(string key) {
@@ -118,6 +122,7 @@ public class Prefs {
 
 	void SetFloat(string key, float value) {
 		PlayerPrefs.SetFloat(PrefixedKey(key), value);
+		PlayerPrefs.Save();
 	}
 
 	bool GetBool(string key) {
@@ -126,5 +131,6 @@ public class Prefs {
 
 	void SetBool(string key, bool value) {
 		PlayerPrefs.SetInt(PrefixedKey(key), value ? 1 : 0);
+		PlayerPrefs.Save();
 	}
 }
