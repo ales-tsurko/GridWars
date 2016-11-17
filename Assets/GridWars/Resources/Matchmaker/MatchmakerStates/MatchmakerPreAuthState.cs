@@ -4,8 +4,6 @@ using System.Collections;
 public class MatchmakerPreAuthState : MatchmakerState {
 	// AppState
 
-	bool sendsCredentials = true;
-
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -14,7 +12,7 @@ public class MatchmakerPreAuthState : MatchmakerState {
 
 		var credentials = new JSONObject(JSONObject.Type.OBJECT);
 
-		if (sendsCredentials && app.prefs.accessToken != null) {
+		if (app.prefs.accessToken != null) {
 			credentials.AddField("screenName", app.prefs.screenName);
 			credentials.AddField("accessToken", app.prefs.accessToken);
 		}
