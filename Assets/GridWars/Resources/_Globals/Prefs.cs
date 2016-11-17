@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Prefs {
 	public static string PrefsKeyIconsVisibleChangedNotification = "PrefsKeyIconsVisibleChangedNotification";
-    public static string prefix = "";
 	
     public bool keyIconsVisible {
 		get {
@@ -90,7 +89,7 @@ public class Prefs {
     }
 
 	string PrefixedKey(string key) {
-		return prefix + "/" + key;
+		return App.shared.config.prefsPrefix + "/" + key;
 	}
 
 	bool HasPref(string key) {

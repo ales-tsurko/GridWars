@@ -35,7 +35,17 @@ public class App : MonoBehaviour, AppStateOwner {
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
 	public bool isExiting;
-    public EnvironmentConfig config;
+
+	EnvironmentConfig _config;
+	public EnvironmentConfig config {
+		get {
+			if (_config == null) {
+				_config = EnvironmentConfigController.Init();
+			}
+
+			return _config;
+		}
+	}
 
 
 	public string version {
@@ -67,9 +77,6 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Start() {
-        config = EnvironmentConfigController.Init();
-        Debug.Log("Enviro Config: " + config.prefsPrefix + "  " + config.serverHost);
-
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
 		notificationCenter = new NotificationCenter();

@@ -14,18 +14,22 @@ public static class EnvironmentConfigController {
 
     public static EnvironmentConfig Init(){
         string filename = "";
-        if (PlayerPrefs.GetInt("DebugBuild", 0) == 0 ? false : true) {
-            filename = debugFile;
-        } else {
-            filename = releaseFile;
-        }
+		if (Debug.isDebugBuild) {
+			filename = debugFile;
+		}
+		else {
+			filename = releaseFile;
+		}
+        
         #if UNITY_EDITOR
         filename = editorFile;
         #endif
+
+		Debug.Log(filename);
+
         FileInfo file = new FileInfo(filename);
         string text = ReadFile(file.FullName);
         EnvironmentConfig data = JsonUtility.FromJson<EnvironmentConfig>(text);
-        Prefs.prefix = data.prefsPrefix;
         return data;
     }
 
