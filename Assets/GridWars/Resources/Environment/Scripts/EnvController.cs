@@ -7,7 +7,7 @@ public class EnvController : ScriptableObject {
     public EnvConfig debug, developer, editor, release;
     public bool developerMode;
 
-    public string host {
+    public string serverHost {
         get {
             if (!Debug.isDebugBuild) {
                 return release.serverHost;

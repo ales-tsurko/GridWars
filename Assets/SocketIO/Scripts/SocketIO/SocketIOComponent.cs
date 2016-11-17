@@ -101,9 +101,9 @@ namespace SocketIO
 
 			//var host = EnvironmentConfigController.Init().serverHost;
 			//host = "localhost:8080";
-            var host = App.shared.config.host;
+            var host = App.shared.config.serverHost;
             url = "ws://" + host + "/socket.io/?EIO=4&transport=websocket";  //works
-            Debug.Log("Enviro test for "+App.shared.config.envName+": "+App.shared.config.host+"  "+App.shared.config.prefsPrefix);
+            Debug.Log("Enviro test for "+App.shared.config.envName+": "+App.shared.config.serverHost+"  "+App.shared.config.prefsPrefix);
            
             //App.shared.config.serverHost
             //EnvironmentConfigController.Init().serverHost
