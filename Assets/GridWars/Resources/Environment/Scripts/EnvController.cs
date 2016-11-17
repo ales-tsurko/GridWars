@@ -5,14 +5,13 @@ using System.Collections;
 public class EnvController : ScriptableObject {
 
     public EnvConfig debug, developer, editor, release;
-    public bool developerMode;
 
     public string serverHost {
         get {
             if (!Debug.isDebugBuild) {
                 return release.serverHost;
             }
-            if (developerMode) {
+            if (developer.hasPriority) {
                 return developer.serverHost;
             }
             if (Application.isEditor) {
@@ -27,7 +26,7 @@ public class EnvController : ScriptableObject {
             if (!Debug.isDebugBuild) {
                 return release.prefsPrefix;
             }
-            if (developerMode) {
+            if (developer.hasPriority) {
                 return developer.prefsPrefix;
             }
             if (Application.isEditor) {
@@ -42,7 +41,7 @@ public class EnvController : ScriptableObject {
             if (!Debug.isDebugBuild) {
                 return release.name;
             }
-            if (developerMode) {
+            if (developer.hasPriority) {
                 return developer.name;
             }
             if (Application.isEditor) {

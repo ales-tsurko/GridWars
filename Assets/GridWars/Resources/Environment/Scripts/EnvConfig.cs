@@ -4,4 +4,5 @@ using System.Collections;
 public class EnvConfig : ScriptableObject {
     public string prefsPrefix;
     public string serverHost;
+    public bool hasPriority;
 }
