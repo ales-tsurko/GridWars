@@ -84,6 +84,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		menu = UI.Menu();
 
 		prefs = new Prefs();
+		prefs.Load();
 
         SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
@@ -121,15 +122,16 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
     void SetupResolution() {
-        Resolution[] res = Screen.resolutions;
-        Resolution r = res[res.Length - 1];
-        Resolution savedRes = prefs.GetResolution();
-        if (savedRes.width != 0 && savedRes.height != 0) {
-            r = savedRes;
-        }
-        Screen.SetResolution(r.width, r.height, true); // last arg is bool for fullscreen
+		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {
+			Screen.SetResolution(prefs.resolution.width, prefs.resolution.height, true); // last arg is bool for fullscreen
+		}
+		else {
+			var resolution = Screen.resolutions[Screen.resolutions.Length - 1];
+			Screen.SetResolution(resolution.width, resolution.height, true);
+			prefs.resolution = resolution;
+		}
 
-        QualitySettings.antiAliasing = prefs.GetAA();
+		QualitySettings.antiAliasing = prefs.antialiasingLevel;
     }
 
 	public void FixedUpdate() {

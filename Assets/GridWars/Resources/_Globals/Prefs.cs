@@ -1,136 +1,205 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Prefs {
-	public static string PrefsKeyIconsVisibleChangedNotification = "PrefsKeyIconsVisibleChangedNotification";
-	
-    public bool keyIconsVisible {
+	public static string PrefsChangedNotification = "PrefsChangedNotification";
+
+	public Prefs() {
+		_keyIconsVisible = true;
+		_screenName = "";
+		_accessToken = "";
+		_hasPlayedTutorial = false;
+		_npcHandicap = 1f;
+		_cameraPosition = "MainBackView";
+
+		//will be corrected in App.SetupResolution
+		_resolutionHeight = -1;
+		_resolutionWidth = -1;
+		_antialiasingLevel = 4;
+	}
+
+	public bool _keyIconsVisible;
+	public bool keyIconsVisible {
 		get {
-            return GetBool("keyIconsVisible");
+			return _keyIconsVisible;
 		}
 
 		set {
-			SetBool("keyIconsVisible", value);
-			App.shared.notificationCenter.NewNotification()
-				.SetName(PrefsKeyIconsVisibleChangedNotification)
-				.SetSender(this)
-				.Post();
+			_keyIconsVisible = value;
+			PostNotification("keyIconsVisible");
+			Save();
 		}
 	}
 
+	public string _screenName;
 	public string screenName {
 		get {
-            return GetString("screenName");
+			return _screenName;
 		}
 
 		set {
-            SetString("screenName", value);
+			_screenName = value;
+			PostNotification("screenName");
+			Save();
 		}
 	}
 
+	public string _accessToken;
 	public string accessToken {
 		get {
-            return GetString("accessToken");
+			return _accessToken;
 		}
 
 		set {
-            SetString("accessToken", value);
+			_accessToken = value;
+			PostNotification("accessToken");
+			Save();
 		}
 	}
 
+	public bool _hasPlayedTutorial;
 	public bool hasPlayedTutorial {
 		get {
-			return GetBool("hasPlayedTutorial");
+			return _hasPlayedTutorial;
 		}
 
 		set {
-			SetBool("hasPlayedTutorial", value);
+			_hasPlayedTutorial = value;
+			PostNotification("hasPlayedTutorial");
+			Save();
 		}
 	}
 
+	public float _npcHandicap;
 	public float npcHandicap {
 		get {
-			if (HasPref("npcHandicap")) {
-				return GetFloat("npcHandicap");
-			}
-			else {
-				return 1.0f;
-			}
+			return _npcHandicap;
 		}
 
 		set {
-			SetFloat("npcHandicap", value);
+			_npcHandicap = value;
+			PostNotification("npcHandicap");
+			Save();
 		}
 	}
-   
-    public int camPosition {
-        get {
-            return GetInt("camPosition");
-        }
 
-        set {
-            SetInt("camPosition", value);
-        }
-    }
+	public string _cameraPosition;
+	public string cameraPosition {
+		get {
+			return _cameraPosition;
+		}
 
-    public Resolution GetResolution (){
-		return new Resolution(){ height = GetInt("ResolutionWidth"), width = GetInt("ResolutionHeight") };
-    }
-
-    public void SetResolution(Resolution res){
-        SetInt("ResolutionWidth", res.width);
-        SetInt("ResolutionHeight", res.height);
-    }
-
-    public int GetAA(){
-        return GetInt("Antialiasing");
-    }
-
-    public void SetAA(int aa){
-        SetInt("Antialiasing", aa);
-    }
-
-	string PrefixedKey(string key) {
-		return App.shared.config.prefsPrefix + "/" + key;
+		set {
+			_cameraPosition = value;
+			PostNotification("cameraPosition");
+			Save();
+		}
 	}
 
-	bool HasPref(string key) {
-		return PlayerPrefs.HasKey(PrefixedKey(key));
+	public int _resolutionWidth;
+	public int resolutionWidth {
+		get {
+			return _resolutionWidth;
+		}
+
+		set {
+			_resolutionWidth = value;
+			PostNotification("resolutionWidth");
+			Save();
+		}
 	}
 
-	string GetString(string key) {
-		return PlayerPrefs.GetString(PrefixedKey(key));
+	public int _resolutionHeight;
+	public int resolutionHeight {
+		get {
+			return _resolutionHeight;
+		}
+
+		set {
+			_resolutionHeight = value;
+			PostNotification("resolutionHeight");
+			Save();
+		}
 	}
 
-	void SetString(string key, string value) {
-		PlayerPrefs.SetString(PrefixedKey(key), value);
-		PlayerPrefs.Save();
+	public int _antialiasingLevel;
+	public int antialiasingLevel {
+		get {
+			return _antialiasingLevel;
+		}
+
+		set {
+			_antialiasingLevel = value;
+			PostNotification("antialiasingLevel");
+			Save();
+		}
 	}
 
-	int GetInt(string key) {
-		return PlayerPrefs.GetInt(PrefixedKey(key));
+	public Resolution resolution {
+		get {
+			return new Resolution(){ height = resolutionHeight, width = resolutionWidth };
+		}
+
+		set {
+			resolutionWidth = value.width;
+			resolutionHeight = value.height;
+		}
 	}
 
-	void SetInt(string key, int value) {
-		PlayerPrefs.SetInt(PrefixedKey(key), value);
-		PlayerPrefs.Save();
+
+	void PostNotification(string name) {
+		if (App.shared.notificationCenter == null) {
+			return;
+		}
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(PrefsChangedNotification)
+			.SetData(name)
+			.SetSender(this)
+			.Post();
 	}
 
-	float GetFloat(string key) {
-		return PlayerPrefs.GetFloat(PrefixedKey(key));
+	string environmentName {
+		get {
+			if (Application.isEditor) {
+				return "Editor";
+			}
+			else if (Debug.isDebugBuild) {
+				return "Debug";
+			}
+			else {
+				return "Release";
+			}
+		}
 	}
 
-	void SetFloat(string key, float value) {
-		PlayerPrefs.SetFloat(PrefixedKey(key), value);
-		PlayerPrefs.Save();
+	string envPath {
+		get {
+			return System.IO.Path.Combine(
+				System.IO.Path.Combine(Application.persistentDataPath, "Environment"),
+				environmentName
+			);
+		}
 	}
 
-	bool GetBool(string key) {
-		return PlayerPrefs.GetInt(PrefixedKey(key)) == 1;
+	string path {
+		get {
+			return System.IO.Path.Combine(envPath, "Prefs.json");
+		}
 	}
 
-	void SetBool(string key, bool value) {
-		PlayerPrefs.SetInt(PrefixedKey(key), value ? 1 : 0);
-		PlayerPrefs.Save();
+	public void Load() {
+		if (System.IO.File.Exists(path)) {
+			JsonUtility.FromJsonOverwrite(System.IO.File.ReadAllText(path), this);
+		}
+	}
+
+	public void Save() {
+		if (!System.IO.Directory.Exists(envPath)) {
+			System.IO.Directory.CreateDirectory(envPath);
+		}
+
+		System.IO.File.WriteAllText(path, JsonUtility.ToJson(this));
 	}
 }

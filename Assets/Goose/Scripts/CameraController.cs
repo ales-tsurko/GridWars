@@ -55,11 +55,15 @@ public class CameraController : MonoBehaviour {
 	public void InitCamera () {
 		SetupFinalPositions();
 
-		pos = App.shared.prefs.camPosition - 1;
+		pos = positionForName(App.shared.prefs.cameraPosition) - 1;
 		ResetCamera();
 		StartCoroutine(MonitorInitialCamMovement());
 		initComplete = true;
 		menuHasFocus = false;
+	}
+
+	int positionForName(string name) {
+		return Mathf.Max(referencePositions.FindIndex(p => p.name == name), 0);
 	}
 		
 	public void SetupFinalPositions () {
@@ -440,7 +444,7 @@ public class CameraController : MonoBehaviour {
 		targetPos = _transform.position;
 		targetRot = _transform.rotation;
 		moving = true;
-        App.shared.prefs.camPosition = pos;
+		App.shared.prefs.cameraPosition = referencePositions[_position].name;
 
 		App.shared.notificationCenter.NewNotification()
 			.SetName(CameraControllerBeganTransitionNotification)
