@@ -83,10 +83,10 @@ public class Battlefield : MonoBehaviour {
 	public bool isAiVsAi;
 	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
-	
+    public bool hasStarted = false;
 
-	void Start() {
-		
+	public void Start() {
+        hasStarted = true;
 		Application.runInBackground = true;
 
 		App.shared.enabled = true; //Load App so Start gets called
@@ -95,6 +95,7 @@ public class Battlefield : MonoBehaviour {
 		gameUnitCache = new GameUnitCache();
 
 		AddPlayers();
+
 	}
 
 	void AddPlayers() {
