@@ -101,9 +101,9 @@ namespace SocketIO
 
 			var host = "gw-matchmaker.herokuapp.com";
 			//host = "localhost:8080";
-            Debug.Log("FROM APP.CONFIG: " + App.shared.config.serverHost); //returns 'gw-matchmaker.herokuapp.com'
+            //Debug.Log("FROM APP.CONFIG: " + App.shared.config.serverHost); //returns 'gw-matchmaker.herokuapp.com'
             Debug.Log("DIRECT: " + EnvironmentConfigController.Init().serverHost); //returns 'gw-matchmaker.herokuapp.com' same as above
-            url = "ws://" + App.shared.config.serverHost  + "/socket.io/?EIO=4&transport=websocket"; //Error NullRef at Battlefield.SoftReset () (at Assets/GridWars/Resources/Battlefield/Battlefield.cs:144)
+            //url = "ws://" + App.shared.config.serverHost  + "/socket.io/?EIO=4&transport=websocket"; //Error NullRef at Battlefield.SoftReset () (at Assets/GridWars/Resources/Battlefield/Battlefield.cs:144)
             url = "ws://" + EnvironmentConfigController.Init().serverHost  + "/socket.io/?EIO=4&transport=websocket";  //works
            
             //App.shared.config.serverHost
