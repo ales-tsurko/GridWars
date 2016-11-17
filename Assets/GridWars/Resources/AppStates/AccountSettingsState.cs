@@ -82,7 +82,7 @@ public class AccountSettingsState : AppState {
 		if (data.GetField("success").b) {
 			title.text = "Account Updated";
 			app.account.email = data.GetField("email").str;
-			app.account.screenName = data.GetField("email").str;
+			app.account.screenName = data.GetField("screenName").str;
 			app.account.SaveToPrefs();
 			menu.SelectItem(backButton);
 		}
