@@ -46,8 +46,8 @@ public class MatchmakerPostedGameState : MatchmakerState {
 	public void HandleOpponentJoinedGame(JSONObject data) {
 		account.game = new Game();
 		account.game.id = data.GetField("id").str;
-		account.game.host = app.account.AccountNamed(data.GetField("host").GetField("screenName").str);
-		account.game.client = app.account.AccountNamed(data.GetField("client").GetField("screenName").str);
+		account.game.host = app.account.AccountWithId(data.GetField("host").GetField("id").n.ToString());
+		account.game.client = app.account.AccountWithId(data.GetField("client").GetField("id").n.ToString());
 
 		TransitionTo(new MatchmakerJoinedGameState());
 	}

@@ -10,6 +10,12 @@ public class MatchmakerNetworkDelegateState : MatchmakerState, NetworkDelegate {
 		network.networkDelegate = this;
 	}
 
+	public override void WillExit() {
+		base.WillExit();
+
+		network.networkDelegate = null;
+	}
+
 	// NetworkDelegate
 
 	public virtual void BoltStartDone() {

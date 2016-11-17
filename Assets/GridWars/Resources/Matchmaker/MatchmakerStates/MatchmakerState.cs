@@ -171,6 +171,10 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		account.PlayerDisconnected(data);
 	}
 
+	public virtual void HandlePlayerChangedScreenName(JSONObject data) {
+		account.PlayerChangedScreenName(data);
+	}
+
 	public void HandleSaveAccount(JSONObject data) {
 		app.notificationCenter.NewNotification()
 			.SetName(MatchmakerSaveAccountNotification)

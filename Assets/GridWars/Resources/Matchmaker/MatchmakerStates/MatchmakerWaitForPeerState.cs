@@ -9,8 +9,6 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 
 		matchmaker.menu.Open();
 
-		network.networkDelegate = this;
-
 		if (app.state is PlayingGameState || app.state is PostGameState) {
 			network.ShutdownBolt();
 		}
