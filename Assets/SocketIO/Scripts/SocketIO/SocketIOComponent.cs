@@ -99,9 +99,11 @@ namespace SocketIO
 			sid = null;
 			packetId = 0;
 
-			var host = EnvironmentConfigController.Init().serverHost;
+			//var host = EnvironmentConfigController.Init().serverHost;
 			//host = "localhost:8080";
-            url = "ws://" + host  + "/socket.io/?EIO=4&transport=websocket";  //works
+            var host = App.shared.config.serverHost;
+            url = "ws://" + host + "/socket.io/?EIO=4&transport=websocket";  //works
+            Debug.Log("Enviro test for "+App.shared.config.envName+": "+App.shared.config.serverHost+"  "+App.shared.config.prefsPrefix);
            
             //App.shared.config.serverHost
             //EnvironmentConfigController.Init().serverHost

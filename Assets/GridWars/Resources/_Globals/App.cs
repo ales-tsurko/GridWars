@@ -36,13 +36,12 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Account account;
 	public bool isExiting;
 
-	EnvironmentConfig _config;
-	public EnvironmentConfig config {
+    EnvController _config;
+    public EnvController config {
 		get {
 			if (_config == null) {
-				_config = EnvironmentConfigController.Init();
+                _config = Resources.Load<EnvController>("EnvironmentController");
 			}
-
 			return _config;
 		}
 	}
@@ -70,10 +69,9 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	// --- MonoBehaviour -------------------
-
+    public EnvController envController;
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
-
 	}
 
 	public void Start() {
@@ -114,12 +112,17 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs.AddLocalPlayer1KeyBindings();
 
 		//*
-		var mainMenuState = new MainMenuState();
-		mainMenuState.owner = this;
-		this.state = mainMenuState;
-		mainMenuState.EnterFrom(null);
+        StartCoroutine(DisplayMainMenuAfterFrame());
 		//*/
 	}
+
+    IEnumerator DisplayMainMenuAfterFrame(){
+        yield return new WaitForEndOfFrame();
+        var mainMenuState = new MainMenuState();
+        mainMenuState.owner = this;
+        this.state = mainMenuState;
+        mainMenuState.EnterFrom(null);
+    }
 
     void SetupResolution() {
 		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {
@@ -142,7 +145,9 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	void Update() {
 		matchmaker.Update();
-		state.Update();
+        if (state != null) {
+            state.Update();
+        }
 		ShowHideCursor();
 		//keys.Update();
 		//UpdateMenuFocus();
