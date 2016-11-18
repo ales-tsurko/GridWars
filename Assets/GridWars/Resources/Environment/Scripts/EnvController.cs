@@ -18,7 +18,7 @@ public class EnvController {
 						return LoadConfigNamed("Debug");
 					}
 					else {
-						throw System.Exception("This shouldn't be possible");
+						throw new System.Exception("This shouldn't be possible");
 					}
 				}
 				else {
