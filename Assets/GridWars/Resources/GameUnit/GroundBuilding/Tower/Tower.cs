@@ -184,10 +184,10 @@ public class Tower : GroundBuilding {
 	public void IsWarpedInChanged() {
 		if (isWarpedIn) {
 			UnhideMesh();
-			UpdateHotKeys(null);
+			UpdateKeyIcon();
 			App.shared.notificationCenter.NewObservation()
-				.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
-				.SetAction(UpdateHotKeys)
+				.SetNotificationName(Prefs.PrefsChangedNotification)
+				.SetAction(PrefsChangedNotification)
 				.Add();
 
 			if (player.inputs != null) {
@@ -583,11 +583,17 @@ public class Tower : GroundBuilding {
 		*/
 	}
 		
-	public void UpdateHotKeys(Notification notification){
-        keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
+	public void PrefsChangedNotification(Notification notification){
+		if (notification.data as string == "keyIconsVisible") {
+			UpdateKeyIcon();
+		}
+    }
+
+	void UpdateKeyIcon() {
+		keyIcon.SetActive(player.isLocal && prefs.keyIconsVisible);
 		UpdateHotkeyText();
 		SetKeyIconRotation();
-    }
+	}
 
     public void UpdateHotkeyText() {
 		var textMesh = keyIcon.GetComponentInChildren<TextMesh>();

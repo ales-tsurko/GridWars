@@ -234,8 +234,8 @@ public class UIButton : UIElement {
 		eventTrigger.triggers.Add(entry);
 
 		App.shared.notificationCenter.NewObservation()
-			.SetNotificationName(Prefs.PrefsKeyIconsVisibleChangedNotification)
-			.SetAction(PrefsKeyIconsVisibleChanged)
+			.SetNotificationName(Prefs.PrefsChangedNotification)
+			.SetAction(PrefsChangedNotification)
 			.Add();
 
 		wasActivatedByMouse = false;
@@ -251,8 +251,10 @@ public class UIButton : UIElement {
 		}
 	}
 
-	void PrefsKeyIconsVisibleChanged(Notification notification) {
-		UpdateSuffix();
+	void PrefsChangedNotification(Notification notification) {
+		if (notification.data as string == "keyIconsVisible") {
+			UpdateSuffix();
+		}
 	}
 
 	void UpdateSuffix() {

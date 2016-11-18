@@ -18,17 +18,17 @@ public class ResolutionMenuState : AppState {
 
     void ShowResolutionOptionsMenu() {
         app.ResetMenu();
-        List<Resolution> resList = new List<Resolution>();
-        foreach (Resolution _res in Screen.resolutions) {
-            if (_res.width <= 1024) {
-                continue;
-            }
-            resList.Add(_res);
-        }
-        float ratio = resList[resList.Count - 1].width / resList[resList.Count - 1].height;
-        foreach (Resolution res in resList.Where(r => Mathf.Abs((r.width/r.height)-ratio)<.1f)) {
-            menu.AddItem(UI.MenuItem(res.MenuString(), ChangeRes).SetData(new ResolutionData(){ resolution = res }));
-        }
+
+		var maxRes = Screen.resolutions[Screen.resolutions.Length - 1];
+
+		foreach (var res in Screen.resolutions) {
+			if (res.width < 1024 || !Mathf.Approximately(maxRes.AspectRatio(), res.AspectRatio())) {
+				continue;
+			}
+
+			menu.AddItem(UI.MenuItem(res.MenuString(), ChangeRes).SetData(new ResolutionData(){ resolution = res }));
+		}
+
         menu.AddItem(UI.MenuItem("Back", GoBackToGraphicsMenu));
         menu.Show();
     }
@@ -40,7 +40,7 @@ public class ResolutionMenuState : AppState {
     void ChangeRes(){
         ResolutionData _res = menu.selectedItem.data as ResolutionData;
         Screen.SetResolution(_res.resolution.width, _res.resolution.height, Screen.fullScreen);
-        App.shared.prefs.SetResolution(_res.resolution);
+		App.shared.prefs.resolution = _res.resolution;
         foreach (UIButton butt in menu.items) {
             if (butt.data != null) {
                 butt.SetText((butt.data as ResolutionData).resolution.PlainString());
@@ -64,13 +64,20 @@ public static class ResolutionExtension {
     /// </summary>
     /// <returns>Formatted String for Menu</returns>
     /// <param name="res">Res.</param>
-    public static string MenuString(this Resolution res){
-        return ((Screen.height == res.height && Screen.width == res.width) ? "✓ " : "") + res.width + "x" + res.height;
+    public static string MenuString(this Resolution res) {
+		return ((App.shared.prefs.resolutionHeight == res.height && App.shared.prefs.resolutionWidth == res.width) ? "✓ " : "") + res.width + "x" + res.height;
     }
-    public static string PlainString(this Resolution res){
+    
+	public static string PlainString(this Resolution res) {
         return res.width + "x" + res.height;
     }
-    public static string CheckedString(this Resolution res){
+
+    public static string CheckedString(this Resolution res) {
         return "✓ " + res.width + "x" + res.height;
     }
+
+	public static float AspectRatio(this Resolution self) {
+		return (float)self.width/(float)self.height;
+	}
+
 }

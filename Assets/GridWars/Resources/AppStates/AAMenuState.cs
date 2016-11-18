@@ -35,7 +35,7 @@ public class AAMenuState : AppState {
     void ChangeAA(){
         AAData _res = menu.selectedItem.data as AAData;
         QualitySettings.antiAliasing = _res.aa;
-        App.shared.prefs.SetAA(_res.aa);
+		App.shared.prefs.antialiasingLevel = _res.aa;
         foreach (UIButton butt in menu.items) {
             if (butt.data != null) {
                 butt.SetText((butt.data as AAData).GetString());

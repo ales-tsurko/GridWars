@@ -36,13 +36,13 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Account account;
 	public bool isExiting;
 
-	EnvironmentConfig _config;
-	public EnvironmentConfig config {
+	EnvConfig _config;
+	public EnvConfig config {
 		get {
 			if (_config == null) {
-				_config = EnvironmentConfigController.Init();
+				_config = new EnvController().config;
+				//Debug.Log(_config.name);
 			}
-
 			return _config;
 		}
 	}
@@ -70,10 +70,9 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	// --- MonoBehaviour -------------------
-
+    public EnvController envController;
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
-
 	}
 
 	public void Start() {
@@ -84,6 +83,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		menu = UI.Menu();
 
 		prefs = new Prefs();
+		prefs.Load();
 
         SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
@@ -99,6 +99,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		account = new Account();
 
 		matchmaker = new Matchmaker();
+		matchmaker.menu.Hide();
 
 		network = new GameObject().AddComponent<Network>();
 		network.gameObject.name = "Network";
@@ -113,23 +114,29 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs.AddLocalPlayer1KeyBindings();
 
 		//*
-		var mainMenuState = new MainMenuState();
-		mainMenuState.owner = this;
-		this.state = mainMenuState;
-		mainMenuState.EnterFrom(null);
+        StartCoroutine(DisplayMainMenuAfterFrame());
 		//*/
 	}
 
-    void SetupResolution() {
-        Resolution[] res = Screen.resolutions;
-        Resolution r = res[res.Length - 1];
-        Resolution savedRes = prefs.GetResolution();
-        if (savedRes.width != 0 && savedRes.height != 0) {
-            r = savedRes;
-        }
-        Screen.SetResolution(r.width, r.height, true); // last arg is bool for fullscreen
+    IEnumerator DisplayMainMenuAfterFrame(){
+        yield return new WaitForEndOfFrame();
+        var mainMenuState = new MainMenuState();
+        mainMenuState.owner = this;
+        this.state = mainMenuState;
+        mainMenuState.EnterFrom(null);
+    }
 
-        QualitySettings.antiAliasing = prefs.GetAA();
+    void SetupResolution() {
+		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {
+			Screen.SetResolution(prefs.resolution.width, prefs.resolution.height, true); // last arg is bool for fullscreen
+		}
+		else {
+			var resolution = Screen.resolutions[Screen.resolutions.Length - 1];
+			Screen.SetResolution(resolution.width, resolution.height, true);
+			prefs.resolution = resolution;
+		}
+
+		QualitySettings.antiAliasing = prefs.antialiasingLevel;
     }
 
 	public void FixedUpdate() {
@@ -140,7 +147,9 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	void Update() {
 		matchmaker.Update();
-		state.Update();
+        if (state != null) {
+            state.Update();
+        }
 		ShowHideCursor();
 		//keys.Update();
 		//UpdateMenuFocus();

@@ -11,7 +11,7 @@ public class Account {
 
 	public bool isHost {
 		get {
-			return game.host.screenName == screenName;
+			return game.host.id == id;
 		}
 	}
 
@@ -66,8 +66,13 @@ public class Account {
 		ResetPlayerList();
 	}
 
-	public Account AccountNamed(string screenName) {
-		return playerList.Find(account => account.screenName == screenName);
+	public Account AccountWithId(string id) {
+		if (this.id == id) {
+			return this;
+		}
+		else {
+			return playerList.Find(account => account.id == id);
+		}
 	}
 
 	public void ResetPlayerList() {
@@ -78,11 +83,22 @@ public class Account {
 	public void PlayerConnected(JSONObject accountData) {
 		var account = new Account();
 		account.screenName = accountData.GetField("screenName").str;
+		account.id = accountData.GetField("id").n.ToString();
 		playerList.Add(account);
 	}
 
 	public void PlayerDisconnected(JSONObject accountData) {
-		playerList.Remove(AccountNamed(accountData.GetField("screenName").str));
+		playerList.Remove(AccountWithId(accountData.GetField("id").n.ToString()));
+	}
+
+	public void PlayerChangedScreenName(JSONObject accountData) {
+		var account = AccountWithId(accountData.GetField("id").n.ToString());
+		if (account == null) {
+			App.shared.Log("Account missing: " + accountData.ToString(), this);
+		}
+		else {
+			account.screenName = accountData.GetField("screenName").str;
+		}
 	}
 
 	public void SaveToPrefs() {

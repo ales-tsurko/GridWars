@@ -132,9 +132,12 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	public virtual void MatchmakerErrored() {
 		app.Log("MatchmakerErrored", this);
 
-		matchmaker.Disconnect();
-
-		TransitionTo(new MatchmakerDisconnectedState());
+		if (matchmaker.isConnected) {
+			matchmaker.Disconnect();
+		}
+		else {
+			TransitionTo(new MatchmakerDisconnectedState());
+		}
 	}
 
 	public virtual void MatchmakerReceivedMessage(JSONObject message) {
@@ -166,6 +169,10 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void HandlePlayerDisconnected(JSONObject data) {
 		account.PlayerDisconnected(data);
+	}
+
+	public virtual void HandlePlayerChangedScreenName(JSONObject data) {
+		account.PlayerChangedScreenName(data);
 	}
 
 	public void HandleSaveAccount(JSONObject data) {
