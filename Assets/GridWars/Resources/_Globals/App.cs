@@ -99,6 +99,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		account = new Account();
 
 		matchmaker = new Matchmaker();
+		matchmaker.menu.Hide();
 
 		network = new GameObject().AddComponent<Network>();
 		network.gameObject.name = "Network";
