@@ -754,19 +754,11 @@ public class GameUnit : NetworkObject {
 	// --- Painting ----
 
 	public void PaintPrimaryColor(Color c) {
-		gameObject.EachRenderer(r => {
-			if (r.material.name.StartsWith("PrimaryColor")) {
-				r.material.color = c;
-			}
-		});
+		gameObject.PaintPrimaryColor(c);
 	}
 
 	public void PaintSecondaryColor(Color c) {
-		gameObject.EachRenderer(r => {
-			if (r.material.name.StartsWith("SecondaryColor")) {
-				r.material.color = c;
-			}
-		});
+		gameObject.PaintSecondaryColor(c);
 	}
 
 	// -------------------------------------

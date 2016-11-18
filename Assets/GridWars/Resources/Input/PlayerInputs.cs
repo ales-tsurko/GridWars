@@ -8,6 +8,7 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction releaseTank;
 	public PlayerAction releaseMobileSam;
 	public PlayerAction releaseBomber;
+	public PlayerAction releaseGunship;
 	public PlayerAction toggleMenu;
 	public PlayerAction concede;
 	public PlayerAction toggleHotkeys;
@@ -53,6 +54,7 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTank = CreatePlayerAction("Tank");
 		releaseMobileSam = CreatePlayerAction("MobileSAM");
 		releaseBomber = CreatePlayerAction("Bomber");
+		releaseGunship = CreatePlayerAction("Gunship");
 
 		toggleMenu = CreatePlayerAction("Toggle Menu");
 		concede = CreatePlayerAction("Concede");

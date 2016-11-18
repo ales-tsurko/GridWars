@@ -78,6 +78,23 @@ public static class GridWarsUnityExtensions {
 
 	// Rendering
 
+	public static void PaintPrimaryColor(this GameObject self, Color c) {
+		self.EachMaterial(m => {
+			if (m.name.StartsWith("PrimaryColor")) {
+				m.color = c;
+			}
+		});
+	}
+
+	public static void PaintSecondaryColor(this GameObject self, Color c) {
+		self.EachMaterial(m => {
+			if (m.name.StartsWith("SecondaryColor")) {
+				m.color = c;
+			}
+		});
+	}
+
+
 	public static void EachRenderer(this GameObject self, Action<MeshRenderer> f) {
 		/*
 		if (self.GameUnit() && self.GameUnit().GetType() == typeof(Tank)) {
@@ -101,12 +118,19 @@ public static class GridWarsUnityExtensions {
 	}
 
 	public static void EachMaterial(this GameObject self, Action<Material> f) {
-		self.EachRenderer(r => f(r.material));
+		//self.EachRenderer(r => f(r.material));
+		self.EachRenderer((r) => { 
+			foreach(Material m in r.materials) {
+				f(m);
+			}
+		});
 	}
 
+	/*
 	public static void CloneMaterials(this GameObject self) {
 		self.EachRenderer(r => r.material = new Material(r.material));
 	}
+	*/
 
 	public static void TurnOffShadows(this GameObject self) {
 		self.EachRenderer(r => r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off);

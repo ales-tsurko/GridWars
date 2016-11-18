@@ -218,9 +218,13 @@ public class Player : MonoBehaviour {
 
 	}
 
-	//Painting
+	// Painting
 
 	public void Paint(GameObject gameObject) {
+		gameObject.PaintPrimaryColor(primaryMaterial.color);
+		gameObject.PaintSecondaryColor(secondaryMaterial.color);
+
+		/*
 		gameObject.EachRenderer(r => {
 			if (r.material.name.StartsWith("PrimaryColor")) {
 				r.material = primaryMaterial;
@@ -229,6 +233,7 @@ public class Player : MonoBehaviour {
 				r.material = secondaryMaterial;
 			}
 		});
+		*/
 	}
 		
 	string resourcesPath {
