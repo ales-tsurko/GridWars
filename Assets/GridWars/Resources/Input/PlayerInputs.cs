@@ -161,6 +161,7 @@ public class PlayerInputs : PlayerActionSet {
 		releaseTanker.AddDefaultBinding(Key.F);
 		releaseTank.AddDefaultBinding(Key.J);
 		releaseMobileSam.AddDefaultBinding(Key.K);
+		releaseGunship.AddDefaultBinding(Key.L);
 
         exitFPS.AddDefaultBinding(Key.Escape);
 	}

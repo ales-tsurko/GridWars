@@ -7,6 +7,7 @@ public class AwaitRematchResponseState : PostGameSubState {
 
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
+		openSoundtrackName = "Waiting";
 
 		timer = app.timerCenter.NewTimer();
 		timer.action = ShowLeave;

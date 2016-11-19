@@ -22,6 +22,8 @@ using System.Collections;
 	public float deathSoundVolume = 1f;
 	private AudioSource audioSource;
 
+	public Material wreckageMaterial;
+
 	public void SetChillPeriod(float v) {
 		chillPeriod = v;
 	}
@@ -39,15 +41,24 @@ using System.Collections;
 
 	public void Start () {
 		VerifyLayer();
+		PaintAsWreckage();
+
 		Collider bc = gameObject.GetComponent<Collider>();
 		deathHeight = bc.bounds.size.y * 2f;
-
 		chillDoneTime = Time.time + chillPeriod;
 
-		if (Physics.GetIgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"))) {
+		DisableTerrainCollisions(); // shouldn't be needed
+		PlayDeathSound();
+	}
+
+	public void DisableTerrainCollisions() {
+		bool canCollideWithTerrain = Physics.GetIgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"));
+		if (canCollideWithTerrain) {
 			Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Wreckage"), LayerMask.NameToLayer("Terrain"), false);
 		}
+	}
 
+	public void PlayDeathSound() {
 		if (deathSound != null) {
 			audioSource = gameObject.AddComponent<AudioSource>();
 			audioSource.pitch = 1f - 0.2f * (UnityEngine.Random.value);
@@ -69,7 +80,6 @@ using System.Collections;
 				if (sinkDoneTime == 0) {
 					sinkStartTime = Time.time;
 					sinkDoneTime = Time.time + sinkPeriod;
-
 					DisableRemainingCollisions();
 				}
 			}
@@ -83,7 +93,6 @@ using System.Collections;
 	}
 
 	public void SinkStep() {
-		//Paint();
 
 		float ratio = (Time.time - sinkStartTime) / sinkPeriod;
 		SetY( - ratio * deathHeight );
@@ -113,19 +122,20 @@ using System.Collections;
 
 	}
 
-	int curColor = 1;
+	void PaintAsWreckage() {
+		/*
+        // why doesn't this work?
+		
+		wreckageMaterial = App.shared.LoadMaterial("Materials/UnitDead");
 
-	void Paint() {
-		if (curColor == 1) {
-			curColor = 0;
-		} else {
-			curColor = 1;
+		if (wreckageMaterial != null) {
+			gameObject.EachRenderer(r => {
+				for (int i = 0; i < r.materials.Length; i ++) {
+					r.materials[i] = wreckageMaterial;
+				}
+			});
 		}
-
-		Color currentColor = new Color(curColor, curColor, curColor);
-
-		gameObject.EachMaterial(mat => {
-			mat.color = currentColor;
-		});
+		*/
 	}
+
 }

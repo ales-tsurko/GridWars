@@ -33,6 +33,7 @@ public class MobileSAM : GroundVehicle {
 	public override List<System.Type> CountersTypes() {
 		List<System.Type> counters = base.CountersTypes();
 		counters.Add(typeof(Chopper));
+		counters.Add(typeof(Gunship));
 		//counters.Add(typeof(AirVehicle));
 		return counters;
 	}

@@ -6,6 +6,7 @@ using System.Linq;
 public class Chopper : AirVehicle {
 	public float cruiseHeight;
 	public float thrustHeight = 2f;
+	public float upThrust = 8f;
 
 	public GameObject leftJet;
 	public GameObject rightJet;
@@ -30,7 +31,7 @@ public class Chopper : AirVehicle {
 
 	public override void Awake() {
 		base.Awake();
-		powerCostPerLevel = new float[] { 5f, 5f*2.5f, float.MaxValue };
+		powerCostPerLevel = new float[] { 5f, 5f * 2.5f, float.MaxValue };
 	}
 
 	public override void ServerInit() {
@@ -107,13 +108,13 @@ public class Chopper : AirVehicle {
 	}
 
 	public float TotalUpThrust() {
-		float upThrust = thrust * UpDesire(); 
+		float ut = upThrust * UpDesire(); 
 
 		if (IsHeavilyDamaged()) {
-			upThrust *= (1f - UnityEngine.Random.value * 0.3f);
+			ut *= (1f - UnityEngine.Random.value * 0.3f);
 		}
 
-		return upThrust;
+		return ut;
 	}
 
 	// client speed 
@@ -297,6 +298,7 @@ public class Chopper : AirVehicle {
 		counters.Add(typeof(Tank));
 		counters.Add(typeof(Tanker));
 		counters.Add(typeof(Chopper));
+		counters.Add(typeof(Gunship));
 		return counters;
 	}
 
