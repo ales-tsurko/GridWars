@@ -6,7 +6,7 @@ public class Gunship : Chopper {
 
 	public override void Awake() {
 		base.Awake();
-		powerCostPerLevel = new float[] { 12.5f, 18f, float.MaxValue };
+		powerCostPerLevel = new float[] { 10f, 18f, float.MaxValue };
 	}
 
 	public override void ServerInit() {
