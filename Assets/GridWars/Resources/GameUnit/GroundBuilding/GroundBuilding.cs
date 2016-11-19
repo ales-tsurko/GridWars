@@ -11,16 +11,19 @@ public class GroundBuilding : GameUnit {
 		base.ServerAndClientJoinedGame();
 
 		AdjustPrimaryColor();
-		AdjustSecondaryColor();
+		//AdjustSecondaryColor();
 	}
 
 	private void AdjustPrimaryColor() {
+		/*
 		float h, s, v;
 
 		Color.RGBToHSV(player.primaryColor, out h, out s, out v);
 		s *= colorSaturationRatio;
 		v *= colorValueRatio;
 		gameObject.Paint(Color.HSVToRGB(h, s, v), Player.primaryColorMaterialName);
+		*/
+		gameObject.Paint(Color.black, Player.primaryColorMaterialName);
 	}
 
 	private void AdjustSecondaryColor() {
