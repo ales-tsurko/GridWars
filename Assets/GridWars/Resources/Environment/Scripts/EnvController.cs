@@ -5,21 +5,27 @@ public class EnvController {
 
 	public EnvConfig config {
 		get {
-			var developer = LoadConfigNamed("Developer");
-			if (developer == null || !developer.hasPriority) {
-				if (Application.isEditor) {
-					return LoadConfigNamed("Editor");
-				}
-				else if (Debug.isDebugBuild) {
-					return LoadConfigNamed("Debug");
-				}
-				else {
-					return LoadConfigNamed("Release");
-				}
+			if (!Debug.isDebugBuild && !Application.isEditor) {
+				return LoadConfigNamed("Release");
 			}
 			else {
-				return developer;
+				var developer = LoadConfigNamed("Developer");
+				if (developer == null || !developer.hasPriority) {
+					if (Application.isEditor) {
+						return LoadConfigNamed("Editor");
+					}
+					else if (Debug.isDebugBuild) {
+						return LoadConfigNamed("Debug");
+					}
+					else {
+						throw new System.Exception("This shouldn't be possible");
+					}
+				}
+				else {
+					return developer;
+				}
 			}
+
 		}
 	}
 
