@@ -25,11 +25,11 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		TransitionTo(new MatchmakerAfterGameState());
 	}
 
-	public void HandleGameCancelled(JSONObject data) {
-		if (data.GetField("id").str == app.account.game.id) {
-			playingGameState.GameCancelled();
-			TransitionTo(new MatchmakerPostAuthState());
-		}
+	public override void HandleMyGameCancelled() {
+		base.HandleMyGameCancelled();
+
+		playingGameState.GameCancelled();
+		TransitionTo(new MatchmakerPostAuthState());
 	}
 
 	public override void MatchmakerDisconnected() {

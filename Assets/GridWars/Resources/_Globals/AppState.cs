@@ -6,6 +6,8 @@ public class AppState {
 
 	public string openSoundName = null;
 	public string openSoundtrackName = null;
+	public bool connectsMatchmakerMenu = false;
+	public bool interactibleMatchmakerMenu = false;
 
 	public static string AppStateChangedNotification = "AppStateChangedNotification";
 
@@ -55,6 +57,16 @@ public class AppState {
 		}
 
 		HandleOpenSounds();
+
+		/*
+		if (connectsMatchmakerMenu) {
+			ConnectMatchmakerMenu();
+		}
+		else {
+			DisconnectMatchmakerMenu();
+		}
+		matchmaker.menu.isInteractible = interactibleMatchmakerMenu;
+		*/
 	}
 
 	public virtual void WillExit() {
@@ -112,6 +124,25 @@ public class AppState {
 		set {
 			_matchmaker = value;
 		}
+	}
+
+	public virtual void ConnectMatchmakerMenu() {
+		//app.Log("ConnectMatchmakerMenu", this);
+		//app.Log("matchmaker.menu: " + matchmaker.menu, this);
+		menu.nextMenu = matchmaker.menu;
+		menu.previousMenu = matchmaker.menu;
+
+		matchmaker.menu.nextMenu = menu;
+		matchmaker.menu.previousMenu = menu;
+	}
+
+	public virtual void DisconnectMatchmakerMenu() {
+		//app.Log("DisconnectMatchmakerMenu", this);
+		menu.nextMenu = null;
+		menu.previousMenu = null;
+
+		matchmaker.menu.nextMenu = null;
+		matchmaker.menu.previousMenu = null;
 	}
 }
 

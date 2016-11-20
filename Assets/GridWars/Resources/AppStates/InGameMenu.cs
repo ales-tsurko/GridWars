@@ -189,8 +189,8 @@ public class InGameMenu {
 	//Matchmaker Menu
 
 	public void ConnectMatchmakerMenu() {
-		/*
-		App.shared.Log("ConnectMatchmakerMenu: " + menu, this);
+		App.shared.Log("ConnectMatchmakerMenu", this);
+
 		App.shared.matchmaker.menu.nextMenu = menu;
 		App.shared.matchmaker.menu.previousMenu = menu;
 
@@ -198,12 +198,11 @@ public class InGameMenu {
 			menu.previousMenu = App.shared.matchmaker.menu;
 			menu.nextMenu = App.shared.matchmaker.menu;
 		}
-		*/
 	}
 
 	public void DisconnectMatchmakerMenu() {
-		/*
-		App.shared.Log("DisconnectMatchmakerMenu: " + menu, this);
+		App.shared.Log("DisconnectMatchmakerMenu", this);
+
 		App.shared.matchmaker.menu.nextMenu = null;
 		App.shared.matchmaker.menu.previousMenu = null;
 
@@ -211,6 +210,5 @@ public class InGameMenu {
 			menu.previousMenu = null;
 			menu.nextMenu = null;
 		}
-		*/
 	}
 }

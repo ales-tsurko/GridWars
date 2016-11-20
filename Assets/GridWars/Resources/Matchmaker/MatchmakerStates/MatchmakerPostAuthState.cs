@@ -14,59 +14,92 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	public override void ConfigureForClosed() {
 		base.ConfigureForClosed();
 		matchmaker.menu.Reset();
-		button = matchmaker.menu.AddNewButton().SetAction(SearchForOpponent);
-		UpdateText();
+		button = matchmaker.menu.AddNewButton();
+		UpdateMenu();
 	}
 
-	void UpdateText() {
-		string text;
+	public override void ConfigureForOpen() {
+		base.ConfigureForClosed();
+		matchmaker.menu.Reset();
+		button = matchmaker.menu.AddNewButton();
+		UpdateMenu();
+	}
 
-		/*
-		if (app.state is MainMenuState) {
-			if (app.account.otherPlayers.Count > 0) {
-				text = app.account.otherPlayers.Count + " Online";
-				App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
+	void UpdateMenu() {
+		matchmaker.menu.isInteractible = false;
+		app.state.DisconnectMatchmakerMenu();
+		button.action = null;
+		button.data = null;
+
+		if (account.connectedAccounts.Count == 0) {
+			button.text = "Online";
+		}
+		else {
+			var potentialOpponent = account.potentialOpponent;
+			if (potentialOpponent == null) {
+				button.text = account.connectedAccounts.Count + " Online";
 			}
 			else {
-				text = "Online";
+				matchmaker.menu.isInteractible = true;
+				app.state.ConnectMatchmakerMenu();
+				if (potentialOpponent.game == null) {
+					button.text = potentialOpponent.screenName + " came online: " + Color.yellow.ColoredTag("Challenge " + potentialOpponent.screenName);
+				}
+				else {
+					button.text = potentialOpponent.screenName + " posted a challenge: " + Color.yellow.ColoredTag("Accept Challenge");
+				}
+				button.action = PostGameWithOpponent;
+				button.data = potentialOpponent;
 			}
 		}
-		else {
-			text = "Play PVP";
-			if (app.account.otherPlayers.Count > 0) {
-				text += ": " + app.account.otherPlayers.Count + " Online";
-				App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
-			}
-		}
-		*/
-
-		if (app.account.otherPlayers.Count > 0) {
-			text = app.account.otherPlayers.Count + " Online";
-			App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
-		}
-		else {
-			text = "Online";
-		}
-
-		button.text = text;
 	}
 
-	void SearchForOpponent() {
-		TransitionTo(new MatchmakerPostedGameState());
-	}
-
-	public override void MainMenuInternetPvpClicked() {
-		SearchForOpponent();
-		base.MainMenuInternetPvpClicked();
+	void PostGameWithOpponent() {
+		var opponent = button.data as Account;
+		var data = new JSONObject();
+		data.AddField("opponent", opponent.publicPropertyData);
+		matchmaker.Send("postGame", data);
+		var state = new MatchmakerPostedGameState();
+		state.opponent = opponent;
+		TransitionTo(state);
 	}
 
 	public override void HandlePlayerConnected(JSONObject data) {
 		base.HandlePlayerConnected(data);
-		UpdateText();
+		UpdateMenu();
 	}
 
 	public override void HandlePlayerDisconnected(JSONObject data) {
 		base.HandlePlayerDisconnected(data);
-		UpdateText();
+		UpdateMenu();
+	}
+
+	public override void HandleGamePosted(JSONObject data) {
+		base.HandleGamePosted(data);
+
+		var game = account.GameWithId(data.GetField("id").str);
+
+		if (game.client == account) {
+			account.game = game;
+			TransitionTo(new MatchmakerReceivedChallengeState());
+		}
+		else {
+			UpdateMenu();
+		}
+	}
+
+	public override void HandleGameCancelled(JSONObject data) {
+		base.HandleGameCancelled(data);
+		UpdateMenu();
+	}
+
+	public override void HandlePlayerBecameAvailableToPlay(JSONObject data) {
+		base.HandlePlayerBecameAvailableToPlay(data);
+		UpdateMenu();
+	}
+
+	public override void HandlePlayerBecameUnavailableToPlay(JSONObject data) {
+		base.HandlePlayerBecameUnavailableToPlay(data);
+		UpdateMenu();
 	}
 }

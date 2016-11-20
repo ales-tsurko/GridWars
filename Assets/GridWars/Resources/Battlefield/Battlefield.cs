@@ -85,20 +85,16 @@ public class Battlefield : MonoBehaviour {
 
     public bool hasStarted = false;
 
-	public void Start() {
-        hasStarted = true;
-		Application.runInBackground = true;
-
-		App.shared.enabled = true; //Load App so Start gets called
-		App.shared.debug = true;
-
+	public void Awake() {
 		gameUnitCache = new GameUnitCache();
+	}
 
-		AddPlayers();
+	public void Start() {
+		App.shared.enabled = true; //Load App so Start gets called
 
 	}
 
-	void AddPlayers() {
+	public void AddPlayers() {
 		players = new List<Player>();
 		AddPlayer();
 		AddPlayer();
@@ -121,6 +117,7 @@ public class Battlefield : MonoBehaviour {
 		player.battlefield = this;
 		players.Add(player);
 		player.gameObject.name = "Player " + player.playerNumber;
+		player.AddedToBattlefield();
 	}
 
 	public void HardReset() {

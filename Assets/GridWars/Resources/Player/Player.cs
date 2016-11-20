@@ -120,13 +120,13 @@ public class Player : MonoBehaviour {
 
 	void Awake() {
 		units = new List<GameUnit>();
-	}
 
-	void Start() {
 		if (App.shared.testEndOfGameMode) {
 			separation = 0.35f;
 		}
+	}
 
+	public void AddedToBattlefield() {
 		primaryMaterial = new Material(Resources.Load("Materials/" + primaryColorMaterialName) as Material);
 		secondaryMaterial = new Material(Resources.Load("Materials/" + secondaryColorMaterialName) as Material);
 		UpdateColors();
@@ -134,9 +134,6 @@ public class Player : MonoBehaviour {
 		gameObject.transform.parent = battlefield.transform;
 		gameObject.transform.rotation = Quaternion.LookRotation(Vector3.forward * ((playerNumber % 2 == 0) ? -1 : 1), Vector3.up);
 		gameObject.transform.localPosition = new Vector3(0f, 0f, -separation * gameObject.transform.forward.z * battlefield.bounds.z / 2f);
-
-		//gameObject.tag = "Player" + playerNumber;
-
 	}
 
 	// --- NPC Handicaping --------------------------------------

@@ -7,6 +7,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		base.EnterFrom(state);
 		openSoundtrackName = "Ready";
 
+		app.state.DisconnectMatchmakerMenu();
 		matchmaker.menu.Open();
 	}
 
@@ -14,6 +15,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 
 	public override void ConfigureForOpen() {
 		base.ConfigureForOpen();
+
 		matchmaker.menu.Reset();
 
 		//string text;
@@ -22,7 +24,15 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 			matchmaker.menu.AddNewIndicator().SetText("Waiting for " + account.opponent.screenName);
 		}
 		else {
-			matchmaker.menu.AddNewText().SetText(account.opponent.screenName + " accepted your challenge.");
+			string text = "";
+			if (account.isHost) {
+				//local player initiated
+				text += Color.yellow.ColoredTag("challenge accepted") + "\n\n";
+			}
+
+			text += account.screenName + " vs " + account.opponent.screenName;
+
+			matchmaker.menu.AddNewText().SetText(text);
 		}
 
 		if (!account.isReadyForGame) {
@@ -31,16 +41,9 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 				.SetAction(Ready);
 		}
 
-		if (account.isReadyForGame) {
-			matchmaker.menu.AddNewButton()
-				.SetText("Cancel")
-				.SetAction(Leave);
-		}
-		else {
-			matchmaker.menu.AddNewButton()
-				.SetText("Decline")
-				.SetAction(Leave);
-		}
+		matchmaker.menu.AddNewButton()
+			.SetText("Cancel")
+			.SetAction(Leave);
 
 
 		matchmaker.menu.Show();
@@ -70,19 +73,19 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 
 	// MatchmakerDelegate
 
-	public void HandleGameCancelled(JSONObject data) {
-		if (data.GetField("id").str == app.account.game.id) {
-			matchmaker.menu.Reset();
+	public override void HandleMyGameCancelled() {
+		base.HandleMyGameCancelled();
 
-			matchmaker.menu.AddNewText()
-				.SetText("Opponent left.");
+		matchmaker.menu.Reset();
 
-			matchmaker.menu.AddNewButton()
-				.SetText("OK")
-				.SetAction(OpponentLeftOK);
+		matchmaker.menu.AddNewText().SetText(account.opponent.screenName + " left");
 
-			matchmaker.menu.Show();
-		}
+		matchmaker.menu.AddNewButton()
+			.SetText("Back")
+			.SetAction(OpponentLeftOK)
+			.SetIsBackItem(true);
+
+		matchmaker.menu.Show();
 	}
 
 	public void HandleOpponentReadyForGame(JSONObject data) {

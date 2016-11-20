@@ -17,6 +17,11 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		}
 	}
 
+	public void PostGame() {
+		matchmaker.Send("postGame");
+		TransitionTo(new MatchmakerPostedGameState());
+	}
+
 	// AppState
 
 	public override void EnterFrom(AppState state) {
@@ -38,6 +43,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	public virtual void ConfigureMatchmakerMenu() {
 		if (matchmaker.menu.isOpen) {
 			ConfigureForOpen();
+			matchmaker.menu.Focus();
 		}
 		else {
 			ConfigureForClosed();
@@ -48,6 +54,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	public virtual void MatchmakerMenuOpened() {
 		//app.Log("MatchmakerMenuOpened", this);
 		ConfigureForOpen();
+		matchmaker.menu.Focus();
 	}
 
 	public virtual void MatchmakerMenuClosed() {
@@ -57,11 +64,12 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void ConfigureForOpen() {
 		//app.Log("ConfigureForOpen", this);
-		DisconnectMatchmakerMenu();
 		app.menu.Hide();
 		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
 		matchmaker.menu.UseDefaultBackgroundColor();
-		EnableMatchmakerMenuInteraction();
+		matchmaker.menu.selectsOnShow = true;
+		matchmaker.menu.isInteractible = true;
+		app.state.DisconnectMatchmakerMenu();
 	}
 
 	public virtual void ConfigureForClosed() {
@@ -69,10 +77,11 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		ConnectMatchmakerMenu();
 		matchmaker.menu.SetAnchor(MenuAnchor.TopCenter);
 		matchmaker.menu.backgroundColor = Color.clear;
+		matchmaker.menu.selectsOnShow = false;
 		app.menu.Show();
-		DisableMatchmakerMenuInteraction();
 	}
 
+	/*
 	public virtual void ConnectMatchmakerMenu() {
 		if (menu == null || !menu.isActiveAndEnabled) {
 			return;
@@ -97,6 +106,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 			app.menu.nextMenu = null;
 		}
 	}
+	*/
 
 	//MainMenu
 
@@ -105,6 +115,8 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		matchmaker.menu.isInteractible = true;
 		matchmaker.menu.Open();
 	}
+
+	/*
 
 	void DisableMatchmakerMenuInteraction() {
 		matchmaker.menu.isNavigable = false;
@@ -115,6 +127,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		matchmaker.menu.isNavigable = true;
 		matchmaker.menu.isInteractible = true;
 	}
+	*/
 
 	//MatchmakerDelegate
 
@@ -161,6 +174,24 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 	}
 
 	public virtual void HandleGamePosted(JSONObject data) {
+		account.GamePosted(data);
+	}
+
+	public virtual void HandleGameCancelled(JSONObject data) {
+		if (data.GetField("host").GetField("id").n == account.id) {
+			HandleMyGameCancelled();
+		}
+		else {
+			var client = data.GetField("client");
+			if (client != null && (client.GetField("id").n == account.id)) {
+				HandleMyGameCancelled();
+			}
+		}
+		account.GameCancelled(data);
+	}
+
+	public virtual void HandleMyGameCancelled() {
+		app.Log("My Game Cancelled", this);
 	}
 
 	public virtual void HandlePlayerConnected(JSONObject data) {
@@ -169,6 +200,14 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void HandlePlayerDisconnected(JSONObject data) {
 		account.PlayerDisconnected(data);
+	}
+
+	public virtual void HandlePlayerBecameUnavailableToPlay(JSONObject data) {
+		account.PlayerBecameUnavailableToPlay(data);
+	}
+
+	public virtual void HandlePlayerBecameAvailableToPlay(JSONObject data) {
+		account.PlayerBecameAvailableToPlay(data);
 	}
 
 	public virtual void HandlePlayerChangedScreenName(JSONObject data) {

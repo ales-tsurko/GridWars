@@ -14,17 +14,21 @@ public class MatchmakerMenu : UIMenu {
 	}
 
 	public void Open() {
-		isOpen = true;
-		foreach (var del in new List<MatchmakerMenuDelegate>(delegates)) {
-			del.MatchmakerMenuOpened();
+		if (!isOpen) {
+			isOpen = true;
+			foreach (var del in new List<MatchmakerMenuDelegate>(delegates)) {
+				del.MatchmakerMenuOpened();
+			}
+			Focus();
 		}
-		Focus();
 	}
 
 	public void Close() {
-		isOpen = false;
-		foreach (var del in new List<MatchmakerMenuDelegate>(delegates)) {
-			del.MatchmakerMenuClosed();
+		if (isOpen) {
+			isOpen = false;
+			foreach (var del in new List<MatchmakerMenuDelegate>(delegates)) {
+				del.MatchmakerMenuClosed();
+			}
 		}
 	}
 
@@ -33,6 +37,7 @@ public class MatchmakerMenu : UIMenu {
 	public override void Awake() {
 		base.Awake();
 		delegates = new List<MatchmakerMenuDelegate>();
+		selectsOnShow = false;
 	}
 
 	protected override void Update() {

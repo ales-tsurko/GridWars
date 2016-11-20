@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 
 public class Account {
-	public string id;
+	public float id;
 	public string screenName;
 	public string email;
 	public string accessToken;
-	public List<Account>playerList;
+	public bool isAvailableToPlay;
+	public float lastUpdateTime;
+	public List<Account>connectedAccounts;
 	public Game game;
 
 	public bool isHost {
@@ -56,48 +58,153 @@ public class Account {
 		}
 	}
 
-	public List<Account>otherPlayers {
+	public Account potentialOpponent {
 		get {
-			return playerList.FindAll(account => account != this);
+			var available = new List<Account>(connectedAccounts.FindAll(a => a.isAvailableToPlay));
+			available.Sort((a, b) => {
+				if (a.game == null) {
+					if (b.game == null) {
+						return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+					}
+					else {
+						return 1;
+					}
+				}
+				else if (b.game == null) {
+					return -1;
+				}
+				else {
+					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+				}
+			});
+
+			if (available.Count > 0) {
+				return available[0];
+			}
+			else {
+				return null;
+			}
 		}
 	}
 
 	public Account() {
 		ResetPlayerList();
+		lastUpdateTime = Time.time;
 	}
 
-	public Account AccountWithId(string id) {
+	public Account AccountWithId(float id) {
 		if (this.id == id) {
 			return this;
 		}
 		else {
-			return playerList.Find(account => account.id == id);
+			return connectedAccounts.Find(account => account.id == id);
+		}
+	}
+
+	public Game GameWithId(string id) {
+		if (game != null && game.id == id) {
+			return game;
+		}
+		else {
+			foreach (var account in connectedAccounts) {
+				if (account.game != null && account.game.id == id) {
+					return account.game;
+				}
+			}
+			return null;
+		}
+	}
+
+	public void SetFromData(JSONObject accountData) {
+		JSONObject property;
+
+		id = accountData.GetField("id").n;
+		screenName = accountData.GetField("screenName").str;
+
+		if ((property = accountData.GetField("accessToken")) != null && !property.IsNull) {
+			accessToken = property.str;
+		}
+
+		if ((property = accountData.GetField("email")) != null && !property.IsNull) {
+			email = property.str;
+		}
+
+		if ((property = accountData.GetField("isAvailableToPlay")) != null && !property.IsNull) {
+			isAvailableToPlay = property.b;
+		}
+	}
+
+	public JSONObject publicPropertyData {
+		get {
+			var data = new JSONObject();
+			data.AddField("id", id);
+			data.AddField("screenName", screenName);
+			return data;
 		}
 	}
 
 	public void ResetPlayerList() {
-		playerList = new List<Account>();
-		playerList.Add(this);
+		connectedAccounts = new List<Account>();
 	}
 
 	public void PlayerConnected(JSONObject accountData) {
 		var account = new Account();
-		account.screenName = accountData.GetField("screenName").str;
-		account.id = accountData.GetField("id").n.ToString();
-		playerList.Add(account);
+		account.SetFromData(accountData);
+		connectedAccounts.Add(account);
 	}
 
 	public void PlayerDisconnected(JSONObject accountData) {
-		playerList.Remove(AccountWithId(accountData.GetField("id").n.ToString()));
+		connectedAccounts.Remove(AccountWithId(accountData.GetField("id").n));
 	}
 
 	public void PlayerChangedScreenName(JSONObject accountData) {
-		var account = AccountWithId(accountData.GetField("id").n.ToString());
+		var account = AccountWithId(accountData.GetField("id").n);
 		if (account == null) {
 			App.shared.Log("Account missing: " + accountData.ToString(), this);
 		}
 		else {
 			account.screenName = accountData.GetField("screenName").str;
+			account.lastUpdateTime = Time.time;
+		}
+	}
+
+	public void PlayerBecameAvailableToPlay(JSONObject accountData) {
+		var account = AccountWithId(accountData.GetField("id").n);
+		if (account == null) {
+			App.shared.Log("Account missing: " + accountData.ToString(), this);
+		}
+		else {
+			account.isAvailableToPlay = true;
+			account.game = null;
+			account.lastUpdateTime = Time.time;
+		}
+	}
+
+	public void PlayerBecameUnavailableToPlay(JSONObject accountData) {
+		var account = AccountWithId(accountData.GetField("id").n);
+		if (account == null) {
+			App.shared.Log("Account missing: " + accountData.ToString(), this);
+		}
+		else {
+			account.isAvailableToPlay = false;
+			account.lastUpdateTime = Time.time;
+		}
+	}
+
+	public void GamePosted(JSONObject gameData) {
+		var game = new Game();
+		game.SetFromData(gameData);
+		game.host.game = game;
+		game.host.lastUpdateTime = Time.time;
+	}
+
+	public void GameCancelled(JSONObject gameData) {
+		var host = gameData.GetField("host");
+
+		var account = AccountWithId(host.GetField("id").n);
+		if (account != null) {
+			account.game = null;
+			account.lastUpdateTime = Time.time;
 		}
 	}
 

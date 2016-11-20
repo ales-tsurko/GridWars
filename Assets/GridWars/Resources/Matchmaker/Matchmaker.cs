@@ -54,7 +54,7 @@ public class Matchmaker : AppStateOwner {
 
 		isConnected = false;
 
-		App.shared.Log("Start", this);
+		App.shared.Log("Connect: " + socket.url, this);
 		socket.Connect();
 	}
 

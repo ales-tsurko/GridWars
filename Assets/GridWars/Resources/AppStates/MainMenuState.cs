@@ -38,8 +38,8 @@ public class MainMenuState : AppState {
 			menu.targetBackgroundColor = Color.clear;
 			_needsInitialFadeIn = false;
 		}
-
-		matchmaker.menu.Hide();
+			
+		matchmaker.menu.Show();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
 	}

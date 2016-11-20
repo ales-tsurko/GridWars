@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class MatchmakerAfterGameState : MatchmakerState {
-	PostGameState postGateState {
+	PostGameState postGameState {
 		get {
 			return app.state as PostGameState;
 		}
@@ -20,24 +20,24 @@ public class MatchmakerAfterGameState : MatchmakerState {
 	}
 
 	public void HandleOpponentRequestedRematch(JSONObject data) {
-		postGateState.ReceivedRematchRequest();
+		postGameState.ReceivedRematchRequest();
 	}
 
 	public override void MatchmakerDisconnected() {
 		base.MatchmakerDisconnected();
-		postGateState.GameCancelled();
+		postGameState.GameCancelled();
 	}
 
 	public override void MatchmakerErrored() {
 		base.MatchmakerDisconnected();
-		postGateState.GameCancelled();
+		postGameState.GameCancelled();
 	}
 
-	public void HandleGameCancelled(JSONObject data) {
-		if (data.GetField("id").str == app.account.game.id) {
-			postGateState.GameCancelled();
-			TransitionTo(new MatchmakerPostAuthState());
-		}
+	public override void HandleMyGameCancelled() {
+		base.HandleMyGameCancelled();
+
+		postGameState.GameCancelled();
+		TransitionTo(new MatchmakerPostAuthState());
 	}
 
 	public void HandleStartGame(JSONObject data) {

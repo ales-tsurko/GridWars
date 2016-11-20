@@ -100,10 +100,10 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		Leave();
 	}
 
-	public void HandleGameCancelled(JSONObject data) {
-		if (data.GetField("id").str == app.account.game.id) {
-			OpponentLeft();
-		}
+	public override void HandleMyGameCancelled() {
+		base.HandleMyGameCancelled();
+
+		OpponentLeft();
 	}
 
 	public void HandleStartGame(JSONObject data) {

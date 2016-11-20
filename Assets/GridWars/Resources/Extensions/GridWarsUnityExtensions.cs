@@ -352,6 +352,10 @@ public static class GridWarsUnityExtensions {
 		return self;
 	}
 
+	public static string ColoredTag(this Color self, string tagBody) {
+		return "<color=#" + ColorUtility.ToHtmlStringRGB(self) + ">" + tagBody + "</color>";
+	}
+
 	public static Bounds BoxBounds(this GameObject self) {
 		BoxCollider bc = self.GetComponent<BoxCollider>();
 		Bounds b = new Bounds();

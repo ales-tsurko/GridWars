@@ -332,6 +332,7 @@ public class UIMenu : UIElement {
 	}
 
 	public void Focus() {
+		//Debug.Log("Focus");
 		if (canFocus) {
 			if (selectedItem == null) {
 				if (previouslySelectedItem == null) {
@@ -370,7 +371,7 @@ public class UIMenu : UIElement {
 
 	public bool canFocus {
 		get {
-			return selectableItems.Count > 0 && isNavigable && isActiveAndEnabled;
+			return selectableItems.Count > 0 && isNavigable && isInteractible && isActiveAndEnabled;
 		}
 	}
 
@@ -397,6 +398,10 @@ public class UIMenu : UIElement {
 	public void SelectNextItem() {
 		var nextIndex = selectedItemIndex + 1;
 		if (nextIndex >= selectableItems.Count) {
+			App.shared.Log("nextMenu: " + (nextMenu != null), this);
+			if (nextMenu != null) {
+				App.shared.Log("nextMenu.canFocus: " + nextMenu.canFocus, this);
+			}
 			if (nextMenu != null && nextMenu.canFocus) {
 				StartCoroutine(this.OnEndOfFrame(() => { //otherwise menu might read input again
 					nextMenu.SelectFirstItem();

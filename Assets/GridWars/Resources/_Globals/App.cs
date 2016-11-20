@@ -76,6 +76,8 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Start() {
+		debug = true;
+		Application.runInBackground = true;
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
 		notificationCenter = new NotificationCenter();
@@ -105,6 +107,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		network.gameObject.name = "Network";
 
 		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
+		battlefield.AddPlayers();
 
 		cameraController = GameObject.FindObjectOfType<CameraController>();
 		cameraController.enabled = true;
@@ -113,18 +116,11 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs.AddControllerBindings();
 		inputs.AddLocalPlayer1KeyBindings();
 
-		//*
-        StartCoroutine(DisplayMainMenuAfterFrame());
-		//*/
+		var mainMenuState = new MainMenuState();
+		mainMenuState.owner = this;
+		this.state = mainMenuState;
+		mainMenuState.EnterFrom(null);
 	}
-
-    IEnumerator DisplayMainMenuAfterFrame(){
-        yield return new WaitForEndOfFrame();
-        var mainMenuState = new MainMenuState();
-        mainMenuState.owner = this;
-        this.state = mainMenuState;
-        mainMenuState.EnterFrom(null);
-    }
 
     void SetupResolution() {
 		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {

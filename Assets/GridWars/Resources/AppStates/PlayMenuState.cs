@@ -37,9 +37,6 @@ public class PlayMenuState : AppState {
 	public override void WillExit() {
 		base.WillExit();
 
-		matchmaker.menu.Close();
-		matchmaker.menu.Hide();
-
 		app.notificationCenter.RemoveObserver(this);
 	}
 
@@ -60,7 +57,7 @@ public class PlayMenuState : AppState {
 		});
 
 		if (matchmaker.isConnected) {
-			matchmaker.matchmakerState.MainMenuInternetPvpClicked();
+			matchmaker.matchmakerState.PostGame();
 		}
 		else {
 			menu.Reset();

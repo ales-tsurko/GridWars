@@ -25,17 +25,13 @@ public class MatchmakerPreAuthState : MatchmakerState {
 	//MatchmakerDelegate
 
 	public void HandleAuthenticate(JSONObject data) {
-		account.id = data.GetField("id").n.ToString();
-		account.email = data.GetField("email").str;
-		account.screenName = data.GetField("screenName").str;
-		account.accessToken = data.GetField("accessToken").str;
+		account.SetFromData(data);
 		account.SaveToPrefs();
 
 		foreach (var obj in data.GetField("players").list) {
 			var playerAccount = new Account();
-			playerAccount.id = obj.GetField("id").n.ToString();
-			playerAccount.screenName = obj.GetField("screenName").str;
-			app.account.playerList.Add(playerAccount);
+			playerAccount.SetFromData(obj);
+			app.account.connectedAccounts.Add(playerAccount);
 		}
 		TransitionTo(new MatchmakerPostAuthState());
 	}
