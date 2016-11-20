@@ -400,20 +400,23 @@ public class Player : MonoBehaviour {
 				//float r = UnityEngine.Random.value;
 				if (powerSource.IsAtMax() && 
 					(bestTower.name.Contains("Tank") ||  bestTower.name.Contains("Chopper"))) {
-					Debug.Log("mass tank release");
-					bestTower.SendAttemptQueueUnit();
-					bestTower.SendAttemptQueueUnit();
-					bestTower.SendAttemptQueueUnit();
+					bestTower.SendAttemptQueueUnit(IntCoinFlip());
+					bestTower.SendAttemptQueueUnit(IntCoinFlip());
+					bestTower.SendAttemptQueueUnit(IntCoinFlip());
 				}
 
-				bestTower.SendAttemptQueueUnit();
+				bestTower.SendAttemptQueueUnit(IntCoinFlip());
 			} else if (powerSource.IsAtMax()) {
 				Tower aTower = fortress.towers.PickRandom();
 				if (aTower) {
-					aTower.SendAttemptQueueUnit();
+					aTower.SendAttemptQueueUnit(IntCoinFlip());
 				}
 			}
 		}
+	}
+
+	private int IntCoinFlip() {
+		return UnityEngine.Random.value > .5 ? 1 : 0;
 	}
 
 	// -- Camera --------------------------------

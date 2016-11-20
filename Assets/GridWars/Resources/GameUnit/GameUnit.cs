@@ -751,6 +751,12 @@ public class GameUnit : NetworkObject {
 	public void AdjustHitPointGenByFactor(float f) {
 		hitPointRegenRate *= f;
 	}
+
+	public void AdjustThrustByFactor(float f) {
+		thrust *= f;
+	}
+
+
 	// --- Painting ----
 
 	public void PaintPrimaryColor(Color c) {

@@ -6,6 +6,7 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction releaseChopper;
 	public PlayerAction releaseTanker;
 	public PlayerAction releaseTank;
+	public PlayerAction releaseLightTank;
 	public PlayerAction releaseMobileSam;
 	public PlayerAction releaseBomber;
 	public PlayerAction releaseGunship;
@@ -52,6 +53,7 @@ public class PlayerInputs : PlayerActionSet {
 		releaseChopper = CreatePlayerAction("Chopper");
 		releaseTanker = CreatePlayerAction("Tanker");
 		releaseTank = CreatePlayerAction("Tank");
+		releaseLightTank = CreatePlayerAction("LightTank");
 		releaseMobileSam = CreatePlayerAction("MobileSAM");
 		releaseBomber = CreatePlayerAction("Bomber");
 		releaseGunship = CreatePlayerAction("Gunship");
@@ -85,10 +87,11 @@ public class PlayerInputs : PlayerActionSet {
 	}
 
 	public void AddControllerBindings() {
-		releaseChopper.AddDefaultBinding(InputControlType.Action4);
+		releaseMobileSam.AddDefaultBinding(InputControlType.Action1);
 		releaseTanker.AddDefaultBinding(InputControlType.Action2);
 		releaseTank.AddDefaultBinding(InputControlType.Action3);
-		releaseMobileSam.AddDefaultBinding(InputControlType.Action1);
+		releaseChopper.AddDefaultBinding(InputControlType.Action4);
+		releaseLightTank.AddDefaultBinding(InputControlType.Action5);
 
 		toggleMenu.AddDefaultBinding(InputControlType.Command);
 
@@ -160,6 +163,7 @@ public class PlayerInputs : PlayerActionSet {
 		releaseChopper.AddDefaultBinding(Key.D);
 		releaseTanker.AddDefaultBinding(Key.F);
 		releaseTank.AddDefaultBinding(Key.J);
+		releaseLightTank.AddDefaultBinding(Key.G);
 		releaseMobileSam.AddDefaultBinding(Key.K);
 		releaseGunship.AddDefaultBinding(Key.L);
 
@@ -169,6 +173,7 @@ public class PlayerInputs : PlayerActionSet {
 	public void AddLocalPlayer2KeyBindings() {
 		releaseChopper.AddDefaultBinding(Key.P);
 		releaseTanker.AddDefaultBinding(Key.LeftBracket);
+		//releaseLightTank.AddDefaultBinding(Key.RightBracket);
 		releaseTank.AddDefaultBinding(Key.RightBracket);
 		releaseMobileSam.AddDefaultBinding(Key.Backslash);
 	}
