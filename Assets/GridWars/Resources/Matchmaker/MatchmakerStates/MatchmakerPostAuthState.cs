@@ -37,7 +37,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 				matchmaker.menu.isInteractible = true;
 				app.state.ConnectMatchmakerMenu();
 				if (potentialOpponent.game == null) {
-					button.text = potentialOpponent.screenName + " came online: " + Color.yellow.ColoredTag("Challenge " + potentialOpponent.screenName);
+					button.text = potentialOpponent.screenName + " is online: " + Color.yellow.ColoredTag("Challenge " + potentialOpponent.screenName);
 				}
 				else {
 					button.text = potentialOpponent.screenName + " posted a challenge: " + Color.yellow.ColoredTag("Accept Challenge");
