@@ -1,15 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class APC : MonoBehaviour {
+public class LightTank : GroundVehicle {
 
-	// Use this for initialization
-	void Start () {
-	
+	public override void Awake() {
+		base.Awake();
+		powerCostPerLevel = new float[] { 4f, 4f*2.5f, float.MaxValue };
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public override void ServerInit() {
+		maxHitPoints = 7f;
+		base.ServerInit();
+	}
+
+	public override List<System.Type> CountersTypes() {
+		List<System.Type> counters = base.CountersTypes();
+		counters.Add(typeof(MobileSAM));
+		counters.Add(typeof(Tank));
+		counters.Add(typeof(Tanker));
+		//counters.Add(typeof(GroundVehicle));
+		return counters;
+	}
+
+	public override void UpgradeVeterancy() {
+		base.UpgradeVeterancy();
+
+		AdjustWeaponsFireRateByFactor(1.2f);
+		AdjustWeaponsDamageByFactor(1.2f);
+		AdjustMaxHitpointsByFactor(1.2f);
+		//AdjustThrustByFactor(1.2f);
 	}
 }

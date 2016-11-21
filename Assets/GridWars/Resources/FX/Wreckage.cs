@@ -123,7 +123,6 @@ using System.Collections;
 	}
 
 	void PaintAsWreckage() {
-		/*
         // why doesn't this work?
 		
 		wreckageMaterial = App.shared.LoadMaterial("Materials/UnitDead");
@@ -135,7 +134,6 @@ using System.Collections;
 				}
 			});
 		}
-		*/
 	}
 
 }
