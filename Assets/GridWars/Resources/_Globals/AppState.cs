@@ -132,6 +132,7 @@ public class AppState {
 	}
 
 	public virtual void ConfigureForClosedMatchmakerMenu() {
+		//Debug.Log("ConfigureForClosedMatchmakerMenu");
 		ConnectMatchmakerMenu();
 		menu.Show();
 	}

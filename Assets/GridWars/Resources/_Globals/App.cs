@@ -86,7 +86,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		notificationCenter.NewObservation()
 			.SetNotificationName(UIMenu.UIMenuShowedNotification)
 			.SetSender(menu)
-			.SetAction(MenuOpened)
+			.SetAction(MenuDidShow)
 			.Add();
 
 		prefs = new Prefs();
@@ -127,7 +127,8 @@ public class App : MonoBehaviour, AppStateOwner {
 		mainMenuState.EnterFrom(null);
 	}
 
-	void MenuOpened(Notification n) {
+	void MenuDidShow(Notification n) {
+		//Debug.Log("MenuDidShow");
 		matchmaker.menu.Close();
 	}
 

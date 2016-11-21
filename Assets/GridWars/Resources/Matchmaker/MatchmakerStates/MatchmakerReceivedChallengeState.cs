@@ -9,6 +9,14 @@ public class MatchmakerReceivedChallengeState : MatchmakerState {
 	}
 	// MatchmakerMenuDelegate
 
+	public override void ConfigureForClosed() {
+		base.ConfigureForClosed();
+
+		matchmaker.menu.Reset();
+		matchmaker.menu.AddNewButton().SetText(game.host.screenName + " challenged you to a match").SetAction(matchmaker.menu.Open);
+		matchmaker.menu.isInteractible = true;
+	}
+
 	public override void ConfigureForOpen() {
 		base.ConfigureForOpen();
 

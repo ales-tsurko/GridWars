@@ -20,8 +20,6 @@ public class PlayingGameState : AppState {
 			battlefield.player2.isLocal = BoltNetwork.isClient;
 			battlefield.player1.npcModeOn = false;
 			battlefield.player2.npcModeOn = false;
-			DisconnectMatchmakerMenu();
-			matchmaker.menu.Hide();
 		}
 
 		app.ResetMenu();

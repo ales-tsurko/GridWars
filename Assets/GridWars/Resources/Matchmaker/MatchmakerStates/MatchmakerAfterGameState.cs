@@ -8,12 +8,6 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		}
 	}
 
-	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
-
-		matchmaker.menu.Hide();
-	}
-
 	public void CancelGame() {
 		matchmaker.Send("cancelGame");
 		TransitionTo(new MatchmakerPostAuthState());

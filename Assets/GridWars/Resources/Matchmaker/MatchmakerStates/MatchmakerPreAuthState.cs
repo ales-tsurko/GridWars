@@ -20,6 +20,8 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		data.AddField("credentials", credentials);
 
 		matchmaker.Send("authenticate", data);
+
+		matchmaker.menu.Close();
 	}
 
 	//MatchmakerDelegate
@@ -57,16 +59,5 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
 			.SetText("Connecting to server");
-	}
-
-	public override void ConfigureForOpen() {
-		base.ConfigureForOpen();
-
-		matchmaker.menu.Reset();
-		matchmaker.menu.AddNewIndicator()
-			.SetText("Connecting to server");
-		matchmaker.menu.AddNewButton()
-			.SetText("OK")
-			.SetAction(matchmaker.menu.Close);
 	}
 }

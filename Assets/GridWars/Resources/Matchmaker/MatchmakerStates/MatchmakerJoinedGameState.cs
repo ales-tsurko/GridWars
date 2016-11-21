@@ -7,7 +7,6 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		base.EnterFrom(state);
 		openSoundtrackName = "Ready";
 
-		app.state.DisconnectMatchmakerMenu();
 		matchmaker.menu.Open();
 	}
 
@@ -44,11 +43,6 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 		matchmaker.menu.AddNewButton()
 			.SetText("Cancel")
 			.SetAction(Leave);
-
-
-		matchmaker.menu.Show();
-
-		app.Log("matchmaker.menu.Show();", this);
 	}
 
 	void Ready() {
@@ -85,7 +79,7 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 			.SetAction(OpponentLeftOK)
 			.SetIsBackItem(true);
 
-		matchmaker.menu.Show();
+		matchmaker.menu.Focus();
 	}
 
 	public void HandleOpponentReadyForGame(JSONObject data) {

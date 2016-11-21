@@ -28,8 +28,6 @@ public class PlayMenuState : AppState {
 				.SetAction(MatchmakerDisconnected)
 				.SetSender(app.matchmaker);
 
-			matchmaker.menu.Show();
-
 			ShowMenu();
 		}
 	}

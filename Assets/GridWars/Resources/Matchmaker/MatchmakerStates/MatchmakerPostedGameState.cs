@@ -31,6 +31,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 			.SetText(text)
 			.SetAction(matchmaker.menu.Open);
 		b.doesType = true;
+		matchmaker.menu.isInteractible = true;
 	}
 
 	public override void ConfigureForOpen() {

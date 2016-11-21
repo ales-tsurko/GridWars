@@ -45,6 +45,7 @@ public class ShowOutcomeState : PostGameSubState {
 
 		menu.AddItem(UI.MenuItem("Leave Game", postGameState.Leave));
 
+		//Debug.Log("menu.Show");
 		menu.Show();
 	}
 

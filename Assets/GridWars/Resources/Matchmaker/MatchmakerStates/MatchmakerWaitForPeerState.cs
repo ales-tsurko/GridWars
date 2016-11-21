@@ -68,8 +68,6 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		matchmaker.menu.AddNewButton()
 			.SetText("Leave")
 			.SetAction(CancelAndLeave);
-
-		matchmaker.menu.Show();
 	}
 		
 	void CancelAndLeave() {
@@ -117,6 +115,7 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		matchmaker.menu.AddNewButton()
 			.SetText("Leave")
 			.SetAction(Leave);
-		matchmaker.menu.Show();
+		
+		matchmaker.menu.Focus();
 	}
 }

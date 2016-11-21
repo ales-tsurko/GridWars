@@ -8,17 +8,11 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Close();
+		matchmaker.menu.Show();
 	}
 	// MatchmakerMenuDelegate
 
 	public override void ConfigureForClosed() {
-		base.ConfigureForClosed();
-		matchmaker.menu.Reset();
-		button = matchmaker.menu.AddNewButton();
-		UpdateMenu();
-	}
-
-	public override void ConfigureForOpen() {
 		base.ConfigureForClosed();
 		matchmaker.menu.Reset();
 		button = matchmaker.menu.AddNewButton();

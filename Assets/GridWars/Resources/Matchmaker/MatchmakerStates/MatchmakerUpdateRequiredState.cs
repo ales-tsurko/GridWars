@@ -3,6 +3,13 @@ using System.Collections;
 
 public class MatchmakerUpdateRequiredState : MatchmakerState {
 
+	public override void EnterFrom(AppState state) {
+		base.EnterFrom(state);
+
+		matchmaker.menu.isInteractible = true;
+		matchmaker.menu.Close();
+	}
+
 	// MatchmakerMenuDelegate
 
 	public override void ConfigureForOpen() {
@@ -10,7 +17,7 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText()
-			.SetText("Update to the latest version to play multiplayer");
+			.SetText("Download to the latest version to play multiplayer");
 		matchmaker.menu.AddNewButton()
 			.SetText("Update")
 			.SetAction(OpenSite);
@@ -18,7 +25,6 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 			.SetText("Close")
 			.SetAction(matchmaker.menu.Close)
 			.SetIsBackItem(true);
-		matchmaker.menu.Show();
 	}
 
 	public override void ConfigureForClosed() {
@@ -30,8 +36,6 @@ public class MatchmakerUpdateRequiredState : MatchmakerState {
 			.SetTextColor(Color.red)
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();
-		matchmaker.menu.Show();
-		matchmaker.menu.Focus();
 	}
 
 	void OpenSite() {

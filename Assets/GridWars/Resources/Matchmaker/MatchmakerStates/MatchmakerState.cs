@@ -79,6 +79,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		matchmaker.menu.SetAnchor(MenuAnchor.TopCenter);
 		matchmaker.menu.backgroundColor = Color.clear;
 		matchmaker.menu.selectsOnShow = false;
+		matchmaker.menu.isInteractible = false;
 
 		if (app.state != null) {
 			app.state.ConfigureForClosedMatchmakerMenu();

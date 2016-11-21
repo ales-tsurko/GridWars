@@ -10,6 +10,7 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		matchmaker.menu.Close();
 		Connect();
 	}
 
@@ -74,5 +75,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 			.SetTextColor(Color.red)
 			.SetAction(matchmaker.menu.Open)
 			.UseAlertStyle();
+		matchmaker.menu.isInteractible = true;
 	}
 }
