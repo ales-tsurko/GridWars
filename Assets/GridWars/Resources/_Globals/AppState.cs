@@ -57,16 +57,6 @@ public class AppState {
 		}
 
 		HandleOpenSounds();
-
-		/*
-		if (connectsMatchmakerMenu) {
-			ConnectMatchmakerMenu();
-		}
-		else {
-			DisconnectMatchmakerMenu();
-		}
-		matchmaker.menu.isInteractible = interactibleMatchmakerMenu;
-		*/
 	}
 
 	public virtual void WillExit() {
@@ -139,7 +129,6 @@ public class AppState {
 
 	public virtual void ConnectMatchmakerMenu() {
 		//app.Log("ConnectMatchmakerMenu", this);
-		//app.Log("matchmaker.menu: " + matchmaker.menu, this);
 		menu.nextMenu = matchmaker.menu;
 		menu.previousMenu = matchmaker.menu;
 

@@ -41,12 +41,8 @@ public class PlayingGameState : AppState {
 
 		menu.Hide();
 
-		if (matchmaker.menu.isOpen) {
-			matchmaker.menu.Close();
-		}
-		else {
-			ConfigureForClosedMatchmakerMenu();
-		}
+		matchmaker.menu.Close();
+		ConnectMatchmakerMenu();
 
 		battlefield.SoftReset();
 

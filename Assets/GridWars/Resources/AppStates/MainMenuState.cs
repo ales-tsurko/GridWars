@@ -40,6 +40,7 @@ public class MainMenuState : AppState {
 		}
 			
 		matchmaker.menu.Show();
+		ConnectMatchmakerMenu();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
 	}
