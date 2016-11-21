@@ -99,13 +99,10 @@ namespace SocketIO
 			sid = null;
 			packetId = 0;
 
-			//var host = EnvironmentConfigController.Init().serverHost;
-			//host = "localhost:8080";
             var host = App.shared.config.serverHost;
+			//host = "localhost:8080";
             url = "ws://" + host + "/socket.io/?EIO=4&transport=websocket";  //works
            
-            //App.shared.config.serverHost
-            //EnvironmentConfigController.Init().serverHost
 			ws = new WebSocket(url);
 			ws.OnOpen += OnOpen;
 			ws.OnMessage += OnMessage;
