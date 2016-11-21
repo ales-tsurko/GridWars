@@ -165,6 +165,8 @@ public class PlayingGameState : AppState {
 	// In Game Menu
 
 	public void DestroyInGameMenus() {
+		DisconnectMatchmakerMenu();
+
 		foreach(var inGameMenu in inGameMenus) {
 			inGameMenu.Destroy();
 		}
@@ -223,11 +225,15 @@ public class PlayingGameState : AppState {
 
 	public override void ConnectMatchmakerMenu() {
 		//don't call base
-		primaryInGameMenu.ConnectMatchmakerMenu();
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.ConnectMatchmakerMenu();
+		}
 	}
 
 	public override void DisconnectMatchmakerMenu() {
 		//don't call base
-		primaryInGameMenu.DisconnectMatchmakerMenu();
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.DisconnectMatchmakerMenu();
+		}
 	}
 }
