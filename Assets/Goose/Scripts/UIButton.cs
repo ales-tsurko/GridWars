@@ -281,6 +281,11 @@ public class UIButton : UIElement {
 		}
 	}
 
+	public void Deselect() {
+		isSelected = false;
+		menu.ItemDeselected(this);
+	}
+
 	public virtual void Update () {
 		//base.Update();
 		if (doesType && !finishedTyping) {
@@ -346,6 +351,7 @@ public class UIButton : UIElement {
 	}
 
 	public void OnDeselected() {
+		//Debug.Log("OnDeselected: " + this.text);
         //menu.Deselect();
 		isSelected = false;
 		menu.ItemDeselected(this);

@@ -6,6 +6,7 @@ using InControl;
 
 public class UIMenu : UIElement {
 	public static string UIMenuShowedNotification = "UIMenuShowedNotification";
+	public static string UIMenuSelectedItemNotification = "UIMenuSelectedItem";
 
 	Image image;
 
@@ -33,7 +34,7 @@ public class UIMenu : UIElement {
 	public bool soundsEnabled = true;
 
 	public UIButton selectedItem;
-	UIButton previouslySelectedItem;
+	UIButton selectedItemWhenLastFocused;
 
 	public bool isNavigable = true;
 
@@ -135,6 +136,17 @@ public class UIMenu : UIElement {
 		t.anchorMax = new Vector2(1, 1);
 		t.offsetMin = new Vector2(0, 0);
 		t.offsetMax = new Vector2(0, 0);
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIMenuSelectedItemNotification)
+			.SetAction(MenuSelectedItem)
+			.Add();
+	}
+
+	void OnDestroy() {
+		if (App.shared.notificationCenter != null) {
+			App.shared.notificationCenter.RemoveObserver(this);
+		}
 	}
 
     public void AddItem(UIButton _item, bool isBackItem = false){
@@ -277,7 +289,8 @@ public class UIMenu : UIElement {
 			Destroy(child.gameObject);
 		}
 		items = new List<UIButton> ();
-		previouslySelectedItem = null;
+		selectedItemWhenLastFocused = null;
+		//App.shared.Log("selectedItem = null", this);
 		selectedItem = null;
 		ApplyLayout();
 	}
@@ -331,9 +344,15 @@ public class UIMenu : UIElement {
 		if (item != null) {
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
-			//App.shared.Log("ItemSelected: " + item.text);
-			previouslySelectedItem = selectedItem;
+			//App.shared.Log("selectedItem = " + item.text);
+			selectedItemWhenLastFocused = item;
 			selectedItem = item;
+			App.shared.notificationCenter.NewNotification()
+				.SetName(UIMenuSelectedItemNotification)
+				.SetData(item)
+				.SetSender(this)
+				.Post();
+
 			//lastSelectionTime = Time.time;
 		}
 	}
@@ -342,24 +361,29 @@ public class UIMenu : UIElement {
 		//Debug.Log("Focus");
 		if (canFocus) {
 			if (selectedItem == null) {
-				if (previouslySelectedItem == null) {
+				//App.shared.Log("selectedItem == null", this);
+				if (selectedItemWhenLastFocused == null) {
+					//App.shared.Log("previouslySelectedItem == null", this);
 					SelectFirstItem();
 				}
 				else {
-					SelectItem(previouslySelectedItem);
+					//App.shared.Log("SelectItem(previouslySelectedItem)", this);
+					SelectItem(selectedItemWhenLastFocused);
 				}
 			}
 			else {
+				//App.shared.Log("SelectItem(selectedItem)", this);
 				SelectItem(selectedItem);
 			}
 		}
 	}
 
 	public void LoseFocus() {
-		//Debug.Log("LoseFocus");
 		if (hasFocus) {
+			//App.shared.Log("LoseFocus", this);
 			FindObjectOfType<CameraController>().menuHasFocus = false;
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+			//App.shared.Log("selectedItem = null", this);
 			selectedItem = null;
 		}
 	}
@@ -383,10 +407,18 @@ public class UIMenu : UIElement {
 	}
 
 	public void ItemDeselected(UIButton item) {
-		//App.shared.Log("ItemDeselected: " + item.text);
+		//App.shared.Log("ItemDeselected: " + item.text, this);
 		if (selectedItem == item) {
-			//App.shared.Log("selectedItem = null: " + item.text);
+			//App.shared.Log("selectedItem = null: " + item.text, this);
 			selectedItem = null;
+		}
+	}
+
+	void MenuSelectedItem(Notification n) {
+		if (n.sender != this) {
+			if (selectedItem != null) {
+				selectedItem.Deselect();
+			}
 		}
 	}
 
@@ -405,9 +437,9 @@ public class UIMenu : UIElement {
 	public void SelectNextItem() {
 		var nextIndex = selectedItemIndex + 1;
 		if (nextIndex >= selectableItems.Count) {
-			App.shared.Log("nextMenu: " + (nextMenu != null), this);
+			//App.shared.Log("nextMenu: " + (nextMenu != null), this);
 			if (nextMenu != null) {
-				App.shared.Log("nextMenu.canFocus: " + nextMenu.canFocus, this);
+				//App.shared.Log("nextMenu.canFocus: " + nextMenu.canFocus, this);
 			}
 			if (nextMenu != null && nextMenu.canFocus) {
 				StartCoroutine(this.OnEndOfFrame(() => { //otherwise menu might read input again

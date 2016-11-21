@@ -7,6 +7,19 @@ public class PlayingGameState : AppState {
 
 	//AppState
 
+	public override UIMenu[] focusableMenus {
+		get {
+			if (inGameMenus.Count == 2) {
+				return new UIMenu[]{ inGameMenus[0].menu, inGameMenus[1].menu, menu, matchmaker.menu };
+			}
+			else {
+				return new UIMenu[]{ inGameMenus[0].menu, menu, matchmaker.menu };
+			}
+
+
+		}
+	}
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -34,6 +47,8 @@ public class PlayingGameState : AppState {
 				AddInGameMenu(player);
 			}
 		}
+
+		primaryInGameMenu.menu.Focus();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 

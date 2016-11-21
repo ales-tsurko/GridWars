@@ -46,7 +46,7 @@ public class InGameMenu {
 		}
 	}
 
-	UIMenu menu;
+	public UIMenu menu;
 
 	PlayerInputs inputs {
 		get {

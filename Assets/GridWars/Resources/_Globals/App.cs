@@ -161,8 +161,6 @@ public class App : MonoBehaviour, AppStateOwner {
             state.Update();
         }
 		ShowHideCursor();
-		//keys.Update();
-		//UpdateMenuFocus();
 	}
 
 	float mouseMoveTime = 0f;
@@ -174,19 +172,6 @@ public class App : MonoBehaviour, AppStateOwner {
 		}
 		if (Time.time - mouseMoveTime > mouseIdleTime) {
 			Cursor.visible = false;
-		}
-	}
-
-	void UpdateMenuFocus() {
-		if (inputs.downItem.WasPressed || inputs.upItem.WasPressed) {
-			if (!menu.hasFocus && !matchmaker.menu.hasFocus) {
-				if (menu.canFocus) {
-					menu.Focus();
-				}
-				else {
-					matchmaker.menu.Focus();
-				}
-			}
 		}
 	}
 

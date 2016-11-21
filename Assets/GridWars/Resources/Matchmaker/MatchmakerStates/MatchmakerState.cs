@@ -24,6 +24,12 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	// AppState
 
+	public override UIMenu[] focusableMenus {
+		get {
+			return new UIMenu[]{};
+		}
+	}
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 

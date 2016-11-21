@@ -8,6 +8,12 @@ public class PostGameSubState : AppState {
 		}
 	}
 
+	public override UIMenu[] focusableMenus {
+		get {
+			return new UIMenu[]{};
+		}
+	}
+
 	public virtual void ReceivedRematchRequest() {
 	}
 
