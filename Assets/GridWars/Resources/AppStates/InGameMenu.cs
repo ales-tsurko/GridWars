@@ -6,26 +6,29 @@ public class InGameMenu {
 	public PlayingGameState playingGameState;
 	public Player player;
 	public MenuAnchor menuPlacement;
-
-	public void Show() {
-		player.inGameMenu = this;
-		App.shared.ResetMenu();
-		App.shared.menu.Hide();
-		Reset();
-	}
 		
-	public void Hide() {
+	public void Destroy() {
 		if (menu != null) {
 			menu.Destroy();
 			menu = null;
 			player.inGameMenu = null;
 			player = null;
 		}
+	}
 
-		App.shared.menu.Show();
+	public void Show() {
+		menu.Show();
+	}
+
+	public void Hide() {
+		menu.Hide();
 	}
 
 	public void ReadInput () {
+		if (menu == null) {
+			return;
+		}
+
 		if (inputs.toggleMenu.WasPressed) {
 			ToggleMenuActivated();
 		}
@@ -51,10 +54,10 @@ public class InGameMenu {
 		}
 	}
 
-	void Reset() {
-		if (menu != null) {
-			menu.Destroy();
-		}
+	public void Setup() {
+		player.inGameMenu = this;
+		App.shared.ResetMenu();
+		App.shared.menu.Hide();
 
 		menu = UI.Menu();
 
@@ -65,13 +68,6 @@ public class InGameMenu {
 		menu.selectsOnShow = false;
 		menu.inputs = inputs;
 		menu.Show();
-
-		if (App.shared.matchmaker.menu.isOpen) {
-			DisconnectMatchmakerMenu();
-		}
-		else {
-			ConnectMatchmakerMenu();
-		}
 	}
 
 	void ToggleMenuActivated() {
@@ -97,6 +93,8 @@ public class InGameMenu {
 			
 		isOpen = true;
 
+		App.shared.matchmaker.menu.Close();
+
 		menu.Reset();
 		menu.UseDefaultBackgroundColor();
 		menu.anchor = MenuAnchor.MiddleCenter;
@@ -117,9 +115,9 @@ public class InGameMenu {
 		menu.Focus();
 	}
 
-	void Close() {
+	public void Close() {
 		if (player.opponent.inGameMenu != null) {
-			player.opponent.inGameMenu.menu.Show();
+			player.opponent.inGameMenu.Show();
 		}
 
 		isOpen = false;

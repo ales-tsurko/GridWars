@@ -56,7 +56,7 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	private bool _isProcessingDestroyQueue = false;
 
-	public bool testEndOfGameMode = false;
+	public bool testEndOfGameMode = true;
 
 	public static App shared {
 		get {
@@ -83,6 +83,11 @@ public class App : MonoBehaviour, AppStateOwner {
 		notificationCenter = new NotificationCenter();
 
 		menu = UI.Menu();
+		notificationCenter.NewObservation()
+			.SetNotificationName(UIMenu.UIMenuShowedNotification)
+			.SetSender(menu)
+			.SetAction(MenuOpened)
+			.Add();
 
 		prefs = new Prefs();
 		prefs.Load();
@@ -120,6 +125,10 @@ public class App : MonoBehaviour, AppStateOwner {
 		mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
+	}
+
+	void MenuOpened(Notification n) {
+		matchmaker.menu.Close();
 	}
 
     void SetupResolution() {

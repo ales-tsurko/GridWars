@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using InControl;
 
 public class UIMenu : UIElement {
+	public static string UIMenuShowedNotification = "UIMenuShowedNotification";
+
 	Image image;
 
 	public Vector2 itemSpacing = new Vector2(0f, 18f); //TODO: match with font size?
@@ -306,6 +308,11 @@ public class UIMenu : UIElement {
 		}
 
 		ApplyLayout();
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(UIMenuShowedNotification)
+			.SetSender(this)
+			.Post();
     }
 
 	public List<UIButton>selectableItems {

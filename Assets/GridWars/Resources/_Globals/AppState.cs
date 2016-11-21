@@ -126,6 +126,16 @@ public class AppState {
 		}
 	}
 
+	public virtual void ConfigureForOpenMatchmakerMenu() {
+		DisconnectMatchmakerMenu();
+		menu.Hide();
+	}
+
+	public virtual void ConfigureForClosedMatchmakerMenu() {
+		ConnectMatchmakerMenu();
+		menu.Show();
+	}
+
 	public virtual void ConnectMatchmakerMenu() {
 		//app.Log("ConnectMatchmakerMenu", this);
 		//app.Log("matchmaker.menu: " + matchmaker.menu, this);

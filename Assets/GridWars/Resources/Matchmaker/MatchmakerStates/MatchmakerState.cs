@@ -64,21 +64,25 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 
 	public virtual void ConfigureForOpen() {
 		//app.Log("ConfigureForOpen", this);
-		app.menu.Hide();
 		matchmaker.menu.SetAnchor(MenuAnchor.MiddleCenter);
 		matchmaker.menu.UseDefaultBackgroundColor();
 		matchmaker.menu.selectsOnShow = true;
 		matchmaker.menu.isInteractible = true;
-		app.state.DisconnectMatchmakerMenu();
+
+		if (app.state != null) {
+			app.state.ConfigureForOpenMatchmakerMenu();
+		}
 	}
 
 	public virtual void ConfigureForClosed() {
 		//app.Log("ConfigureForClosed", this);
-		ConnectMatchmakerMenu();
 		matchmaker.menu.SetAnchor(MenuAnchor.TopCenter);
 		matchmaker.menu.backgroundColor = Color.clear;
 		matchmaker.menu.selectsOnShow = false;
-		app.menu.Show();
+
+		if (app.state != null) {
+			app.state.ConfigureForClosedMatchmakerMenu();
+		}
 	}
 
 	/*

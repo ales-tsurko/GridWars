@@ -24,13 +24,31 @@ public class PlayingGameState : AppState {
 			matchmaker.menu.Hide();
 		}
 
-		ShowInGameMenus();
+		app.ResetMenu();
+
+		inGameMenus = new List<InGameMenu>();
+
+		if (app.battlefield.localPlayers.Count == 0) {
+			AddInGameMenu(app.battlefield.player1);
+		}
+		else {
+			foreach (var player in app.battlefield.localPlayers) {
+				AddInGameMenu(player);
+			}
+		}
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
 		App.shared.PlayAppSoundNamed("GameStart");
 
 		menu.Hide();
+
+		if (matchmaker.menu.isOpen) {
+			matchmaker.menu.Close();
+		}
+		else {
+			ConfigureForClosedMatchmakerMenu();
+		}
 
 		battlefield.SoftReset();
 
@@ -50,7 +68,7 @@ public class PlayingGameState : AppState {
 
 		menu.Show();
 
-		HideInGameMenus();
+		DestroyInGameMenus();
 	}
 
 	public override void Update() {
@@ -123,7 +141,7 @@ public class PlayingGameState : AppState {
 	*/
 
 	void ShowLostConnection() {
-		HideInGameMenus();
+		DestroyInGameMenus();
 
 		menu.AddNewText().SetText("Lost Connection");
 		menu.AddNewButton().SetText("Leave").SetAction(Leave);
@@ -136,33 +154,16 @@ public class PlayingGameState : AppState {
 
 	// In Game Menu
 
-	public void HideInGameMenus() {
+	public void DestroyInGameMenus() {
 		foreach(var inGameMenu in inGameMenus) {
-			inGameMenu.Hide();
+			inGameMenu.Destroy();
 		}
 
 		inGameMenus = new List<InGameMenu>();
-
-		app.ResetMenu(); //TODO: Needed?
 	}
 
 	public InGameMenu InGameMenuForPlayer(Player player) {
 		return inGameMenus.Find(m => m.player == player);
-	}
-
-	void ShowInGameMenus() {
-		app.ResetMenu();
-
-		inGameMenus = new List<InGameMenu>();
-
-		if (app.battlefield.localPlayers.Count == 0) {
-			AddInGameMenu(app.battlefield.player1);
-		}
-		else {
-			foreach (var player in app.battlefield.localPlayers) {
-				AddInGameMenu(player);
-			}
-		}
 	}
 
 	void AddInGameMenu(Player player) {
@@ -170,7 +171,7 @@ public class PlayingGameState : AppState {
 		inGameMenu.playingGameState = this;
 		inGameMenu.player = player;
 		inGameMenu.menuPlacement = player.localNumber == 2 ? MenuAnchor.TopRight : MenuAnchor.TopLeft;
-		inGameMenu.Show();
+		inGameMenu.Setup();
 
 		inGameMenus.Add(inGameMenu);
 	}
@@ -183,17 +184,40 @@ public class PlayingGameState : AppState {
 			else {
 				return null;
 			}
-
 		}
 	}
 
 	//matchmaker
 
+	public override void ConfigureForOpenMatchmakerMenu() {
+		//don't call base
+		primaryInGameMenu.DisconnectMatchmakerMenu();
+
+		foreach (var menu in inGameMenus) {
+			menu.Close();
+		}
+
+		//inGameMenu.Close shows opponents menu
+		foreach (var menu in inGameMenus) {
+			menu.Hide();
+		}
+	}
+
+	public override void ConfigureForClosedMatchmakerMenu() {
+		//don't call base
+		ConnectMatchmakerMenu();
+		foreach (var menu in inGameMenus) {
+			menu.Show();
+		}
+	}
+
 	public override void ConnectMatchmakerMenu() {
+		//don't call base
 		primaryInGameMenu.ConnectMatchmakerMenu();
 	}
 
 	public override void DisconnectMatchmakerMenu() {
+		//don't call base
 		primaryInGameMenu.DisconnectMatchmakerMenu();
 	}
 }
