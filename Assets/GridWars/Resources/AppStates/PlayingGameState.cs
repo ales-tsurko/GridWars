@@ -12,11 +12,12 @@ public class PlayingGameState : AppState {
 			if (inGameMenus.Count == 2) {
 				return new UIMenu[]{ inGameMenus[0].menu, inGameMenus[1].menu, menu, matchmaker.menu };
 			}
-			else {
+			else if (inGameMenus.Count == 1) {
 				return new UIMenu[]{ inGameMenus[0].menu, menu, matchmaker.menu };
 			}
-
-
+			else {
+				return new UIMenu[]{ menu, matchmaker.menu };
+			}
 		}
 	}
 
