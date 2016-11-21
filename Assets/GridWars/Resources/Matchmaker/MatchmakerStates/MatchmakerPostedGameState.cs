@@ -73,6 +73,25 @@ public class MatchmakerPostedGameState : MatchmakerState {
 		matchmaker.menu.Focus();
 	}
 
+	public void HandlePostGameFailed(JSONObject data) {
+		matchmaker.menu.Reset();
+		matchmaker.menu.AddNewText().SetText(Color.red.ColoredTag("Error: " + data.GetField("error").str));
+		matchmaker.menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
+		matchmaker.menu.Focus();
+	}
+
+	//possible when both players challenge each other at the same time (race condition)
+	public override void HandleGamePosted(JSONObject data) {
+		base.HandleGamePosted(data);
+
+		var game = account.GameWithId(data.GetField("id").str);
+
+		if (game.client == account) {
+			account.game = game;
+			TransitionTo(new MatchmakerReceivedChallengeState());
+		}
+	}
+
 	void Back() {
 		TransitionTo(new MatchmakerPostAuthState());
 	}
