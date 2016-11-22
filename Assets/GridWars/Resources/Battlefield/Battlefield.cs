@@ -168,6 +168,7 @@ public class Battlefield : MonoBehaviour {
 			"App",
 			"BoltControl",
 			"BoltBehaviours",
+			"Matchmaker",
 			"SocketIO",
 			"InControl"
 		});

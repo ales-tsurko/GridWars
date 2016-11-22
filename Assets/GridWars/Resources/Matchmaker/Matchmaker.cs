@@ -2,6 +2,7 @@
 using System.Collections;
 using SocketIO;
 using System;
+using System.Collections.Generic;
 
 public interface MatchmakerDelegate {
 	void MatchmakerConnected();
@@ -10,17 +11,21 @@ public interface MatchmakerDelegate {
 	void MatchmakerReceivedMessage(JSONObject message);
 }
 
-public class Matchmaker : AppStateOwner {
-	public Network network;
+public class Matchmaker : MonoBehaviour, AppStateOwner {
 	public MatchmakerDelegate matchmakerDelegate;
 
 	public static string MatchmakerConnectedNotification = "MatchmakerConnectedNotification";
 	public static string MatchmakerDisconnectedNotification = "MatchmakerDisconnectedNotification";
 	public static string MatchmakerErroredNotification = "MatchmakerErroredNotification";
 
+	bool isConnecting;
 	public bool isConnected;
 
 	public MatchmakerMenu menu;
+
+	Queue<SocketIOEvent> events;
+
+	public GameObject socketIoPrefab;
 
 	public AppState state { get; set; }
 	public MatchmakerState matchmakerState {
@@ -29,32 +34,93 @@ public class Matchmaker : AppStateOwner {
 		}
 	}
 
-	public Matchmaker() {
-		socket = GameObject.Find("SocketIO").GetComponent<SocketIOComponent>();
-
-		socket.On("connect", SocketConnected);
-		socket.On("disconnect", SocketDisconnected);
-		socket.On("error", SocketError);
-		socket.On("message", Receive);
-
+	public void Setup() {
 		menu = new GameObject().AddComponent<MatchmakerMenu>();
 		state = new MatchmakerDisconnectedState();
 		state.matchmaker = this;
 		state.owner = this;
 		state.EnterFrom(null);
 
+		events = new Queue<SocketIOEvent>();
+
 		//ws://gw-matchmaker.herokuapp.com/socket.io/?EIO=4&transport=websocket
 		//ws://localhost:8080/socket.io/?EIO=4&transport=websocket
 	}
 
+	private System.Object lockObj = new System.Object();
+
+	void EnqueueEvent(SocketIOEvent e) {
+		lock(lockObj) {
+			events.Enqueue(e);
+		}
+	}
+
+	void ClearQueue() {
+		lock(lockObj) {
+			events.Clear();
+		}
+	}
+
+	SocketIOEvent DequeueEvent() {
+		SocketIOEvent e;
+		lock(lockObj) {
+			if (events.Count > 0) {
+				e = events.Dequeue();
+			}
+			else {
+				e = null;
+			}
+		}
+		return e;
+	}
+
+	public void Update() {
+		state.Update();
+
+		var e = DequeueEvent();
+		if (e != null) {
+			switch (e.name) {
+			case "connect":
+				SocketConnected(e);
+				break;
+			case "disconnect":
+				SocketDisconnected(e);
+				break;
+			case "error":
+				SocketError(e);
+				break;
+			case "message":
+				Receive(e);
+				break;
+			}
+		}
+
+	}
+
 	public void Connect() {
+		if (isConnecting) {
+			throw new Exception("Already connecting to Matchmaker");
+		}
+
+		isConnecting = true;
+
 		if (isConnected) {
 			throw new Exception("Already connected to Matchmaker");
 		}
 
 		isConnected = false;
 
+		socket = Instantiate(socketIoPrefab).GetComponent<SocketIOComponent>();
+		socket.gameObject.name = "SocketIO";
+		socket.gameObject.transform.parent = transform;
+
+		socket.On("connect", EnqueueEvent);
+		socket.On("disconnect", EnqueueEvent);
+		socket.On("error", EnqueueEvent);
+		socket.On("message", EnqueueEvent);
+
 		App.shared.Log("Connect: " + socket.url, this);
+
 		socket.Connect();
 	}
 
@@ -68,6 +134,8 @@ public class Matchmaker : AppStateOwner {
 	SocketIOComponent socket;
 
 	void SocketConnected(SocketIOEvent e) {
+		isConnecting = false;
+
 		App.shared.Log("SocketConnected", this);
 		isConnected = true;
 		if (matchmakerDelegate != null) {
@@ -79,9 +147,36 @@ public class Matchmaker : AppStateOwner {
 			.Post();
 	}
 
+	void DestroySocket() {
+		ClearQueue();
+
+		if (socket != null) {
+			socket.Close();
+
+			socket.Off("connect", EnqueueEvent);
+			socket.Off("disconnect", EnqueueEvent);
+			socket.Off("error", EnqueueEvent);
+			socket.Off("message", EnqueueEvent);
+
+			Destroy(socket.gameObject);
+		}
+
+
+		socket = null;
+	}
+
 	void SocketDisconnected(SocketIOEvent e) {
-		App.shared.Log("SocketDisconnected", this);
+		if (socket == null) { //SocketIOComponent sometimes sends events twice
+			return;
+		}
+
+		DestroySocket();
+
+		isConnecting = false;
 		isConnected = false;
+
+		App.shared.Log("SocketDisconnected", this);
+
 		if (matchmakerDelegate != null) {
 			matchmakerDelegate.MatchmakerDisconnected();
 		}
@@ -91,33 +186,25 @@ public class Matchmaker : AppStateOwner {
 			.Post();
 	}
 
-	bool receivedError = false;
-	private System.Object lockObj = new System.Object();
-
 	void SocketError(SocketIOEvent e) {
-		lock(lockObj) {
-			receivedError = true;
-		}
-	}
-
-	public void Update() {
-		state.Update();
-
-		if (receivedError) {
-			lock(lockObj) {
-				receivedError = false;
-			}
-
-			App.shared.Log("SocketError", this);
-			if (matchmakerDelegate != null) {
-				matchmakerDelegate.MatchmakerErrored();
-			}
-			App.shared.notificationCenter.NewNotification()
-				.SetName(MatchmakerErroredNotification)
-				.SetSender(this)
-				.Post();
+		if (socket == null) { //SocketIOComponent sometimes sends events twice
+			return;
 		}
 
+		DestroySocket();
+
+		isConnecting = false;
+		isConnected = false;
+
+		App.shared.Log("SocketError", this);
+		isConnected = false;
+		if (matchmakerDelegate != null) {
+			matchmakerDelegate.MatchmakerErrored();
+		}
+		App.shared.notificationCenter.NewNotification()
+			.SetName(MatchmakerErroredNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	// Messages

@@ -16,6 +16,10 @@ public class Game {
 		if (clientData != null && !clientData.IsNull) {
 			client = App.shared.account.AccountWithId(clientData.GetField("id").n);
 		}
+
+		host.game = this;
+
+		host.lastUpdateTime = Time.time;
 	}
 
 	public JSONObject publicPropertyData {

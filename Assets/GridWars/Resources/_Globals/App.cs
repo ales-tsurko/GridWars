@@ -109,7 +109,8 @@ public class App : MonoBehaviour, AppStateOwner {
 
 		account = new Account();
 
-		matchmaker = new Matchmaker();
+		matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
+		matchmaker.Setup();
 		matchmaker.menu.Hide();
 
 		network = new GameObject().AddComponent<Network>();
@@ -156,7 +157,6 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	void Update() {
-		matchmaker.Update();
         if (state != null) {
             state.Update();
         }

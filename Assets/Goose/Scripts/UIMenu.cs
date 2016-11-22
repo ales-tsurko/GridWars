@@ -415,7 +415,7 @@ public class UIMenu : UIElement {
 	}
 
 	void MenuSelectedItem(Notification n) {
-		if (n.sender != this) {
+		if (n.sender as UIMenu != this) {
 			if (selectedItem != null) {
 				selectedItem.Deselect();
 			}

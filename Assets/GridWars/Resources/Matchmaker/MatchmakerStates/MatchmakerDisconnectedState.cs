@@ -5,8 +5,6 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 
 	// AppState
 
-	bool isConnecting = false;
-
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -15,12 +13,8 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	}
 
 	void Connect() {
-		if (!isConnecting) {
-			app.account.ResetPlayerList();
-			//TODO: countdown?
-			matchmaker.Connect();
-			isConnecting = true;
-		}
+		app.account.ResetPlayerList();
+		matchmaker.Connect();
 	}
 
 	//app.state
@@ -48,7 +42,7 @@ public class MatchmakerDisconnectedState : MatchmakerState {
 	}
 
 	IEnumerator ReconnectCoroutine() {
-		yield return new WaitForSeconds(0.25f);
+		yield return new WaitForSeconds(1f);
 		Connect();
 	}
 
