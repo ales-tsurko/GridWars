@@ -96,4 +96,9 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		base.HandlePlayerBecameUnavailableToPlay(data);
 		UpdateMenu();
 	}
+
+	public override void HandlePlayerChangedScreenName(JSONObject data) {
+		base.HandlePlayerChangedScreenName(data);
+		UpdateMenu();
+	}
 }
