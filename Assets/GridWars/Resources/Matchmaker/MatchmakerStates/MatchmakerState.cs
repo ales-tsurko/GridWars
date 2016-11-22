@@ -194,7 +194,7 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 		}
 		else {
 			var client = data.GetField("client");
-			if (client != null && (client.GetField("id").n == account.id)) {
+			if (client != null && !client.IsNull && (client.GetField("id").n == account.id)) {
 				HandleMyGameCancelled();
 			}
 		}

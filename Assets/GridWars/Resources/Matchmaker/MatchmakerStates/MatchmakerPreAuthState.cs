@@ -30,11 +30,6 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		account.SetFromData(data);
 		account.SaveToPrefs();
 
-		foreach (var obj in data.GetField("players").list) {
-			var playerAccount = new Account();
-			playerAccount.SetFromData(obj);
-			app.account.connectedAccounts.Add(playerAccount);
-		}
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 

@@ -132,6 +132,23 @@ public class Account {
 		if ((property = accountData.GetField("isAvailableToPlay")) != null && !property.IsNull) {
 			isAvailableToPlay = property.b;
 		}
+
+		if ((property = accountData.GetField("players")) != null && !property.IsNull) {
+			foreach (var otherAccountData in accountData.GetField("players").list) {
+				var playerAccount = new Account();
+				playerAccount.SetFromData(otherAccountData);
+				connectedAccounts.Add(playerAccount);
+			}
+
+			foreach (var otherAccountData in accountData.GetField("players").list) {
+				if ((property = otherAccountData.GetField("game")) != null && !property.IsNull) {
+					var game = new Game();
+					game.SetFromData(otherAccountData.GetField("game"));
+				}
+			}
+		}
+
+		lastUpdateTime = Time.time;
 	}
 
 	public JSONObject publicPropertyData {
@@ -174,6 +191,7 @@ public class Account {
 			App.shared.Log("Account missing: " + accountData.ToString(), this);
 		}
 		else {
+			//App.shared.Log("PlayerBecameAvailableToPlay: " + account.screenName);
 			account.isAvailableToPlay = true;
 			account.game = null;
 			account.lastUpdateTime = Time.time;
@@ -186,6 +204,7 @@ public class Account {
 			App.shared.Log("Account missing: " + accountData.ToString(), this);
 		}
 		else {
+			//App.shared.Log("PlayerBecameUnavailableToPlay: " + account.screenName);
 			account.isAvailableToPlay = false;
 			account.lastUpdateTime = Time.time;
 		}
@@ -194,15 +213,17 @@ public class Account {
 	public void GamePosted(JSONObject gameData) {
 		var game = new Game();
 		game.SetFromData(gameData);
-		game.host.game = game;
-		game.host.lastUpdateTime = Time.time;
+		//App.shared.Log("GamePosted: " + game.host.id);
 	}
 
 	public void GameCancelled(JSONObject gameData) {
 		var host = gameData.GetField("host");
 
+		//App.shared.Log("GameCancelled: " + host.GetField("id").n);
+
 		var account = AccountWithId(host.GetField("id").n);
 		if (account != null) {
+			//App.shared.Log(account.screenName + ": account.game = null;", this);
 			account.game = null;
 			account.lastUpdateTime = Time.time;
 		}
