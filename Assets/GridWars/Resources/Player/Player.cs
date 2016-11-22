@@ -321,7 +321,9 @@ public class Player : MonoBehaviour {
 		else {
 			//give control to client
 			//App.shared.Log("AssignControl: " + gameUnit);
-			gameUnit.entity.AssignControl(App.shared.network.connection);
+			if (App.shared.network.connection != null) {
+				gameUnit.entity.AssignControl(App.shared.network.connection);
+			}
 		}
 	}
 
