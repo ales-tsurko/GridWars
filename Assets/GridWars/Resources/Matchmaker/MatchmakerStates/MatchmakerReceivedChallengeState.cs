@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MatchmakerReceivedChallengeState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
+		openSoundtrackName = "Ready";
+
 		base.EnterFrom(state);
 
 		matchmaker.menu.Open();

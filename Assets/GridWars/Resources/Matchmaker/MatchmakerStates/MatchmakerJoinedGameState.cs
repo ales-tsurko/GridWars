@@ -4,8 +4,8 @@ public class MatchmakerJoinedGameState : MatchmakerState {
 	// AppState
 
 	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
 		openSoundtrackName = "Ready";
+		base.EnterFrom(state);
 
 		matchmaker.menu.Open();
 	}
