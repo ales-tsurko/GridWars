@@ -29,6 +29,9 @@ public class ShowOutcomeState : PostGameSubState {
 				}
 			}
 		} else {
+			if (showRematch) {
+				app.PlayAppSoundNamed("Victory");
+			}
 			title = postGameState.victoriousPlayer.description + " is Victorious!";
 		}
 
