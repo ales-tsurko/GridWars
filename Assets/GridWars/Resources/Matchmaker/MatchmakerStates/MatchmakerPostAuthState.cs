@@ -58,9 +58,30 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		TransitionTo(state);
 	}
 
+	Account previousPotentialOpponent;
+	Game previousPotentialOpponentGame;
+
+	void PlayOpponentSounds() {
+		if (account.potentialOpponent != null) {
+			if (account.potentialOpponent.game != null) {
+				if (previousPotentialOpponent != null) {
+				}
+				if (previousPotentialOpponent == null || previousPotentialOpponentGame == null) {
+					App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
+				}
+			}
+			else if (previousPotentialOpponent == null) {
+				App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
+			}
+		}
+	}
+
 	public override void HandlePlayerConnected(JSONObject data) {
+		previousPotentialOpponent = account.potentialOpponent;
+		previousPotentialOpponentGame = previousPotentialOpponent != null ? previousPotentialOpponent.game : null;
 		base.HandlePlayerConnected(data);
 		UpdateMenu();
+		PlayOpponentSounds();
 	}
 
 	public override void HandlePlayerDisconnected(JSONObject data) {
@@ -69,6 +90,9 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	}
 
 	public override void HandleGamePosted(JSONObject data) {
+		previousPotentialOpponent = account.potentialOpponent;
+		previousPotentialOpponentGame = previousPotentialOpponent != null ? previousPotentialOpponent.game : null;
+
 		base.HandleGamePosted(data);
 
 		var game = account.GameWithId(data.GetField("id").str);
@@ -79,6 +103,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		}
 		else {
 			UpdateMenu();
+			PlayOpponentSounds();
 		}
 	}
 
