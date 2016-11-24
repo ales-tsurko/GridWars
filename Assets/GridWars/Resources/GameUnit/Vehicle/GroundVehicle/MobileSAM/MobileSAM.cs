@@ -61,7 +61,8 @@ public class MobileSAM : GroundVehicle {
 	}
 
 	private bool ShouldTargetGoundNow() {
-		// this is kind of a weird rule, but we need to avoid a stalemate when only SAMs are left
+		// this is aweird rule, 
+		// but we need some way to avoid a stalemate when only SAMs are left
 
 		// if either side has no towers
 		if (player.fortress.towers.Count == 0 || player.opponent.fortress.towers.Count == 0) {
