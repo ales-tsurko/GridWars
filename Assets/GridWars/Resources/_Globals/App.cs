@@ -14,8 +14,7 @@ using System.Linq;
 
 public class App : MonoBehaviour, AppStateOwner {
 	//test github push
-    [Range(.01f, 5)]
-    public float gameSpeed = 1;
+
 	private static App _shared;
 	public AssemblyCSharp.TimerCenter timerCenter;
 	public int timeCounter = 0;
@@ -254,9 +253,6 @@ public class App : MonoBehaviour, AppStateOwner {
 	// --- Destroying Objects -----------
 
 	void LateUpdate() {
-        #if UNITY_EDITOR
-        Time.timeScale = Mathf.Clamp(gameSpeed, 0.01f, 5);
-        #endif
 		ProcessDestroyQueue();
 	}
 
