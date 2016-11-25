@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MatchmakerReceivedChallengeState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
-		openSoundtrackName = "Ready";
+		openSoundtrackName = "ReadyLoop";
 
 		base.EnterFrom(state);
 
