@@ -137,12 +137,13 @@ public class AppState {
 	}
 
 	public virtual void ConfigureForOpenMatchmakerMenu() {
+		//App.shared.Log("ConfigureForOpenMatchmakerMenu", this);
 		DisconnectMatchmakerMenu();
 		menu.Hide();
 	}
 
 	public virtual void ConfigureForClosedMatchmakerMenu() {
-		//Debug.Log("ConfigureForClosedMatchmakerMenu");
+		//App.shared.Log("ConfigureForClosedMatchmakerMenu", this);
 		ConnectMatchmakerMenu();
 		menu.Show();
 	}

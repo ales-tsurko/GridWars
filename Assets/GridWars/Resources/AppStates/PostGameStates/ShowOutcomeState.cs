@@ -7,6 +7,8 @@ public class ShowOutcomeState : PostGameSubState {
 		base.EnterFrom(state);
 
 		ShowMenu(true);
+
+		ConnectMatchmakerMenu();
 	}
 
 	void ShowMenu(bool showRematch) {

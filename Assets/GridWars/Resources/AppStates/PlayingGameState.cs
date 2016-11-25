@@ -200,6 +200,7 @@ public class PlayingGameState : AppState {
 	//matchmaker
 
 	public override void ConfigureForOpenMatchmakerMenu() {
+		//App.shared.Log("ConfigureForOpenMatchmakerMenu", this);
 		//don't call base
 		primaryInGameMenu.DisconnectMatchmakerMenu();
 
@@ -214,6 +215,7 @@ public class PlayingGameState : AppState {
 	}
 
 	public override void ConfigureForClosedMatchmakerMenu() {
+		//App.shared.Log("ConfigureForClosedMatchmakerMenu", this);
 		//don't call base
 		ConnectMatchmakerMenu();
 		foreach (var menu in inGameMenus) {
