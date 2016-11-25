@@ -9,14 +9,12 @@ public class PlayingGameState : AppState {
 
 	public override UIMenu[] focusableMenus {
 		get {
-			if (inGameMenus.Count == 2) {
-				return new UIMenu[]{ inGameMenus[0].menu, inGameMenus[1].menu, menu, matchmaker.menu };
-			}
-			else if (inGameMenus.Count == 1) {
-				return new UIMenu[]{ inGameMenus[0].menu, menu, matchmaker.menu };
+			var openMenu = inGameMenus.Find(m => m.isOpen);
+			if (openMenu == null) {
+				return new UIMenu[]{ menu };
 			}
 			else {
-				return new UIMenu[]{ menu, matchmaker.menu };
+				return new UIMenu[]{ openMenu.menu, matchmaker.menu };
 			}
 		}
 	}
@@ -49,7 +47,7 @@ public class PlayingGameState : AppState {
 			}
 		}
 
-		primaryInGameMenu.menu.Focus();
+		//primaryInGameMenu.menu.Focus();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
