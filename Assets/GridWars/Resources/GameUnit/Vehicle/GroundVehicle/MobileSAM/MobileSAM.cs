@@ -26,6 +26,16 @@ public class MobileSAM : GroundVehicle {
 		}
 	}
 
+	public override void ServerFixedUpdate(){
+		base.ServerFixedUpdate();
+
+		if (ShouldTargetGoundNow()) {
+			foreach (var weapon in Weapons()) {
+				weapon.SetCanTargetGround(true);
+			}
+		}
+	}
+
 	public override GameObject DefaultTarget() {
 		return ClosestOfObjects(EnemyBuildings());
 	}
@@ -48,5 +58,22 @@ public class MobileSAM : GroundVehicle {
 		AdjustWeaponsRangeByFactor(1.2f);
 		AdjustWeaponsFireRateByFactor(1.5f);
 		AdjustHitPointGenByFactor(1.5f);
+	}
+
+	private bool ShouldTargetGoundNow() {
+		// this is aweird rule, 
+		// but we need some way to avoid a stalemate when only SAMs are left
+
+		// if either side has no towers
+		if (player.fortress.towers.Count == 0 || player.opponent.fortress.towers.Count == 0) {
+			return true;
+		}
+
+		// we only have a SAM tower
+		if (player.fortress.towers.Count == 1 && player.fortress.towers[0].unitPrefab.GetComponent<MobileSAM>() != null) {
+			return true;
+		}
+
+		return false;
 	}
 }
