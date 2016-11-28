@@ -242,4 +242,23 @@ public class Battlefield : MonoBehaviour {
 	public bool isPvsAI() {
 		return player1.isLocal == true && player2.npcModeOn == true;
 	}
+
+    public GameType GetGameType(){
+        if (isInternetPVP) {
+            return GameType.InternetPVP;
+        }
+        if (isPvP() && !isInternetPVP) {
+            return GameType.SharedScreenPVP;
+        }
+        if (isAIvsAI()) {
+            return GameType.AIvsAI;
+        }
+        if (!isPvP() && !isAIvsAI()) {
+            return GameType.PlayervsAI;
+        }
+        return GameType.Unknown;
+    }
 }
+
+public enum GameType {Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI}
+

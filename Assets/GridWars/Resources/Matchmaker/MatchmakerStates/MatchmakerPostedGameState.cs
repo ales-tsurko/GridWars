@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.Analytics;
+using System.Collections.Generic;
 
 public class MatchmakerPostedGameState : MatchmakerState {
 	public Account opponent;
@@ -6,9 +8,23 @@ public class MatchmakerPostedGameState : MatchmakerState {
 	// AppState
 
 	public override void EnterFrom(AppState state) {
-		base.EnterFrom(state);
-		matchmaker.menu.Open();
-	}
+        base.EnterFrom(state);
+        matchmaker.menu.Open();
+        string oScreenName = "null";
+        string oID = "null";
+        if (App.shared.account.opponent != null) {
+            oScreenName = App.shared.account.screenName;
+            oID = App.shared.account.opponent.GetID();
+        }
+        Analytics.CustomEvent("PostedGame", new Dictionary<string, object>
+            {
+                { "platform", Application.platform.ToString() },
+                { "id", App.shared.account.GetID() },
+                { "screenName", App.shared.account.screenName },
+                { "opponentId", oID },
+                { "opponentScreenName", oScreenName }
+            });
+    }
 
 	// MatchmakerMenuDelegate
 

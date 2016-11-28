@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class Account {
 	public float id;
+    public string GetID (){
+        return id == null ? "null" : id.ToString();
+    }
 	public string screenName;
 	public string email;
 	public string accessToken;
