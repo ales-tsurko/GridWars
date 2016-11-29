@@ -257,7 +257,12 @@ public class Battlefield : MonoBehaviour {
             return GameType.SharedScreenPVP;
         }
         if (isAIvsAI()) {
-            return GameType.AIvsAI;
+			if (player1.isTutorialMode) {
+				return GameType.Tutorial;
+			}
+			else {
+				return GameType.AIvsAI;
+			}
         }
         if (!isPvP() && !isAIvsAI()) {
             return GameType.PlayervsAI;
@@ -266,5 +271,5 @@ public class Battlefield : MonoBehaviour {
     }
 }
 
-public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI }
+public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI, Tutorial }
 

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using UnityEngine.Analytics;
 using System.Linq;
 
@@ -301,30 +300,38 @@ public class Account {
 	}
 
     public void LogEvent(string eventName){
-        Dictionary <string, object> dict = new Dictionary<string, object>
-        {
-            { "platform", Application.platform.ToString() },
-            { "id", id.ToString()},
-            { "screenName", screenName },
-        };
-       
-        if (opponent != null) {
-            dict.Add("opponentId", opponent.id.ToString());
-            dict.Add("opponentScreenName", opponent.screenName);
-        }
-        if (App.shared.battlefield !=null && App.shared.battlefield.isPlayingGame) {
-            dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
-        }
-        if (App.shared.config == null) {
-            Debug.LogError("Event Not Sent, config is null");
-            return;
-        }
-        if (App.shared.config.name != "Release") {
-            string t = "<color=green>Event Would Be Sent: " + eventName + "</color>\n" + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray());
-            Debug.Log(t);
-        } else {
-            Analytics.CustomEvent(eventName, dict);
-        }
+		try {
+			Dictionary <string, object> dict = new Dictionary<string, object>
+			{
+				{ "platform", Application.platform.ToString() },
+				{ "id", id.ToString()},
+				{ "screenName", screenName },
+				{ "handicap", App.shared.prefs.npcHandicap }
+			};
+
+			if (opponent != null) {
+				dict.Add("opponentId", opponent.id.ToString());
+				dict.Add("opponentScreenName", opponent.screenName);
+			}
+
+			if (App.shared.battlefield !=null && App.shared.battlefield.isPlayingGame) {
+				dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
+			}
+
+			if (App.shared.config == null) {
+				Debug.LogError("Event Not Sent, config is null");
+				return;
+			}
+
+			if (App.shared.config.name == "Release") {
+				Analytics.CustomEvent(eventName, dict);
+			} else {
+				App.shared.Log("Would Send Event: " + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray()), this);
+			}
+		}
+		catch (System.Exception e) {
+			App.shared.Log("LogEvent exception:\n" + e.StackTrace, this);
+		}
 
     }
 }

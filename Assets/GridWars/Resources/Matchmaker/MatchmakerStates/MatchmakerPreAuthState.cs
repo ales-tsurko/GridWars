@@ -30,6 +30,8 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		account.SetFromData(data);
 		account.SaveToPrefs();
 
+		account.LogEvent("Authenticated");
+
 		TransitionTo(new MatchmakerPostAuthState());
 	}
 
