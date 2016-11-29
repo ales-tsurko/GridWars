@@ -15,6 +15,7 @@ public class Game {
 		var clientData = data.GetField("client");
 		if (clientData != null && !clientData.IsNull) {
 			client = App.shared.account.AccountWithId(clientData.GetField("id").n);
+			client.game = this;
 		}
 
 		host.game = this;

@@ -232,4 +232,10 @@ public class MatchmakerState : AppState, MatchmakerDelegate, MatchmakerMenuDeleg
 			.SetData(data)
 			.Post();
 	}
+
+	//MatchmakerMessenger
+
+	public void HandleTextMessage(JSONObject data) {
+		matchmaker.messenger.HandleTextMessage(data);
+	}
 }

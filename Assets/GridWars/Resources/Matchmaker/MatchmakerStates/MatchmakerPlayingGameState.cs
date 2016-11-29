@@ -12,7 +12,8 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Close();
-		matchmaker.menu.Hide();
+
+		matchmaker.messenger.Setup();
 
 		battlefield.isInternetPVP = true;
 		battlefield.isAiVsAi = false;

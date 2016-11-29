@@ -8,6 +8,10 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		}
 	}
 
+	public override void ConfigureForClosed() {
+		//to preserve messenger state, don't call base
+	}
+
 	public void CancelGame() {
 		matchmaker.Send("cancelGame");
 		TransitionTo(new MatchmakerPostAuthState());

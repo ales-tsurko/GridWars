@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
 
 public class PlayingGameState : AppState {
 	List<InGameMenu> inGameMenus;
@@ -9,14 +10,12 @@ public class PlayingGameState : AppState {
 
 	public override UIMenu[] focusableMenus {
 		get {
-			if (inGameMenus.Count == 2) {
-				return new UIMenu[]{ inGameMenus[0].menu, inGameMenus[1].menu, menu, matchmaker.menu };
-			}
-			else if (inGameMenus.Count == 1) {
-				return new UIMenu[]{ inGameMenus[0].menu, menu, matchmaker.menu };
+			var openMenu = inGameMenus.Find(m => m.isOpen);
+			if (openMenu == null) {
+				return new UIMenu[]{ menu };
 			}
 			else {
-				return new UIMenu[]{ menu, matchmaker.menu };
+				return new UIMenu[]{ openMenu.menu, matchmaker.menu };
 			}
 		}
 	}
@@ -49,7 +48,7 @@ public class PlayingGameState : AppState {
 			}
 		}
 
-		primaryInGameMenu.menu.Focus();
+		//primaryInGameMenu.menu.Focus();
 
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").FadeOut();
 
@@ -63,6 +62,22 @@ public class PlayingGameState : AppState {
 		battlefield.SoftReset();
 
 		app.StartCoroutine(StartGameAfterBattlefieldEmpty());
+        string oScreenName = "null";
+        string oID = "null";
+        if (App.shared.account.opponent != null) {
+            oScreenName = App.shared.account.screenName;
+            oID = App.shared.account.opponent.GetID();
+        }
+        Analytics.CustomEvent("PlayingGame", new Dictionary<string, object>
+            {
+                { "platform", Application.platform.ToString() },
+                { "id", App.shared.account.GetID() },
+                { "screenName", App.shared.account.screenName },
+                { "opponentId", oID },
+                { "opponentScreenName", oScreenName },
+                { "gameType", battlefield.GetGameType().ToString() }
+            }
+        );
 	}
 
 	IEnumerator StartGameAfterBattlefieldEmpty() {
@@ -202,6 +217,7 @@ public class PlayingGameState : AppState {
 	//matchmaker
 
 	public override void ConfigureForOpenMatchmakerMenu() {
+		//App.shared.Log("ConfigureForOpenMatchmakerMenu", this);
 		//don't call base
 		primaryInGameMenu.DisconnectMatchmakerMenu();
 
@@ -216,6 +232,7 @@ public class PlayingGameState : AppState {
 	}
 
 	public override void ConfigureForClosedMatchmakerMenu() {
+		//App.shared.Log("ConfigureForClosedMatchmakerMenu", this);
 		//don't call base
 		ConnectMatchmakerMenu();
 		foreach (var menu in inGameMenus) {

@@ -15,6 +15,7 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction toggleHotkeys;
 	public PlayerAction nextCamera;
 	public PlayerAction firstPersonCamera;
+	public PlayerAction focusMessenger;
 	public PlayerAction upItem;
 	public PlayerAction downItem;
 	public PlayerAction leftItem;
@@ -65,6 +66,8 @@ public class PlayerInputs : PlayerActionSet {
 		nextCamera = CreatePlayerAction("Next Camera");
 
 		firstPersonCamera = CreatePlayerAction("Unit Camera");
+
+		focusMessenger = CreatePlayerAction("Focus Messenger");
 
 		upItem = CreatePlayerAction("Up Item");
 		downItem = CreatePlayerAction("Down Item");
@@ -159,6 +162,8 @@ public class PlayerInputs : PlayerActionSet {
 
 		nextCamera.AddDefaultBinding(Key.C);
 		firstPersonCamera.AddDefaultBinding(Key.DownArrow);
+
+		focusMessenger.AddDefaultBinding(Key.M);
 
 		releaseChopper.AddDefaultBinding(Key.D);
 		releaseTanker.AddDefaultBinding(Key.F);

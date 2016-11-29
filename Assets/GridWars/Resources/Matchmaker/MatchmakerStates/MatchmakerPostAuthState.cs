@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using AssemblyCSharp;
 
 public class MatchmakerPostAuthState : MatchmakerState {
 	UIButton button;
@@ -7,49 +8,104 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
+		if (matchmaker.messenger.isEnabled) {
+			matchmaker.messenger.TearDown();
+		}
+
 		matchmaker.menu.Close();
 		matchmaker.menu.Show();
 	}
+
+	public override void WillExit() {
+		base.WillExit();
+
+		CancelStatusTimer();
+	}
+
 	// MatchmakerMenuDelegate
 
 	public override void ConfigureForClosed() {
 		base.ConfigureForClosed();
+
 		matchmaker.menu.Reset();
 		button = matchmaker.menu.AddNewButton();
-		UpdateMenu();
+		UpdateStatus();
 	}
 
-	void UpdateMenu() {
-		matchmaker.menu.isInteractible = false;
-		app.state.DisconnectMatchmakerMenu();
-		button.action = null;
-		button.data = null;
+	void UpdateStatus() {
+		if (matchmaker.menu.isOpen) {
+			return;
+		}
 
 		if (account.connectedAccounts.Count == 0) {
 			button.text = "Online";
+			button.action = null;
+			matchmaker.menu.isInteractible = false;
+			app.state.DisconnectMatchmakerMenu();
 		}
 		else {
-			var potentialOpponent = account.potentialOpponent;
-			if (potentialOpponent == null) {
-				button.text = account.connectedAccounts.Count + " Online";
+			button.text = account.connectedAccounts.Count + " Online";
+
+			if (account.connectedAccounts.Exists(a => a.status == AccountStatus.Searching)) {
+				button.text += ": " + Color.yellow.ColoredTag("1 Posted Challenge");
 			}
-			else {
-				matchmaker.menu.isInteractible = true;
-				app.state.ConnectMatchmakerMenu();
-				if (potentialOpponent.game == null) {
-					button.text = potentialOpponent.screenName + " is online: " + Color.yellow.ColoredTag("Challenge " + potentialOpponent.screenName);
-				}
-				else {
-					button.text = potentialOpponent.screenName + " posted a challenge: " + Color.yellow.ColoredTag("Accept Challenge");
-				}
-				button.action = PostGameWithOpponent;
-				button.data = potentialOpponent;
-			}
+
+			MakeMenuOpenable();
 		}
 	}
 
-	void PostGameWithOpponent() {
-		var opponent = button.data as Account;
+	void MakeMenuOpenable() {
+		button.action = matchmaker.menu.Open;
+		matchmaker.menu.isInteractible = true;
+		app.state.ConnectMatchmakerMenu();
+	}
+
+	public override void ConfigureForOpen() {
+		base.ConfigureForOpen();
+
+		UpdateOpenMenu();
+	}
+
+	void UpdateOpenMenu() {
+		matchmaker.menu.Reset();
+
+		CancelStatusTimer();
+
+		foreach (var account in app.account.connectedAccounts) {
+			switch (account.status) {
+			case AccountStatus.Available:
+				matchmaker.menu.AddNewButton()
+					.SetText(account.screenName + ": Online: " + Color.yellow.ColoredTag("Send Challenge"))
+					.SetData(account)
+					.SetAction(() => { PostGameWithOpponent(account); });
+				break;
+			case AccountStatus.Searching:
+				matchmaker.menu.AddNewButton()
+					.SetText(account.screenName + ": Posted Challenge: " + Color.yellow.ColoredTag("Accept Challenge"))
+					.SetData(account)
+					.SetAction(() => { PostGameWithOpponent(account); });
+				break;
+			case AccountStatus.Playing:
+				matchmaker.menu.AddNewText()
+					.SetText(account.screenName + ": Playing " + account.opponent.screenName);
+				break;
+			case AccountStatus.Unavailable:
+				matchmaker.menu.AddNewText()
+					.SetText(account.screenName + ": Busy");
+				break;
+			}
+		}
+
+		if (app.account.connectedAccounts.Count == 0) {
+			matchmaker.menu.AddNewText().SetText("No one else is online");
+		}
+
+		matchmaker.menu.AddNewButton().SetText("Back").SetAction(matchmaker.menu.Close).SetIsBackItem(true);
+
+		matchmaker.menu.Focus();
+	}
+
+	void PostGameWithOpponent(Account opponent) {
 		var data = new JSONObject();
 		data.AddField("opponent", opponent.publicPropertyData);
 		matchmaker.Send("postGame", data);
@@ -58,30 +114,45 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		TransitionTo(state);
 	}
 
-	Account previousPotentialOpponent;
-	Game previousPotentialOpponentGame;
+	Timer statusTimer;
 
-	void PlayOpponentSounds() {
-		if (account.potentialOpponent != null) {
-			if (account.potentialOpponent.game != null) {
-				if (previousPotentialOpponent != null) {
-				}
-				if (previousPotentialOpponent == null || previousPotentialOpponentGame == null) {
-					App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
-				}
-			}
-			else if (previousPotentialOpponent == null) {
-				App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
-			}
+	void StartStatusTimer() {
+		CancelStatusTimer();
+
+		statusTimer = App.shared.timerCenter.NewTimer();
+		statusTimer.action = UpdateStatus;
+		statusTimer.timeout = 5;
+		statusTimer.Start();
+	}
+
+	void CancelStatusTimer() {
+		if (statusTimer != null) {
+			statusTimer.Cancel();
+			statusTimer = null;
 		}
 	}
 
 	public override void HandlePlayerConnected(JSONObject data) {
-		previousPotentialOpponent = account.potentialOpponent;
-		previousPotentialOpponentGame = previousPotentialOpponent != null ? previousPotentialOpponent.game : null;
 		base.HandlePlayerConnected(data);
-		UpdateMenu();
-		PlayOpponentSounds();
+
+		if (matchmaker.menu.isOpen) {
+			UpdateOpenMenu();
+		}
+		else {
+			App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
+			button.text = data.GetField("screenName").str + " is online";
+			MakeMenuOpenable();
+			StartStatusTimer();
+		}
+	}
+
+	void UpdateMenu() {
+		if (matchmaker.menu.isOpen) {
+			UpdateOpenMenu();
+		}
+		else if (statusTimer == null) {
+			UpdateStatus();
+		}
 	}
 
 	public override void HandlePlayerDisconnected(JSONObject data) {
@@ -90,9 +161,6 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	}
 
 	public override void HandleGamePosted(JSONObject data) {
-		previousPotentialOpponent = account.potentialOpponent;
-		previousPotentialOpponentGame = previousPotentialOpponent != null ? previousPotentialOpponent.game : null;
-
 		base.HandleGamePosted(data);
 
 		var game = account.GameWithId(data.GetField("id").str);
@@ -102,8 +170,15 @@ public class MatchmakerPostAuthState : MatchmakerState {
 			TransitionTo(new MatchmakerReceivedChallengeState());
 		}
 		else {
-			UpdateMenu();
-			PlayOpponentSounds();
+			if (matchmaker.menu.isOpen) {
+				UpdateOpenMenu();
+			}
+			else {
+				App.shared.PlayAppSoundNamedAtVolume("PlayPVP", 1f);
+				button.text = Color.yellow.ColoredTag(game.host.screenName + " posted a challenge");
+				MakeMenuOpenable();
+				StartStatusTimer();
+			}
 		}
 	}
 

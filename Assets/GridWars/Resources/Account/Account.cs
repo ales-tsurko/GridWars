@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class Account {
 	public float id;
+    public string GetID (){
+        return id == null ? "null" : id.ToString();
+    }
 	public string screenName;
 	public string email;
 	public string accessToken;
@@ -47,6 +50,17 @@ public class Account {
 		}
 	}
 
+	public Player player {
+		get {
+			if (this == App.shared.account) {
+				return App.shared.battlefield.localPlayer1;
+			}
+			else {
+				return App.shared.battlefield.localPlayer1.opponent;
+			}
+		}
+	}
+
 	public Account opponent {
 		get {
 			if (game == null) {
@@ -58,32 +72,33 @@ public class Account {
 		}
 	}
 
-	public Account potentialOpponent {
+	public AccountStatus status {
 		get {
-			var available = new List<Account>(connectedAccounts.FindAll(a => a.isAvailableToPlay));
-			available.Sort((a, b) => {
-				if (a.game == null) {
-					if (b.game == null) {
-						return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
-					}
-					else {
-						return 1;
-					}
-				}
-				else if (b.game == null) {
-					return -1;
+			if (isAvailableToPlay) {
+				if (game == null) {
+					return AccountStatus.Available;
 				}
 				else {
-					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+					return AccountStatus.Searching;
 				}
-			});
-
-			if (available.Count > 0) {
-				return available[0];
 			}
 			else {
-				return null;
+				if (game == null) {
+					return AccountStatus.Unavailable;
+				}
+				else {
+					return AccountStatus.Playing;
+				}
 			}
+		}
+	}
+
+	public JSONObject publicPropertyData {
+		get {
+			var data = new JSONObject();
+			data.AddField("id", id);
+			data.AddField("screenName", screenName);
+			return data;
 		}
 	}
 
@@ -146,18 +161,54 @@ public class Account {
 					game.SetFromData(otherAccountData.GetField("game"));
 				}
 			}
+
+			Sort();
 		}
 
 		lastUpdateTime = Time.time;
 	}
 
-	public JSONObject publicPropertyData {
-		get {
-			var data = new JSONObject();
-			data.AddField("id", id);
-			data.AddField("screenName", screenName);
-			return data;
-		}
+	void Sort() {
+		connectedAccounts.Sort((a, b) => {
+			switch(a.status) {
+			case AccountStatus.Searching:
+				if (b.status == AccountStatus.Searching) {
+					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+				}
+				else {
+					return -1;
+				}
+			case AccountStatus.Available:
+				if (b.status == AccountStatus.Searching) {
+					return 1;
+				}
+				else if (b.status == AccountStatus.Available) {
+					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+				}
+				else {
+					return -1;
+				}
+			case AccountStatus.Playing:
+				if (b.status == AccountStatus.Unavailable) {
+					return -1;
+				}
+				if (b.status == AccountStatus.Playing) {
+					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+				}
+				else {
+					return 1;
+				}
+			case AccountStatus.Unavailable:
+				if (b.status == AccountStatus.Unavailable) {
+					return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+				}
+				else {
+					return 1;
+				}
+			}
+
+			return b.lastUpdateTime.CompareTo(a.lastUpdateTime);
+		});
 	}
 
 	public void ResetPlayerList() {
@@ -168,10 +219,12 @@ public class Account {
 		var account = new Account();
 		account.SetFromData(accountData);
 		connectedAccounts.Add(account);
+		Sort();
 	}
 
 	public void PlayerDisconnected(JSONObject accountData) {
 		connectedAccounts.Remove(AccountWithId(accountData.GetField("id").n));
+		Sort();
 	}
 
 	public void PlayerChangedScreenName(JSONObject accountData) {
@@ -183,6 +236,7 @@ public class Account {
 			account.screenName = accountData.GetField("screenName").str;
 			account.lastUpdateTime = Time.time;
 		}
+		Sort();
 	}
 
 	public void PlayerBecameAvailableToPlay(JSONObject accountData) {
@@ -196,6 +250,7 @@ public class Account {
 			account.game = null;
 			account.lastUpdateTime = Time.time;
 		}
+		Sort();
 	}
 
 	public void PlayerBecameUnavailableToPlay(JSONObject accountData) {
@@ -207,12 +262,23 @@ public class Account {
 			//App.shared.Log("PlayerBecameUnavailableToPlay: " + account.screenName);
 			account.isAvailableToPlay = false;
 			account.lastUpdateTime = Time.time;
+			var gameData = accountData.GetField("game");
+			if (gameData != null && !gameData.IsNull) {
+				var game = GameWithId(gameData.GetField("id").str);
+				if (game == null) {
+					//its a challenge -- we never received the posted game
+					game = new Game();
+				}
+				game.SetFromData(gameData); //will set game property on host and client
+			}
 		}
+		Sort();
 	}
 
 	public void GamePosted(JSONObject gameData) {
 		var game = new Game();
 		game.SetFromData(gameData);
+		Sort();
 		//App.shared.Log("GamePosted: " + game.host.id);
 	}
 
@@ -226,6 +292,7 @@ public class Account {
 			//App.shared.Log(account.screenName + ": account.game = null;", this);
 			account.game = null;
 			account.lastUpdateTime = Time.time;
+			Sort();
 		}
 	}
 
@@ -234,3 +301,5 @@ public class Account {
 		App.shared.prefs.accessToken = accessToken;
 	}
 }
+
+public enum AccountStatus { Available, Unavailable, Searching, Playing };

@@ -7,6 +7,8 @@ public class ShowOutcomeState : PostGameSubState {
 		base.EnterFrom(state);
 
 		ShowMenu(true);
+
+		ConnectMatchmakerMenu();
 	}
 
 	void ShowMenu(bool showRematch) {
@@ -26,7 +28,7 @@ public class ShowOutcomeState : PostGameSubState {
 				title = "Defeat!";
 				if (showRematch) {
 					app.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
-				}
+				}	
 			}
 		} else {
 			if (showRematch) {
@@ -48,8 +50,9 @@ public class ShowOutcomeState : PostGameSubState {
 
 		menu.AddItem(UI.MenuItem("Leave Game", postGameState.Leave));
 
-		//Debug.Log("menu.Show");
+		menu.selectsOnShow = !matchmaker.menu.hasFocus; //user might be typing a message.
 		menu.Show();
+		menu.selectsOnShow = true;
 	}
 
 	void RequestRematch() {

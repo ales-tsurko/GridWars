@@ -379,7 +379,7 @@ public class Tower : GroundBuilding {
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
-		if (player.inGameMenu == null || player.inGameMenu.isOpen) {
+		if (player.inGameMenu == null || player.inGameMenu.isOpen || App.shared.matchmaker.menu.hasFocus) {
 			return;
 		}
 

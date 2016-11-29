@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Analytics;
+using System.Collections.Generic;
 
 public class ReceivedRematchRequestState : PostGameSubState {
 	public override void EnterFrom(AppState state) {
@@ -15,6 +17,20 @@ public class ReceivedRematchRequestState : PostGameSubState {
 
 	void RejectRematch() {
 		postGameState.Leave();
+        string oScreenName = "null";
+        string oID = "null";
+        if (App.shared.account.opponent != null) {
+            oScreenName = App.shared.account.screenName;
+            oID = App.shared.account.opponent.GetID();
+        }
+        Analytics.CustomEvent("RematchRejected", new Dictionary<string, object>
+            {
+                { "platform", Application.platform.ToString() },
+                { "id", App.shared.account.GetID() },
+                { "screenName", App.shared.account.screenName },
+                { "opponentId", oID },
+                { "opponentScreenName", oScreenName }
+            });
 	}
 
 	void AcceptRematch() {
@@ -24,5 +40,19 @@ public class ReceivedRematchRequestState : PostGameSubState {
 		menu.AddNewIndicator().SetText("Starting Game");
 		menu.AddNewButton().SetText("Leave").SetAction(postGameState.Leave);
 		menu.Show();
+        string oScreenName = "null";
+        string oID = "null";
+        if (App.shared.account.opponent != null) {
+            oScreenName = App.shared.account.screenName;
+            oID = App.shared.account.opponent.GetID();
+        }
+        Analytics.CustomEvent("RematchAccepted", new Dictionary<string, object>
+                {
+                    { "platform", Application.platform.ToString() },
+                    { "id", App.shared.account.GetID() },
+                    { "screenName", App.shared.account.screenName },
+                    { "opponentId", oID },
+                    { "opponentScreenName", oScreenName }
+                });
 	}
 }

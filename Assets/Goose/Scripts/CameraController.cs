@@ -127,7 +127,6 @@ public class CameraController : MonoBehaviour {
 
 			var closest = sorted[0];
 
-			float mod = 0;
 			var steps = 0;
 
 			cam.transform.position = finalPosition.transform.position;
@@ -135,12 +134,13 @@ public class CameraController : MonoBehaviour {
 			while (steps < 100) {
 				Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(closest.transform.position);
 
-				if (screenPoint.z > 0.1f && screenPoint.x > 0.1f + mod && screenPoint.x < .9f - mod && screenPoint.y > 0.1f + mod && screenPoint.y < .9f - mod) {
+				if (screenPoint.x > .1f && screenPoint.x < .9f && screenPoint.y > .125f && screenPoint.y < .875f) {
 					break;
 				}
 				else {
 					cam.transform.position -= cam.transform.forward;
 				}
+
 				steps ++;
 			}
 
