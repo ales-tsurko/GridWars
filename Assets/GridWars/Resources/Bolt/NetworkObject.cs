@@ -124,13 +124,6 @@ public class NetworkObject : BetterMonoBehaviour {
 		}
 	}
 
-	//MonoBehaviour
-
-	bool isQuitting = false;
-	void OnApplicationQuit() {
-		isQuitting = true;
-	}
-
 	/*
 	protected virtual void FixedUpdate() {
 		throw new System.Exception("FixedUpdate shouldn't be used in NetworkObjects");

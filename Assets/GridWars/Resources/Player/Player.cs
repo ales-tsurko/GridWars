@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Player : MonoBehaviour {
+public class Player : BetterMonoBehaviour {
 	public static string primaryColorMaterialName = "PrimaryColor";
 	public static string secondaryColorMaterialName = "SecondaryColor";
 
@@ -129,7 +129,9 @@ public class Player : MonoBehaviour {
 
 	// MonoBehaviour
 
-	void Awake() {
+	public override void Awake() {
+		base.Awake();
+
 		units = new List<GameUnit>();
 
 		if (App.shared.testEndOfGameMode) {
@@ -196,7 +198,9 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnDestroy() {
-		DestroyInputs();
+		if (!isQuitting) {
+			DestroyInputs();
+		}
 	}
 
 	// Game

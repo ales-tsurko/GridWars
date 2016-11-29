@@ -168,4 +168,12 @@ public class BetterMonoBehaviour : MonoBehaviour {
 
 	// --- Lists ------------------------------------
 
+	// --- App Quit ------------------------------------
+
+	protected bool isQuitting;
+
+	void OnApplicationQuit() {
+		isQuitting = true;
+	}
+
 }
