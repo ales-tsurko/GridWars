@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 
 public class GroundBuilding : GameUnit {
+	/*
 	private float colorValueRatio = 0.0f;
 	private float colorSaturationRatio = 1f;
+	*/
 
 	public override void ServerAndClientJoinedGame() {
 		fadeInPeriod = 0f;
