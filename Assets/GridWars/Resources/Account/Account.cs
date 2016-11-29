@@ -312,14 +312,18 @@ public class Account {
             dict.Add("opponentId", opponent.id.ToString());
             dict.Add("opponentScreenName", opponent.screenName);
         }
-        if (App.shared.battlefield != null) {
+        if (App.shared.battlefield !=null && App.shared.battlefield.isPlayingGame) {
             dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
         }
-        if (Application.isEditor) {
+        if (App.shared.config == null) {
+            Debug.LogError("Event Not Sent, config is null");
+            return;
+        }
+        if (App.shared.config.name != "Release") {
             string t = "<color=green>Event Would Be Sent: " + eventName + "</color>\n" + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray());
             Debug.Log(t);
         } else {
-            Analytics.CustomEvent("PeerConnectionAttempt", dict);
+            Analytics.CustomEvent(eventName, dict);
         }
 
     }
