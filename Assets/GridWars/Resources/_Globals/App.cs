@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using System.Linq;
-
+using UnityEngine.Analytics;
 /*
  *  This is a singleton. Access like this:
  * 
@@ -76,6 +76,11 @@ public class App : MonoBehaviour, AppStateOwner {
     public EnvController envController;
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
+        Analytics.CustomEvent("AppStarted", new Dictionary<string, object>
+                {
+                    { "platform", Application.platform.ToString() }
+                });
+
 	}
 
 	public void Start() {
