@@ -243,6 +243,12 @@ public class Battlefield : MonoBehaviour {
 		return player1.isLocal == true && player2.npcModeOn == true;
 	}
 
+	public bool isPlayingGame {
+		get {
+			return App.shared.state is PlayingGameState || App.shared.state is PostGameState;
+		}
+	}
+
     public GameType GetGameType(){
         if (isInternetPVP) {
             return GameType.InternetPVP;
@@ -260,5 +266,5 @@ public class Battlefield : MonoBehaviour {
     }
 }
 
-public enum GameType {Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI}
+public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI }
 
