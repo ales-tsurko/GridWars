@@ -71,18 +71,16 @@ public class MatchmakerPostAuthState : MatchmakerState {
 
 		CancelStatusTimer();
 
-		foreach (var account in app.account.connectedAccounts) {
+		app.account.connectedAccounts.ForEach((account) => {
 			switch (account.status) {
 			case AccountStatus.Available:
 				matchmaker.menu.AddNewButton()
 					.SetText(account.screenName + ": Online: " + Color.yellow.ColoredTag("Send Challenge"))
-					.SetData(account)
 					.SetAction(() => { PostGameWithOpponent(account); });
 				break;
 			case AccountStatus.Searching:
 				matchmaker.menu.AddNewButton()
 					.SetText(account.screenName + ": Posted Challenge: " + Color.yellow.ColoredTag("Accept Challenge"))
-					.SetData(account)
 					.SetAction(() => { PostGameWithOpponent(account); });
 				break;
 			case AccountStatus.Playing:
@@ -94,7 +92,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 					.SetText(account.screenName + ": Busy");
 				break;
 			}
-		}
+		});
 
 		if (app.account.connectedAccounts.Count == 0) {
 			matchmaker.menu.AddNewText().SetText("No one else is online");
@@ -120,9 +118,14 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		CancelStatusTimer();
 
 		statusTimer = App.shared.timerCenter.NewTimer();
-		statusTimer.action = UpdateStatus;
+		statusTimer.action = TimerUpdateStatus;
 		statusTimer.timeout = 5;
 		statusTimer.Start();
+	}
+
+	void TimerUpdateStatus() {
+		CancelStatusTimer();
+		UpdateStatus();
 	}
 
 	void CancelStatusTimer() {
