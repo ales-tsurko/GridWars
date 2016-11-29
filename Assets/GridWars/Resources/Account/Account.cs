@@ -315,11 +315,13 @@ public class Account {
         if (App.shared.battlefield != null) {
             dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
         }
-        Analytics.CustomEvent("PeerConnectionAttempt", dict);
         if (Application.isEditor) {
-            string t = "<color=green>Event Sent: " + eventName + "</color>\n" + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray());
-            Debug.Log (t);
+            string t = "<color=green>Event Would Be Sent: " + eventName + "</color>\n" + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray());
+            Debug.Log(t);
+        } else {
+            Analytics.CustomEvent("PeerConnectionAttempt", dict);
         }
+
     }
 }
 
