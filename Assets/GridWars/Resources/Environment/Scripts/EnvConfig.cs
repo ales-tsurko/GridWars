@@ -4,4 +4,5 @@ using System.Collections;
 public class EnvConfig : ScriptableObject {
     public string serverHost;
 	public bool testEndOfGameMode;
+	public bool internetPvpBotMode;
 }

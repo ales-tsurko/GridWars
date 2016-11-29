@@ -8,6 +8,7 @@ public class DevConfig : EnvConfig {
 		if (config.name != "Release") {
 			config.serverHost = serverHost;
 			config.testEndOfGameMode = testEndOfGameMode;
+			config.internetPvpBotMode = internetPvpBotMode;
 		}
 	}
 }

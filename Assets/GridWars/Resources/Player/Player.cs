@@ -21,6 +21,11 @@ public class Player : MonoBehaviour {
 		new Color(22f/255, 22f/255, 191f/255) // blue
 	};
 
+	Color[] uiColors = new Color[]{ 
+		new Color(255f/255, 29f/255, 28f/255),    // player 1 rendered power bar color
+		new Color(100f/255, 99f/255, 255f/255) // player 2 rendered power bar color
+	};
+
 	Color[] secondaryColors = new Color[]{ 
 		new Color(181f/255, 181f/255, 0f/255),  // yellow
 		new Color(181f/255, 181f/255, 0f/255)   // yellow
@@ -68,6 +73,12 @@ public class Player : MonoBehaviour {
 			}
 
 			return primaryColors[playerNumber - 1];
+		}
+	}
+
+	public Color uiColor {
+		get {
+			return uiColors[playerNumber - 1];
 		}
 	}
 

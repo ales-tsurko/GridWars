@@ -23,7 +23,7 @@ public class BindInputsToPlayersState : AppState {
 	void ResetMenu() {
 		app.ResetMenu();
 		//TODO describe the controller button.
-		menu.AddItem(UI.ActivityIndicator("<color=#" + ColorUtility.ToHtmlStringRGB(player.primaryColor.WithV(1f)) + ">" + player.description + "</color>\n\n" + "Press return or click continue to use keyboard and mouse.\n\nPress any button to use controller."));
+		menu.AddItem(UI.ActivityIndicator(player.uiColor.ColoredTag(player.description) + "\n\nPress return or click continue to use keyboard and mouse.\n\nPress any button to use controller."));
 		//menu.AddItem(UI.ActivityIndicator(player.description + "\n\n" + "Press return or click continue to use keyboard and mouse.\n\nPress any button to use controller."));
 
 		continueButton = menu.AddNewButton().SetText("Continue").SetAction(Continue);

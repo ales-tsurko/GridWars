@@ -47,6 +47,17 @@ public class Account {
 		}
 	}
 
+	public Player player {
+		get {
+			if (this == App.shared.account) {
+				return App.shared.battlefield.localPlayer1;
+			}
+			else {
+				return App.shared.battlefield.localPlayer1.opponent;
+			}
+		}
+	}
+
 	public Account opponent {
 		get {
 			if (game == null) {

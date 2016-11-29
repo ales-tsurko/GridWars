@@ -27,6 +27,8 @@ public class Matchmaker : MonoBehaviour, AppStateOwner {
 
 	public GameObject socketIoPrefab;
 
+	public MatchmakerMessenger messenger;
+
 	public AppState state { get; set; }
 	public MatchmakerState matchmakerState {
 		get {
@@ -43,8 +45,7 @@ public class Matchmaker : MonoBehaviour, AppStateOwner {
 
 		events = new Queue<SocketIOEvent>();
 
-		//ws://gw-matchmaker.herokuapp.com/socket.io/?EIO=4&transport=websocket
-		//ws://localhost:8080/socket.io/?EIO=4&transport=websocket
+		messenger = new MatchmakerMessenger();
 	}
 
 	private System.Object lockObj = new System.Object();
@@ -76,6 +77,9 @@ public class Matchmaker : MonoBehaviour, AppStateOwner {
 
 	public void Update() {
 		state.Update();
+		if (messenger.isEnabled) {
+			messenger.Update();
+		}
 
 		var e = DequeueEvent();
 		if (e != null) {

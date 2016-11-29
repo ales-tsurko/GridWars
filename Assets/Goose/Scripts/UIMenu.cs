@@ -7,6 +7,7 @@ using InControl;
 public class UIMenu : UIElement {
 	public static string UIMenuShowedNotification = "UIMenuShowedNotification";
 	public static string UIMenuSelectedItemNotification = "UIMenuSelectedItem";
+	public static string UIMenuDeselectedItemNotification = "UIMenuDeselectedItem";
 
 	Image image;
 
@@ -267,19 +268,19 @@ public class UIMenu : UIElement {
 			panel.anchorMin = new Vector2(.5f, 1f);
 			panel.anchorMax = new Vector2(.5f, 1f);
 			panel.pivot = new Vector2(0.5f, 0.5f);
-			panel.anchoredPosition = new Vector2(0, -panel.sizeDelta.y);
+			panel.anchoredPosition = new Vector2(0, -panel.sizeDelta.y/2);
 			break;
 		case MenuAnchor.TopLeft:
 			panel.anchorMin = new Vector2(0f, 1f);
 			panel.anchorMax = new Vector2(0f, 1f);
 			panel.pivot = new Vector2(0f, 0.5f);
-			panel.anchoredPosition = new Vector2(18f, -panel.sizeDelta.y);
+			panel.anchoredPosition = new Vector2(18f, -panel.sizeDelta.y/2);
 			break;
 		case MenuAnchor.TopRight:
 			panel.anchorMin = new Vector2(1f, 1f);
 			panel.anchorMax = new Vector2(1f, 1f);
 			panel.pivot = new Vector2(1f, 0.5f);
-			panel.anchoredPosition = new Vector2(-18f, -panel.sizeDelta.y);
+			panel.anchoredPosition = new Vector2(-18f, -panel.sizeDelta.y/2);
 			break;
 		}
     }
@@ -330,7 +331,7 @@ public class UIMenu : UIElement {
 
 	public List<UIButton>selectableItems {
 		get {
-			return items.FindAll(item => (item.isInteractible));
+			return items.FindAll(item => (item.isInteractible && item.isActiveAndEnabled));
 		}
 	}
 
@@ -341,7 +342,7 @@ public class UIMenu : UIElement {
 	}
 
 	public void SelectItem(UIButton item) {
-		if (item != null) {
+		if (item != null && item != selectedItem) {
 			UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 			item.Select();
 			//App.shared.Log("selectedItem = " + item.text);
@@ -410,6 +411,14 @@ public class UIMenu : UIElement {
 		//App.shared.Log("ItemDeselected: " + item.text, this);
 		if (selectedItem == item) {
 			//App.shared.Log("selectedItem = null: " + item.text, this);
+			if (App.shared.notificationCenter != null) {
+				App.shared.notificationCenter.NewNotification()
+					.SetName(UIMenuDeselectedItemNotification)
+					.SetSender(this)
+					.SetData(item)
+					.Post();
+			}
+
 			selectedItem = null;
 		}
 	}
