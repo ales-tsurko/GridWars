@@ -120,9 +120,14 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		CancelStatusTimer();
 
 		statusTimer = App.shared.timerCenter.NewTimer();
-		statusTimer.action = UpdateStatus;
+		statusTimer.action = TimerUpdateStatus;
 		statusTimer.timeout = 5;
 		statusTimer.Start();
+	}
+
+	void TimerUpdateStatus() {
+		CancelStatusTimer();
+		UpdateStatus();
 	}
 
 	void CancelStatusTimer() {
