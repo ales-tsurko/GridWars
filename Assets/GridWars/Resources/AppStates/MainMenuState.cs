@@ -59,26 +59,26 @@ public class MainMenuState : AppState {
 	private static bool _needsInitialFadeIn = true;
 
 	void PlayClicked() {
-		Analytics.CustomEvent("PlayClicked", new Dictionary<string, object>{
+		/*Analytics.CustomEvent("PlayClicked", new Dictionary<string, object>{
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		TransitionTo(new PlayMenuState());
 	}
 
 	void AccountClicked() {
-		Analytics.CustomEvent("AccountClicked", new Dictionary<string, object>{
+		/*Analytics.CustomEvent("AccountClicked", new Dictionary<string, object>{
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		TransitionTo(new AccountMenuState());
 	}
 
 	void ChatClicked() {
-        Analytics.CustomEvent("ChatClicked", new Dictionary<string, object>
+       /* Analytics.CustomEvent("ChatClicked", new Dictionary<string, object>
                 {
                     { "playTime", Time.timeSinceLevelLoad }
-                });
+                });*/
 
 		Application.OpenURL("http://slack.baremetalgame.com/");
 	}

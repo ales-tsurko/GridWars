@@ -50,9 +50,9 @@ public class PlayMenuState : AppState {
 	}
 
 	void InternetPvpClicked() {
-		Analytics.CustomEvent("InternetPvpClicked", new Dictionary<string, object> {
+		/*Analytics.CustomEvent("InternetPvpClicked", new Dictionary<string, object> {
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		if (matchmaker.isConnected) {
 			matchmaker.matchmakerState.PostGame();
@@ -101,10 +101,10 @@ public class PlayMenuState : AppState {
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
 
-		Analytics.CustomEvent("SharedScreenPvPClicked", new Dictionary<string, object>
+		/*Analytics.CustomEvent("SharedScreenPvPClicked", new Dictionary<string, object>
 			{
 				{ "playTime", Time.timeSinceLevelLoad }
-			});
+			});*/
 		TransitionTo(new BindInputsToPlayersState());
 	}
 
@@ -127,10 +127,10 @@ public class PlayMenuState : AppState {
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
 
-		Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
+		/*Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
 			{
 				{ "playTime", Time.timeSinceLevelLoad }
-			});
+			});*/
 
 		TransitionTo(new WaitForBoltState());
 	}
@@ -146,10 +146,10 @@ public class PlayMenuState : AppState {
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
 
-		Analytics.CustomEvent("CompVsCompClicked", new Dictionary<string, object>
+		/*Analytics.CustomEvent("CompVsCompClicked", new Dictionary<string, object>
 			{
 				{ "playTime", Time.timeSinceLevelLoad }
-			});
+			});*/
 
 		TransitionTo(new WaitForBoltState());
 	}
@@ -171,9 +171,9 @@ public class PlayMenuState : AppState {
 		battlefield.player2.npcModeOn = true;
 		battlefield.player2.isTutorialMode = true;
 
-		Analytics.CustomEvent("TutorialClicked", new Dictionary<string, object> {
+		/*Analytics.CustomEvent("TutorialClicked", new Dictionary<string, object> {
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		TransitionTo(new WaitForBoltState());
 	}
