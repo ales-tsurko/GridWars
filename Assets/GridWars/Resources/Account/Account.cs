@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections.Generic;
+using UnityEngine.Analytics;
+using System.Linq;
 
 public class Account {
 	public float id;
-    public string GetID (){
-        return id == null ? "null" : id.ToString();
-    }
 	public string screenName;
 	public string email;
 	public string accessToken;
@@ -164,7 +164,6 @@ public class Account {
 
 			Sort();
 		}
-
 		lastUpdateTime = Time.time;
 	}
 
@@ -300,6 +299,28 @@ public class Account {
 		App.shared.prefs.screenName = screenName;
 		App.shared.prefs.accessToken = accessToken;
 	}
+
+    public void LogEvent(string eventName){
+        Dictionary <string, object> dict = new Dictionary<string, object>
+        {
+            { "platform", Application.platform.ToString() },
+            { "id", id.ToString()},
+            { "screenName", screenName },
+        };
+       
+        if (opponent != null) {
+            dict.Add("opponentId", opponent.id.ToString());
+            dict.Add("opponentScreenName", opponent.screenName);
+        }
+        if (App.shared.battlefield != null) {
+            dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
+        }
+        Analytics.CustomEvent("PeerConnectionAttempt", dict);
+        if (Application.isEditor) {
+            string t = "<color=green>Event Sent: " + eventName + "</color>\n" + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray());
+            Debug.Log (t);
+        }
+    }
 }
 
 public enum AccountStatus { Available, Unavailable, Searching, Playing };

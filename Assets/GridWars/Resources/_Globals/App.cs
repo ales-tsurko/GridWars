@@ -76,10 +76,6 @@ public class App : MonoBehaviour, AppStateOwner {
     public EnvController envController;
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
-        Analytics.CustomEvent("AppStarted", new Dictionary<string, object>
-                {
-                    { "platform", Application.platform.ToString() }
-                });
 
 	}
 
@@ -112,6 +108,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		Projectile.SetupLayerCollisions();
 
 		account = new Account();
+        account.LogEvent("AppStarted");
 
 		matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
 		matchmaker.Setup();
