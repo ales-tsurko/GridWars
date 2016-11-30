@@ -204,7 +204,11 @@ public class PlayingGameState : AppState {
 	public override void ConfigureForOpenMatchmakerMenu() {
 		//App.shared.Log("ConfigureForOpenMatchmakerMenu", this);
 		//don't call base
-		primaryInGameMenu.DisconnectMatchmakerMenu();
+
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.DisconnectMatchmakerMenu();
+		}
+
 
 		foreach (var menu in inGameMenus) {
 			menu.Close();
