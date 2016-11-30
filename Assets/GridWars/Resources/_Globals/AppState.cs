@@ -16,10 +16,12 @@ public class AppState {
 
 	void HandleOpenSounds() {
 		if (openSoundtrackName != null) {
+			//app.Log("Play: " + openSoundtrackName);
 			App.shared.SoundtrackNamed(openSoundtrackName).Play();
 		}
 
-		if (openSoundName == null) {
+		if (openSoundName != null) {
+			//app.Log("Play: " + openSoundName);
 			App.shared.PlayAppSoundNamedAtVolume(openSoundName, 1f);
 		}
 	}
