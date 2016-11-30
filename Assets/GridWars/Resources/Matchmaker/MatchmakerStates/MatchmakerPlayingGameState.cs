@@ -20,6 +20,14 @@ public class MatchmakerPlayingGameState : MatchmakerState {
 		app.state.TransitionTo(new PlayingGameState());
 	}
 
+	public override void WillExit() {
+		base.WillExit();
+
+		if (!(matchmaker.state is MatchmakerAfterGameState)) {
+			matchmaker.messenger.TearDown();
+		}
+	}
+
 	public void HandleGameEnded(JSONObject data) {
 		playingGameState.GameEnded(data.GetField("isWinner").b ? battlefield.localPlayer1 : battlefield.localPlayer1.opponent);
 

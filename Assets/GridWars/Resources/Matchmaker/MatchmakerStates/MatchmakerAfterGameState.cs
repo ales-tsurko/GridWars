@@ -8,6 +8,12 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		}
 	}
 
+	public override void WillExit() {
+		base.WillExit();
+
+		matchmaker.messenger.TearDown();
+	}
+
 	public override void ConfigureForClosed() {
 		//to preserve messenger state, don't call base
 	}

@@ -8,10 +8,6 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
-		if (matchmaker.messenger.isEnabled) {
-			matchmaker.messenger.TearDown();
-		}
-
 		matchmaker.menu.Close();
 		matchmaker.menu.Show();
 	}
