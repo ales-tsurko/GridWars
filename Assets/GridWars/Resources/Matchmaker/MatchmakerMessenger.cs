@@ -64,6 +64,10 @@ public class MatchmakerMessenger {
 
 		messageInput.Destroy();
 		messageInput = null;
+
+		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
+
+		isEditingMessageInput = false;
 	}
 
 	void ShowMessageInput() {
@@ -84,6 +88,7 @@ public class MatchmakerMessenger {
 	}
 
 	void HideMessageInput() {
+		Debug.Log("HIDE MESSAGE INPUT");
 		isEditingMessageInput = false;
 
 		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
