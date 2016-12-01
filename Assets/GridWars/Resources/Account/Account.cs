@@ -8,6 +8,9 @@ public class Account {
 	public string screenName;
 	public string email;
 	public string accessToken;
+	public int rank;
+	public int wins;
+	public int losses;
 	public bool isAvailableToPlay;
 	public float lastUpdateTime;
 	public List<Account>connectedAccounts;
@@ -147,6 +150,18 @@ public class Account {
 			isAvailableToPlay = property.b;
 		}
 
+		if ((property = accountData.GetField("rank")) != null && !property.IsNull) {
+			rank = (int)Mathf.Round(property.n);
+		}
+
+		if ((property = accountData.GetField("wins")) != null && !property.IsNull) {
+			wins = (int)Mathf.Round(property.n);
+		}
+
+		if ((property = accountData.GetField("losses")) != null && !property.IsNull) {
+			losses = (int)Mathf.Round(property.n);
+		}
+
 		if ((property = accountData.GetField("players")) != null && !property.IsNull) {
 			foreach (var otherAccountData in accountData.GetField("players").list) {
 				var playerAccount = new Account();
@@ -163,6 +178,7 @@ public class Account {
 
 			Sort();
 		}
+
 		lastUpdateTime = Time.time;
 	}
 

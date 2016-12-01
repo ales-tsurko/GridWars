@@ -27,6 +27,7 @@ public class MainMenuState : AppState {
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
+		menu.AddItem(UI.MenuItem("Ladder", LadderClicked));
 		menu.AddItem(UI.MenuItem("Account", AccountClicked));
 		menu.AddItem(UI.MenuItem("Community", ChatClicked));
 		menu.AddItem(UI.MenuItem("Options", OptionsClicked));
@@ -64,6 +65,10 @@ public class MainMenuState : AppState {
 		});*/
 
 		TransitionTo(new PlayMenuState());
+	}
+
+	void LadderClicked() {
+		TransitionTo(new LadderState());
 	}
 
 	void AccountClicked() {
