@@ -33,6 +33,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public CameraController cameraController;
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
+	public ExceptionReporter exceptionReporter;
 	public bool isExiting;
 
 	EnvConfig _config;
@@ -80,7 +81,12 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Start() {
-		debug = true;
+		exceptionReporter = new ExceptionReporter();
+		if (config.name == "Release") {
+			Application.logMessageReceived += HandleException;
+		}
+
+		debug = false;
 		Application.runInBackground = true;
 		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
@@ -131,6 +137,12 @@ public class App : MonoBehaviour, AppStateOwner {
 		mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
+	}
+
+	void HandleException(string message, string stackTrace, LogType type) {
+		if (type == LogType.Exception || type == LogType.Error) {
+			exceptionReporter.ReportException(message, stackTrace);
+		}
 	}
 
 	void MenuDidShow(Notification n) {
