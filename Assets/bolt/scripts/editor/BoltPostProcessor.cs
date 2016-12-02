@@ -9,8 +9,8 @@ public class BoltPostProcessor : AssetPostprocessor
         {
             if (str.Contains("project.xml") || str.Contains("project.bytes"))
             {
-                Debug.Log("Bolt project file changed outside of Unity, reloading it.");
-                BoltWindow.ProjectNeedsReloading = true;
+               // Debug.Log("Bolt project file changed outside of Unity, reloading it.");
+               // BoltWindow.ProjectNeedsReloading = true;
             }
         }
     }
