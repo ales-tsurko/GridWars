@@ -83,12 +83,7 @@ public class BoltInit : Bolt.GlobalEventListener
     {
         foreach (string value in BoltScenes.AllScenes)
         {
-			#if !UNITY_5_3 && !UNITY_5_4
-			if (Application.loadedLevelName != value)
-			#endif
-			#if UNITY_5_3 || UNITY_5_4
-            if (SceneManager.GetActiveScene().name != value)
-			#endif
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != value)
             {
                 if (ExpandButton(value))
                 {

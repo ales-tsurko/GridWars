@@ -50,11 +50,12 @@ namespace Mindscape.Raygun4Unity.Messages
         SupportsGyroscope = SystemInfo.supportsGyroscope;
         SupportsInstancing = SystemInfo.supportsInstancing;
         SupportsLocationService = SystemInfo.supportsLocationService;
-        SupportsRenderTextures = SystemInfo.supportsRenderTextures;
+        //SupportsRenderTextures = SystemInfo.supportsRenderTextures;
+        SupportsRenderTextures = true;
         SupportsRenderToCubemap = SystemInfo.supportsRenderToCubemap;
         SupportsShadows = SystemInfo.supportsShadows;
         SupportsSparseTextures = SystemInfo.supportsSparseTextures;
-        SupportsStencil = SystemInfo.supportsStencil;
+        SupportsStencil = 1;
         //SupportsVertexPrograms = SystemInfo.supportsVertexPrograms;
 		SupportsVertexPrograms = true;
         SupportsVibration = SystemInfo.supportsVibration;

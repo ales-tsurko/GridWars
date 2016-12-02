@@ -88,7 +88,7 @@ public class App : MonoBehaviour, AppStateOwner {
 
 		debug = false;
 		Application.runInBackground = true;
-		Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
+		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
 		notificationCenter = new NotificationCenter();
 

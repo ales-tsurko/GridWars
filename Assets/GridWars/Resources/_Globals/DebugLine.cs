@@ -54,9 +54,10 @@ public class DebugLine : MonoBehaviour
 		lineRenderer.material = new Material(Shader.Find("Mobile/Particles/Additive"));
 		lineRenderer.SetPosition( 0, start );
 		lineRenderer.SetPosition( 1, end );
-		lineRenderer.SetColors( color, color );
-		lineRenderer.SetWidth( DebugLine.CalcPixelHeightAtDist( (start - Camera.main.transform.position).magnitude) * width,
-			DebugLine.CalcPixelHeightAtDist( (end - Camera.main.transform.position).magnitude) * width	);
+		lineRenderer.startColor = color;
+		lineRenderer.endColor = color;
+		lineRenderer.startWidth = DebugLine.CalcPixelHeightAtDist( (start - Camera.main.transform.position).magnitude) * width;
+		lineRenderer.endWidth = DebugLine.CalcPixelHeightAtDist( (end - Camera.main.transform.position).magnitude) * width;
 
 		//add the MonoBehaviour instance
 		DebugLine debugLine = line.AddComponent<DebugLine>();
