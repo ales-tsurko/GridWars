@@ -11,7 +11,7 @@ public class JoinLadderState : AppState {
 		if (app.account.email == null || app.account.email == "") {
 			menu.AddNewText().SetText("Email Address is Required to Join Ladder");
 			menu.AddNewButton().SetText("Go To Account Settings").SetAction(GoToSettings);
-			menu.AddNewButton().SetText("Back").SetAction(TransitionBack);
+			menu.AddNewButton().SetText("Back").SetAction(Back);
 		}
 		else {
 			menu.AddNewText().SetText("Contest Terms and Conditions");
