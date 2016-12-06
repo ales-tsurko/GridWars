@@ -86,7 +86,7 @@ public class App : MonoBehaviour, AppStateOwner {
 			Application.logMessageReceived += HandleException;
 		}
 
-		debug = false;
+		debug = true;
 		Application.runInBackground = true;
 		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 

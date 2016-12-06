@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 public class LadderState : AppState {
+	string terms;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -36,35 +38,59 @@ public class LadderState : AppState {
 
 		var lastRank = 0f;
 
-		menu.Reset();
+		menu.Reset(); 
 
 		var accountDataList = data.GetField("ladder").list;
+		var prize = data.GetField("prize").n;
+		var terminationTime = DateTime.Parse(data.GetField("terminationTime").str);
+		var joinedLadder = data.GetField("joinedLadder").b;
+		terms = data.GetField("terms").str.Replace("\\n", "\n");
 
-		if (accountDataList.Count == 0) {
-			menu.AddNewText().SetText("Play Internet PVP to Establish Your Rank");
+		menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BTC"));
+
+		var isRanked = false; 
+
+		foreach (var accountData in accountDataList) {
+			var account = new Account();
+			account.SetFromData(accountData);
+
+			if (account.rank > lastRank + 1) {
+				menu.AddNewText().SetText("...");
+			}
+
+			var text = account.rank + ". " + account.screenName + " " + account.wins + "-" + account.losses;
+			if (account.id == app.account.id) {
+				isRanked = true;
+				text = Color.yellow.ColoredTag(text);
+			}
+
+			menu.AddNewText().SetText(text);
+
+			lastRank = account.rank;
 		}
-		else {
-			foreach (var accountData in data.GetField("ladder").list) {
-				var account = new Account();
-				account.SetFromData(accountData);
 
-				if (account.rank > lastRank + 1) {
-					menu.AddNewText().SetText("...");
-				}
+		if (!isRanked) {
+			if (accountDataList.Count > 0) {
+				menu.AddNewText().SetText(Color.yellow.ColoredTag("??? " + app.account.screenName));
+			}
 
-				var text = account.rank + ". " + account.screenName + " " + account.wins + "-" + account.losses;
-				if (account.id == app.account.id) {
-					text = Color.yellow.ColoredTag(text);
-				}
-
-				menu.AddNewText().SetText(text);
-
-				lastRank = account.rank;
+			if (joinedLadder) {
+				menu.AddNewText().SetText("Play Internet PVP to Establish Your Rank");
+			}
+			else {
+				menu.AddNewButton().SetText("Join Ladder").SetAction(JoinLadder);
 			}
 		}
 
 		menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
 
 		menu.Focus();
+	}
+
+	void JoinLadder() {
+		var s = new JoinLadderState();
+		Debug.Log(terms);
+		s.terms = terms;
+		TransitionTo(s);
 	}
 }

@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using InControl;
 
 public class UIMenu : UIElement {
 	public static string UIMenuShowedNotification = "UIMenuShowedNotification";
@@ -183,6 +181,12 @@ public class UIMenu : UIElement {
 		return input;
 	}
 
+	public UITextScrollView AddNewTextScrollView() {
+		var textScrollView = UITextScrollView.Instantiate();
+		AddItem(textScrollView);
+		return textScrollView;
+	}
+
 	public UIButton AddNewText() {
 		var button = AddNewButton();
 		button.allowsInteraction = false;
@@ -194,6 +198,12 @@ public class UIMenu : UIElement {
 		var indicator = UIActivityIndicator.Instantiate();
 		AddItem(indicator);
 		return indicator;
+	}
+
+	public UIToggle AddNewToggle() {
+		var toggle = UIToggle.Instantiate();
+		AddItem(toggle);
+		return toggle;
 	}
 
 	public UIMenu SetOrientation(MenuOrientation orientation) {

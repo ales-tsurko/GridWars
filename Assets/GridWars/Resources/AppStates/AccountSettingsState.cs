@@ -4,6 +4,7 @@ using System.Collections;
 public class AccountSettingsState : AppState {
 	UIButton title;
 	UIInput screenNameInput;
+	UIButton over13Toggle;
 	UIInput emailInput;
 	UIButton saveButton;
 	UIButton backButton;
@@ -30,6 +31,8 @@ public class AccountSettingsState : AppState {
 		screenNameInput.inputComponent.contentType = UnityEngine.UI.InputField.ContentType.Alphanumeric;
 		screenNameInput.text = app.account.screenName;
 
+		over13Toggle = menu.AddNewButton().SetText("I'm 13 years of age or older").SetData(false).SetAction(Over13Clicked);
+
 		saveButton = menu.AddNewButton().SetText("Save").SetAction(SaveActivated);
 		saveIndicator = menu.AddNewIndicator();
 		saveIndicator.text = "";
@@ -49,19 +52,37 @@ public class AccountSettingsState : AppState {
 		app.notificationCenter.RemoveObserver(this);
 	}
 
+	void Over13Clicked() {
+		var check = "✓ ";
+		if (over13Toggle.text.Contains(check)) {
+			over13Toggle.text = over13Toggle.text.Substring(check.Length);
+			over13Toggle.data = false;
+		}
+		else {
+			over13Toggle.text = check + over13Toggle.text;
+			over13Toggle.data = true;
+		}
+	}
+
 	void SaveActivated() {
 		if (matchmaker.isConnected) {
-			saveButton.Hide();
-			saveIndicator.Show();
-			title.UseDefaultStyle();
-			JSONObject data = new JSONObject();
-			data.AddField("email", emailInput.text);
-			data.AddField("screenName", screenNameInput.text);
-			matchmaker.Send("saveAccount", data);
-			app.notificationCenter.NewObservation()
-				.SetNotificationName(MatchmakerState.MatchmakerSaveAccountNotification)
-				.SetAction(MatchmakerSavedAccount)
-				.Add();
+			if ((bool)over13Toggle.data) {
+				saveButton.Hide();
+				saveIndicator.Show();
+				title.UseDefaultStyle();
+				JSONObject data = new JSONObject();
+				data.AddField("email", emailInput.text);
+				data.AddField("screenName", screenNameInput.text);
+				matchmaker.Send("saveAccount", data);
+				app.notificationCenter.NewObservation()
+					.SetNotificationName(MatchmakerState.MatchmakerSaveAccountNotification)
+					.SetAction(MatchmakerSavedAccount)
+					.Add();
+			}
+			else {
+				title.text = "You must be 13 or older to save your account.";
+				title.UseAlertStyle();
+			}
 		}
 		else {
 			title.text = "Can't connect to server";
@@ -70,7 +91,7 @@ public class AccountSettingsState : AppState {
 	}
 
 	void BackActivated() {
-		TransitionTo(new AccountMenuState());
+		TransitionBack();
 	}
 
 	void MatchmakerSavedAccount(Notification n) {
