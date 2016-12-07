@@ -26,6 +26,10 @@ public class UIInput : UIButton {
 		}
 
 		set {
+			if (value == null) {
+				value = "";
+			}
+
 			if (capitalizes) {
 				inputComponent.text = value.ToUpper();
 			}
