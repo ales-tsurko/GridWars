@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections;
 
 public class InGameMenu {
+	public static string InGameMenuOpenedNotification = "InGameMenuOpenedNotification";
+	public static string InGameMenuClosedNotification = "InGameMenuClosedNotification";
+
 	public PlayingGameState playingGameState;
 	public Player player;
 	public MenuAnchor menuPlacement;
@@ -82,6 +85,10 @@ public class InGameMenu {
 	public bool isOpen = false;
 
 	void Open() {
+		if (isOpen) {
+			return;
+		}
+
 		if (player.opponent.inGameMenu != null) {
 			if (player.opponent.inGameMenu.isOpen) {
 				return;
@@ -90,7 +97,7 @@ public class InGameMenu {
 				player.opponent.inGameMenu.menu.Hide();
 			}
 		}
-			
+
 		isOpen = true;
 
 		App.shared.matchmaker.menu.Close();
@@ -113,15 +120,29 @@ public class InGameMenu {
         menu.AddNewButton().SetText("Close").SetAction(CloseActivated);
 
 		menu.Focus();
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(InGameMenuOpenedNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	public void Close() {
+		if (!isOpen) {
+			return;
+		}
+
 		if (player.opponent.inGameMenu != null) {
 			player.opponent.inGameMenu.Show();
 		}
 
 		isOpen = false;
 		ShowOptionsButton();
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(InGameMenuClosedNotification)
+			.SetSender(this)
+			.Post();
 	}
 
 	void ShowOptionsButton() {
@@ -142,7 +163,7 @@ public class InGameMenu {
 
 		menu.AddNewText().SetText("Are you sure?");
 
-		if (App.shared.battlefield.isAiVsAi) { //AIvAI
+		if (App.shared.battlefield.isAiVsAi && !App.shared.battlefield.player1.isTutorialMode) { //AIvAI
 			menu.AddNewButton().SetText("Leave").SetAction(ConfirmConcedeActivated);
 			menu.AddNewButton().SetText("Rematch").SetAction(RematchActivated);
 		}
