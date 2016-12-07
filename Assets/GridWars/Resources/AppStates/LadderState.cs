@@ -46,7 +46,7 @@ public class LadderState : AppState {
 		var joinedLadder = data.GetField("joinedLadder").b;
 		terms = data.GetField("terms").str.Replace("\\n", "\n");
 
-		menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BTC"));
+		menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BITCOIN"));
 
 		var isRanked = false; 
 
