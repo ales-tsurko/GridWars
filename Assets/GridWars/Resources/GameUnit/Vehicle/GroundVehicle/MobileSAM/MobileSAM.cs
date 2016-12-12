@@ -30,9 +30,13 @@ public class MobileSAM : GroundVehicle {
 		base.ServerFixedUpdate();
 
 		if (ShouldTargetGoundNow()) {
-			foreach (var weapon in Weapons()) {
-				weapon.SetCanTargetGround(true);
-			}
+			SetCanTargetGround(true);
+		}
+	}
+
+	public void SetCanTargetGround(bool v) {
+		foreach (var weapon in Weapons()) {
+			weapon.SetCanTargetGround(v);
 		}
 	}
 
@@ -58,6 +62,10 @@ public class MobileSAM : GroundVehicle {
 		AdjustWeaponsRangeByFactor(1.2f);
 		AdjustWeaponsFireRateByFactor(1.5f);
 		AdjustHitPointGenByFactor(1.5f);
+
+		if (veteranLevel == 2) {
+			SetCanTargetGround(true);
+		}
 	}
 
 	private bool ShouldTargetGoundNow() {
