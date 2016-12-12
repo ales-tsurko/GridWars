@@ -124,15 +124,12 @@ public class SwitchAccountState : AppState {
 	}
 
 	void ReceiveCredentialsForCode(Notification n) {
-		Debug.Log("ReceiveCredentialsForCode");
 		app.notificationCenter.RemoveObserver(this);
 
 		var data = n.data as JSONObject;
 
 		submitCodeButton.Show();
 		submitCodeIndicator.Hide();
-
-		Debug.Log(data.GetField("success").b);
 
 		if (data.GetField("success").b) {
 			var credentials = data.GetField("credentials");
