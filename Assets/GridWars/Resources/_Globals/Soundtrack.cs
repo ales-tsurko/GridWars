@@ -42,7 +42,7 @@ public class Soundtrack : MonoBehaviour {
 	}
 		
 	private void StopIfZeroVolume() {
-		if (Mathf.Approximately(audioSource.volume, 0f)) {
+		if (audioSource.volume < 0.01f) {
 			audioSource.Stop();
 		}
 	}
