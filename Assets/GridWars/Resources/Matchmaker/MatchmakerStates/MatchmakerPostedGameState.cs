@@ -70,6 +70,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 	public override void HandleMyGameCancelled() {
 		base.HandleMyGameCancelled();
+		matchmaker.menu.Open();
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText().SetText(opponent.screenName + " Declined");
 		matchmaker.menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
@@ -77,6 +78,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 	}
 
 	public void HandlePostGameFailed(JSONObject data) {
+		matchmaker.menu.Open();
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText().SetText(Color.red.ColoredTag("Error: " + data.GetField("error").str));
 		matchmaker.menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
