@@ -45,8 +45,6 @@ public class TutorialPart : MonoBehaviour {
 
 	public void WillExit() {
 		TurnOff();
-		_textMesh.GetComponent<Renderer>().enabled = true;
-		App.shared.notificationCenter.RemoveObserver(this);
 	}
 
 
@@ -160,6 +158,9 @@ public class TutorialPart : MonoBehaviour {
 	void Next() {
 		TurnOff();
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
+
+		_textMesh.GetComponent<Renderer>().enabled = true;
+		App.shared.notificationCenter.RemoveObserver(this);
 
 		if (nextPart != null) {
 			nextPart.GetComponent<TutorialPart>().Begin();
