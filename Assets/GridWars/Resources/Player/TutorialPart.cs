@@ -41,7 +41,6 @@ public class TutorialPart : MonoBehaviour {
 		if (App.shared.state is MainMenuState) {
 			WillExit();
 		}
-
 	}
 
 	public void WillExit() {
@@ -59,6 +58,26 @@ public class TutorialPart : MonoBehaviour {
 			Debug.Log("missing target on " + gameObject.name);
 			return;
 		}
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(InGameMenu.InGameMenuOpenedNotification)
+			.SetAction(MenuOpened)
+			.Add();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(MatchmakerMenu.MatchmakerMenuOpenedNotification)
+			.SetAction(MenuOpened)
+			.Add();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(InGameMenu.InGameMenuClosedNotification)
+			.SetAction(MenuClosed)
+			.Add();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(MatchmakerMenu.MatchmakerMenuClosedNotification)
+			.SetAction(MenuClosed)
+			.Add();
 
 		ObserveExit();
 
@@ -97,6 +116,23 @@ public class TutorialPart : MonoBehaviour {
 		_hasBegun = true;
 	}
 
+	void MenuOpened(Notification n) {
+		ShowHideText();
+	}
+
+	void MenuClosed(Notification n) {
+		ShowHideText();
+	}
+
+	void ShowHideText() {
+		if (App.shared.matchmaker.menu.isOpen || (App.shared.state as PlayingGameState).primaryInGameMenu.isOpen) {
+			_textMesh.GetComponent<Renderer>().enabled = false;
+		}
+		else {
+			_textMesh.GetComponent<Renderer>().enabled = true;
+		}
+	}
+
 	void Update() {
 		if (_hasBegun) {
 			if (App.shared.inputs.continueTutorial.WasPressed) {
@@ -122,6 +158,9 @@ public class TutorialPart : MonoBehaviour {
 	void Next() {
 		TurnOff();
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
+
+		_textMesh.GetComponent<Renderer>().enabled = true;
+		App.shared.notificationCenter.RemoveObserver(this);
 
 		if (nextPart != null) {
 			nextPart.GetComponent<TutorialPart>().Begin();
@@ -161,5 +200,11 @@ public class TutorialPart : MonoBehaviour {
 		App.shared.cameraController.ResetCamera();
 		App.shared.cameraController.pos = 0;
 		App.shared.cameraController.NextPosition();
+	}
+
+	void OnDestroy() {
+		if (App.shared.notificationCenter != null) {
+			App.shared.notificationCenter.RemoveObserver(this);
+		}
 	}
 }

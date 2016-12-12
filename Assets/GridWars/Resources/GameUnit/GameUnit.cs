@@ -516,7 +516,8 @@ public class GameUnit : NetworkObject {
 
 		if (smokeDamage != null) {
 			float max = 50f;
-			smokeDamage.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints)));
+			var main = smokeDamage.main; 
+			main.maxParticles = (int)(max * (1 - (hitPoints / maxHitPoints))); 
 		}
 	}
 
@@ -1057,8 +1058,9 @@ public class GameUnit : NetworkObject {
 		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
 		if (smokeDamageT != null) {
 			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
-			smokeDamage.maxParticles = 0;
-			smokeDamage.simulationSpace = ParticleSystemSimulationSpace.World;
+			var main = smokeDamage.main;
+			main.maxParticles = 0;
+			main.simulationSpace = ParticleSystemSimulationSpace.World;
 		}
 	}
 

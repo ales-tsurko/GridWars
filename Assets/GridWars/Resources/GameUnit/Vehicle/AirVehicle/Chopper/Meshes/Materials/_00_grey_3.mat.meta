@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: e5972dae947bd453c895112ffecb9d6a
 timeCreated: 1481529044
+=======
+guid: 892e57850a0f445afba6f066f3b8bb33
+timeCreated: 1480702609
+>>>>>>> 0df3bb3f360911f202949487f60779e3426064bb
 licenseType: Free
 NativeFormatImporter:
   userData: 

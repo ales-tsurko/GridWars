@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class AppState {
 	public AppStateOwner owner;
 
+	public AppState previousState;
+
 	public string openSoundName = null;
 	public string openSoundtrackName = null;
 	public bool connectsMatchmakerMenu = false;
@@ -16,10 +18,12 @@ public class AppState {
 
 	void HandleOpenSounds() {
 		if (openSoundtrackName != null) {
+			//app.Log("Play: " + openSoundtrackName);
 			App.shared.SoundtrackNamed(openSoundtrackName).Play();
 		}
 
-		if (openSoundName == null) {
+		if (openSoundName != null) {
+			//app.Log("Play: " + openSoundName);
 			App.shared.PlayAppSoundNamedAtVolume(openSoundName, 1f);
 		}
 	}
@@ -41,6 +45,7 @@ public class AppState {
 	public void TransitionTo(AppState state) {
 		owner.state = state;
 		state.owner = owner;
+		state.previousState = this;
 		this.WillExit();
 		state.EnterFrom(this);
 		app.notificationCenter.NewNotification()
@@ -58,6 +63,10 @@ public class AppState {
 		}
 
 		HandleOpenSounds();
+	}
+
+	public void TransitionBack() {
+		TransitionTo(previousState);
 	}
 
 	public virtual void WillExit() {

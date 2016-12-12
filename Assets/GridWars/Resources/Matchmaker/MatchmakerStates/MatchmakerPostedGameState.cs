@@ -10,20 +10,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 	public override void EnterFrom(AppState state) {
         base.EnterFrom(state);
         matchmaker.menu.Open();
-        string oScreenName = "null";
-        string oID = "null";
-        if (App.shared.account.opponent != null) {
-            oScreenName = App.shared.account.screenName;
-            oID = App.shared.account.opponent.GetID();
-        }
-        Analytics.CustomEvent("PostedGame", new Dictionary<string, object>
-            {
-                { "platform", Application.platform.ToString() },
-                { "id", App.shared.account.GetID() },
-                { "screenName", App.shared.account.screenName },
-                { "opponentId", oID },
-                { "opponentScreenName", oScreenName }
-            });
+        app.account.LogEvent("PostedGame");
     }
 
 	// MatchmakerMenuDelegate
@@ -83,6 +70,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 
 	public override void HandleMyGameCancelled() {
 		base.HandleMyGameCancelled();
+		matchmaker.menu.Open();
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText().SetText(opponent.screenName + " Declined");
 		matchmaker.menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
@@ -90,6 +78,7 @@ public class MatchmakerPostedGameState : MatchmakerState {
 	}
 
 	public void HandlePostGameFailed(JSONObject data) {
+		matchmaker.menu.Open();
 		matchmaker.menu.Reset();
 		matchmaker.menu.AddNewText().SetText(Color.red.ColoredTag("Error: " + data.GetField("error").str));
 		matchmaker.menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);

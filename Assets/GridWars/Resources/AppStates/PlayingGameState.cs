@@ -62,22 +62,7 @@ public class PlayingGameState : AppState {
 		battlefield.SoftReset();
 
 		app.StartCoroutine(StartGameAfterBattlefieldEmpty());
-        string oScreenName = "null";
-        string oID = "null";
-        if (App.shared.account.opponent != null) {
-            oScreenName = App.shared.account.screenName;
-            oID = App.shared.account.opponent.GetID();
-        }
-        Analytics.CustomEvent("PlayingGame", new Dictionary<string, object>
-            {
-                { "platform", Application.platform.ToString() },
-                { "id", App.shared.account.GetID() },
-                { "screenName", App.shared.account.screenName },
-                { "opponentId", oID },
-                { "opponentScreenName", oScreenName },
-                { "gameType", battlefield.GetGameType().ToString() }
-            }
-        );
+        app.account.LogEvent("PlayingGame");
 	}
 
 	IEnumerator StartGameAfterBattlefieldEmpty() {
@@ -219,7 +204,11 @@ public class PlayingGameState : AppState {
 	public override void ConfigureForOpenMatchmakerMenu() {
 		//App.shared.Log("ConfigureForOpenMatchmakerMenu", this);
 		//don't call base
-		primaryInGameMenu.DisconnectMatchmakerMenu();
+
+		if (primaryInGameMenu != null) {
+			primaryInGameMenu.DisconnectMatchmakerMenu();
+		}
+
 
 		foreach (var menu in inGameMenus) {
 			menu.Close();

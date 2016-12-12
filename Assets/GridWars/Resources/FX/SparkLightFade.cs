@@ -16,7 +16,7 @@ public class SparkLightFade : MonoBehaviour {
 
 	float normalizedLifeTime {
 		get {
-			return (Time.time - startTime)/(sparkLifetimeRatio*sparks.duration);
+			return (Time.time - startTime)/(sparkLifetimeRatio*sparks.main.duration);
 		}
 	}
 

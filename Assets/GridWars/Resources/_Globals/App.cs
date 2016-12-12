@@ -33,6 +33,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public CameraController cameraController;
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
+	public ExceptionReporter exceptionReporter;
 	public bool isExiting;
 
 	EnvConfig _config;
@@ -76,14 +77,15 @@ public class App : MonoBehaviour, AppStateOwner {
     public EnvController envController;
 	public void Awake() {
 		timerCenter = new AssemblyCSharp.TimerCenter();
-        Analytics.CustomEvent("AppStarted", new Dictionary<string, object>
-                {
-                    { "platform", Application.platform.ToString() }
-                });
 
 	}
 
 	public void Start() {
+		exceptionReporter = new ExceptionReporter();
+		if (config.name == "Release") {
+			Application.logMessageReceived += HandleException;
+		}
+
 		debug = true;
 		Application.runInBackground = true;
 		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
@@ -112,6 +114,7 @@ public class App : MonoBehaviour, AppStateOwner {
 		Projectile.SetupLayerCollisions();
 
 		account = new Account();
+        account.LogEvent("AppStarted");
 
 		matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
 		matchmaker.Setup();
@@ -134,6 +137,12 @@ public class App : MonoBehaviour, AppStateOwner {
 		mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
+	}
+
+	void HandleException(string message, string stackTrace, LogType type) {
+		if (type == LogType.Exception || type == LogType.Error) {
+			exceptionReporter.ReportException(message, stackTrace);
+		}
 	}
 
 	void MenuDidShow(Notification n) {

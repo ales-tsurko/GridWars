@@ -17,20 +17,7 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		else {
 			StartBolt();
 		}
-        string oScreenName = "null";
-        string oID = "null";
-        if (App.shared.account.opponent != null) {
-            oScreenName = App.shared.account.screenName;
-            oID = App.shared.account.opponent.GetID();
-        }
-        Analytics.CustomEvent("PeerConnectionAttempt", new Dictionary<string, object>
-            {
-                { "platform", Application.platform.ToString() },
-                { "id", App.shared.account.GetID() },
-                { "screenName", App.shared.account.screenName },
-                { "opponentId", oID },
-                { "opponentScreenName", oScreenName }
-            });
+        account.LogEvent("PeerConnectionAttempt");
 	}
 
 	void RestartBolt() {
@@ -98,20 +85,7 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 		if (app.state is PlayingGameState || app.state is PostGameState) {
 			app.state.TransitionTo(new MainMenuState());
 		}
-        string oScreenName = "null";
-        string oID = "null";
-        if (App.shared.account.opponent != null) {
-            oScreenName = App.shared.account.screenName;
-            oID = App.shared.account.opponent.GetID();
-        }
-        Analytics.CustomEvent("PeerConnectionAttemptFailed", new Dictionary<string, object>
-            {
-                { "platform", Application.platform.ToString() },
-                { "id", App.shared.account.GetID() },
-                { "screenName", App.shared.account.screenName },
-                { "opponentId", oID },
-                { "opponentScreenName", oScreenName }
-            });
+        account.LogEvent("PeerConnectionAttemptFailed");
 	}
 
 	// MatchmakerDelegate

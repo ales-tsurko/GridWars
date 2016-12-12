@@ -27,6 +27,7 @@ public class MainMenuState : AppState {
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
+		menu.AddItem(UI.MenuItem("Ladder", LadderClicked));
 		menu.AddItem(UI.MenuItem("Account", AccountClicked));
 		menu.AddItem(UI.MenuItem("Community", ChatClicked));
 		menu.AddItem(UI.MenuItem("Options", OptionsClicked));
@@ -59,26 +60,30 @@ public class MainMenuState : AppState {
 	private static bool _needsInitialFadeIn = true;
 
 	void PlayClicked() {
-		Analytics.CustomEvent("PlayClicked", new Dictionary<string, object>{
+		/*Analytics.CustomEvent("PlayClicked", new Dictionary<string, object>{
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		TransitionTo(new PlayMenuState());
 	}
 
+	void LadderClicked() {
+		TransitionTo(new LadderState());
+	}
+
 	void AccountClicked() {
-		Analytics.CustomEvent("AccountClicked", new Dictionary<string, object>{
+		/*Analytics.CustomEvent("AccountClicked", new Dictionary<string, object>{
 			{ "playTime", Time.timeSinceLevelLoad }
-		});
+		});*/
 
 		TransitionTo(new AccountMenuState());
 	}
 
 	void ChatClicked() {
-        Analytics.CustomEvent("ChatClicked", new Dictionary<string, object>
+       /* Analytics.CustomEvent("ChatClicked", new Dictionary<string, object>
                 {
                     { "playTime", Time.timeSinceLevelLoad }
-                });
+                });*/
 
 		Application.OpenURL("http://slack.baremetalgame.com/");
 	}

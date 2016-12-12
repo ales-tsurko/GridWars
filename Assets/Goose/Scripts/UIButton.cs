@@ -42,6 +42,9 @@ public class UIButton : UIElement {
 
         set {
 			_text = value;
+			if (_text == null) {
+				_text = "";
+			}
 
 
 			bool shouldType = doesType && (!value.Contains("<") && !value.Contains("\n"));

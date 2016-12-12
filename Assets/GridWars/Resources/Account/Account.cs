@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
+using System.Linq;
 
 public class Account {
 	public float id;
-    public string GetID (){
-        return id == null ? "null" : id.ToString();
-    }
 	public string screenName;
 	public string email;
 	public string accessToken;
+	public int rank;
+	public int wins;
+	public int losses;
 	public bool isAvailableToPlay;
 	public float lastUpdateTime;
 	public List<Account>connectedAccounts;
@@ -146,6 +148,18 @@ public class Account {
 
 		if ((property = accountData.GetField("isAvailableToPlay")) != null && !property.IsNull) {
 			isAvailableToPlay = property.b;
+		}
+
+		if ((property = accountData.GetField("rank")) != null && !property.IsNull) {
+			rank = (int)Mathf.Round(property.n);
+		}
+
+		if ((property = accountData.GetField("wins")) != null && !property.IsNull) {
+			wins = (int)Mathf.Round(property.n);
+		}
+
+		if ((property = accountData.GetField("losses")) != null && !property.IsNull) {
+			losses = (int)Mathf.Round(property.n);
 		}
 
 		if ((property = accountData.GetField("players")) != null && !property.IsNull) {
@@ -300,6 +314,42 @@ public class Account {
 		App.shared.prefs.screenName = screenName;
 		App.shared.prefs.accessToken = accessToken;
 	}
+
+    public void LogEvent(string eventName){
+		try {
+			Dictionary <string, object> dict = new Dictionary<string, object>
+			{
+				{ "platform", Application.platform.ToString() },
+				{ "id", id.ToString()},
+				{ "screenName", screenName },
+				{ "handicap", App.shared.prefs.npcHandicap }
+			};
+
+			if (opponent != null) {
+				dict.Add("opponentId", opponent.id.ToString());
+				dict.Add("opponentScreenName", opponent.screenName);
+			}
+
+			if (App.shared.battlefield !=null && App.shared.battlefield.isPlayingGame) {
+				dict.Add("gameType", App.shared.battlefield.GetGameType().ToString());
+			}
+
+			if (App.shared.config == null) {
+				Debug.LogError("Event Not Sent, config is null");
+				return;
+			}
+
+			if (App.shared.config.name == "Release") {
+				Analytics.CustomEvent(eventName, dict);
+			} else {
+				App.shared.Log("Would Send Event: " + string.Join(",", dict.Select(kv => kv.Key + "=" + kv.Value).ToArray()), this);
+			}
+		}
+		catch (System.Exception e) {
+			App.shared.Log("LogEvent exception:\n" + e.StackTrace, this);
+		}
+
+    }
 }
 
 public enum AccountStatus { Available, Unavailable, Searching, Playing };
