@@ -8,7 +8,7 @@ public class MatchmakerPreAuthState : MatchmakerState {
 		base.EnterFrom(state);
 
 		var data = new JSONObject();
-		data.AddField("version", App.shared.version);
+		data.AddField("version", App.shared.serverVersion);
 
 		var credentials = new JSONObject(JSONObject.Type.OBJECT);
 

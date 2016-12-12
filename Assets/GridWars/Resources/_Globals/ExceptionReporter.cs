@@ -18,6 +18,7 @@ public class ExceptionReporter {
 
 
 			RaygunClient raygunClient = new RaygunClient("RAYDm54NrF6Gxo5sLot4vg==");
+			raygunClient.ApplicationVersion = App.shared.releaseVersion;
 			raygunClient.Send(message, stackTrace);
 
 			//App.shared.StartCoroutine(LogException(message));

@@ -48,9 +48,15 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 
-	public string version {
+	public string serverVersion {
 		get {
 			return Resources.Load<TextAsset>("version").text;
+		}
+	}
+
+	public string releaseVersion {
+		get {
+			return Resources.Load<TextAsset>("release").text;
 		}
 	}
 
@@ -81,6 +87,8 @@ public class App : MonoBehaviour, AppStateOwner {
 	}
 
 	public void Start() {
+		Debug.Log("release: " + releaseVersion);
+
 		exceptionReporter = new ExceptionReporter();
 		if (config.name == "Release") {
 			Application.logMessageReceived += HandleException;
