@@ -233,7 +233,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public AudioClip SoundNamedForUnitType(string name, System.Type type) {
 		string path = ResourcePathForUnitType(type);
 		string soundPath = path + "/Sounds/" + name;
-		return Resources.Load<AudioClip>(soundPath);
+		return LoadAudioClip(soundPath);
 	}
 
 	// --- global audio ----
@@ -260,7 +260,7 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	public void PlayAppSoundNamedAtVolume(string soundName, float v) {
 		string soundPath = "Sounds/" + soundName;
-		AudioClip clip = Resources.Load<AudioClip>(soundPath);
+		AudioClip clip = LoadAudioClip(soundPath);
 		PlayOneShot(clip, v);
 	}
 

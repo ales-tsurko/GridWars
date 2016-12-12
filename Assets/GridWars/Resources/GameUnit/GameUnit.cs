@@ -271,7 +271,6 @@ public class GameUnit : NetworkObject {
 		string path = ResourcePath();
 		string soundPath = path + "/Sounds/" + name;
 		return App.shared.LoadAudioClip(soundPath);
-		//return Resources.Load<AudioClip>(soundPath);
 	}
 
 	public void PlaySoundNamed(string name, float volume) {

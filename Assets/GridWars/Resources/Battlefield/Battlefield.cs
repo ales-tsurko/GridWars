@@ -140,6 +140,8 @@ public class Battlefield : MonoBehaviour {
 		DestroyEntities();
 		DestroyChaff();
 		gameUnitCache.Reset();
+
+		Resources.UnloadUnusedAssets();
 	}
 
 	void DestroyEntities() {
