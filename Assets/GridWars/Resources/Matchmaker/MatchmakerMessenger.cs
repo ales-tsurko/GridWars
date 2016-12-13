@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using AssemblyCSharp;
 
 public class MatchmakerMessenger {
 	UIButton messageButton;
-	UIInput messageInput;
+	UIChatView chatView;
+	Timer hideTimer;
 
 	Matchmaker matchmaker {
 		get {
 			return App.shared.matchmaker;
 		}
 	}
-
-	bool isEditingMessageInput = false;
-
+		
 	public bool isEnabled = false;
-
-	Timer messageTimer;
-
-	List<string> messages;
+	public bool hasFocus {
+		get {
+			return chatView != null && chatView.hasFocus;
+		}
+	}
 
 
 	public void Setup() {
@@ -31,21 +32,25 @@ public class MatchmakerMessenger {
 		messageButton = matchmaker.menu.AddNewButton();
 		messageButton.matchesNeighborSize = false;
 		messageButton.text = "CLICK HERE OR PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
-		messageButton.action = ShowMessageInput;
+		messageButton.action = MessageButtonActivated;
 
-		messageInput = matchmaker.menu.AddNewInput();
-		messageInput.capitalizes = true;
-		messageInput.matchesNeighborSize = false;
-		messageInput.characterLimit = 64;
-		messageInput.inputComponent.contentType = UnityEngine.UI.InputField.ContentType.Standard;
-		messageInput.Hide();
-
-		messages = new List<string>();
+		chatView = UIChatView.Instantiate();
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIChatView.UIChatViewSubmittedNotification)
+			.SetSender(chatView)
+			.SetAction(ChatViewEditingEnded)
+			.Add();
 
 		App.shared.notificationCenter.NewObservation()
-			.SetSender(matchmaker.menu)
-			.SetNotificationName(UIMenu.UIMenuDeselectedItemNotification)
-			.SetAction(MenuDeselectedItem)
+			.SetNotificationName(UIChatView.UIChatViewReceivedFocusNotification)
+			.SetSender(chatView)
+			.SetAction(ChatViewReceivedFocus)
+			.Add();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIChatView.UIChatViewLostFocusNotification)
+			.SetSender(chatView)
+			.SetAction(ChatViewLostFocus)
 			.Add();
 	}
 
@@ -54,112 +59,103 @@ public class MatchmakerMessenger {
 
 		App.shared.notificationCenter.RemoveObserver(this);
 
-		if (messageTimer != null) {
-			messageTimer.Cancel();
-			messageTimer = null;
-		}
-
 		messageButton.Destroy();
 		messageButton = null;
 
-		messageInput.Destroy();
-		messageInput = null;
+		chatView.Destroy();
+		chatView = null;
+
+		CancelHideTimer();
 
 		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
-
-		isEditingMessageInput = false;
 	}
 
-	void ShowMessageInput() {
-		isEditingMessageInput = true;
-
-		App.shared.battlefield.localPlayer1.inputs.Enabled = false;
-
-		messageButton.Hide();
-
-		messageInput.text = "";
-		messageInput.Show();
-		matchmaker.menu.SelectItem(messageInput);
-
-		if (messageTimer != null) {
-			messageTimer.Cancel();
-			messageTimer = null;
-		}
-	}
-
-	void HideMessageInput() {
-		Debug.Log("HIDE MESSAGE INPUT");
-		isEditingMessageInput = false;
-
-		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
-
-		messageInput.Hide();
-
-		messageButton.Show();
-
-		ShowNextMessage();
-	}
-
-	public void MenuDeselectedItem(Notification n) {
-		if ((n.data as UIInput) == messageInput) {
-			HideMessageInput();
-		}
+	void MessageButtonActivated() {
+		chatView.Show();
+		chatView.Focus();
 	}
 
 	public void AppendMessage(Account account, string message) {
-		messages.Add(account.player.uiColor.ColoredTag(account.screenName + ": ") + message);
-		ShowNextMessage();
-	}
-
-	public void PrependMessage(Account account, string message) {
-		messages.Insert(0, account.player.uiColor.ColoredTag(account.screenName + ": ") + message);
-		ShowNextMessage();
-	}
-
-	void ShowNextMessage() {
-		if (messages.Count > 0 && !isEditingMessageInput && messageTimer == null) {
-			messageButton.text = messages[0];
-			messages.RemoveAt(0);
-
-			if (messages.Count > 0) {
-				messageTimer = App.shared.timerCenter.NewTimer();
-				messageTimer.action = TimerShowNextMessage;
-				messageTimer.timeout = 1f;
-				messageTimer.Start();
-			}
-		}
-	}
-
-	void TimerShowNextMessage() {
-		messageTimer = null;
-		ShowNextMessage();
+		Debug.Log("AppendMessage");
+		chatView.AddMessage(account.player.uiColor.ColoredTag(account.screenName + ": ") + message);
+		StartHideTimer();
 	}
 
 	public void HandleTextMessage(JSONObject data) {
+		chatView.Show();
 		AppendMessage(App.shared.account.opponent, data.GetField("text").str);
 	}
 
-	public void Update() {
-		if (isEditingMessageInput) {
-			if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) {
-				var text = messageInput.text.Trim();
+	public void ChatViewEditingEnded(Notification n) {
+		var text = chatView.messageText;
 
-				if (text.Length > 0) {
-					JSONObject data = new JSONObject();
+		if (text.Length > 0) {
+			JSONObject data = new JSONObject();
 
-					data.AddField("text", text);
-					matchmaker.Send("textMessage", data);
-					PrependMessage(App.shared.account, text);
-				}
-
-				matchmaker.menu.LoseFocus();
-			}
-			else if (Input.GetKeyDown(KeyCode.Escape)) {
-				matchmaker.menu.LoseFocus();
-			}
+			data.AddField("text", text);
+			matchmaker.Send("textMessage", data);
+			AppendMessage(App.shared.account, text);
 		}
-		else if (App.shared.inputs.focusMessenger.WasPressed){
-			ShowMessageInput();
+
+		if (matchmaker.matchmakerState is MatchmakerPlayingGameState || text.Length == 0) {
+			chatView.LoseFocus();
+		}
+		else {
+			chatView.ClearInput();
+		}
+	}
+
+	public void ChatViewReceivedFocus(Notification n) {
+		Debug.Log("ChatViewReceivedFocus");
+		messageButton.Hide();
+		App.shared.battlefield.localPlayer1.inputs.Enabled = false;
+		CancelHideTimer();
+	}
+
+	public void ChatViewLostFocus(Notification n) {
+		Debug.Log("ChatViewLostFocus");
+		messageButton.Show();
+		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
+		chatView.ClearInput();
+
+		if (hideTimer == null) {
+			chatView.Hide();
+		}
+	}
+
+	public void Update() {
+		if (App.shared.inputs.focusMessenger.WasPressed && !chatView.hasFocus) {
+			MessageButtonActivated();
+		}
+	}
+
+	IEnumerator LoseFocusCouroutine() {
+		yield return new WaitForEndOfFrame();
+		chatView.LoseFocus();
+	}
+
+	void StartHideTimer() {
+		CancelHideTimer();
+
+		hideTimer = App.shared.timerCenter.NewTimer();
+		hideTimer.action = HideTimerFired;
+		hideTimer.timeout = 10f;
+		hideTimer.Start();
+
+		Debug.Log("StartHideTimer");
+	}
+
+	void HideTimerFired() {
+		CancelHideTimer();
+		chatView.Hide();
+		Debug.Log("HideTimerFired");
+	}
+
+	void CancelHideTimer() {
+		if (hideTimer != null) {
+			Debug.Log("CancelHideTimer");
+			hideTimer.Cancel();
+			hideTimer = null;
 		}
 	}
 }

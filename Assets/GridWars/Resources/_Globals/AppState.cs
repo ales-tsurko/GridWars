@@ -80,7 +80,7 @@ public class AppState {
 	}
 
 	public virtual void Update() {
-		if (Time.frameCount % 10 == 0) {
+		if (!matchmaker.messenger.hasFocus && Time.frameCount % 10 == 0) {
 			var menuList = new List<UIMenu>(focusableMenus);
 			if (menuList.TrueForAll(m => !m.hasFocus)) {
 				var menu = menuList.Find(m => m.canFocus);

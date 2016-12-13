@@ -22,8 +22,8 @@ public class Player : BetterMonoBehaviour {
 	};
 
 	Color[] uiColors = new Color[]{ 
-		new Color(255f/255, 29f/255, 28f/255),    // player 1 rendered power bar color
-		new Color(100f/255, 99f/255, 255f/255) // player 2 rendered power bar color
+		new Color(255f/255, 29f/255, 28f/255),    // player 1 rendered power bar color FF1D1C
+		new Color(100f/255, 99f/255, 255f/255) // player 2 rendered power bar color 6463FF
 	};
 
 	Color[] secondaryColors = new Color[]{ 
