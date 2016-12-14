@@ -40,8 +40,8 @@ public class CameraController : MonoBehaviour {
 	private float orbitHeight = 30f;
 
 
-	float zoomRate = 0.05f;
-	float rotationRate = 0.05f;
+	public float zoomRate = 0.05f;
+	public float rotationRate = 0.05f;
 	float stoppingDistance = 0.05f*600;
 	float stoppingAngle = 0.1f*600;
 
@@ -393,6 +393,12 @@ public class CameraController : MonoBehaviour {
 		mainTargetRot.eulerAngles = e;
 	}
 
+	public float distanceLerpRatio {
+		get {
+			return zoomRate * Time.deltaTime * 60f;
+		}
+	}
+
 	void UpdateForMainMenu() {		
 		if (mainTargetPos == Vector3.zero) {
 			PickMainCameraLocation();
@@ -417,10 +423,10 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void UpdateForInGame() {
-		float pf = zoomRate; // 0.05f;
+		//float pf = zoomRate; // 0.05f;
 		float rf = rotationRate; //0.05f;
 
-		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
+		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, distanceLerpRatio);
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
 	}
 

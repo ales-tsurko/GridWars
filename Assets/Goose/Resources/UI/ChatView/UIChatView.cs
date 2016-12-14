@@ -54,9 +54,6 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Hide() {
-		var transform = GetComponent<RectTransform>();
-		transform.sizeDelta = new Vector2(0f, transform.sizeDelta.y);
-
 		//Debug.Log("Hide: " + isShown);
 
 		if (isShown) {
@@ -86,6 +83,8 @@ public class UIChatView : MonoBehaviour {
 		transform.offsetMin = new Vector2(0f, 0f);
 		transform.offsetMax = new Vector2(0f, 0f);
 		transform.sizeDelta = new Vector2(384f, transform.sizeDelta.y);
+
+		GetComponent<CanvasRenderer>().SetAlpha(1f);
 	}
 
 	public void Destroy() {
@@ -167,6 +166,9 @@ public class UIChatView : MonoBehaviour {
 				LoseFocus();
 			}
 		}
+
+		var cg = GetComponent<CanvasGroup>();
+		cg.alpha = Mathf.Lerp(cg.alpha, isShown ? 1f : 0f, App.shared.cameraController.distanceLerpRatio);
 	}
 
 	void Awake() {

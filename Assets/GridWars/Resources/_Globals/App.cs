@@ -434,6 +434,24 @@ public class App : MonoBehaviour, AppStateOwner {
 	void OnApplicationQuit() {
 		isExiting = true;
 	}
+
+	public UIMenu focusedMenu {
+		get {
+			var selected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
+			if (selected == null) {
+				return null;
+			}
+			else {
+				var item = selected.GetComponent<UIButton>();
+				if (item == null) {
+					return null;
+				}
+				else {
+					return item.menu;
+				}
+			}
+		}
+	}
 }
 
 

@@ -13,6 +13,12 @@ public class MatchmakerMessenger {
 		}
 	}
 
+	bool isAfterGame {
+		get {
+			return matchmaker.state is MatchmakerAfterGameState;
+		}
+	}
+
 	Matchmaker matchmaker {
 		get {
 			return App.shared.matchmaker;
@@ -128,7 +134,7 @@ public class MatchmakerMessenger {
 
 		chatView.ClearInput();
 
-		if (isPlayingGame || text.Length == 0) {
+		if (text.Length == 0) {
 			chatView.LoseFocus();
 		}
 	}
@@ -148,9 +154,19 @@ public class MatchmakerMessenger {
 	}
 
 	public void Update() {
-		if (App.shared.inputs.focusMessenger.WasPressed && !chatView.hasFocus) {
-			MessageButtonActivated();
+		if ((isPlayingGame || isAfterGame) && !chatView.hasFocus) {
+			if (App.shared.inputs.focusMessenger.WasPressed) {
+				MessageButtonActivated();
+			}
+			else if (App.shared.focusedMenu == null && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))) {
+				App.shared.StartCoroutine(MessageButtonActivatedAtEndOfFrame()); //so UIChatView doesn't read enter key
+			}
 		}
+	}
+
+	IEnumerator MessageButtonActivatedAtEndOfFrame() {
+		yield return new WaitForEndOfFrame();
+		MessageButtonActivated();
 	}
 
 	void StartHideTimer() {
