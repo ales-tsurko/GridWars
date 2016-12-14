@@ -25,7 +25,17 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Prefs prefs;
 	public AppState state { get; set; }
 	public UIMenu menu;
-	public NotificationCenter notificationCenter;
+
+	NotificationCenter _notificationCenter;
+	public NotificationCenter notificationCenter {
+		get {
+			if (_notificationCenter == null) {
+				_notificationCenter = new NotificationCenter();
+			}
+
+			return _notificationCenter;
+		}
+	}
 
 	public Matchmaker matchmaker;
 	public Network network;
@@ -97,8 +107,6 @@ public class App : MonoBehaviour, AppStateOwner {
 		debug = true;
 		Application.runInBackground = true;
 		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
-
-		notificationCenter = new NotificationCenter();
 
 		menu = UI.Menu();
 		notificationCenter.NewObservation()

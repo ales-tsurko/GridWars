@@ -12,6 +12,37 @@ public class Battlefield : MonoBehaviour {
 	public List<Player> players;
 	public GameUnitCache gameUnitCache;
 
+	public Vector3 fortressBounds {
+		get {
+			if (players.Count > 0) {
+				if (player1.fortress == null) {
+					return Vector3.zero;
+				}
+				else {
+					return new Vector3(
+						player1.fortress.bounds.x,
+						1f,
+						(player2.fortress.transform.position.z - player1.fortress.transform.position.z) + player1.fortress.bounds.z
+					);
+				}
+			}
+			else {
+				return Vector3.zero;
+			}
+		}
+	}
+
+	public Vector3[] fortressCorners {
+		get {
+			return new Vector3[] {
+				new Vector3(-fortressBounds.x/2, 0f, -fortressBounds.z/2),
+				new Vector3(-fortressBounds.x/2, 0f, fortressBounds.z/2),
+				new Vector3(fortressBounds.x/2, 0f, -fortressBounds.z/2),
+				new Vector3(fortressBounds.x/2, 0f, fortressBounds.z/2)
+			};
+		}
+	}
+
 	public Player PlayerNumbered(int playerNumber) {
 		if (playerNumber < 1 || playerNumber > players.Count) {
 			return null;
@@ -271,6 +302,13 @@ public class Battlefield : MonoBehaviour {
         }
         return GameType.Unknown;
     }
+
+	/*
+	void OnDrawGizmos() {
+		Gizmos.color = new Color(0, 0, 0, 0.5f);
+		Gizmos.DrawCube(transform.position, new Vector3(fortressBounds.x, 1f, fortressBounds.z));
+	}
+	*/
 }
 
 public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI, Tutorial }

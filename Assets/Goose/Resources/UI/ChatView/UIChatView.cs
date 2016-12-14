@@ -7,11 +7,16 @@ public class UIChatView : MonoBehaviour {
 	public static string UIChatViewSubmittedNotification = "UIChatViewEditingEndedNotification";
 	public static string UIChatViewReceivedFocusNotification = "UIChatViewReceivedFocusNotification";
 	public static string UIChatViewLostFocusNotification = "UIChatViewLostFocusNotification";
+	public static string UIChatViewShowedNotification = "UIChatViewShowedNotification";
+	public static string UIChatViewHidNotification = "UIChatViewHidNotification";
+	public static string UIChatViewCreatedNotification = "UIChatViewCreatedNotification";
+	public static string UIChatViewDestroyedNotifcation = "UIChatViewDestroyedNotifcation";
 
 	public static UIChatView Instantiate() {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject("UI/ChatView/UIChatView"));
 		UI.AssignToCanvas(go);
 		UIChatView chatView = go.GetComponent<UIChatView>();
+		chatView.Hide();
 		return chatView;
 	}
 
@@ -48,13 +53,25 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Hide() {
-		Debug.Log("ChatView.Hide");
-		gameObject.SetActive(false);
+		if (gameObject.activeInHierarchy) {
+			gameObject.SetActive(false);
+			App.shared.notificationCenter.NewNotification()
+				.SetName(UIChatViewHidNotification)
+				.SetSender(this)
+				.Post();
+		}
 	}
 
 	public void Show() {
-		Debug.Log("ChatView.Show");
-		gameObject.SetActive(true);
+		if (!gameObject.activeInHierarchy) {
+			gameObject.SetActive(true);
+
+			App.shared.notificationCenter.NewNotification()
+				.SetName(UIChatViewShowedNotification)
+				.SetSender(this)
+				.Post();
+		}
+
 		var transform = GetComponent<RectTransform>();
 		transform.offsetMin = new Vector2(0f, 0f);
 		transform.offsetMax = new Vector2(0f, 0f);
@@ -62,6 +79,11 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Destroy() {
+		Hide();
+		App.shared.notificationCenter.NewNotification()
+			.SetName(UIChatViewDestroyedNotifcation)
+			.SetSender(this)
+			.Post();
 		Destroy(gameObject);
 	}
 
@@ -135,5 +157,12 @@ public class UIChatView : MonoBehaviour {
 				LoseFocus();
 			}
 		}
+	}
+
+	void Awake() {
+		App.shared.notificationCenter.NewNotification()
+			.SetName(UIChatViewCreatedNotification)
+			.SetSender(this)
+			.Post();
 	}
 }

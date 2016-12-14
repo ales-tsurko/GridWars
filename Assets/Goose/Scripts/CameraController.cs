@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour {
 
 	public List<Transform> referencePositions = new List<Transform>();
 	public List<GameObject> finalPositions = new List<GameObject>();
+	public List<GameObject> openDrawerPositions = new List<GameObject>();
 
     [HideInInspector]
 
@@ -41,6 +42,8 @@ public class CameraController : MonoBehaviour {
 
 	float zoomRate = 0.05f;
 	float rotationRate = 0.05f;
+	float stoppingDistance = 0.05f*600;
+	float stoppingAngle = 0.1f*600;
 
 	//float currentZoomRate;
 	//float currentRotationRate;
@@ -49,11 +52,24 @@ public class CameraController : MonoBehaviour {
 
 		initComplete = false;
 		mouseLook = cam.GetComponent<MouseLook> ();
+
 		//DontDestroyOnLoad (gameObject);
 	}
 
 	public void InitCamera () {
 		SetupFinalPositions();
+
+		App.shared.notificationCenter.RemoveObserver(this);
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIChatView.UIChatViewShowedNotification)
+			.SetAction(ChatViewShowed)
+			.Add();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIChatView.UIChatViewHidNotification)
+			.SetAction(ChatViewHid)
+			.Add();
 
 		pos = positionForName(App.shared.prefs.cameraPosition) - 1;
 		ResetCamera();
@@ -67,15 +83,6 @@ public class CameraController : MonoBehaviour {
 	}
 		
 	public void SetupFinalPositions () {
-		List<GameObject> towerPlacements;
-		if (App.shared.battlefield.localPlayer1 == null) {
-			towerPlacements = App.shared.battlefield.player1.fortress.towerPlacements;
-		}
-		else {
-			towerPlacements = App.shared.battlefield.localPlayer1.fortress.towerPlacements;
-		}
-			
-
 		if (finalPositions.Count == 0) {
 			foreach (var transform in referencePositions) {
 				var obj = new GameObject();
@@ -83,6 +90,14 @@ public class CameraController : MonoBehaviour {
 				obj.transform.parent = transform.parent;
 				obj.AddComponent<KeyIconRotation>();
 				finalPositions.Add(obj);
+			}
+
+			foreach (var transform in referencePositions) {
+				var obj = new GameObject();
+				obj.name = transform.name + " (Drawer Open)";
+				obj.transform.parent = transform.parent;
+				obj.AddComponent<KeyIconRotation>();
+				openDrawerPositions.Add(obj);
 			}
 		}
 
@@ -116,42 +131,95 @@ public class CameraController : MonoBehaviour {
 				finalPosition.transform.rotation = transform.rotation;
 			}
 
-			var sorted = new List<GameObject>(towerPlacements);
-				
-			sorted.Sort((a, b) => {
-				var aSqrMag = (a.transform.position - finalPosition.transform.position).sqrMagnitude;
-				var bSqrMag = (b.transform.position - finalPosition.transform.position).sqrMagnitude;
-
-				return aSqrMag.CompareTo(bSqrMag);
-			});
-
-			var closest = sorted[0];
-
-			var steps = 0;
-
-			cam.transform.position = finalPosition.transform.position;
-			cam.transform.rotation = finalPosition.transform.rotation;
-			while (steps < 100) {
-				Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(closest.transform.position);
-
-				if (screenPoint.x > .1f && screenPoint.x < .9f && screenPoint.y > .125f && screenPoint.y < .875f) {
-					break;
-				}
-				else {
-					cam.transform.position -= cam.transform.forward;
-				}
-
-				steps ++;
-			}
-
-			finalPosition.transform.position = cam.transform.position;
-			finalPosition.transform.rotation = cam.transform.rotation;
+			ZoomCameraOutToContainFortresses(finalPosition.transform, Vector2.zero);
 
 			i ++;
 		}
 
+		i = 0;
+		foreach (var openDrawerPosition in openDrawerPositions) {
+			openDrawerPosition.transform.position = finalPositions[i].transform.position;
+			openDrawerPosition.transform.rotation = finalPositions[i].transform.rotation;
+
+			var margin = 0.1f;
+
+			ZoomCameraOutToContainFortresses(openDrawerPosition.transform, new Vector2(margin, 0f));
+
+			List<Vector3> originalCorners = new List<Vector3>();
+
+			foreach (var corner in App.shared.battlefield.fortressCorners) {
+				originalCorners.Add(cam.GetComponent<Camera>().WorldToViewportPoint(corner));
+			}
+
+
+
+			var steps = 0;
+			while (steps < 100) {
+				bool allContained = true;
+
+				var ci = 0;
+				foreach (var corner in App.shared.battlefield.fortressCorners) {
+					Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(corner);
+
+					var originalCorner = originalCorners[ci];
+
+					if (screenPoint.x <= originalCorner.x - margin) {
+						allContained = false;
+						break;
+					}
+
+					ci ++;
+				}
+
+				if (allContained) {
+					cam.transform.position += cam.transform.right;
+					steps ++;
+				}
+				else {
+					break;
+				}
+			}
+
+			openDrawerPosition.transform.position = cam.transform.position;
+
+			i++;
+		}
+
 		cam.transform.position = savedCamPosition;
 		cam.transform.rotation = savedCamRotation;
+	}
+
+	void ZoomCameraOutToContainFortresses(Transform transform, Vector2 margin) {
+		var steps = 0;
+
+		cam.transform.position = transform.position;
+		cam.transform.rotation = transform.rotation;
+
+		var bounds = App.shared.battlefield.fortressBounds;
+
+		while (steps < 100) {
+			bool allContained = true;
+
+			foreach (var corner in App.shared.battlefield.fortressCorners) {
+				Vector3 screenPoint = cam.GetComponent<Camera>().WorldToViewportPoint(corner);
+
+				if (screenPoint.x < margin.x || screenPoint.x > (1 - margin.x) || screenPoint.y < margin.y || screenPoint.y > (1 - margin.y)) {
+					allContained = false;
+					break;
+				}
+			}
+
+			if (allContained) {
+				break;
+			}
+			else {
+				cam.transform.position -= cam.transform.forward;
+				steps ++;
+			}
+		}
+
+		transform.position = cam.transform.position;
+		transform.rotation = cam.transform.rotation;
 	}
 		
     IEnumerator MonitorInitialCamMovement () {
@@ -212,6 +280,13 @@ public class CameraController : MonoBehaviour {
 	void ResetZoomRates() {
 		zoomRate = 0.05f;
 		rotationRate = 0.05f;
+		stoppingDistance = 0.05f * 600;
+		stoppingAngle = 0.1f * 600;
+
+		if (App.shared.testEndOfGameMode) {
+			zoomRate = 1.0f;
+			rotationRate = 1.0f;
+		}
 	}
 
 	void UseSlowZoomRate2() {
@@ -222,6 +297,14 @@ public class CameraController : MonoBehaviour {
 	void UseSlowZoomRate() {
 		zoomRate = 0.03f;
 		rotationRate = 0.03f;
+	}
+
+	void UseDrawerZoomRate() {
+		Debug.Log("UseDrawerZoomRate");
+		zoomRate = 0.15f;
+		rotationRate = 0.15f;
+		stoppingDistance = 1f;
+		stoppingAngle = 0.1f;
 	}
 
 	void CheckForFPSMode() {
@@ -269,8 +352,8 @@ public class CameraController : MonoBehaviour {
 		//if (Vector3.Distance (cam.localPosition, targetPos) < .05f 
 		//		&& Quaternion.Angle(cam.localRotation, targetRot) < .1f) {
 
-		if (Vector3.Distance (cam.localPosition, targetPos) < .05f*600f 
-			&& Quaternion.Angle(cam.localRotation, targetRot) < .1f*600f) {
+		if (Vector3.Distance (cam.localPosition, targetPos) < stoppingDistance
+			&& Quaternion.Angle(cam.localRotation, targetRot) < stoppingAngle) {
 			if (actionMode) {
 				mouseLook.enabled = true;
 			}
@@ -314,7 +397,6 @@ public class CameraController : MonoBehaviour {
 	void UpdateForMainMenu() {		
 		if (mainTargetPos == Vector3.zero) {
 			PickMainCameraLocation();
-
 		}
 
 		float pf = zoomRate; // 0.05f;
@@ -338,11 +420,6 @@ public class CameraController : MonoBehaviour {
 	void UpdateForInGame() {
 		float pf = zoomRate; // 0.05f;
 		float rf = rotationRate; //0.05f;
-
-		if (App.shared.testEndOfGameMode) {
-			pf = 1.0f;
-			rf = 1.0f;
-		}
 
 		cam.localPosition = Vector3.Lerp (cam.localPosition, targetPos, pf * Time.deltaTime * 60f);
 		cam.localRotation = Quaternion.Lerp (cam.localRotation, targetRot, rf * Time.deltaTime * 60f);
@@ -439,7 +516,14 @@ public class CameraController : MonoBehaviour {
 		cam.parent = null;
         pos += _dir;
 		var _position = Mathf.Abs(pos % finalPositions.Count);
-		var _transform = finalPositions[_position].transform;
+		Transform _transform;
+		if (isDrawerOpen) {
+			_transform = openDrawerPositions[_position].transform;
+		}
+		else {
+			_transform = finalPositions[_position].transform;
+		}
+
 		keyIconRotation = finalPositions[_position].GetComponent<KeyIconRotation>();
 		targetPos = _transform.position;
 		targetRot = _transform.rotation;
@@ -470,8 +554,32 @@ public class CameraController : MonoBehaviour {
 		Cursor.visible = true;
 	}
 
-    void OnDestroy (){
+    void OnDestroy() {
 		UnlockCursor();
     }
+
+	//Drawer
+
+	bool isDrawerOpen = false;
+
+	public void ChatViewShowed(Notification n) {
+		isDrawerOpen = true;
+
+		if (!isOrbiting) {
+			UseDrawerZoomRate();
+			pos--;
+			NextPosition();
+		}
+	}
+
+	public void ChatViewHid(Notification n) {
+		isDrawerOpen = false;
+
+		if (!isOrbiting) {
+			UseDrawerZoomRate();
+			pos--;
+			NextPosition();
+		}
+	}
 
 }
