@@ -7,6 +7,11 @@ public class MatchmakerMessenger {
 	UIButton messageButton;
 	UIChatView chatView;
 	Timer hideTimer;
+	bool isPlayingGame {
+		get {
+			return matchmaker.state is MatchmakerPlayingGameState;
+		}
+	}
 
 	Matchmaker matchmaker {
 		get {
@@ -21,7 +26,6 @@ public class MatchmakerMessenger {
 		}
 	}
 
-
 	public void Setup() {
 		isEnabled = true;
 
@@ -30,9 +34,7 @@ public class MatchmakerMessenger {
 		matchmaker.menu.isInteractible = true;
 
 		messageButton = matchmaker.menu.AddNewButton();
-		messageButton.matchesNeighborSize = false;
-		messageButton.text = "CLICK HERE OR PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
-		messageButton.action = MessageButtonActivated;
+		ResetMessageButton();
 
 		chatView = UIChatView.Instantiate();
 		App.shared.notificationCenter.NewObservation()
@@ -52,6 +54,12 @@ public class MatchmakerMessenger {
 			.SetSender(chatView)
 			.SetAction(ChatViewLostFocus)
 			.Add();
+	}
+
+	void ResetMessageButton() {
+		messageButton.matchesNeighborSize = false;
+		messageButton.text = "PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
+		messageButton.action = MessageButtonActivated;
 	}
 
 	public void TearDown() {
@@ -75,14 +83,24 @@ public class MatchmakerMessenger {
 		chatView.Focus();
 	}
 
+	void HideChatView() {
+		if (isPlayingGame) { //leave it open after the game
+			chatView.Hide();
+		}
+	}
+
 	public void AppendMessage(Account account, string message) {
-		Debug.Log("AppendMessage");
 		chatView.AddMessage(account.player.uiColor.ColoredTag(account.screenName + ": ") + message);
 		StartHideTimer();
 	}
 
 	public void HandleTextMessage(JSONObject data) {
-		chatView.Show();
+		if (chatView.isShown) {
+			App.shared.PlayAppSoundNamed("ReceivedChatMessage");
+		}
+		else {
+			chatView.Show();
+		}
 		AppendMessage(App.shared.account.opponent, data.GetField("text").str);
 	}
 
@@ -92,12 +110,14 @@ public class MatchmakerMessenger {
 		if (text.Length > 0) {
 			JSONObject data = new JSONObject();
 
+			App.shared.PlayAppSoundNamed("SentChatMessage");
+
 			data.AddField("text", text);
 			matchmaker.Send("textMessage", data);
 			AppendMessage(App.shared.account, text);
 		}
 
-		if (matchmaker.matchmakerState is MatchmakerPlayingGameState || text.Length == 0) {
+		if (isPlayingGame || text.Length == 0) {
 			chatView.LoseFocus();
 		}
 		else {
@@ -106,20 +126,18 @@ public class MatchmakerMessenger {
 	}
 
 	public void ChatViewReceivedFocus(Notification n) {
-		Debug.Log("ChatViewReceivedFocus");
 		messageButton.Hide();
 		App.shared.battlefield.localPlayer1.inputs.Enabled = false;
 		CancelHideTimer();
 	}
 
 	public void ChatViewLostFocus(Notification n) {
-		Debug.Log("ChatViewLostFocus");
 		messageButton.Show();
 		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
 		chatView.ClearInput();
 
 		if (hideTimer == null) {
-			chatView.Hide();
+			HideChatView();
 		}
 	}
 
@@ -139,21 +157,17 @@ public class MatchmakerMessenger {
 
 		hideTimer = App.shared.timerCenter.NewTimer();
 		hideTimer.action = HideTimerFired;
-		hideTimer.timeout = 10f;
+		hideTimer.timeout = 5f;
 		hideTimer.Start();
-
-		Debug.Log("StartHideTimer");
 	}
 
 	void HideTimerFired() {
 		CancelHideTimer();
-		chatView.Hide();
-		Debug.Log("HideTimerFired");
+		HideChatView();
 	}
 
 	void CancelHideTimer() {
 		if (hideTimer != null) {
-			Debug.Log("CancelHideTimer");
 			hideTimer.Cancel();
 			hideTimer = null;
 		}
