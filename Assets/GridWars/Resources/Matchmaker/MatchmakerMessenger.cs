@@ -35,8 +35,8 @@ public class MatchmakerMessenger {
 
 		messageButton = matchmaker.menu.AddNewButton();
 		messageButton.matchesNeighborSize = false;
-		messageButton.text = "PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
 		messageButton.action = MessageButtonActivated;
+		ResetMessageButtonText();
 
 		chatView = UIChatView.Instantiate();
 		App.shared.notificationCenter.NewObservation()
@@ -58,6 +58,10 @@ public class MatchmakerMessenger {
 			.Add();
 	}
 
+	void ResetMessageButtonText() {
+		messageButton.text = "PRESS '" + App.shared.inputs.focusMessenger.HotkeyDescription() + "' TO CHAT WITH " + App.shared.account.opponent.screenName;
+	}
+
 	public void Show() {
 		chatView.Show();
 	}
@@ -65,11 +69,14 @@ public class MatchmakerMessenger {
 	public void TearDown() {
 		isEnabled = false;
 
+		//Debug.Log("TearDown");
+
 		App.shared.notificationCenter.RemoveObserver(this);
 
 		messageButton.Destroy();
 		messageButton = null;
 
+		chatView.Hide();
 		chatView.Destroy();
 		chatView = null;
 
@@ -89,19 +96,21 @@ public class MatchmakerMessenger {
 		}
 	}
 
-	public void AppendMessage(Account account, string message) {
-		chatView.AddMessage(account.player.uiColor.ColoredTag(account.screenName + ": ") + message);
-		StartHideTimer();
+	string AttributedMessage(Account account, string message) {
+		return account.player.uiColor.ColoredTag(account.screenName + ": ") + message;
 	}
 
 	public void HandleTextMessage(JSONObject data) {
-		if (chatView.isShown) {
-			App.shared.PlayAppSoundNamed("ChatReceived");
+		App.shared.PlayAppSoundNamed("ChatReceived");
+		var attributedMessage = AttributedMessage(App.shared.account.opponent, data.GetField("text").str);
+		chatView.AddMessage(attributedMessage);
+		if (!chatView.isShown && isPlayingGame) {
+			if (attributedMessage.Length > 60) {
+				attributedMessage = attributedMessage.Substring(0, 60) + "...";
+			}
+			attributedMessage += " ('M' to Respond)";
+			messageButton.text = attributedMessage;
 		}
-		else {
-			chatView.Show();
-		}
-		AppendMessage(App.shared.account.opponent, data.GetField("text").str);
 	}
 
 	public void ChatViewEditingEnded(Notification n) {
@@ -114,14 +123,13 @@ public class MatchmakerMessenger {
 
 			data.AddField("text", text);
 			matchmaker.Send("textMessage", data);
-			AppendMessage(App.shared.account, text);
+			chatView.AddMessage(AttributedMessage(App.shared.account, text));
 		}
+
+		chatView.ClearInput();
 
 		if (isPlayingGame || text.Length == 0) {
 			chatView.LoseFocus();
-		}
-		else {
-			chatView.ClearInput();
 		}
 	}
 
@@ -132,24 +140,17 @@ public class MatchmakerMessenger {
 	}
 
 	public void ChatViewLostFocus(Notification n) {
+		ResetMessageButtonText();
 		messageButton.Show();
 		App.shared.battlefield.localPlayer1.inputs.Enabled = true;
 		chatView.ClearInput();
-
-		if (hideTimer == null) {
-			HideChatView();
-		}
+		HideChatView();
 	}
 
 	public void Update() {
 		if (App.shared.inputs.focusMessenger.WasPressed && !chatView.hasFocus) {
 			MessageButtonActivated();
 		}
-	}
-
-	IEnumerator LoseFocusCouroutine() {
-		yield return new WaitForEndOfFrame();
-		chatView.LoseFocus();
 	}
 
 	void StartHideTimer() {

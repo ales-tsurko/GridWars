@@ -16,7 +16,7 @@ public class UIChatView : MonoBehaviour {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject("UI/ChatView/UIChatView"));
 		UI.AssignToCanvas(go);
 		UIChatView chatView = go.GetComponent<UIChatView>();
-		chatView.gameObject.SetActive(false);
+		chatView.Hide();
 		return chatView;
 	}
 
@@ -28,11 +28,7 @@ public class UIChatView : MonoBehaviour {
 	public InputField inputField;
 
 	public bool hasFocus;
-	public bool isShown {
-		get {
-			return gameObject.activeInHierarchy;
-		}
-	}
+	public bool isShown;
 
 	public string messageText {
 		get {
@@ -58,9 +54,14 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Hide() {
+		var transform = GetComponent<RectTransform>();
+		transform.sizeDelta = new Vector2(0f, transform.sizeDelta.y);
+
+		//Debug.Log("Hide: " + isShown);
+
 		if (isShown) {
-			gameObject.SetActive(false);
-			App.shared.PlayAppSoundNamed("ChatOpen");
+			isShown = false;
+			App.shared.PlayAppSoundNamed("ChatClose");
 			App.shared.notificationCenter.NewNotification()
 				.SetName(UIChatViewHidNotification)
 				.SetSender(this)
@@ -69,9 +70,11 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Show() {
+		//Debug.Log("Show: " + isShown);
+
 		if (!isShown) {
-			App.shared.PlayAppSoundNamed("ChatClose");
-			gameObject.SetActive(true);
+			isShown = true;
+			App.shared.PlayAppSoundNamed("ChatOpen");
 
 			App.shared.notificationCenter.NewNotification()
 				.SetName(UIChatViewShowedNotification)

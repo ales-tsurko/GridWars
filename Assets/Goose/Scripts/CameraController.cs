@@ -300,7 +300,6 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void UseDrawerZoomRate() {
-		Debug.Log("UseDrawerZoomRate");
 		zoomRate = 0.15f;
 		rotationRate = 0.15f;
 		stoppingDistance = 1f;
