@@ -16,7 +16,7 @@ public class UIChatView : MonoBehaviour {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject("UI/ChatView/UIChatView"));
 		UI.AssignToCanvas(go);
 		UIChatView chatView = go.GetComponent<UIChatView>();
-		chatView.Hide();
+		chatView.gameObject.SetActive(false);
 		return chatView;
 	}
 

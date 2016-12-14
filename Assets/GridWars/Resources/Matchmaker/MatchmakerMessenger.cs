@@ -34,7 +34,9 @@ public class MatchmakerMessenger {
 		matchmaker.menu.isInteractible = true;
 
 		messageButton = matchmaker.menu.AddNewButton();
-		ResetMessageButton();
+		messageButton.matchesNeighborSize = false;
+		messageButton.text = "PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
+		messageButton.action = MessageButtonActivated;
 
 		chatView = UIChatView.Instantiate();
 		App.shared.notificationCenter.NewObservation()
@@ -56,10 +58,8 @@ public class MatchmakerMessenger {
 			.Add();
 	}
 
-	void ResetMessageButton() {
-		messageButton.matchesNeighborSize = false;
-		messageButton.text = "PRESS " + App.shared.inputs.focusMessenger.HotkeyDescription() + " TO MESSAGE " + App.shared.account.opponent.screenName;
-		messageButton.action = MessageButtonActivated;
+	public void Show() {
+		chatView.Show();
 	}
 
 	public void TearDown() {
