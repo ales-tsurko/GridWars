@@ -16,7 +16,6 @@ public class UIChatView : MonoBehaviour {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject("UI/ChatView/UIChatView"));
 		UI.AssignToCanvas(go);
 		UIChatView chatView = go.GetComponent<UIChatView>();
-		chatView.Hide();
 		return chatView;
 	}
 
@@ -78,13 +77,6 @@ public class UIChatView : MonoBehaviour {
 				.SetSender(this)
 				.Post();
 		}
-
-		var transform = GetComponent<RectTransform>();
-		transform.offsetMin = new Vector2(0f, 0f);
-		transform.offsetMax = new Vector2(0f, 0f);
-		transform.sizeDelta = new Vector2(384f, transform.sizeDelta.y);
-
-		GetComponent<CanvasRenderer>().SetAlpha(1f);
 	}
 
 	public void Destroy() {
@@ -139,6 +131,11 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	void ApplyLayout() {
+		var transform = GetComponent<RectTransform>();
+		transform.offsetMin = new Vector2(0f, 0f);
+		transform.offsetMax = new Vector2(0f, 0f);
+		transform.sizeDelta = new Vector2(384f, transform.sizeDelta.y);
+
 		float y = 0f;
 		float fontSize = (float)messageViewPrefab.GetComponent<Text>().fontSize;
 
@@ -176,5 +173,8 @@ public class UIChatView : MonoBehaviour {
 			.SetName(UIChatViewCreatedNotification)
 			.SetSender(this)
 			.Post();
+
+		ApplyLayout();
+		Hide();
 	}
 }
