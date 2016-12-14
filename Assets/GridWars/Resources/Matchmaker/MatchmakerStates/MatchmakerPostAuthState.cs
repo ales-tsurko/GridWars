@@ -138,7 +138,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 			UpdateOpenMenu();
 		}
 		else {
-			App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
+			//App.shared.PlayAppSoundNamedAtVolume("PlayerConnected", 1f);
 			button.text = data.GetField("screenName").str + " is online";
 			MakeMenuOpenable();
 			StartStatusTimer();
