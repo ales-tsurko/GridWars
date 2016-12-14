@@ -28,6 +28,11 @@ public class UIChatView : MonoBehaviour {
 	public InputField inputField;
 
 	public bool hasFocus;
+	public bool isShown {
+		get {
+			return gameObject.activeInHierarchy;
+		}
+	}
 
 	public string messageText {
 		get {
@@ -53,8 +58,9 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Hide() {
-		if (gameObject.activeInHierarchy) {
+		if (isShown) {
 			gameObject.SetActive(false);
+			App.shared.PlayAppSoundNamed("ChatViewOpened");
 			App.shared.notificationCenter.NewNotification()
 				.SetName(UIChatViewHidNotification)
 				.SetSender(this)
@@ -63,7 +69,8 @@ public class UIChatView : MonoBehaviour {
 	}
 
 	public void Show() {
-		if (!gameObject.activeInHierarchy) {
+		if (!isShown) {
+			App.shared.PlayAppSoundNamed("ChatViewClosed");
 			gameObject.SetActive(true);
 
 			App.shared.notificationCenter.NewNotification()
