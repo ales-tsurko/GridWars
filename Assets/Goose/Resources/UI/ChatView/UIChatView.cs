@@ -16,7 +16,7 @@ public class UIChatView : MonoBehaviour {
 		GameObject go = MonoBehaviour.Instantiate(App.shared.LoadGameObject("UI/ChatView/UIChatView"));
 		UI.AssignToCanvas(go);
 		UIChatView chatView = go.GetComponent<UIChatView>();
-		chatView.Hide();
+		chatView.gameObject.SetActive(false);
 		return chatView;
 	}
 
@@ -60,7 +60,7 @@ public class UIChatView : MonoBehaviour {
 	public void Hide() {
 		if (isShown) {
 			gameObject.SetActive(false);
-			App.shared.PlayAppSoundNamed("ChatViewOpened");
+			App.shared.PlayAppSoundNamed("ChatViewClosed");
 			App.shared.notificationCenter.NewNotification()
 				.SetName(UIChatViewHidNotification)
 				.SetSender(this)
@@ -70,7 +70,7 @@ public class UIChatView : MonoBehaviour {
 
 	public void Show() {
 		if (!isShown) {
-			App.shared.PlayAppSoundNamed("ChatViewClosed");
+			App.shared.PlayAppSoundNamed("ChatViewOpened");
 			gameObject.SetActive(true);
 
 			App.shared.notificationCenter.NewNotification()

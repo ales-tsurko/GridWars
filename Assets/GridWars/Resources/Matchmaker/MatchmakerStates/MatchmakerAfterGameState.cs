@@ -8,6 +8,12 @@ public class MatchmakerAfterGameState : MatchmakerState {
 		}
 	}
 
+	public override void EnterFrom(AppState state) {
+		base.EnterFrom(state);
+
+		matchmaker.messenger.Show();
+	}
+
 	public override void WillExit() {
 		base.WillExit();
 
