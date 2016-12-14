@@ -60,7 +60,7 @@ public class UIChatView : MonoBehaviour {
 	public void Hide() {
 		if (isShown) {
 			gameObject.SetActive(false);
-			App.shared.PlayAppSoundNamed("ChatViewOpened");
+			App.shared.PlayAppSoundNamed("ChatOpen");
 			App.shared.notificationCenter.NewNotification()
 				.SetName(UIChatViewHidNotification)
 				.SetSender(this)
@@ -70,7 +70,7 @@ public class UIChatView : MonoBehaviour {
 
 	public void Show() {
 		if (!isShown) {
-			App.shared.PlayAppSoundNamed("ChatViewClosed");
+			App.shared.PlayAppSoundNamed("ChatClose");
 			gameObject.SetActive(true);
 
 			App.shared.notificationCenter.NewNotification()

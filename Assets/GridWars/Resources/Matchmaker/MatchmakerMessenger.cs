@@ -96,7 +96,7 @@ public class MatchmakerMessenger {
 
 	public void HandleTextMessage(JSONObject data) {
 		if (chatView.isShown) {
-			App.shared.PlayAppSoundNamed("ReceivedChatMessage");
+			App.shared.PlayAppSoundNamed("ChatReceived");
 		}
 		else {
 			chatView.Show();
@@ -110,7 +110,7 @@ public class MatchmakerMessenger {
 		if (text.Length > 0) {
 			JSONObject data = new JSONObject();
 
-			App.shared.PlayAppSoundNamed("SentChatMessage");
+			App.shared.PlayAppSoundNamed("ChatSent");
 
 			data.AddField("text", text);
 			matchmaker.Send("textMessage", data);
