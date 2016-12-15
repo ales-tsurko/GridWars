@@ -77,6 +77,8 @@ public class UIChatView : MonoBehaviour {
 				.SetSender(this)
 				.Post();
 		}
+
+		ApplyLayout();
 	}
 
 	public void Destroy() {
