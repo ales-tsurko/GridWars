@@ -606,20 +606,24 @@ public class Tower : GroundBuilding {
 			.Post();
 
 		if (textMesh.text == "△") {
+			textMesh.transform.localPosition = new Vector3(0.164f, 0f, -0.18f);
 			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-			textMesh.transform.localPosition = new Vector3(0.054f, 0f, -0.18f);
-		}
-		else if (textMesh.text == "▢") {
-			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
-			textMesh.transform.localPosition = new Vector3(0.032f, 0f, -0.18f);
 		}
 		else if (textMesh.text == "◯") {
+			textMesh.transform.localPosition = new Vector3(0.107f, 0f, -0.18f);
 			textMesh.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-			textMesh.transform.localPosition = new Vector3(0.028f, 0f, -0.18f);
+		}
+		else if (textMesh.text == "▢") {
+			textMesh.transform.localPosition = new Vector3(0.132f, 0f, -0.18f);
+			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
+		}
+		else if (textMesh.text == "X") {
+			textMesh.transform.localPosition = new Vector3(0.082f, 0f, -0.18f);
+			textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
 		}
 		else {
 			textMesh.transform.localScale = new Vector3(0.038f, 0.038f, 0.038f);
-			textMesh.transform.localPosition = new Vector3(0f, 0f, -0.18f);
+			textMesh.transform.localPosition = new Vector3(0.081f, 0f, -0.18f);
 		}
     }
 
