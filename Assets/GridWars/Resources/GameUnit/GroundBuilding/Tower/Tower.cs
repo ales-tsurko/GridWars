@@ -383,13 +383,13 @@ public class Tower : GroundBuilding {
 			return;
 		}
 
-			if (releaseAction.WasPressed) {
-				ReleaseUnitDown();
-			}
+		if (releaseAction.WasPressed) {
+			ReleaseUnitDown();
+		}
 
-			if (releaseAction.WasReleased) {
-				ReleaseUnitUp();
-			}
+		if (releaseAction.WasReleased) {
+			ReleaseUnitUp();
+		}
 		
 
 		ReleaseUnitUpdate();

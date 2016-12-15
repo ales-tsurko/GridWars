@@ -158,6 +158,8 @@ public class InGameMenu {
 	}
 
 	void ConcedeActivated() {
+		Open();
+
 		menu.Reset();
 		menu.anchor = MenuAnchor.MiddleCenter;
 
