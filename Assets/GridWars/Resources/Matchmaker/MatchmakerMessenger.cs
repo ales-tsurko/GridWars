@@ -92,8 +92,10 @@ public class MatchmakerMessenger {
 	}
 
 	void MessageButtonActivated() {
-		chatView.Show();
-		chatView.Focus();
+		if (App.shared.inputs.LastInputType != InControl.BindingSourceType.DeviceBindingSource) {
+			chatView.Show();
+			chatView.Focus();
+		}
 	}
 
 	void HideChatView() {
