@@ -241,6 +241,11 @@ public class UIButton : UIElement {
 			.SetAction(PrefsChangedNotification)
 			.Add();
 
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(Tower.TowerUpdatedHotkeyTextNotification)
+			.SetAction(TowerUpdatedHotkeyText)
+			.Add();
+
 		wasActivatedByMouse = false;
 	}
 
@@ -258,6 +263,21 @@ public class UIButton : UIElement {
 		if (notification.data as string == "keyIconsVisible") {
 			UpdateSuffix();
 		}
+	}
+
+	bool hasFixedText = false;
+	//Hack: Unity garbles text when textMesh.text = releaseAction.HotkeyDescription(); is called in Tower.  Only needs to be fixed once for all text.
+	void TowerUpdatedHotkeyText(Notification notification) {
+		if (isActiveAndEnabled && !hasFixedText)  {
+			hasFixedText = true;
+			StartCoroutine(UpdateDisplayedTextAtEndOfFrame());
+		}
+	}
+
+	IEnumerator UpdateDisplayedTextAtEndOfFrame() {
+		textComponent.text = displayedText + "\u2063";
+		yield return new WaitForEndOfFrame();
+		textComponent.text = displayedText;
 	}
 
 	void UpdateSuffix() {

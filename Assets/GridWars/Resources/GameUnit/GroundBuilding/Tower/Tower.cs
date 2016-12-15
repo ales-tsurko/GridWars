@@ -5,7 +5,7 @@ using System.Linq;
 using InControl;
 
 public class Tower : GroundBuilding {
-
+	public static string TowerUpdatedHotkeyTextNotification = "TowerUpdatedHotkeyTextNotification";
 	public GameObject iconPlacement;
 
 	//public Mesh theMesh;
@@ -599,6 +599,11 @@ public class Tower : GroundBuilding {
 		var textMesh = keyIcon.GetComponentInChildren<TextMesh>();
 
 		textMesh.text = releaseAction.HotkeyDescription();
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(TowerUpdatedHotkeyTextNotification)
+			.SetSender(this)
+			.Post();
 
 		if (textMesh.text == "△") {
 			textMesh.transform.localScale = new Vector3(0.065f, 0.065f, 0.065f);
