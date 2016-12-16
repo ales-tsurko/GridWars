@@ -19,13 +19,21 @@ public class ShowOutcomeState : PostGameSubState {
             return;
         }
 		if (battlefield.localPlayers.Count == 1) {
+			bool flawlessVictor = postGameState.victoriousPlayer.fortress.TowersNetDamageRatio() == 1f;
 			if (postGameState.victoriousPlayer.isLocal) {
 				title = "Victory!";
+				if (flawlessVictor) {
+					title = "Flawless Victory!";
+				}
 				if (showRematch) {
 					app.PlayAppSoundNamed("Victory");
 				}
 			} else {
 				title = "Defeat!";
+				if (flawlessVictor) {
+					title = "Crushing Defeat!";
+				}
+
 				if (showRematch) {
 					app.PlayAppSoundNamedAtVolume("Defeat", 0.5f);
 				}	

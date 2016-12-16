@@ -190,4 +190,16 @@ public class Fortress : MonoBehaviour {
 
 		return 1f;
 	}
+
+	public float TowersNetDamageRatio() {
+		float maxHitPoints = 0f;
+		float hitPoints = 0f;
+
+		foreach (var tower in towers) {
+			maxHitPoints += tower.maxHitPoints;
+			hitPoints += tower.hitPoints;
+		}
+
+		return hitPoints / maxHitPoints;
+	}
 }
