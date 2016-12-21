@@ -457,6 +457,7 @@ public class Weapon : MonoBehaviour {
 			Transform tt = turretObjX.transform;
 			var e = tt.eulerAngles;
 			float newX = e.x + dx;
+			newX = CleanAngle(newX);
 			tt.eulerAngles = new Vector3(newX, e.y, e.z);
 		}
 	}
@@ -471,7 +472,7 @@ public class Weapon : MonoBehaviour {
 			Transform tt = turretObjY.transform;
 			var e = tt.eulerAngles;
 			float newY = e.y + dy;
-
+			newY = CleanAngle(newY);
 			tt.eulerAngles = new Vector3(e.x, newY, e.z);
 		}
 	}
@@ -602,9 +603,7 @@ public class Weapon : MonoBehaviour {
 	public bool isLoaded() {
 		return Time.time > isReloadedAfterTime;
 	}
-
-
-
+		
 	public void FillClip() {
 		while ((clipAmmo < clipMaxAmmo+1) && hasAmmo()) {
 			DecrementAmmo();
@@ -764,6 +763,13 @@ public class Weapon : MonoBehaviour {
 			angle += 360;
 		}
 		return angle;
+	}
+
+	float CleanAngle(float angle) {
+		angle = Convert360to180(angle);
+		angle = Convert180to360(angle);
+		return angle;
+
 	}
 
 	// --- Debugging --------------------------------------

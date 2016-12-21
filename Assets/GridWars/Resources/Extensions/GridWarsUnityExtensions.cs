@@ -208,8 +208,6 @@ public static class GridWarsUnityExtensions {
 	public static bool inheritsFrom(this System.Object self, System.Type type) {
 		return type.IsAssignableFrom(self.GetType());
 	}
-		
-
 
 	// --- Fade ---------------------------
 
@@ -228,6 +226,7 @@ public static class GridWarsUnityExtensions {
 	}
 
 	/*
+	 
 	public static void FadeOutStep(this GameObject self) {
 		foreach (Renderer _renderer in gameObject.GetComponentsInChildren<Renderer>() ) {
 			if (_renderer) {
@@ -238,9 +237,7 @@ public static class GridWarsUnityExtensions {
 			}
 		}
 	}
-	*/
 
-	/*
 	public static List<GameUnit> UnitsForObjects(this List <GameObject> self) {
 		List <GameObject> units = new List <GameObject>();
 

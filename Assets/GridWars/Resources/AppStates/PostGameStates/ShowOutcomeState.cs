@@ -18,8 +18,10 @@ public class ShowOutcomeState : PostGameSubState {
             postGameState.Leave();
             return;
         }
+
+		bool flawlessVictor = postGameState.victoriousPlayer.fortress.TowersNetDamageRatio() == 1f;
+
 		if (battlefield.localPlayers.Count == 1) {
-			bool flawlessVictor = postGameState.victoriousPlayer.fortress.TowersNetDamageRatio() == 1f;
 			if (postGameState.victoriousPlayer.isLocal) {
 				title = "Victory!";
 				if (flawlessVictor) {
@@ -42,7 +44,11 @@ public class ShowOutcomeState : PostGameSubState {
 			if (showRematch) {
 				app.PlayAppSoundNamed("Victory");
 			}
+			string winnerName = postGameState.victoriousPlayer.description;
 			title = postGameState.victoriousPlayer.description + " is Victorious!";
+			if (flawlessVictor) {
+				title = postGameState.victoriousPlayer.description + " is Victorious!";
+			}
 		}
 
 		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
