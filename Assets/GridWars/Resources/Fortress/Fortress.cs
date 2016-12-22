@@ -22,7 +22,7 @@ public class Fortress : MonoBehaviour {
 		get {
 			return new Vector3(unitTypes.Length*(Tower.size.x+towerSpacing) - towerSpacing,
 				Tower.size.y,
-				powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
+				2*powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
 			);
 		}
 	}

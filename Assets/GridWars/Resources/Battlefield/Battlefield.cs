@@ -308,7 +308,7 @@ public class Battlefield : MonoBehaviour {
 		Gizmos.color = new Color(0, 0, 0, 0.5f);
 		Gizmos.DrawCube(transform.position, new Vector3(fortressBounds.x, 1f, fortressBounds.z));
 	}
-	*/
+	//*/
 }
 
 public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI, Tutorial }
