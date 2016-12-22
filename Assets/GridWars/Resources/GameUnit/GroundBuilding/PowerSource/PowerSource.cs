@@ -25,6 +25,7 @@ public class PowerSource : GroundBuilding {
 	public float baseSegmentLength = 10f;
 	public int segmentCount = 20;
 	public float generationRateAdjustment = 1f;
+	public float segmentVAdjust = 0.5f;
 
 	public GameObject prefab;
 
@@ -92,6 +93,10 @@ public class PowerSource : GroundBuilding {
 	public override void ClientJoinedGame() {
 		base.ClientJoinedGame();
 		//need to setup here so its available to other objects.  Server sets it when creating fortress
+		SetOnFortress();
+	}
+
+	protected virtual void SetOnFortress() {
 		player.fortress.powerSource = this;
 	}
 
@@ -115,7 +120,7 @@ public class PowerSource : GroundBuilding {
 			segment.transform.localPosition = new Vector3(offset, 0.1f, 0);
 			segment.transform.localScale = new Vector3(segmentLengthScale, segment.transform.localScale.y, segmentWidthScale);
 
-			player.Paint(segment.gameObject);
+			player.Paint(segment.gameObject, segmentVAdjust);
 
 			//segment.SetActive(false);
 			segments.Add(segment);

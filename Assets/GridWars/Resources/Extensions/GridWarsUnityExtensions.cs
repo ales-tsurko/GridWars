@@ -300,6 +300,35 @@ public static class GridWarsUnityExtensions {
 		return Color.HSVToRGB(ch, cs, v);
 	}
 
+	public static Color WithHAdjust(this Color self, float hAdjust) {
+		float ch;
+		float cs;
+		float cv;
+
+		Color.RGBToHSV(self, out ch, out cs, out cv);
+
+		return Color.HSVToRGB(ch*hAdjust, cs, cv);
+	}
+
+	public static Color WithSAdjust(this Color self, float sAdjust) {
+		float ch;
+		float cs;
+		float cv;
+
+		Color.RGBToHSV(self, out ch, out cs, out cv);
+
+		return Color.HSVToRGB(ch, cs*sAdjust, cv);
+	}
+
+	public static Color WithVAdjust(this Color self, float vAdjust) {
+		float ch;
+		float cs;
+		float cv;
+
+		Color.RGBToHSV(self, out ch, out cs, out cv);
+		return Color.HSVToRGB(ch, cs, cv*vAdjust);
+	}
+
 	public static Color ToP1Green(this Color self) {
 		self.r = 65f/255;
 		self.g = 255f/255;
