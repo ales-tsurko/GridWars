@@ -160,10 +160,10 @@ public class PlayerInputs : PlayerActionSet {
 		concede.AddDefaultBinding(Key.Q);
 		toggleHotkeys.AddDefaultBinding(Key.H);
 
-		nextCamera.AddDefaultBinding(Key.C);
+		nextCamera.AddDefaultBinding(Key.Z);
 		firstPersonCamera.AddDefaultBinding(Key.DownArrow);
 
-		focusMessenger.AddDefaultBinding(Key.M);
+		focusMessenger.AddDefaultBinding(Key.Tab);
 
 		releaseChopper.AddDefaultBinding(Key.D);
 		releaseTanker.AddDefaultBinding(Key.F);
@@ -201,7 +201,8 @@ public static class PlayerInputsExtensions {
 		{ "backslash", "\\" },
 		{ "right bracket",  "]" },
 		{ "left bracket", "[" },
-		{ "escape", "esc" }
+		{ "escape", "esc" },
+		{ "tab", "tab" }
 	};
 
 	public static string HotkeyDescription(this DeviceBindingSource self, int maxLength = 1) {
