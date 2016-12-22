@@ -97,7 +97,7 @@ public class Player : BetterMonoBehaviour {
 		}
 	}
 
-	public PowerSource spellSource {
+	public SpellSource spellSource {
 		get {
 			return fortress.spellSource;
 		}

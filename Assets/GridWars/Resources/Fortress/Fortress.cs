@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Fortress : MonoBehaviour {
 	public Player player;
 	public PowerSource powerSource;
-	public PowerSource spellSource;
+	public SpellSource spellSource;
 	public List<Tower> towers;
 
 	public float towerSpacing {

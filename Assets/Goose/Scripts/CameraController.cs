@@ -227,7 +227,7 @@ public class CameraController : MonoBehaviour {
         while (moving) {
             yield return null;
         }
-        foreach (PowerSource _powerSource in GameObject.FindObjectsOfType<PowerSource>()){
+		foreach (PowerSource _powerSource in GameObject.FindObjectsOfType<PowerSource>()){
             _powerSource.gameStart = true;
         }
 		if (BoltNetwork.isServer) {

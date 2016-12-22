@@ -10,6 +10,12 @@ public class PlayerInputs : PlayerActionSet {
 	public PlayerAction releaseMobileSam;
 	public PlayerAction releaseBomber;
 	public PlayerAction releaseGunship;
+
+	public PlayerAction castSpell1;
+	public PlayerAction castSpell2;
+	public PlayerAction castSpell3;
+	public PlayerAction castSpell4;
+
 	public PlayerAction toggleMenu;
 	public PlayerAction concede;
 	public PlayerAction toggleHotkeys;
@@ -58,6 +64,11 @@ public class PlayerInputs : PlayerActionSet {
 		releaseMobileSam = CreatePlayerAction("MobileSAM");
 		releaseBomber = CreatePlayerAction("Bomber");
 		releaseGunship = CreatePlayerAction("Gunship");
+
+		castSpell1 = CreatePlayerAction("CastSpell1");
+		castSpell2 = CreatePlayerAction("CastSpell2");
+		castSpell3 = CreatePlayerAction("CastSpell3");
+		castSpell4 = CreatePlayerAction("CastSpell4");
 
 		toggleMenu = CreatePlayerAction("Toggle Menu");
 		concede = CreatePlayerAction("Concede");
@@ -171,6 +182,11 @@ public class PlayerInputs : PlayerActionSet {
 		releaseLightTank.AddDefaultBinding(Key.G);
 		releaseMobileSam.AddDefaultBinding(Key.K);
 		releaseGunship.AddDefaultBinding(Key.L);
+
+		castSpell1.AddDefaultBinding(Key.C);
+		castSpell2.AddDefaultBinding(Key.V);
+		castSpell3.AddDefaultBinding(Key.N);
+		castSpell4.AddDefaultBinding(Key.M);
 
         exitFPS.AddDefaultBinding(Key.Escape);
 	}
