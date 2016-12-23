@@ -766,8 +766,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	float CleanAngle(float angle) {
-		angle = Convert360to180(angle);
-		angle = Convert180to360(angle);
+		//angle = Convert360to180(angle);
+		//angle = Convert180to360(angle);
 		return angle;
 
 	}
@@ -795,7 +795,7 @@ public class Weapon : MonoBehaviour {
 	#endif
 
 	public void ShowDebugAimLine() {
-		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 1, true);
 		/*
 		RaycastHit hit;
 		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
