@@ -398,6 +398,10 @@ public class Tower : GroundBuilding {
 	public void SendAttemptQueueUnit(int veteranLevel = 0) {
 		if (isInGame && entity.hasControl && CanQueueUnit(veteranLevel)) {
 			var queueEvent = AttemptQueueUnitEvent.Create(entity);
+			queueEvent.spellName = "";
+			if (player.spellSource.activeSpell != null) {
+				queueEvent.spellName = player.spellSource.activeSpell.name;
+			}
 			queueEvent.veteranLevel = veteranLevel;
 			queueEvent.Send();
 		}

@@ -164,6 +164,9 @@ public class MatchmakerMessenger {
 				App.shared.StartCoroutine(MessageButtonActivatedAtEndOfFrame()); //so UIChatView doesn't read enter key
 			}
 		}
+		else if (chatView.hasFocus && Input.GetKeyDown(KeyCode.Tab)) {
+			chatView.LoseFocus();
+		}
 	}
 
 	IEnumerator MessageButtonActivatedAtEndOfFrame() {

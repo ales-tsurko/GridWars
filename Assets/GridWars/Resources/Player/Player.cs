@@ -97,6 +97,12 @@ public class Player : BetterMonoBehaviour {
 		}
 	}
 
+	public SpellSource spellSource {
+		get {
+			return fortress.spellSource;
+		}
+	}
+
 	public List<GameUnit> units;
 
 	public bool isLocal;
@@ -188,6 +194,7 @@ public class Player : BetterMonoBehaviour {
 		float h = 1f - NpcHandicap() * maxHandicap;
 		Debug.Log("NpcHandicap " + NpcHandicap() + " generationRateAdjustment " + h);
 		fortress.powerSource.generationRateAdjustment = h;
+		fortress.spellSource.generationRateAdjustment = h;
 	}
 			
 	// -----------------------------------------------------------------
@@ -232,9 +239,9 @@ public class Player : BetterMonoBehaviour {
 
 	// Painting
 
-	public void Paint(GameObject gameObject) {
-		gameObject.PaintPrimaryColor(primaryMaterial.color);
-		gameObject.PaintSecondaryColor(secondaryMaterial.color);
+	public void Paint(GameObject gameObject, float vAdjust = 1.0f) {
+		gameObject.PaintPrimaryColor(primaryColor.WithVAdjust(vAdjust));
+		gameObject.PaintSecondaryColor(secondaryColor.WithVAdjust(vAdjust));
 
 		/*
 		gameObject.EachRenderer(r => {

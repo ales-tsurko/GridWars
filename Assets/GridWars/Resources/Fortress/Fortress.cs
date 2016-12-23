@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class Fortress : MonoBehaviour {
 	public Player player;
 	public PowerSource powerSource;
+	public SpellSource spellSource;
 	public List<Tower> towers;
 
 	public float towerSpacing {
@@ -21,7 +22,7 @@ public class Fortress : MonoBehaviour {
 		get {
 			return new Vector3(unitTypes.Length*(Tower.size.x+towerSpacing) - towerSpacing,
 				Tower.size.y,
-				powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
+				2*powerSourcePrefab.bounds.z + towerToPowerSpacing + Tower.size.z
 			);
 		}
 	}
@@ -77,6 +78,7 @@ public class Fortress : MonoBehaviour {
 
 		if (BoltNetwork.isServer) {
 			PlacePowerSource();
+			PlaceSpellSource();
 			PlaceUnitTowers();
 			Destroy(fortressPlacement);
 		}
@@ -90,6 +92,16 @@ public class Fortress : MonoBehaviour {
 		powerSource.transform.position = transform.position;
 		powerSource.transform.rotation = transform.rotation;
 
+	}
+
+	void PlaceSpellSource() {
+		spellSource = GameUnit.Instantiate<SpellSource>();
+		spellSource.name = "SpellSource Player" + player.playerNumber;
+		spellSource.player = player;
+		spellSource.transform.position = transform.position;
+		spellSource.transform.rotation = transform.rotation;
+
+		spellSource.transform.Translate(new Vector3(0, 0, -powerSource.bounds.z));
 	}
 
 	/*
@@ -158,9 +170,13 @@ public class Fortress : MonoBehaviour {
 
 		if (towers.Count == 0) {
 			player.powerSource.ShutDown();
+			player.spellSource.ShutDown();
 		} else {
 			player.powerSource.power += (player.powerSource.maxPower - player.powerSource.power) * 0.8f;
 			player.powerSource.generationRate *= 1.05f;
+
+			player.spellSource.power += (player.spellSource.maxPower - player.spellSource.power) * 0.8f;
+			player.spellSource.generationRate *= 1.05f;
 		}
 	}
 
