@@ -3,7 +3,43 @@ using System.Collections.Generic;
 using InControl;
 using UnityEngine;
 
-public class Spell : MonoBehaviour {
-	public string name;
+public class Spell {
+
+	public GameUnit gameUnit;
+	//public string name;
 	public PlayerAction playerAction;
+
+	public float startTime = 0f;
+
+	public float Cost() {
+		return 5f;
+	}
+
+	public float LifeSpan() {
+		return 10f;
+	}
+
+
+	virtual public void ServerInit () {
+		startTime = Time.time;
+		Debug.Log("Applying " + this.ClassName() + " to " + gameUnit.ClassName());
+	}
+
+	virtual public void ServerStop () {
+		gameUnit.RemoveSpell(this);
+		Debug.Log("Removing " + this.ClassName() + " from " + gameUnit.ClassName());
+	}
+
+	virtual public void ServerFixedUpdate () {
+		if (LifeSpan() != 0f && Age() > LifeSpan()) {
+			ServerStop();
+		}
+	}
+
+	float Age() {
+		return Time.time - startTime;
+	}
+
+
+
 }

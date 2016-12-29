@@ -16,7 +16,6 @@ public class GameUnit : NetworkObject {
 
 	public AudioClip deathSound;
 
-
 	[HideInInspector]
 	public bool showsUnitExplosion = true;
 
@@ -54,7 +53,16 @@ public class GameUnit : NetworkObject {
 
 	public bool shouldAddToPlayerUnits = true;
 		
+	// Cloaking 
+
+	public bool isCloaked = false; // TODO: add this to bolt
+
+	public void SetIsCloaked(bool v) {
+		isCloaked = v;
+	}
+
 	// Damagable
+
 	public float hitPoints {
 		get {
 			return gameUnitState.hitPoints;
@@ -87,6 +95,15 @@ public class GameUnit : NetworkObject {
 
 
 	[HideInInspector]
+
+	// Armor
+
+	public float armor = 0f; // fraction of 1f - damageTaken = (damage * (1f - armor))
+
+	public void SetArmor(float v) {
+		armor = v;
+	}
+
 	public bool isTargetable;
 	public bool isRunning = true;
 
@@ -106,7 +123,27 @@ public class GameUnit : NetworkObject {
 		return powerCostPerLevel[veteranLevel];
 	}
 
-	//FX
+	// Spells
+
+	List <Spell> spells; 
+
+	public void AddSpell(Spell spell) {
+		spells.Add(spell);
+		spell.ServerInit();
+	}
+
+	public void RemoveSpell(Spell spell) {
+		spells.Remove(spell);
+	}
+
+	public void SpellsServerFixedUpdate() {
+		foreach(var spell in spells) {
+			spell.ServerFixedUpdate();
+		}
+	}
+
+
+	// FX
 
 	public float fadeInPeriod = 0.3f;
 	protected bool isPlayerPainted = true;
@@ -377,6 +414,8 @@ public class GameUnit : NetworkObject {
 		thinkThrottle = new Throttle();
 		thinkThrottle.behaviour = this;
 		thinkThrottle.period = 25;
+
+		spells = new List<Spell>();
 	}
 
 	public override void ClientInit() {
@@ -476,7 +515,7 @@ public class GameUnit : NetworkObject {
 		}
 	}
 
-	public override void ServerFixedUpdate(){
+	public override void ServerFixedUpdate() {
 		base.ServerFixedUpdate();
 
 		hitPoints += Time.deltaTime * hitPointRegenRate;
@@ -486,16 +525,21 @@ public class GameUnit : NetworkObject {
 			Think();
 		}
 
+		WeaponsServerFixedUpdate();
+		SpellsServerFixedUpdate();
+
+		RemoveIfOutOfBounds();
+	}
+
+	public void WeaponsServerFixedUpdate() {
 		foreach (var weapon in Weapons()) {
 			if (weapon.isActiveAndEnabled) {
 				weapon.ServerFixedUpdate();
 			}
 		}
-			
-		RemoveIfOutOfBounds ();
 	}
 		
-	public override void ClientFixedUpdate(){
+	public override void ClientFixedUpdate() {
 		base.ClientFixedUpdate();
 	}
 
@@ -1043,7 +1087,7 @@ public class GameUnit : NetworkObject {
 			return;
 		}
 
-		hitPoints -= damage;
+		hitPoints -= damage * (1f - armor);
 		if (hitPoints <= 0) {
 			Die();
 		}

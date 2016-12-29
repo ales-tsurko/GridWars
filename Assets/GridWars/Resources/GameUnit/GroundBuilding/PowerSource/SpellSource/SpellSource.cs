@@ -11,18 +11,19 @@ public class SpellSource : PowerSource {
 			if (_spells == null) {
 				_spells = new List<Spell>();
 
-				var spell = new Spell();
-				spell.name = "Speed";
+				Spell spell = new CloakSpell();
 				spell.playerAction = player.inputs.castSpell1;
 				spells.Add(spell);
 
-				spell = new Spell();
-				spell.name = "Shield";
+				spell = new RangeSpell();
 				spell.playerAction = player.inputs.castSpell2;
 				spells.Add(spell);
 
-				spell = new Spell();
-				spell.name = "Damage";
+				spell = new ShieldSpell();
+				spell.playerAction = player.inputs.castSpell3;
+				spells.Add(spell);
+
+				spell = new SpeedSpell();
 				spell.playerAction = player.inputs.castSpell3;
 				spells.Add(spell);
 			}
@@ -46,11 +47,10 @@ public class SpellSource : PowerSource {
 
 		foreach (var spell in spells) {
 			if (spell.playerAction.WasPressed) {
+				activeSpell = spell;
+			} else if (spell.playerAction.WasReleased) {
 				if (activeSpell == spell) {
 					activeSpell = null;
-				}
-				else {
-					activeSpell = spell;
 				}
 			}
 		}

@@ -416,4 +416,20 @@ public static class GridWarsUnityExtensions {
 		return new String(c, n);
 	}
 	*/
+
+	public static string RemoveSuffix(this string s, string suffix)
+	{
+		if (s.EndsWith(suffix))
+		{
+			return s.Substring(0, s.Length - suffix.Length);
+		}
+		else
+		{
+			return s;
+		}
+	}
+
+	public static string ClassName(this object self) {
+		return self.GetType().Name;
+	}
 }
