@@ -46,12 +46,10 @@ public class SpellSource : PowerSource {
 
 		foreach (var spell in spells) {
 			if (spell.playerAction.WasPressed) {
-				if (activeSpell == spell) {
-					activeSpell = null;
-				}
-				else {
-					activeSpell = spell;
-				}
+				activeSpell = spell;
+			}
+			else if (spell.playerAction.WasReleased) {
+				activeSpell = null;
 			}
 		}
 	}
