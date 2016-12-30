@@ -88,12 +88,14 @@ public class Tower : GroundBuilding {
 
 	// NetworkedGameUnit
 
+	public List<AttemptQueueUnitEvent> attemptQueue;
+
 	public override void ServerInit() {
 		maxHitPoints = 50f;
 		base.ServerInit();
 
 		aiStyle = UnityEngine.Random.value;
-		unreleasedUnitsQueue = new List<GameUnit>();
+		attemptQueue = new List<AttemptQueueUnitEvent>();
 	}
 
 
@@ -230,14 +232,7 @@ public class Tower : GroundBuilding {
 	public override void ServerFixedUpdate () {
 		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.
 
-		//NpcStep();
-
-		/*
-		if (unreleasedUnitsQueue.Count > 0) {
-			ReleaseUnits();
-		}
-		*/
-
+		ProcessAttemptQueue();
 	}
 
 	public void LaunchWithChance(float chance) { // chance out of 1
@@ -305,7 +300,6 @@ public class Tower : GroundBuilding {
 	public float lastProductionTime = 0f;
 	//int releaseLocationIndex = 0;
 	//List<int>unitWithVeterancyQueue; //value is veterancy
-	List<GameUnit>unreleasedUnitsQueue;
 	List<ReleaseZone> releaseZones;
 	int nextUnitVeteranLevel; //used for power calculations
 
@@ -410,27 +404,47 @@ public class Tower : GroundBuilding {
 	}
 
 	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		if (CanQueueUnit(e.veteranLevel)) {
+		attemptQueue.Add(e);
+	}
+
+	public void ProcessAttemptQueue() {
+		foreach(var e in attemptQueue) {
+			ExecuteAttemptQueueUnit(e);
+		}
+
+		attemptQueue.Clear();
+	}
+
+	public void ExecuteAttemptQueueUnit(AttemptQueueUnitEvent e) {
+		if (CanQueueUnit(e.veteranLevel) && unobstructedReleaseZone != null) {
 
 			var unit = unitPrefab.GameUnit().Instantiate();
-			unit.gameObject.SetActive(false);
 			unit.player = player;
 
+			// place in release zone
+			unit.releaseZone = unobstructedReleaseZone;
+			unit.transform.position = unobstructedReleaseZone.transform.position;
+
+
+			// apply veterancy
 			for (int i = 0; i < e.veteranLevel; i ++) {
 				unit.UpgradeVeterancy();
 			}
 
-			unreleasedUnitsQueue.Add(unit);
-
+			// apply spell
 			if (e.spellName != "") {
 				Type spellType = Type.GetType(e.spellName);
 				Spell spell = (Spell)System.Activator.CreateInstance(spellType);
 
-				player.spellSource.power -= spell.Cost();
-				unit.AddSpell(spell);
+				bool hasSpellPower = player.spellSource.power >= spell.Cost();
+				// deduct spell power
+				if (hasSpellPower) {
+					player.spellSource.power -= spell.Cost();
+					unit.AddSpell(spell);
+				}
 			}
 
-
+			// deduct power
 			player.powerSource.power -= gameUnit.PowerCost(e.veteranLevel);
 			lastProductionTime = Time.time;
 		}
@@ -454,22 +468,6 @@ public class Tower : GroundBuilding {
 	}
 	*/
 
-	void ReleaseUnits() {
-		while (unreleasedUnitsQueue.Count > 0 && unobstructedReleaseZone != null) {
-
-			var unit = unreleasedUnitsQueue[0];
-			unreleasedUnitsQueue.RemoveAt(0);
-			unit.gameObject.SetActive(true);
-
-			// place via release zone
-			var releaseZone = unobstructedReleaseZone;
-			releaseZone.hiddenUnit = unit;
-			unit.releaseZone = releaseZone;
-			unit.transform.position = releaseZone.transform.position;
-			unit.transform.rotation = transform.rotation;
-
-		}
-	}
 
 	ReleaseZone unobstructedReleaseZone {
 		get {

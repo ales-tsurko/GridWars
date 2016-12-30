@@ -53,6 +53,12 @@ public class SpellSource : PowerSource {
 					activeSpell = null;
 				}
 			}
+				/*
+			}
+			else if (spell.playerAction.WasReleased) {
+				activeSpell = null;
+			}
+			*/
 		}
 	}
 }

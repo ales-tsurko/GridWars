@@ -451,11 +451,6 @@ public class GameUnit : NetworkObject {
 
 		SetVisibleAndEnabled(true); //Don't do this in ServerAndClientJoinedGame as some classes need it setup here
 		gameUnitState.isInGame = true;
-
-		if (releaseZone != null) {
-			releaseZone.hiddenUnit = null;
-		}
-
 	}
 
 	public override void ClientJoinedGame() {
