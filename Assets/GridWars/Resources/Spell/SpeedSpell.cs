@@ -4,26 +4,29 @@ using UnityEngine;
 
 public class SpeedSpell : Spell {
 
-	public float Cost() {
-		return 5f;
+
+	override public float Cost() {
+		return 7f;
 	}
 
-	public float LifeSpan() {
-		return 10f;
+	override public float LifeSpan() {
+		return 2.7f;
 	}
 
 	override public void ServerInit () {
 		base.ServerInit();
 
-		gameUnit.AdjustWeaponsFireRateByFactor(1.5f);
-		gameUnit.AdjustThrustByFactor(1.5f);
+		factor = 1.3f;
+
+		gameUnit.AdjustWeaponsFireRateByFactor(factor);
+		gameUnit.AdjustThrustByFactor(factor);
 	}
 
 	override public void ServerStop () {
 		base.ServerStop();
 
-		gameUnit.AdjustWeaponsFireRateByFactor(1.0f/1.5f);
-		gameUnit.AdjustThrustByFactor(1.0f/1.5f);
+		gameUnit.AdjustWeaponsFireRateByFactor(1.0f/factor);
+		gameUnit.AdjustThrustByFactor(1.0f/factor);
 	}
 	
 	/*

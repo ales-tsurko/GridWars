@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CloakSpell : Spell {
 
-	public float Cost() {
+	override public float Cost() {
 		return 15f;
 	}
 

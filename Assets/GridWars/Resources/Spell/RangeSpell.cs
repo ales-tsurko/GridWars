@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class RangeSpell : Spell {
 
+	override public float Cost() {
+		return 20f;
+	}
+
+	override public float LifeSpan() {
+		return 10f;
+	}
+
 	override public void ServerInit () {
 		base.ServerInit();
-		gameUnit.AdjustWeaponsRangeByFactor(1.5f);
+		factor = 1.5f;
+
+		gameUnit.AdjustWeaponsRangeByFactor(factor);
 	}
 
 	override public void ServerStop () {
 		base.ServerStop();
-		gameUnit.SetArmor(1f/1.5f);
+		gameUnit.AdjustWeaponsRangeByFactor(1f/factor);
 	}
 
 	/*

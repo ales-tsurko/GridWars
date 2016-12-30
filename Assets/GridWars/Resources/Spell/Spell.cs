@@ -10,14 +10,20 @@ public class Spell {
 	public PlayerAction playerAction;
 
 	public float startTime = 0f;
+	public float factor = 1.3f;
 
-	public float Cost() {
+	virtual public float Cost() {
 		return 5f;
 	}
 
-	public float LifeSpan() {
+	virtual public float LifeSpan() {
 		return 10f;
 	}
+
+	/*
+	public Spell() {
+	}
+	*/
 
 
 	virtual public void ServerInit () {
