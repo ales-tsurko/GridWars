@@ -129,6 +129,7 @@ public class GameUnit : NetworkObject {
 
 	public void AddSpell(Spell spell) {
 		spells.Add(spell);
+		spell.gameUnit = this;
 		spell.ServerInit();
 	}
 
@@ -137,11 +138,12 @@ public class GameUnit : NetworkObject {
 	}
 
 	public void SpellsServerFixedUpdate() {
-		foreach(var spell in spells) {
+		int max = spells.Count;
+		for(int i = max - 1; i >= 0; i--) { // don't use foreach since a spell might remove itself
+			Spell spell = spells[i];
 			spell.ServerFixedUpdate();
 		}
 	}
-
 
 	// FX
 
