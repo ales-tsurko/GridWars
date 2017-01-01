@@ -24,7 +24,7 @@ public class SpellSource : PowerSource {
 				spells.Add(spell);
 
 				spell = new SpeedSpell();
-				spell.playerAction = player.inputs.castSpell3;
+				spell.playerAction = player.inputs.castSpell4;
 				spells.Add(spell);
 			}
 
@@ -48,6 +48,7 @@ public class SpellSource : PowerSource {
 		foreach (var spell in spells) {
 			if (spell.playerAction.WasPressed) {
 				activeSpell = spell;
+				Debug.Log("activeSpell = " + activeSpell.ClassName());
 			} else if (spell.playerAction.WasReleased) {
 				if (activeSpell == spell) {
 					activeSpell = null;
