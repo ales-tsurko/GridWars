@@ -101,7 +101,8 @@ public class BrightFadeInGeneric : MonoBehaviour {
 			float r = EaseInOutSine(t, startColor.r, realColor.r - startColor.r, 1); 
 			float g = EaseInOutSine(t, startColor.g, realColor.g - startColor.g, 1); 
 			float b = EaseInOutSine(t, startColor.b, realColor.b - startColor.b, 1); 
-			return new Color(r, g, b);
+			float a = EaseInOutSine(t, startColor.a, realColor.a - startColor.a, 1); 
+			return new Color(r, g, b, a);
 		}
 			
 		return Color.Lerp(startColor, realColor, t);

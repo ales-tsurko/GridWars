@@ -11,6 +11,7 @@ public class Spell {
 
 	public float startTime = 0f;
 	public float factor = 1.3f;
+	public string startSoundName;
 
 	virtual public float Cost() {
 		return 5f;

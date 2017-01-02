@@ -41,7 +41,8 @@ public class BrightFadeIn : MonoBehaviour {
 		float r = EaseInOutSine(t, startColor.r, finalColor.r - startColor.r, 1); 
 		float g = EaseInOutSine(t, startColor.g, finalColor.g - startColor.g, 1); 
 		float b = EaseInOutSine(t, startColor.b, finalColor.b - startColor.b, 1); 
-		Color color = new Color(r, g, b);
+		float a = EaseInOutSine(t, startColor.a, finalColor.a - startColor.a, 1); 
+		Color color = new Color(r, g, b, a);
 
 		gameObject.Paint(color, materialName);
 	}

@@ -10,7 +10,7 @@ public class ShieldSpell : Spell {
 	}
 
 	override public float LifeSpan() {
-		return 3.3f;
+		return 6.3f;
 	}
 
 	override public void ServerInit () {
@@ -31,6 +31,11 @@ public class ShieldSpell : Spell {
 		//Debug.Log("r.material.name = " + r.material.name);
 
 		// sphere.SetAlpha(0.01f);
+	}
+
+	override public void ServerFixedUpdate () {
+		base.ServerFixedUpdate();
+		//sphere.SetAlpha(0.01f);
 	}
 
 	override public void ServerStop () {
