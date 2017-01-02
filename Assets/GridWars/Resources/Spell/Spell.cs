@@ -21,32 +21,41 @@ public class Spell {
 		return 10f;
 	}
 
+	public float Age() {
+		return Time.time - startTime;
+	}
+
+	public float TimeLeft() {
+		float dt = LifeSpan() - Age();
+		if (dt < 0) {
+			dt = 0f;
+		}
+		return dt;
+	}
+
 	/*
 	public Spell() {
 	}
 	*/
 
 
-	virtual public void ServerInit () {
+	virtual public void ServerAndClientInit () {
 		startTime = Time.time;
-		Debug.Log("Applying " + this.ClassName() + " to " + gameUnit.ClassName());
+		//Debug.Log("Applying " + this.ClassName() + " to " + gameUnit.ClassName());
+		App.shared.PlayAppSoundNamedAtVolume(startSoundName, 1f);
 	}
 
-	virtual public void ServerStop () {
-		gameUnit.RemoveSpell(this);
-		Debug.Log("Removing " + this.ClassName() + " from " + gameUnit.ClassName());
-	}
 
-	virtual public void ServerFixedUpdate () {
+	virtual public void ServerAndClientFixedUpdate () {
 		if (LifeSpan() != 0f && Age() > LifeSpan()) {
-			ServerStop();
+			ServerAndClientStop();
 		}
 	}
 
-	float Age() {
-		return Time.time - startTime;
+	virtual public void ServerAndClientStop () {
+		gameUnit.RemoveSpell(this);
+		//Debug.Log("Removing " + this.ClassName() + " from " + gameUnit.ClassName());
 	}
-
 
 
 }

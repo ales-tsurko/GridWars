@@ -130,20 +130,21 @@ public class GameUnit : NetworkObject {
 	public void AddSpell(Spell spell) {
 		spells.Add(spell);
 		spell.gameUnit = this;
-		spell.ServerInit();
+		spell.ServerAndClientInit();
 	}
 
 	public void RemoveSpell(Spell spell) {
 		spells.Remove(spell);
 	}
 
-	public void SpellsServerFixedUpdate() {
+	public void SpellsServerAndClientFixedUpdate () {
 		int max = spells.Count;
 		for(int i = max - 1; i >= 0; i--) { // don't use foreach since a spell might remove itself
 			Spell spell = spells[i];
-			spell.ServerFixedUpdate();
+			spell.ServerAndClientFixedUpdate();
 		}
 	}
+		
 
 	// FX
 
@@ -523,7 +524,7 @@ public class GameUnit : NetworkObject {
 		}
 
 		WeaponsServerFixedUpdate();
-		SpellsServerFixedUpdate();
+		SpellsServerAndClientFixedUpdate();
 
 		RemoveIfOutOfBounds();
 	}
@@ -542,6 +543,7 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientFixedUpdate() {
 		base.ServerAndClientFixedUpdate();
+		SpellsServerAndClientFixedUpdate();
 		UpdateSpatialSounds();
 	}
 

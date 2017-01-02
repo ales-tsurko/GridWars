@@ -13,8 +13,8 @@ public class SpeedSpell : Spell {
 		return 2.7f;
 	}
 
-	override public void ServerInit () {
-		base.ServerInit();
+	override public void ServerAndClientInit () {
+		base.ServerAndClientInit();
 
 		factor = 1.3f;
 
@@ -22,16 +22,10 @@ public class SpeedSpell : Spell {
 		gameUnit.AdjustThrustByFactor(factor);
 	}
 
-	override public void ServerStop () {
-		base.ServerStop();
+	override public void ServerAndClientStop () {
+		base.ServerAndClientStop();
 
 		gameUnit.AdjustWeaponsFireRateByFactor(1.0f/factor);
 		gameUnit.AdjustThrustByFactor(1.0f/factor);
 	}
-	
-	/*
-	override public void ServerFixedUpdate () {
-		base.ServerFixedUpdate();
-	}
-	*/
 }

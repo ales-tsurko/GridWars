@@ -13,8 +13,8 @@ public class ShieldSpell : Spell {
 		return 6.3f;
 	}
 
-	override public void ServerInit () {
-		base.ServerInit();
+	override public void ServerAndClientInit () {
+		base.ServerAndClientInit();
 
 		gameUnit.SetArmor(0.9f);
 
@@ -33,13 +33,17 @@ public class ShieldSpell : Spell {
 		// sphere.SetAlpha(0.01f);
 	}
 
-	override public void ServerFixedUpdate () {
-		base.ServerFixedUpdate();
-		//sphere.SetAlpha(0.01f);
+	override public void ServerAndClientFixedUpdate () {
+		base.ServerAndClientFixedUpdate();
+
+		float dt = TimeLeft();
+		if (dt < 1f) {
+			sphere.SetAlpha(0.01f * dt);
+		}
 	}
 
-	override public void ServerStop () {
-		base.ServerStop();
+	override public void ServerAndClientStop () {
+		base.ServerAndClientStop();
 		gameUnit.SetArmor(0.0f);
 		Object.Destroy(sphere);
 	}

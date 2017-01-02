@@ -8,22 +8,15 @@ public class CloakSpell : Spell {
 		return 15f;
 	}
 
-	override public void ServerInit () {
-		base.ServerInit();
+	override public void ServerAndClientInit () {
+		base.ServerAndClientInit();
 
 		gameUnit.SetIsCloaked(true);
 	}
 
-	override public void ServerStop () {
-		base.ServerStop();
+	override public void ServerAndClientStop () {
+		base.ServerAndClientStop();
 
 		gameUnit.SetIsCloaked(false);
 	}
-
-
-	/*
-	override public void ServerFixedUpdate () {
-		base.ServerFixedUpdate();
-	}
-	*/
 }
