@@ -6,7 +6,7 @@ public class SpeedSpell : Spell {
 
 
 	override public float Cost() {
-		return 7f;
+		return 10f;
 	}
 
 	override public float LifeSpan() {

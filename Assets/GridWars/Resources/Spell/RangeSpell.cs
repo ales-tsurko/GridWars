@@ -9,7 +9,7 @@ public class RangeSpell : Spell {
 	}
 
 	override public float LifeSpan() {
-		return 10f;
+		return 1000f;
 	}
 
 	override public void ServerAndClientInit () {

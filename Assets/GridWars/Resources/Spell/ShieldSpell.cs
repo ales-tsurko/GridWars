@@ -6,11 +6,11 @@ public class ShieldSpell : Spell {
 	GameObject sphere;
 
 	override public float Cost() {
-		return 7f;
+		return 12f;
 	}
 
 	override public float LifeSpan() {
-		return 6.3f;
+		return 7f;
 	}
 
 	override public void ServerAndClientInit () {
@@ -27,10 +27,6 @@ public class ShieldSpell : Spell {
 
 		Renderer r = sphere.GetComponent<Renderer>();
 		r.material = App.shared.LoadMaterial("Materials/Shield");
-		//r.material.color = new Color(1f, 1f, 1f, 0.01f);
-		//Debug.Log("r.material.name = " + r.material.name);
-
-		// sphere.SetAlpha(0.01f);
 	}
 
 	override public void ServerAndClientFixedUpdate () {
@@ -38,7 +34,15 @@ public class ShieldSpell : Spell {
 
 		float dt = TimeLeft();
 		if (dt < 1f) {
-			sphere.SetAlpha(0.01f * dt);
+			//sphere.SetAlpha(0.01f * dt);
+			Renderer r = sphere.GetComponent<Renderer>();
+			Color c = r.material.color;
+			float f = 0.95f;
+			c.r *= f;
+			c.g *= f;
+			c.b *= f;
+			c.a *= f;
+			r.material.color = c;
 		}
 	}
 
