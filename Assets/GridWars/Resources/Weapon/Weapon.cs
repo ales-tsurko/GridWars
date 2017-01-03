@@ -203,6 +203,10 @@ public class Weapon : MonoBehaviour {
 			return false;
 		}
 
+		if (obj.GameUnit().isCloaked) {
+			return false;
+		}
+
 		GameUnit aUnit = obj.GetComponent<GameUnit>();
 
 		if (aUnit.isTargetable && CanTargetClassOfUnit(aUnit)) {
@@ -642,6 +646,11 @@ public class Weapon : MonoBehaviour {
 				GetComponent<AudioSource>().PlayOneShot(fireClip, fireClipVolume);
 			}
 			Reload();
+
+			App.shared.notificationCenter.NewNotification()
+				.SetName("UnitDidFireNotification")
+				.SetSender(owner.GameUnit())
+				.Post();
 		}
 	}
 

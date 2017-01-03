@@ -3,6 +3,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+	Examples:
+
+	Observe:
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName("UnitFired")
+			.SetAction(UnitDidFireNotification)
+			.SetSender(gameUnit)
+			.Add();
+
+	Post:
+
+		App.shared.notificationCenter.NewNotification()
+			.SetName(UIChatViewDestroyedNotifcation)
+			.SetSender(this)
+			.Post();
+
+ */
+
 public class NotificationCenter {
 	Dictionary<string, List<Observation>> observationMap;
 

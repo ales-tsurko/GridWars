@@ -58,4 +58,9 @@ public class Spell {
 	}
 
 
+
+	virtual public void UnitWasHit(float damage) {
+
+	}
+
 }

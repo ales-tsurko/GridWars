@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class SpeedSpell : Spell {
 
-
 	override public float Cost() {
-		return 10f;
+		return 12f;
 	}
 
 	override public float LifeSpan() {
