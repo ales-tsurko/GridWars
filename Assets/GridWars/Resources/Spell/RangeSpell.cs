@@ -5,7 +5,7 @@ using UnityEngine;
 public class RangeSpell : Spell {
 
 	override public float Cost() {
-		return 20f;
+		return 25f;
 	}
 
 	override public float LifeSpan() {

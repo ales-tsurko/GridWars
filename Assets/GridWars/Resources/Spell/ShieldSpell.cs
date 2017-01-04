@@ -6,10 +6,13 @@ public class ShieldSpell : Spell {
 	GameObject sphere;
 
 	override public float Cost() {
-		return 12f;
+		return 20f;
 	}
 
 	override public float LifeSpan() {
+		if (gameUnit.GetType() == typeof(Tanker)) {
+			return 3.7f;
+		}
 		return 7f;
 	}
 

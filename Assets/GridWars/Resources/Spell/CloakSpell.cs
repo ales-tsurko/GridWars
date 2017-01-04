@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class CloakSpell : Spell {
 
+	// cloak unit (making it invisible to enemies) until it fires
+	// while cloaked, unit renders as semi-transparent
+
 	override public float Cost() {
-		return 15f;
+		return 20f;
 	}
 
 	override public float LifeSpan() {
-		return 1000f;
+		if (gameUnit.GetType() == typeof(Tanker)) {
+			return 3.7f;
+		}
+		return 30f;
 	}
 
 	public float cloackedAlpha = 0.3f;
@@ -21,8 +27,7 @@ public class CloakSpell : Spell {
 
 		gameUnit.gameObject.SetAlpha(cloackedAlpha);
 
-
-
+		// so we can uncloak when we fire
 		App.shared.notificationCenter.NewObservation()
 			.SetNotificationName("UnitDidFireNotification")
 			.SetAction(UnitDidFireNotification)
