@@ -5,16 +5,22 @@ public class TireTrackGenerator : MonoBehaviour {
 	int lastMark;
 	Transform _t;
 	TireTracks track;
+    Color trackColor;
 	void Start (){
 		GameObject go = new GameObject ();
 		track = go.AddComponent<TireTracks> ();
 		track.transform.position = Vector3.zero;
 		track.name = gameObject.GetInstanceID () + "Track";
 		_t = transform;
+        trackColor = Color.black;
 	}
 	void Update(){
-		lastMark = track.AddSkidMark (new Vector3 (_t.position.x, 0.02f, _t.position.z), new Vector3 (0, 1, 0), 1, lastMark);
+        lastMark = track.AddSkidMark (new Vector3 (_t.position.x, 0.02f, _t.position.z), new Vector3 (0, 1, 0), 1, lastMark, trackColor);
 	}
+
+    public void SetColor(Color newColor){
+        trackColor = newColor;
+    }
 
 	void OnDestroy(){
 		if (track != null) {

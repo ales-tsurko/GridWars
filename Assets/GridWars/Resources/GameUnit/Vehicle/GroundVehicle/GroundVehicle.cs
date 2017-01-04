@@ -36,4 +36,15 @@ public class GroundVehicle : Vehicle {
 		return Mathf.Abs(a1) + Mathf.Abs(a2);
 	}
 
+    TireTrackGenerator[] tracks;
+
+    public void SetTrackColor (Color newColor){
+        if (tracks == null) {
+            tracks = GetComponentsInChildren<TireTrackGenerator>();
+        }
+        foreach (TireTrackGenerator track in tracks) {
+            track.SetColor(newColor);
+        }
+    }
+
 }

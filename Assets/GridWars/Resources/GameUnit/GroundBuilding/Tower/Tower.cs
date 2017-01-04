@@ -421,6 +421,10 @@ public class Tower : GroundBuilding {
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
 
+            if (App.shared.battlefield.isPvELadder) {
+                App.shared.battlefield.AdjustUnitForPvELadder(unit, playerNumber);
+            }
+
 			// place in release zone
 			unit.releaseZone = unobstructedReleaseZone;
 			unit.transform.position = unobstructedReleaseZone.transform.position;

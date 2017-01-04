@@ -112,9 +112,12 @@ public class Battlefield : MonoBehaviour {
 
 	public bool isInternetPVP;
 	public bool isAiVsAi;
+    public bool isPvELadder;
 	public bool canCheckGameOver; //don't check game over until a unit is received from server
 
     public bool hasStarted = false;
+
+    public int pveLadderLevel;
 
 	public void Awake() {
 		gameUnitCache = new GameUnitCache();
@@ -141,6 +144,9 @@ public class Battlefield : MonoBehaviour {
 		}
 
 		App.shared.cameraController.InitCamera(); //depends on fortress.  call after StartGame
+        if (isPvELadder) {
+            SetupForPvELadder();
+        }
 	}
 
 	void AddPlayer() {
@@ -286,6 +292,9 @@ public class Battlefield : MonoBehaviour {
         if (isInternetPVP) {
             return GameType.InternetPVP;
         }
+        if (isPvELadder) {
+            return GameType.PvELadder;
+        }
         if (isPvP() && !isInternetPVP) {
             return GameType.SharedScreenPVP;
         }
@@ -302,6 +311,22 @@ public class Battlefield : MonoBehaviour {
         }
         return GameType.Unknown;
     }
+    PvELadderLevelConfig pveConfig;
+    void SetupForPvELadder(){
+        pveConfig = Resources.Load<PvELadderLevelConfig>("PvELadder/Levels/Level" + pveLadderLevel);
+        //power rate
+        player1.powerSource.generationRate = pveConfig.playerPowerRate;
+        player1.powerSource.generationRateAdjustment = 1;
+        player2.powerSource.generationRate = pveConfig.cpuPowerRate;
+        player2.powerSource.generationRateAdjustment = 1;
+        //
+    }
+
+    public void AdjustUnitForPvELadder(GameUnit _unit, int _playerNumber){
+        print(_playerNumber);
+        pveConfig.AdjustUnit(_unit, _playerNumber);
+        print("Unit Adjusted");
+    }
 
 	/*
 	void OnDrawGizmos() {
@@ -311,5 +336,5 @@ public class Battlefield : MonoBehaviour {
 	//*/
 }
 
-public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI, Tutorial }
+public enum GameType { Unknown, InternetPVP, SharedScreenPVP, AIvsAI, PlayervsAI, Tutorial, PvELadder }
 

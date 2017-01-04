@@ -42,6 +42,7 @@ public class PlayMenuState : AppState {
 		menu.Reset();
 		internetPvpButton = menu.AddNewButton().SetText("Internet PVP").SetAction(InternetPvpClicked);
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
+        //menu.AddItem(UI.MenuItem("PvE Ladder", PvELadderClicked));  //commented while still adding
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Tutorial", Tutorial));
@@ -134,6 +135,22 @@ public class PlayMenuState : AppState {
 
 		TransitionTo(new WaitForBoltState());
 	}
+
+    void PvELadderClicked (){ 
+        battlefield.player1.isLocal = true;
+        battlefield.player2.isLocal = false;
+
+        battlefield.player1.npcModeOn = false;
+        battlefield.player2.npcModeOn = true;
+
+        battlefield.player1.isTutorialMode = false;
+        battlefield.player2.isTutorialMode = false;
+
+        battlefield.isPvELadder = true;
+        battlefield.pveLadderLevel = 1;
+
+        TransitionTo(new WaitForBoltState());
+    }
 
 	void CompVsCompClicked() {
 		battlefield.isAiVsAi = true;

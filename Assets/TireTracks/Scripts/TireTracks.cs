@@ -108,9 +108,10 @@ public class TireTracks: MonoBehaviour {
 		}
 		mf.sharedMesh = marksMesh;
 	}
-
-	public int AddSkidMark(Vector3 pos, Vector3 normal, float intensity, int lastIndex) {
-		if (intensity > 1) intensity = 1.0f;
+    Color color;
+    public int AddSkidMark(Vector3 pos, Vector3 normal, float intensity, int lastIndex, Color _color) {
+        color = _color;
+        if (intensity > 1) intensity = 1.0f;
 		else if (intensity < 0) return -1; if (lastIndex > 0) {
 			float sqrDistance = (pos - skidmarks[lastIndex].Pos).sqrMagnitude;
 			if (sqrDistance < MIN_SQR_DISTANCE) return lastIndex;
@@ -118,6 +119,7 @@ public class TireTracks: MonoBehaviour {
 		if (skidmarks == null) {
 			return -1;
 		}
+
 		MarkSection curSection = skidmarks[markIndex];
 
 		curSection.Pos = pos + normal * GROUND_OFFSET;
@@ -154,8 +156,14 @@ public class TireTracks: MonoBehaviour {
 		MarkSection curr = skidmarks[markIndex];
 
 		if (curr.LastIndex == -1) return;
+        Color32 lastColor = color;
+        Color32 currColor = color;
 
 		MarkSection last = skidmarks[curr.LastIndex];
+
+        lastColor.a = last.Intensity;
+        currColor.a = curr.Intensity;
+
 		vertices[markIndex * 4 + 0] = last.Posl;
 		vertices[markIndex * 4 + 1] = last.Posr;
 		vertices[markIndex * 4 + 2] = curr.Posl;
@@ -171,10 +179,10 @@ public class TireTracks: MonoBehaviour {
 		tangents[markIndex * 4 + 2] = curr.Tangent;
 		tangents[markIndex * 4 + 3] = curr.Tangent;
 
-		colors[markIndex * 4 + 0] = new Color32(0, 0, 0, last.Intensity);
-		colors[markIndex * 4 + 1] = new Color32(0, 0, 0, last.Intensity);
-		colors[markIndex * 4 + 2] = new Color32(0, 0, 0, curr.Intensity);
-		colors[markIndex * 4 + 3] = new Color32(0, 0, 0, curr.Intensity);
+        colors[markIndex * 4 + 0] = lastColor;
+        colors[markIndex * 4 + 1] = lastColor;
+        colors[markIndex * 4 + 2] = currColor;
+        colors[markIndex * 4 + 3] = currColor;
 
 		uvs[markIndex * 4 + 0] = new Vector2(0, 0);
 		uvs[markIndex * 4 + 1] = new Vector2(1, 0);
