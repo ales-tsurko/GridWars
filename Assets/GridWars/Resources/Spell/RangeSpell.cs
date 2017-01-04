@@ -15,7 +15,6 @@ public class RangeSpell : Spell {
 	override public void ServerAndClientInit () {
 		base.ServerAndClientInit();
 		factor = 1.5f;
-
 		gameUnit.AdjustWeaponsRangeByFactor(factor);
 	}
 

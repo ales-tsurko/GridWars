@@ -20,6 +20,8 @@ public class SpeedSpell : Spell {
 
 		gameUnit.AdjustWeaponsFireRateByFactor(factor);
 		gameUnit.AdjustThrustByFactor(factor);
+
+		SetTrackColor(new Color(1f, 1f, 0f, 0.5f));
 	}
 
 	override public void ServerAndClientStop () {
@@ -27,5 +29,14 @@ public class SpeedSpell : Spell {
 
 		gameUnit.AdjustWeaponsFireRateByFactor(1.0f/factor);
 		gameUnit.AdjustThrustByFactor(1.0f/factor);
+
+		SetTrackColor(new Color(0f, 0f, 0f, 0.1f));
+	}
+
+	void SetTrackColor(Color c) {
+		if (gameUnit.inheritsFrom(typeof(GroundVehicle))) {
+			GroundVehicle gv = (GroundVehicle)gameUnit;
+			gv.SetTrackColor(c);
+		}
 	}
 }
