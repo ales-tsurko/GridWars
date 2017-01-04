@@ -11,19 +11,56 @@ public class PvELadderLevelConfig : ScriptableObject {
         public float maxHP = 1;
         public float regen = 1;
     }
-    public UnitAdjustment chopper, tanker, tank, mobilesam;
+    [System.Serializable]
+    public class PlayerUnitAdjustments {
+        public string player;
+        public UnitAdjustment chopper, tanker, tank, mobilesam;
+    }
 
-    public void AdjustUnit(GameUnit _unit){
+    public List<PlayerUnitAdjustments> unitAdjustments= new List<PlayerUnitAdjustments>() { {new PlayerUnitAdjustments {player = "Player"}}, {new PlayerUnitAdjustments{player = "CPU"}}};
+
+    public string levelDescription;
+    public string enemyName;
+
+    public void AdjustUnit(GameUnit _unit, int playerNum){
+        playerNum--;
         Debug.Log(_unit.GetType().ToString());
         if (_unit.GetType() == typeof(Chopper)) {
             Chopper c = _unit as Chopper;
-            Debug.Log(c.maxSpeed);
+            UnitAdjustment chopper = unitAdjustments[playerNum].chopper;
             c.maxSpeed *= chopper.speed;
             c.maxForwardSpeed *= chopper.speed;
-            Debug.Log(c.maxSpeed);
-            c.thrust *= chopper.speed;
+            c.AdjustThrustByFactor(chopper.speed);
+            c.AdjustMaxHitpointsByFactor(chopper.maxHP);
+            c.AdjustHitPointGenByFactor(chopper.regen);
+            c.AdjustWeaponsDamageByFactor(chopper.damage);
         }
-                
+        if (_unit.GetType() == typeof(Tank)) {
+            Tank k = _unit as Tank;
+            UnitAdjustment tank = unitAdjustments[playerNum].tank;
+            k.maxSpeed *= tank.speed;
+            k.AdjustThrustByFactor(tank.speed);
+            k.AdjustMaxHitpointsByFactor(tank.maxHP);
+            k.AdjustHitPointGenByFactor(tank.regen);
+            k.AdjustWeaponsDamageByFactor(tank.damage);
+        }
+        if (_unit.GetType() == typeof(Tanker)) {
+            Tanker t = _unit as Tanker;
+            UnitAdjustment tanker = unitAdjustments[playerNum].tanker;
+            t.maxSpeed *= tanker.speed;
+            t.AdjustThrustByFactor(tanker.speed);
+            t.AdjustMaxHitpointsByFactor(tanker.maxHP);
+            t.AdjustHitPointGenByFactor(tanker.regen);
+            t.AdjustWeaponsDamageByFactor(tanker.damage);
+        }
+        if (_unit.GetType() == typeof(MobileSAM)) {
+            MobileSAM m = _unit as MobileSAM;
+            UnitAdjustment mobilesam = unitAdjustments[playerNum].mobilesam;
+            m.maxSpeed *= mobilesam.speed;
+            m.AdjustThrustByFactor(mobilesam.speed);
+            m.AdjustMaxHitpointsByFactor(mobilesam.maxHP);
+            m.AdjustHitPointGenByFactor(mobilesam.regen);
+            m.AdjustWeaponsDamageByFactor(mobilesam.damage);
+        }         
     }
-	
 }

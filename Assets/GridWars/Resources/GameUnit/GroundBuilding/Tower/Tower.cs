@@ -422,7 +422,7 @@ public class Tower : GroundBuilding {
 			unit.player = player;
 
             if (App.shared.battlefield.isPvELadder) {
-                App.shared.battlefield.AdjustUnitForPvELadder(unit);
+                App.shared.battlefield.AdjustUnitForPvELadder(unit, playerNumber);
             }
 
 			// place in release zone

@@ -322,8 +322,9 @@ public class Battlefield : MonoBehaviour {
         //
     }
 
-    public void AdjustUnitForPvELadder(GameUnit _unit){
-        pveConfig.AdjustUnit(_unit);
+    public void AdjustUnitForPvELadder(GameUnit _unit, int _playerNumber){
+        print(_playerNumber);
+        pveConfig.AdjustUnit(_unit, _playerNumber);
         print("Unit Adjusted");
     }
 
