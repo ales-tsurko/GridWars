@@ -109,11 +109,16 @@ public class PlayerInputs : PlayerActionSet {
 
 		toggleMenu.AddDefaultBinding(InputControlType.Command);
 
-		concede.AddDefaultBinding(InputControlType.LeftTrigger);
-		toggleHotkeys.AddDefaultBinding(InputControlType.RightTrigger);
+		//concede.AddDefaultBinding(InputControlType.LeftTrigger);
+		//toggleHotkeys.AddDefaultBinding(InputControlType.RightTrigger);
 
-		nextCamera.AddDefaultBinding(InputControlType.RightBumper);
-		firstPersonCamera.AddDefaultBinding(InputControlType.DPadDown);
+		//nextCamera.AddDefaultBinding(InputControlType.RightBumper);
+		//firstPersonCamera.AddDefaultBinding(InputControlType.DPadDown);
+
+		castSpell1.AddDefaultBinding(InputControlType.LeftBumper);
+		castSpell2.AddDefaultBinding(InputControlType.RightBumper);
+		castSpell3.AddDefaultBinding(InputControlType.LeftTrigger);
+		castSpell4.AddDefaultBinding(InputControlType.RightTrigger);
 
 		upItem.AddDefaultBinding(InputControlType.LeftStickUp);
 		upItem.AddDefaultBinding(InputControlType.RightStickUp);
@@ -148,7 +153,7 @@ public class PlayerInputs : PlayerActionSet {
         enterFPS.AddDefaultBinding(InputControlType.LeftStickButton);
         exitFPS.AddDefaultBinding(InputControlType.LeftStickButton);
         unitNext.AddDefaultBinding(InputControlType.RightBumper);
-        unitPrev.AddDefaultBinding(InputControlType.LeftBumper);
+        //unitPrev.AddDefaultBinding(InputControlType.LeftBumper);
 
 	}
 
