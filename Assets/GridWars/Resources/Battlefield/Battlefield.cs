@@ -319,6 +319,16 @@ public class Battlefield : MonoBehaviour {
         player1.powerSource.generationRateAdjustment = 1;
         player2.powerSource.generationRate = pveConfig.cpuPowerRate;
         player2.powerSource.generationRateAdjustment = 1;
+        if (pveConfig.isBossLevel) {
+            print("BOSS");
+            var unit = pveConfig.boss.prefab.Instantiate();
+            unit.player = player2;
+            unit.name = "BOSS";
+           // unit.releaseZone = player2.fortress.towers[2].transform.position;
+            unit.transform.position = player2.fortress.towers[2].transform.position + (player2.fortress.towers[2].transform.forward * 12);
+            unit.transform.rotation = player2.fortress.towers[2].transform.rotation;
+            pveConfig.AdjustBossUnit(unit);
+        }
         //
     }
 
