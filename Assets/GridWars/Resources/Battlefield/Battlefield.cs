@@ -92,6 +92,8 @@ public class Battlefield : MonoBehaviour {
 		}
 	}
 
+	public TrainingScenario trainingScenario;
+
 	public bool GameOver() {
 		return livingPlayers.Count == 1;
 	}

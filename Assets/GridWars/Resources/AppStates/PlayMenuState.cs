@@ -40,6 +40,7 @@ public class PlayMenuState : AppState {
 
 	void ShowMenu() {
 		menu.Reset();
+		menu.AddItem(UI.MenuItem("Training", TrainingClicked));
 		internetPvpButton = menu.AddNewButton().SetText("Internet PVP").SetAction(InternetPvpClicked);
 		menu.AddItem(UI.MenuItem("Shared Screen PVP", SharedScreenPvpClicked));
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
@@ -47,6 +48,23 @@ public class PlayMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Tutorial", Tutorial));
 		menu.AddItem(UI.MenuItem("Back", Back).SetIsBackItem(true));
 		menu.Show();
+	}
+
+	void TrainingClicked() {
+		battlefield.isAiVsAi = true;
+
+		battlefield.player1.isLocal = false;
+		//battlefield.player1.npcModeOn = true;
+		//battlefield.player1.isTutorialMode = true;
+
+		battlefield.player2.isLocal = false;
+		battlefield.player2.npcModeOn = true;
+		//battlefield.player2.isTutorialMode = true;
+		battlefield.player2.trainingAi = new BasicCountersTrainingAi();
+
+		battlefield.trainingScenario = new BasicCountersTrainingScenario();
+
+		TransitionTo(new WaitForBoltState());
 	}
 
 	void InternetPvpClicked() {

@@ -66,6 +66,21 @@ public class Player : BetterMonoBehaviour {
 		}
 	}
 
+	TrainingAi _trainingAi;
+
+	public TrainingAi trainingAi {
+		get {
+			return _trainingAi;
+		}
+
+		set {
+			_trainingAi = value;
+			if (_trainingAi != null) {
+				_trainingAi.player = this;
+			}
+		}
+	}
+
 	public Color primaryColor {
 		get {
 			if (npcModeOn) {
@@ -373,6 +388,11 @@ public class Player : BetterMonoBehaviour {
 	}
 
 	private void AI() {
+		if (trainingAi != null) {
+			trainingAi.AI();
+			return;
+		}
+
 		SetupAI();
 
 		if (isTutorialMode) {
@@ -489,6 +509,4 @@ public class Player : BetterMonoBehaviour {
 			firstTutorial.GetComponent<TutorialPart>().Begin();
 		}
 	}
-
-
 }

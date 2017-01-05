@@ -309,7 +309,13 @@ public class Tower : GroundBuilding {
 	int nextUnitVeteranLevel; //used for power calculations
 
 	bool CanQueueUnit(int level) {
-		return hasCooledDown && HasEnoughPower(level);
+		var canQueueUnit = hasCooledDown && HasEnoughPower(level);
+		if (player.battlefield.trainingScenario != null) {
+			return canQueueUnit && player.battlefield.trainingScenario.TowerCanQueueUnit(this);
+		}
+		else {
+			return canQueueUnit;
+		}
 	}
 
 	bool hasCooledDown {
