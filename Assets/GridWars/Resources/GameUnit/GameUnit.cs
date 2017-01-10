@@ -933,6 +933,11 @@ public class GameUnit : NetworkObject {
 	}
 
 	public virtual void PickTarget() {
+		if (App.shared.battlefield.isPaused) {
+			target = null;
+			return;
+		}
+			
 		if (target != null && target.IsDestroyed()) {
 			target = null;
 		}
