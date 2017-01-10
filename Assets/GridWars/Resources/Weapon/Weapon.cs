@@ -520,7 +520,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool ShouldFire() {
 		// easier to debug with separate ifs
-		if (target) {
+		if (target != null) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
 					if (IsAimed()) {
