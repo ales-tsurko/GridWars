@@ -21,7 +21,7 @@ public class SpeedSpell : Spell {
 		gameUnit.AdjustWeaponsFireRateByFactor(factor);
 		gameUnit.AdjustThrustByFactor(factor);
 
-		SetTrackColor(new Color(1f, 1f, 0f, 0.5f));
+		SetTrackColor(new Color(1f, 1f, 0f, 1f));
 	}
 
 	override public void ServerAndClientStop () {

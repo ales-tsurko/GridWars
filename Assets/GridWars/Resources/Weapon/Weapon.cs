@@ -395,7 +395,6 @@ public class Weapon : MonoBehaviour {
 
 	public float XAngleToTarget() {  // returns 0 if no target
 		if (target != null) {
-			//Transform t = turretObjX.transform;
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
@@ -418,7 +417,6 @@ public class Weapon : MonoBehaviour {
 
 	public float YAngleToTarget() { // returns 0 if no target
 		if (target) {
-			//Transform t = turretObjY.transform;
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
@@ -497,13 +495,8 @@ public class Weapon : MonoBehaviour {
 
 	public void AimIfAble() { 
 					
-		//if (canRotateX()) {
-			AimOnXAxis();
-		//}
-
-		//if (canRotateY()) {
-			AimOnYAxis();
-		//}
+		AimOnXAxis();
+		AimOnYAxis();
 
 		ApplyAngleLimits();
 			
@@ -520,7 +513,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool ShouldFire() {
 		// easier to debug with separate ifs
-		if (target != null) {
+		if (target) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
 					if (IsAimed()) {
@@ -804,18 +797,24 @@ public class Weapon : MonoBehaviour {
 	#endif
 
 	public void ShowDebugAimLine() {
-		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 1, true);
-		/*
+
+		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0.2f, true);
+
 		RaycastHit hit;
-		if (Physics.Raycast(transform.position, transform.forward, out hit, range) && RayCastHitsEnemy()) {
-			
-			//Debug.DrawLine(transform.position, hit.point, Color.yellow, 0, true); // hit point
+
+		if (Physics.Raycast(transform.position, transform.forward, out hit, range)) {
+			/*
+			 if (RayCastHitsEnemy()) {
+			}
+			*/
+			Debug.DrawLine(transform.position, hit.point, Color.yellow, 0.3f, true); // hit point
 		} else {
-			//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0, true);
+			Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.red, 0.3f, true);
 		}
 
 		//Debug.DrawLine(transform.position, transform.position + transform.forward * 1000f, Color.yellow, 0, true);
-	    */
+
+		Debug.DrawLine(transform.position, target.gameObject.transform.position, Color.blue, 0.2f, true); 
 	}
 		
 	public void ShowDebugTargetLine() {
