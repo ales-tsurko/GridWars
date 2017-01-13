@@ -25,7 +25,7 @@ public class PowerSource : GroundBuilding {
 	public float baseSegmentLength = 10f;
 	public int segmentCount = 20;
 	public float generationRateAdjustment = 1f;
-	public float segmentVAdjust = 0.5f;
+	public float segmentVAdjust = 1.0f;
 
 	public GameObject prefab;
 

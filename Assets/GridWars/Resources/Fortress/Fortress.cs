@@ -78,7 +78,7 @@ public class Fortress : MonoBehaviour {
 
 		if (BoltNetwork.isServer) {
 			PlacePowerSource();
-			PlaceSpellSource();
+			//PlaceSpellSource();
 			PlaceUnitTowers();
 			Destroy(fortressPlacement);
 		}
@@ -170,13 +170,17 @@ public class Fortress : MonoBehaviour {
 
 		if (towers.Count == 0) {
 			player.powerSource.ShutDown();
-			player.spellSource.ShutDown();
+			if (player.spellSource) {
+				player.spellSource.ShutDown();
+			}
 		} else {
 			player.powerSource.power += (player.powerSource.maxPower - player.powerSource.power) * 0.8f;
 			player.powerSource.generationRate *= 1.05f;
 
-			player.spellSource.power += (player.spellSource.maxPower - player.spellSource.power) * 0.8f;
-			player.spellSource.generationRate *= 1.05f;
+			if (player.spellSource) {
+				player.spellSource.power += (player.spellSource.maxPower - player.spellSource.power) * 0.8f;
+				player.spellSource.generationRate *= 1.05f;
+			}
 		}
 	}
 

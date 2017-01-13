@@ -395,7 +395,7 @@ public class Tower : GroundBuilding {
 		if (isInGame && entity.hasControl && CanQueueUnit(veteranLevel)) {
 			var queueEvent = AttemptQueueUnitEvent.Create(entity);
 			queueEvent.spellName = "";
-			if (player.spellSource.activeSpell != null) {
+			if (player.spellSource && player.spellSource.activeSpell != null) {
 				queueEvent.spellName = player.spellSource.activeSpell.ClassName();
 			}
 			queueEvent.veteranLevel = veteranLevel;
