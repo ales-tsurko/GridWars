@@ -311,7 +311,10 @@ public class Battlefield : MonoBehaviour {
         }
         return GameType.Unknown;
     }
+    [HideInInspector]
     PvELadderLevelConfig pveConfig;
+    [HideInInspector]
+    UIMenu PvEMenu;
     void SetupForPvELadder(){
         pveConfig = Resources.Load<PvELadderLevelConfig>("PvELadder/Levels/Level" + pveLadderLevel);
         //power rate
@@ -329,6 +332,13 @@ public class Battlefield : MonoBehaviour {
             unit.transform.rotation = player2.fortress.towers[2].transform.rotation;
             pveConfig.AdjustBossUnit(unit);
         }
+        Time.timeScale = pveConfig.gameSpeed;
+        PvEMenu = App.shared.menu;
+        PvEMenu.Reset();
+        PvEMenu.AddNewText()
+            .SetText(pveConfig.levelDescription.NewLine());
+        PvEMenu.Show();
+        Invoke("ResetPvEMenu", 8);
         //
     }
 
@@ -336,6 +346,10 @@ public class Battlefield : MonoBehaviour {
         print(_playerNumber);
         pveConfig.AdjustUnit(_unit, _playerNumber);
         print("Unit Adjusted");
+    }
+
+    public void ResetPvEMenu(){
+        PvEMenu.Reset();
     }
 
 	/*
