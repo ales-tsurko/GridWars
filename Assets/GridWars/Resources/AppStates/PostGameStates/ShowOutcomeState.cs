@@ -56,6 +56,9 @@ public class ShowOutcomeState : PostGameSubState {
 			title = "Request Rematch";
 		} else {
 			title = "Rematch!";
+            if (App.shared.battlefield.GetGameType() == GameType.PvELadder && postGameState.victoriousPlayer.isLocal) {
+                title = "Next Level";
+            }
 		}
 
 		if (showRematch) {
@@ -75,6 +78,9 @@ public class ShowOutcomeState : PostGameSubState {
 			TransitionTo(new AwaitRematchResponseState());
 		}
 		else {
+            if (App.shared.battlefield.GetGameType() == GameType.PvELadder && postGameState.victoriousPlayer.isLocal) {
+                App.shared.battlefield.pveLadderLevel++;
+            }
 			postGameState.StartGame();
 		}
 	}
