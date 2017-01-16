@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu]
 public class PvELadderLevelConfig : ScriptableObject {
     public float playerPowerRate, cpuPowerRate;
+    public float gameSpeed;
+
     [System.Serializable]
     public class UnitAdjustment { //in pct +/-
         public float speed = 1;
@@ -22,6 +24,7 @@ public class PvELadderLevelConfig : ScriptableObject {
 
     public string levelDescription;
     public string enemyName;
+    public Texture2D enemyAvatar;
     public bool isBossLevel;
     public Boss boss;
     [System.Serializable]
