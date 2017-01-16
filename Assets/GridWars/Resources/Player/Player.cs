@@ -194,7 +194,9 @@ public class Player : BetterMonoBehaviour {
 		float h = 1f - NpcHandicap() * maxHandicap;
 		Debug.Log("NpcHandicap " + NpcHandicap() + " generationRateAdjustment " + h);
 		fortress.powerSource.generationRateAdjustment = h;
-		fortress.spellSource.generationRateAdjustment = h;
+        if (fortress.spellSource != null) {
+            fortress.spellSource.generationRateAdjustment = h;
+        }
 	}
 			
 	// -----------------------------------------------------------------
