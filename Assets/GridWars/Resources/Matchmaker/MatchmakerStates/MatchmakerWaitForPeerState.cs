@@ -61,12 +61,15 @@ public class MatchmakerWaitForPeerState : MatchmakerNetworkDelegateState {
 
 	// MatchmakerMenuDelegate
 
+	protected UIActivityIndicator indicator;
+
 	public override void ConfigureForOpen() {
 		base.ConfigureForOpen();
 
 		matchmaker.menu.Reset();
 
-		matchmaker.menu.AddNewIndicator().SetText("Connecting to opponent.");
+		indicator = matchmaker.menu.AddNewIndicator();
+		indicator.SetText("Connecting to opponent.");
 
 		matchmaker.menu.AddNewButton()
 			.SetText("Leave")
