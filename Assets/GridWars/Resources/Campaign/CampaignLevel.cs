@@ -26,6 +26,7 @@ public class CampaignLevel : MonoBehaviour {
 	}
 
 	public void Begin() {
+		App.shared.battlefield.isPaused = true;
 		intro.Begin();
 	}
 }
