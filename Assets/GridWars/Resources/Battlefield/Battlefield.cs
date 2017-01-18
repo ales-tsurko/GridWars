@@ -315,8 +315,14 @@ public class Battlefield : MonoBehaviour {
     PvELadderLevelConfig pveConfig;
     [HideInInspector]
     UIMenu PvEMenu;
+
+	CampaignLevel campaignLevel;
+
     void SetupForPvELadder(){
-        pveConfig = Resources.Load<PvELadderLevelConfig>("PvELadder/Levels/Level" + pveLadderLevel);
+		campaignLevel = CampaignLevel.Load(pveLadderLevel);
+		campaignLevel.Setup();
+
+		pveConfig = campaignLevel.config;
         //power rate
         player1.powerSource.generationRate = pveConfig.playerPowerRate;
         player1.powerSource.generationRateAdjustment = 1;
@@ -333,12 +339,8 @@ public class Battlefield : MonoBehaviour {
             pveConfig.AdjustBossUnit(unit);
         }
         Time.timeScale = pveConfig.gameSpeed;
-        PvEMenu = App.shared.menu;
-        PvEMenu.Reset();
-        PvEMenu.AddNewText()
-            .SetText(pveConfig.levelDescription.NewLine());
-        PvEMenu.Show();
-        Invoke("ResetPvEMenu", 8);
+
+		campaignLevel.Begin();
         //
     }
 
