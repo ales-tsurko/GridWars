@@ -12,6 +12,8 @@ public class Battlefield : MonoBehaviour {
 	public List<Player> players;
 	public GameUnitCache gameUnitCache;
 
+	public bool isPaused;
+
 	public Vector3 fortressBounds {
 		get {
 			if (players.Count > 0) {
@@ -127,6 +129,14 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 
 	}
+
+	/*
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			isPaused = !isPaused;
+		}
+	}
+	*/
 
 	public void AddPlayers() {
 		players = new List<Player>();

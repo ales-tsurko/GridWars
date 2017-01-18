@@ -304,7 +304,7 @@ public class Tower : GroundBuilding {
 	int nextUnitVeteranLevel; //used for power calculations
 
 	bool CanQueueUnit(int level) {
-		return hasCooledDown && HasEnoughPower(level);
+		return !App.shared.battlefield.isPaused && hasCooledDown && HasEnoughPower(level);
 	}
 
 	bool hasCooledDown {

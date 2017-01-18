@@ -223,6 +223,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
+		if (App.shared.battlefield.isPaused) {
+			target = null;
+			return;
+		}
 
 		// remove target if it's destroyed
 		if (target != null && target.IsDestroyed()) {
@@ -513,7 +517,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool ShouldFire() {
 		// easier to debug with separate ifs
-		if (target) {
+		if (target != null) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
 					if (IsAimed()) {
