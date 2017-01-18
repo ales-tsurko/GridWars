@@ -53,6 +53,7 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	public void Begin() {
+		App.shared.battlefield.isPaused = true;
 
 		if (Target() == null) {
 			Debug.Log("missing target on " + gameObject.name);
@@ -188,6 +189,8 @@ public class TutorialPart : MonoBehaviour {
 	}
 
 	public void DoneTutorial() {
+		App.shared.battlefield.isPaused = false;
+
 		App.shared.battlefield.isAiVsAi = false;
 
 		App.shared.battlefield.player1.isLocal = true;
