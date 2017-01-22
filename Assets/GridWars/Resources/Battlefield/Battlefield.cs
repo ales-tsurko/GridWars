@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using PvEConfig;
 
 public class Battlefield : MonoBehaviour {
 	public static Battlefield current { //TODO: get rid of this

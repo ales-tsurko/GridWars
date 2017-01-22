@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+namespace PvEConfig{
 [CreateAssetMenu]
 public class PvELadderLevelConfig : ScriptableObject {
     public float playerPowerRate, cpuPowerRate;
@@ -92,4 +94,5 @@ public class PvELadderLevelConfig : ScriptableObject {
             m.AdjustWeaponsDamageByFactor(mobilesam.damage);
         }         
     }
+}
 }

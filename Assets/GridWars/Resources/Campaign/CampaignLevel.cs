@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PvEConfig;
 
 public class CampaignLevel : MonoBehaviour {
 	public static CampaignLevel Load(int number) {
