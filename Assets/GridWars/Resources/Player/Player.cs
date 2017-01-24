@@ -494,6 +494,7 @@ public class Player : BetterMonoBehaviour {
 
 	void TutorialStep() {
 		if (playerNumber == 1 && firstTutorial == null && App.shared.cameraController.initComplete) {
+			battlefield.isPaused = true;
 			firstTutorial = Instantiate(Resources.Load<GameObject>("Tutorial/Tutorial"));
 			firstTutorial.transform.parent = battlefield.transform;
 			firstTutorial.transform.FindChild("TutorialStart").GetComponent<TutorialPart>().Begin();

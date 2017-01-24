@@ -8,6 +8,8 @@ using System;
 
 public class Tower : GroundBuilding {
 	public static string TowerUpdatedHotkeyTextNotification = "TowerUpdatedHotkeyTextNotification";
+	public static string TowerProducedUnitNotification = "TowerProducedUnitNotification";
+	public static string TowerDiedNotification = "TowerDiedNotification";
 	public GameObject iconPlacement;
 
 	//public Mesh theMesh;
@@ -254,6 +256,10 @@ public class Tower : GroundBuilding {
 
 		if (player != null && player.fortress != null) {
 			player.fortress.TowerDied(this);
+			App.shared.notificationCenter.NewNotification()
+				.SetSender(this)
+				.SetName(TowerDiedNotification)
+				.Post();
 		}
 	}
 
@@ -303,8 +309,10 @@ public class Tower : GroundBuilding {
 	List<ReleaseZone> releaseZones;
 	int nextUnitVeteranLevel; //used for power calculations
 
+	public bool isDisabled;
+
 	bool CanQueueUnit(int level) {
-		return !App.shared.battlefield.isPaused && hasCooledDown && HasEnoughPower(level);
+		return hasCooledDown && HasEnoughPower(level) && !isDisabled;
 	}
 
 	bool hasCooledDown {
@@ -416,7 +424,7 @@ public class Tower : GroundBuilding {
 	}
 
 	public void ExecuteAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		if (CanQueueUnit(e.veteranLevel) && unobstructedReleaseZone != null) {
+		if (!App.shared.battlefield.isPaused && CanQueueUnit(e.veteranLevel) && unobstructedReleaseZone != null) {
 
 			var unit = unitPrefab.GameUnit().Instantiate();
 			unit.player = player;
@@ -451,6 +459,12 @@ public class Tower : GroundBuilding {
 			// deduct power
 			player.powerSource.power -= gameUnit.PowerCost(e.veteranLevel);
 			lastProductionTime = Time.time;
+
+			App.shared.notificationCenter.NewNotification()
+				.SetSender(this)
+				.SetName(TowerProducedUnitNotification)
+				.SetData(unit)
+				.Post();
 		}
 	}
 

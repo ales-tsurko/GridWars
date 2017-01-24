@@ -5,6 +5,8 @@ using System;
 using AssemblyCSharp;
 
 public class GameUnit : NetworkObject {
+	public static string GameUnitVeteranLevelChangedNotification = "GameUnitVeteranLevelChangedNotification";
+
 	public float thrust;
 	public float rotationThrust;
 	public float birthVolume = 1;
@@ -682,11 +684,11 @@ public class GameUnit : NetworkObject {
 
 	public int veteranLevel {
 		get {
-			if (serverAndClientJoinedGame) {
-				return gameUnitState.veteranLevel;
+			if (gameUnitState == null) {
+				return 0;
 			}
 			else {
-				return 0;
+				return gameUnitState.veteranLevel;
 			}
 		}
 
@@ -715,6 +717,11 @@ public class GameUnit : NetworkObject {
 
 	void VeteranLevelChanged() {
 		if (veteranLevel != 0) {
+			App.shared.notificationCenter.NewNotification()
+				.SetName(GameUnitVeteranLevelChangedNotification)
+				.SetSender(this)
+				.Post();
+			
 			ShowVeteranLevel();
 		}
 	}

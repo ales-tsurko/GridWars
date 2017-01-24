@@ -15,6 +15,13 @@ public class TutorialPart : MonoBehaviour {
 
 	public GameObject nextPart;
 	public bool _hasBegun = false;
+	public bool preventsNext;
+
+	public TutorialPartDelegate tutorialPartDelegate {
+		get {
+			return GetComponent<TutorialPartDelegate>();
+		}
+	}
 
 	private int counter = 0;
 	private int countsPerCharacter = 3;
@@ -81,7 +88,6 @@ public class TutorialPart : MonoBehaviour {
 		ObserveExit();
 
 		enabled = true;
-		counter = 0;
 		TutorialLabel().GetComponent<HoverText>().enabled = true;
 		nextTime = Time.time + timeout;
 
@@ -99,6 +105,17 @@ public class TutorialPart : MonoBehaviour {
 
 
 		_textMesh = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
+
+		Reset();
+
+		if (tutorialPartDelegate != null) {
+			tutorialPartDelegate.DidBegin();
+		}
+	}
+
+	public void Reset() {
+		counter = 0;
+
 		_formattedText = hoverText.Replace("NEWLINE", "\n").ToUpper();
 		_formattedText = _formattedText.Replace("CONTINUEHOTKEY", App.shared.inputs.continueTutorial.HotkeyDescription(20)).ToUpper();
 
@@ -111,6 +128,7 @@ public class TutorialPart : MonoBehaviour {
 		else {
 			replacement = "click your towers";
 		}
+
 		_formattedText = _formattedText.Replace("CLICKYOURTOWERS", replacement).ToUpper();
 		_hasBegun = true;
 	}
@@ -135,11 +153,23 @@ public class TutorialPart : MonoBehaviour {
 	void Update() {
 		if (_hasBegun) {
 			if (App.shared.inputs.continueTutorial.WasPressed) {
-				_hasBegun = false;
-				App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
+				if (counter / countsPerCharacter >= _formattedText.Length && !preventsNext) {
+					_hasBegun = false;
+					App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
+				}
+				else {
+					counter = _formattedText.Length * countsPerCharacter;
+				}
+
 				//Next();
 			}
 
+			if (counter == _formattedText.Length * countsPerCharacter) {
+				if (tutorialPartDelegate != null) {
+					tutorialPartDelegate.TextDidComplete();
+				}
+			}
+				
 			counter ++;
 
 			if (counter % countsPerCharacter == 0) {
@@ -154,18 +184,21 @@ public class TutorialPart : MonoBehaviour {
 		return s.Substring(0, max) + s.Substring(max, s.Length - max).ReplacedNonWhiteSpaceWithSpaces();
 	}
 
-	void Next() {
+	public void Next() {
 		TurnOff();
 		App.shared.PlayAppSoundNamedAtVolume("MenuItemClicked", 0.5f);
 
 		_textMesh.GetComponent<Renderer>().enabled = true;
 		App.shared.notificationCenter.RemoveObserver(this);
 
+		if (tutorialPartDelegate != null) {
+			tutorialPartDelegate.DidNext();
+		}
+
 		if (nextPart != null) {
 			nextPart.GetComponent<TutorialPart>().Begin();
 		} else {
 			TutorialLabel().GetComponent<HoverText>().enabled = false;
-			DoneTutorial();
 		}
 	}
 
@@ -184,23 +217,6 @@ public class TutorialPart : MonoBehaviour {
 			_textMesh.characterSize = characterSize;
 			App.shared.PlayAppSoundNamedAtVolume("bleep2", 0.02f);
 		}
-	}
-
-	public void DoneTutorial() {
-		App.shared.battlefield.isPaused = false;
-
-		App.shared.battlefield.isAiVsAi = false;
-
-		App.shared.battlefield.player1.isLocal = true;
-		App.shared.battlefield.player1.isTutorialMode = false;
-		App.shared.battlefield.player1.npcModeOn = false;
-
-		App.shared.battlefield.player2.isTutorialMode = false;
-		App.shared.battlefield.player2.npcModeOn = true;
-
-		App.shared.cameraController.ResetCamera();
-		App.shared.cameraController.pos = 0;
-		App.shared.cameraController.NextPosition();
 	}
 
 	void OnDestroy() {
