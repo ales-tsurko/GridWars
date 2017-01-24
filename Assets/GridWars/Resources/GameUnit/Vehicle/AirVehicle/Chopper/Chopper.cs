@@ -263,10 +263,13 @@ public class Chopper : AirVehicle {
 			Die();
 		}
 	}
-
+    [HideInInspector]
+    public bool immuneToGround = false;
 	public override void OnCollisionEnter(Collision collision) {
 		base.OnCollisionEnter(collision);
-
+        if (immuneToGround) {
+            return;
+        }
 		// destroy on ground collision
 		if (collision.collider.name == "BattlefieldPlane") {
 			if (collision.relativeVelocity.magnitude > 2) {
