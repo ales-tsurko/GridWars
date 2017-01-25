@@ -22,9 +22,13 @@ public class MainMenuState : AppState {
 
 		battlefield.isInternetPVP = false;
 		battlefield.isAiVsAi = false;
+		battlefield.isPvELadder = false;
+
 		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = false;
-		battlefield.isPvELadder = false;
+
+		battlefield.player1.inputs = null;
+		battlefield.player2.inputs = null;
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
