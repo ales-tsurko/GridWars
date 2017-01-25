@@ -436,6 +436,7 @@ public class Tower : GroundBuilding {
 			// place in release zone
 			unit.releaseZone = unobstructedReleaseZone;
 			unit.transform.position = unobstructedReleaseZone.transform.position;
+			unit.transform.rotation = transform.rotation;
 
 
 			// apply veterancy
