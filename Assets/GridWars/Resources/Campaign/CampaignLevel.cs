@@ -22,6 +22,8 @@ public class CampaignLevel : MonoBehaviour {
 		GameObject introObj = Instantiate(Resources.Load<GameObject>("Campaign/Levels/" + level + "/Intro"));
 		introObj.transform.parent = gameObject.transform;
 		intro = introObj.transform.Find("1").GetComponent<TutorialPart>();
+		var d = intro.gameObject.AddComponent<CampaignLevelTutorialPartDelegate>();
+		d.campaignLevel = this;
 
 		config = Resources.Load<PvELadderLevelConfig>("PvELadder/Levels/Level" + level);
 	}
@@ -29,5 +31,22 @@ public class CampaignLevel : MonoBehaviour {
 	public void Begin() {
 		App.shared.battlefield.isPaused = true;
 		intro.Begin();
+	}
+}
+
+public class CampaignLevelTutorialPartDelegate : TutorialPartDelegate {
+	public CampaignLevel campaignLevel;
+
+	public override void TextDidComplete() {
+		base.TextDidComplete();
+
+		if (campaignLevel.level > 1) {
+			StartCoroutine(DelayedNext());
+		}
+	}
+
+	IEnumerator DelayedNext() {
+		yield return new WaitForSeconds(1f);
+		tutorialPart.Next();
 	}
 }

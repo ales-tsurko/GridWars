@@ -199,6 +199,21 @@ public class TutorialPart : MonoBehaviour {
 			nextPart.GetComponent<TutorialPart>().Begin();
 		} else {
 			TutorialLabel().GetComponent<HoverText>().enabled = false;
+
+			App.shared.battlefield.isPaused = false;
+
+			App.shared.battlefield.isAiVsAi = false;
+
+			App.shared.battlefield.player1.isLocal = true;
+			App.shared.battlefield.player1.isTutorialMode = false;
+			App.shared.battlefield.player1.npcModeOn = false;
+
+			App.shared.battlefield.player2.isTutorialMode = false;
+			App.shared.battlefield.player2.npcModeOn = true;
+
+			App.shared.cameraController.ResetCamera();
+			App.shared.cameraController.pos = 0;
+			App.shared.cameraController.NextPosition();
 		}
 	}
 
