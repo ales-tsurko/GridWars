@@ -24,6 +24,7 @@ public class MainMenuState : AppState {
 		battlefield.isAiVsAi = false;
 		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = false;
+		battlefield.isPvELadder = false;
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
