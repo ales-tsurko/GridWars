@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
 using InControl;
-using System.Reflection;
-using System;
 
 public class Tower : GroundBuilding {
 	public static string TowerUpdatedHotkeyTextNotification = "TowerUpdatedHotkeyTextNotification";
@@ -90,14 +88,12 @@ public class Tower : GroundBuilding {
 
 	// NetworkedGameUnit
 
-	public List<AttemptQueueUnitEvent> attemptQueue;
-
 	public override void ServerInit() {
 		maxHitPoints = 50f;
 		base.ServerInit();
 
 		aiStyle = UnityEngine.Random.value;
-		attemptQueue = new List<AttemptQueueUnitEvent>();
+		unitWithVeterancyQueue = new List<int>();
 	}
 
 
@@ -234,11 +230,16 @@ public class Tower : GroundBuilding {
 	public override void ServerFixedUpdate () {
 		//base.ServerFixedUpdate(); TODO: extract another class from GameUnit so we don't have to perform this perf opt.
 
-		ProcessAttemptQueue();
+		//NpcStep();
+
+		if (unitWithVeterancyQueue.Count > 0) {
+			ReleaseUnits();
+		}
+
 	}
 
 	public void LaunchWithChance(float chance) { // chance out of 1
-		if (UnityEngine.Random.value < chance) {
+		if (Random.value < chance) {
 			SendAttemptQueueUnit();
 		}
 	}
@@ -301,11 +302,15 @@ public class Tower : GroundBuilding {
 		// doesn't need to pick targets
 	}
 
-
+	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
+		if (CanQueueUnit(e.veteranLevel)) {
+			QueueUnit(e.veteranLevel);
+		}
+	}
 
 	public float lastProductionTime = 0f;
 	//int releaseLocationIndex = 0;
-	//List<int>unitWithVeterancyQueue; //value is veterancy
+	List<int>unitWithVeterancyQueue; //value is veterancy
 	List<ReleaseZone> releaseZones;
 	int nextUnitVeteranLevel; //used for power calculations
 
@@ -397,82 +402,12 @@ public class Tower : GroundBuilding {
 
 		ReleaseUnitUpdate();
 	}
-		
 
 	public void SendAttemptQueueUnit(int veteranLevel = 0) {
 		if (isInGame && entity.hasControl && CanQueueUnit(veteranLevel)) {
 			var queueEvent = AttemptQueueUnitEvent.Create(entity);
-			queueEvent.spellName = "";
-			if (player.spellSource && player.spellSource.activeSpell != null) {
-				queueEvent.spellName = player.spellSource.activeSpell.ClassName();
-			}
 			queueEvent.veteranLevel = veteranLevel;
 			queueEvent.Send();
-		}
-	}
-
-	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		attemptQueue.Add(e);
-	}
-
-	public void ProcessAttemptQueue() {
-		foreach(var e in attemptQueue) {
-			ExecuteAttemptQueueUnit(e);
-		}
-
-		attemptQueue.Clear();
-	}
-
-	public void ExecuteAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		if (!App.shared.battlefield.isPaused && CanQueueUnit(e.veteranLevel) && unobstructedReleaseZone != null) {
-
-			var unit = unitPrefab.GameUnit().Instantiate();
-			unit.player = player;
-
-            if (App.shared.battlefield.isPvELadder) {
-                App.shared.battlefield.AdjustUnitForPvELadder(unit, playerNumber);
-            }
-
-			// place in release zone
-			unit.releaseZone = unobstructedReleaseZone;
-			unit.transform.position = unobstructedReleaseZone.transform.position;
-			unit.transform.rotation = transform.rotation;
-
-
-			// apply veterancy
-			for (int i = 0; i < e.veteranLevel; i ++) {
-				unit.UpgradeVeterancy();
-			}
-
-			// apply spell
-			if (e.spellName != "") {
-				Type spellType = Type.GetType(e.spellName);
-				Spell spell = (Spell)System.Activator.CreateInstance(spellType);
-
-				bool hasSpellPower = player.spellSource.power >= spell.Cost();
-				// deduct spell power
-				if (hasSpellPower) {
-					player.spellSource.power -= spell.Cost();
-					unit.AddSpell(spell);
-				}
-			}
-
-			// deduct power
-			player.powerSource.power -= gameUnit.PowerCost(e.veteranLevel);
-			lastProductionTime = Time.time;
-
-			App.shared.notificationCenter.NewNotification()
-				.SetSender(this)
-				.SetName(TowerProducedUnitNotification)
-				.SetData(unit)
-				.Post();
-		}
-	}
-
-	/*
-	public void ReceiveAttemptQueueUnit(AttemptQueueUnitEvent e) {
-		if (CanQueueUnit(e.veteranLevel)) {
-			QueueUnit(e.veteranLevel);
 		}
 	}
 
@@ -481,12 +416,40 @@ public class Tower : GroundBuilding {
 			throw new System.Exception("Use SendAttemptQueueUnit from the client");
 		}
 		unitWithVeterancyQueue.Add(veteranLevel);
-
 		player.powerSource.power -= gameUnit.PowerCost(veteranLevel);
 		lastProductionTime = Time.time;
 	}
-	*/
 
+	void ReleaseUnits() {
+		while (unitWithVeterancyQueue.Count > 0 && unobstructedReleaseZone != null) {
+			var releaseZone = unobstructedReleaseZone;
+
+			var unit = unitPrefab.GameUnit().Instantiate();
+
+			unit.player = player;
+
+			if (App.shared.battlefield.isPvELadder) {
+				App.shared.battlefield.AdjustUnitForPvELadder(unit, playerNumber);
+			}
+
+			releaseZone.hiddenUnit = unit;
+			unit.releaseZone = releaseZone;
+
+			unit.transform.position = releaseZone.transform.position;
+			unit.transform.rotation = transform.rotation;
+
+			if (unitWithVeterancyQueue[0] == 1) {
+				unit.UpgradeVeterancy();
+			}
+			unitWithVeterancyQueue.RemoveAt(0);
+
+			App.shared.notificationCenter.NewNotification()
+				.SetSender(this)
+				.SetName(TowerProducedUnitNotification)
+				.SetData(unit)
+				.Post();
+		}
+	}
 
 	ReleaseZone unobstructedReleaseZone {
 		get {

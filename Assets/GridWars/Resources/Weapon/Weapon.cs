@@ -420,7 +420,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float YAngleToTarget() { // returns 0 if no target
-		if (target) {
+		if (target != null) {
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
