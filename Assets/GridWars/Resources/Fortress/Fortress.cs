@@ -215,7 +215,7 @@ public class Fortress : MonoBehaviour {
 		float maxHitPoints = 0f;
 		float hitPoints = 0f;
 
-		foreach (var tower in towers) {
+		foreach (var tower in player.units.FindAll(u => u is Tower)) {
 			maxHitPoints += tower.maxHitPoints;
 			hitPoints += tower.hitPoints;
 		}
