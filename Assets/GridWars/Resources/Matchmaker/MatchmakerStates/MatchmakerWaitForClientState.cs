@@ -14,6 +14,12 @@ public class MatchmakerWaitForClientState : MatchmakerWaitForPeerState {
 		slowConnectionTimer.Start();
 	}
 
+	public override void WillExit() {
+		base.WillExit();
+
+		slowConnectionTimer.Cancel();
+	}
+
 	void SlowConnectionTimerFired() {
 		indicator.text = "Opponent can't connect.  Please check your" + (Application.platform == RuntimePlatform.WindowsPlayer ? " Windows" : "") + " firewall settings.";
 	}
