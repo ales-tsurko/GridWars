@@ -419,8 +419,6 @@ public class GameUnit : NetworkObject {
 		thinkThrottle = new Throttle();
 		thinkThrottle.behaviour = this;
 		thinkThrottle.period = 25;
-
-		spells = new List<Spell>();
 	}
 
 	public override void ClientInit() {
@@ -434,6 +432,8 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
+
+		spells = new List<Spell>();
 
 		instanceId = GetInstanceID();
 
