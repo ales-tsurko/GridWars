@@ -791,10 +791,22 @@ public class GameUnit : NetworkObject {
 	}
 
 	public void AdjustWeaponsFireRateByFactor(float f) {
-		foreach (Weapon w in Weapons()) {
+        foreach (Weapon w in Weapons()) {
 			w.reloadTimeInSeconds *= 1f/f;
 		}
 	}
+
+    public void AdjustWeaponsClipReloadTimeByFactor(float f){
+        foreach (Weapon w in Weapons()) {
+            w.clipReloadTimeInSeconds *= 1f/f;
+        }
+    }
+
+    public void AdjustFireThrottle(int i){
+        foreach (Weapon w in Weapons()) {
+            w.SetFireThrottle(i);
+        }
+    }
 
 	public void AdjustMaxHitpointsByFactor(float f) {
 		maxHitPoints *= f;

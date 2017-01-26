@@ -5,13 +5,14 @@ using UnityEngine;
 namespace PvEConfig{
     [CreateAssetMenu]
     public class PvELadderLevelConfig : ScriptableObject {
-        public float playerPowerRate, cpuPowerRate;
-        public float gameSpeed;
+        public float playerPowerRate = 1, cpuPowerRate = 1;
+        public float gameSpeed = 1;
 
         [System.Serializable]
         public class UnitAdjustment { //in pct +/-
             public float speed = 1;
             public float damage = 1;
+            public float fireRate = 1;
             public float maxHP = 1;
             public float regen = 1;
             public float scale = 1;
@@ -110,6 +111,8 @@ namespace PvEConfig{
                 k.AdjustMaxHitpointsByFactor(tank.maxHP);
                 k.hitPoints = k.maxHitPoints;
                 k.AdjustHitPointGenByFactor(tank.regen);
+                k.AdjustWeaponsFireRateByFactor(tank.fireRate);
+                k.AdjustWeaponsClipReloadTimeByFactor(tank.fireRate);
                 k.AdjustWeaponsDamageByFactor(tank.damage);
                 k.AdjustScaleByFactor(tank.scale);
                 k.damageThrustAdjustment = 0;
@@ -126,7 +129,10 @@ namespace PvEConfig{
                 k.hitPoints = k.maxHitPoints;
                 k.AdjustHitPointGenByFactor(chopper.regen);
                 k.AdjustWeaponsDamageByFactor(chopper.damage);
+                k.AdjustWeaponsFireRateByFactor(chopper.fireRate);
+                k.AdjustWeaponsClipReloadTimeByFactor(chopper.fireRate);
                 k.AdjustScaleByFactor(chopper.scale);
+                k.AdjustFireThrottle(1);
                 k.damageThrustAdjustment = 0;
                 //k.GetComponent<Rigidbody>().mass *= 40;
                 k.AdjustThrustByFactor(40);
@@ -145,6 +151,12 @@ namespace PvEConfig{
                 c.AdjustMaxHitpointsByFactor(chopper.maxHP);
                 c.AdjustHitPointGenByFactor(chopper.regen);
                 c.AdjustWeaponsDamageByFactor(chopper.damage);
+                c.AdjustWeaponsFireRateByFactor(chopper.fireRate);
+                c.AdjustWeaponsClipReloadTimeByFactor(chopper.fireRate);
+                if (chopper.fireRate != 1) {
+                    c.AdjustFireThrottle(1);
+                }
+
             }
             if (_unit.GetType() == typeof(Tank)) {
                 Tank k = _unit as Tank;
@@ -154,6 +166,11 @@ namespace PvEConfig{
                 k.AdjustMaxHitpointsByFactor(tank.maxHP);
                 k.AdjustHitPointGenByFactor(tank.regen);
                 k.AdjustWeaponsDamageByFactor(tank.damage);
+                k.AdjustWeaponsFireRateByFactor(tank.fireRate);
+                k.AdjustWeaponsClipReloadTimeByFactor(tank.fireRate);
+                if (tank.fireRate != 1) {
+                    k.AdjustFireThrottle(1);
+                }
             }
             if (_unit.GetType() == typeof(Tanker)) {
                 Tanker t = _unit as Tanker;
@@ -163,6 +180,11 @@ namespace PvEConfig{
                 t.AdjustMaxHitpointsByFactor(tanker.maxHP);
                 t.AdjustHitPointGenByFactor(tanker.regen);
                 t.AdjustWeaponsDamageByFactor(tanker.damage);
+                t.AdjustWeaponsFireRateByFactor(tanker.fireRate);
+                t.AdjustWeaponsClipReloadTimeByFactor(tanker.fireRate);
+                if (tanker.fireRate != 1) {
+                    t.AdjustFireThrottle(1);
+                }
             }
             if (_unit.GetType() == typeof(MobileSAM)) {
                 MobileSAM m = _unit as MobileSAM;
@@ -172,6 +194,11 @@ namespace PvEConfig{
                 m.AdjustMaxHitpointsByFactor(mobilesam.maxHP);
                 m.AdjustHitPointGenByFactor(mobilesam.regen);
                 m.AdjustWeaponsDamageByFactor(mobilesam.damage);
+                m.AdjustWeaponsFireRateByFactor(mobilesam.fireRate);
+                m.AdjustWeaponsClipReloadTimeByFactor(mobilesam.fireRate);
+                if (mobilesam.fireRate != 1) {
+                    m.AdjustFireThrottle(1);
+                }
             }         
         }
     }

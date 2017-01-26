@@ -778,6 +778,9 @@ public class Weapon : MonoBehaviour {
 
 	}
 
+    public void SetFireThrottle (int newThrottle){
+        fireThrottle.period = newThrottle;
+    }
 	// --- Debugging --------------------------------------
 
 	#if UNITY_EDITOR
