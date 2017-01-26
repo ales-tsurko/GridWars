@@ -46,7 +46,7 @@ public class LadderState : AppState {
 		var joinedLadder = data.GetField("joinedLadder").b;
 		terms = data.GetField("terms").str.Replace("\\n", "\n");
 
-		menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BITCOIN"));
+		//menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BITCOIN"));
 
 		var isRanked = false; 
 
@@ -74,12 +74,15 @@ public class LadderState : AppState {
 				menu.AddNewText().SetText(Color.yellow.ColoredTag("??? " + app.account.screenName));
 			}
 
+			/*
 			if (joinedLadder) {
+			*/
 				menu.AddNewText().SetText("Play Internet PVP to Establish Your Rank");
-			}
+			/*}
 			else {
-				menu.AddNewButton().SetText("Join Ladder").SetAction(JoinLadder);
+				//menu.AddNewButton().SetText("Join Ladder").SetAction(JoinLadder);
 			}
+			*/
 		}
 
 		menu.AddNewButton().SetText("Back").SetAction(Back).SetIsBackItem(true);
