@@ -65,6 +65,6 @@ public class PlayMenuState : AppState {
 	}
 
 	void Back() {
-		TransitionBack();
+		TransitionTo(new MainMenuState());
 	}
 }

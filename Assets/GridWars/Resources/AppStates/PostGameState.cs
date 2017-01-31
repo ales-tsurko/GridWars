@@ -30,6 +30,14 @@ public class PostGameState : AppState, AppStateOwner {
 		subState = new ShowOutcomeState();
 		subState.owner = this;
 		subState.EnterFrom(null);
+
+		if (battlefield.isPvsAI() && !battlefield.isPvELadder) {
+			if (matchmaker.isConnected) {
+				JSONObject data = new JSONObject();
+				data.AddField("didWin", !victoriousPlayer.npcModeOn);
+				matchmaker.Send("pveGameResult", data);
+			}
+		}
 	}
 
 	public override void WillExit() {

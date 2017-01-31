@@ -32,7 +32,7 @@ public class MainMenuState : AppState {
 
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
-		//menu.AddItem(UI.MenuItem("PVP Ladder", LadderClicked)); I MOVED THIS TO MultiPlayerMenuState
+		menu.AddItem(UI.MenuItem("Leaderboards", Leaderboards));
 		menu.AddItem(UI.MenuItem("Account", AccountClicked));
 		menu.AddItem(UI.MenuItem("Community", ChatClicked));
 		menu.AddItem(UI.MenuItem("Options", OptionsClicked));
@@ -70,6 +70,10 @@ public class MainMenuState : AppState {
 		});*/
 
 		TransitionTo(new PlayMenuState());
+	}
+
+	void Leaderboards() {
+		TransitionTo(new LeaderboardsMenuState());
 	}
 
 	void LadderClicked() {

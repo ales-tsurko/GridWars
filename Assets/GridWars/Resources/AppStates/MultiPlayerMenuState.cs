@@ -37,7 +37,6 @@ public class MultiPlayerMenuState : AppState {
 		menu.Reset();
 		internetPvpButton = menu.AddNewButton().SetText("Internet").SetAction(InternetPvpClicked);
 		menu.AddItem(UI.MenuItem("Shared Screen", SharedScreenPvpClicked));
-		menu.AddItem(UI.MenuItem("View Ladder", LadderClicked));
 		menu.AddItem(UI.MenuItem("Back", Back).SetIsBackItem(true));
 		menu.Show();
 	}
@@ -106,6 +105,6 @@ public class MultiPlayerMenuState : AppState {
 	}
 
 	void Back() {
-		TransitionBack();
+		TransitionTo(new PlayMenuState());
 	}
 }

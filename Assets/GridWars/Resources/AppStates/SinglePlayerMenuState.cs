@@ -100,7 +100,11 @@ public class SinglePlayerMenuState : AppState {
 		TransitionTo(new WaitForBoltState());
 	}
 
+	void ViewLeaderboard() {
+		TransitionTo(new SingleplayerLeaderboardMenuState());
+	}
+
 	void Back() {
-		TransitionBack();
+		TransitionTo(new PlayMenuState());
 	}
 }

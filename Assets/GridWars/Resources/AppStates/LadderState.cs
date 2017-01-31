@@ -30,7 +30,7 @@ public class LadderState : AppState {
 	}
 
 	void Back() {
-		TransitionTo(new MainMenuState());
+		TransitionTo(new LeaderboardsMenuState());
 	}
 
 	public void MatchmakerReceivedRequestLadder(Notification n) {
@@ -41,9 +41,11 @@ public class LadderState : AppState {
 		menu.Reset(); 
 
 		var accountDataList = data.GetField("ladder").list;
+		/*
 		var prize = data.GetField("prize").n;
 		var terminationTime = DateTime.Parse(data.GetField("terminationTime").str);
 		var joinedLadder = data.GetField("joinedLadder").b;
+		*/
 		terms = data.GetField("terms").str.Replace("\\n", "\n");
 
 		//menu.AddNewText().SetText("THE #1 PLAYER AT " + terminationTime + " WINS " + Color.yellow.ColoredTag("$" + prize + " IN BITCOIN"));

@@ -296,7 +296,7 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public bool isPvsAI() {
-		return player1.isLocal == true && player2.npcModeOn == true;
+		return player1.IsNpcPlayingHuman() || player2.IsNpcPlayingHuman();
 	}
 
 	public bool isPlayingGame {
