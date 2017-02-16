@@ -149,6 +149,11 @@ public static class UI {
 		text.alignment = TextAnchor.MiddleCenter;
 		return textObj.GetComponent<RectTransform> ();
 	}
+
+    public static string NewLine(this string _text){
+        string n = "\n";
+        return _text.Replace("NEWLINE", n);
+    }
 }
 
 public enum MenuItemType {ButtonRound, ButtonSquare, Label, TextField, ButtonTextOnly, ButtonPrefab}

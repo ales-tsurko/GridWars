@@ -22,12 +22,17 @@ public class MainMenuState : AppState {
 
 		battlefield.isInternetPVP = false;
 		battlefield.isAiVsAi = false;
+		battlefield.isPvELadder = false;
+
 		battlefield.player1.npcModeOn = false;
 		battlefield.player2.npcModeOn = false;
 
+		battlefield.player1.inputs = null;
+		battlefield.player2.inputs = null;
+
 		app.ResetMenu();
 		menu.AddItem(UI.MenuItem("Play", PlayClicked));
-		menu.AddItem(UI.MenuItem("Ladder", LadderClicked));
+		menu.AddItem(UI.MenuItem("Leaderboards", Leaderboards));
 		menu.AddItem(UI.MenuItem("Account", AccountClicked));
 		menu.AddItem(UI.MenuItem("Community", ChatClicked));
 		menu.AddItem(UI.MenuItem("Options", OptionsClicked));
@@ -65,6 +70,10 @@ public class MainMenuState : AppState {
 		});*/
 
 		TransitionTo(new PlayMenuState());
+	}
+
+	void Leaderboards() {
+		TransitionTo(new LeaderboardsMenuState());
 	}
 
 	void LadderClicked() {

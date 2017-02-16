@@ -1,7 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using AssemblyCSharp;
 
 public class MatchmakerWaitForClientState : MatchmakerWaitForPeerState {
+	Timer slowConnectionTimer;
+
+	public override void EnterFrom(AppState state) {
+		base.EnterFrom(state);
+
+		slowConnectionTimer = app.timerCenter.NewTimer();
+		slowConnectionTimer.action = SlowConnectionTimerFired;
+		slowConnectionTimer.timeout = 5;
+		slowConnectionTimer.Start();
+	}
+
+	public override void WillExit() {
+		base.WillExit();
+
+		slowConnectionTimer.Cancel();
+	}
+
+	void SlowConnectionTimerFired() {
+		indicator.text = "Opponent can't connect.  Please check your" + (Application.platform == RuntimePlatform.WindowsPlayer ? " Windows" : "") + " firewall settings.";
+	}
+
 	protected override void StartBolt() {
 		base.StartBolt();
 

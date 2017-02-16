@@ -223,6 +223,10 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public virtual void PickTarget() {
+		if (App.shared.battlefield.isPaused) {
+			target = null;
+			return;
+		}
 
 		// remove target if it's destroyed
 		if (target != null && target.IsDestroyed()) {
@@ -416,7 +420,7 @@ public class Weapon : MonoBehaviour {
 	}
 
 	public float YAngleToTarget() { // returns 0 if no target
-		if (target) {
+		if (target != null) {
 			Transform t = transform;
 			var targetPos = TargetLeadPosition();
 
@@ -527,7 +531,7 @@ public class Weapon : MonoBehaviour {
 
 	public bool ShouldFire() {
 		// easier to debug with separate ifs
-		if (target) {
+		if (target != null) {
 			if (hasAmmo()) {
 				if (isLoaded()) {
 					if (IsAimed()) {
@@ -788,6 +792,9 @@ public class Weapon : MonoBehaviour {
 
 	}
 
+    public void SetFireThrottle (int newThrottle){
+        fireThrottle.period = newThrottle;
+    }
 	// --- Debugging --------------------------------------
 
 	#if UNITY_EDITOR

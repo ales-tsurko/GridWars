@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using PvEConfig;
 
 public class Battlefield : MonoBehaviour {
 	public static Battlefield current { //TODO: get rid of this
@@ -11,6 +12,8 @@ public class Battlefield : MonoBehaviour {
 	public Vector3 bounds = new Vector3(100f, 10f, 100f);
 	public List<Player> players;
 	public GameUnitCache gameUnitCache;
+
+	public bool isPaused;
 
 	public Vector3 fortressBounds {
 		get {
@@ -127,6 +130,20 @@ public class Battlefield : MonoBehaviour {
 		App.shared.enabled = true; //Load App so Start gets called
 
 	}
+
+    float nextRandomCheck;
+	void Update() {
+		/*if (Input.GetKeyDown(KeyCode.Space)) {
+			isPaused = !isPaused;
+		}*/
+        if (pveConfig == null || !pveConfig.randomizeUnitMod || Time.time < nextRandomCheck) {
+            return;
+        }
+        nextRandomCheck = Time.time + pveConfig.randomizeInterval;
+        pveConfig.Randomize();
+	}
+
+
 
 	public void AddPlayers() {
 		players = new List<Player>();
@@ -279,7 +296,7 @@ public class Battlefield : MonoBehaviour {
 	}
 
 	public bool isPvsAI() {
-		return player1.isLocal == true && player2.npcModeOn == true;
+		return player1.IsNpcPlayingHuman() || player2.IsNpcPlayingHuman();
 	}
 
 	public bool isPlayingGame {
@@ -311,9 +328,18 @@ public class Battlefield : MonoBehaviour {
         }
         return GameType.Unknown;
     }
+    [HideInInspector]
     PvELadderLevelConfig pveConfig;
+    [HideInInspector]
+    UIMenu PvEMenu;
+
+	CampaignLevel campaignLevel;
+
     void SetupForPvELadder(){
-        pveConfig = Resources.Load<PvELadderLevelConfig>("PvELadder/Levels/Level" + pveLadderLevel);
+		campaignLevel = CampaignLevel.Load(pveLadderLevel);
+		campaignLevel.Setup();
+
+		pveConfig = campaignLevel.config;
         //power rate
         player1.powerSource.generationRate = pveConfig.playerPowerRate;
         player1.powerSource.generationRateAdjustment = 1;
@@ -325,10 +351,13 @@ public class Battlefield : MonoBehaviour {
             unit.player = player2;
             unit.name = "BOSS";
            // unit.releaseZone = player2.fortress.towers[2].transform.position;
-            unit.transform.position = player2.fortress.towers[2].transform.position + (player2.fortress.towers[2].transform.forward * 12);
+            unit.transform.position = player2.fortress.towers[2].transform.position + (player2.fortress.towers[2].transform.forward * 12) + (player2.fortress.towers[2].transform.up * 10);
             unit.transform.rotation = player2.fortress.towers[2].transform.rotation;
             pveConfig.AdjustBossUnit(unit);
         }
+        Time.timeScale = pveConfig.gameSpeed;
+
+		campaignLevel.Begin();
         //
     }
 
@@ -336,6 +365,10 @@ public class Battlefield : MonoBehaviour {
         print(_playerNumber);
         pveConfig.AdjustUnit(_unit, _playerNumber);
         print("Unit Adjusted");
+    }
+
+    public void ResetPvEMenu(){
+        PvEMenu.Reset();
     }
 
 	/*

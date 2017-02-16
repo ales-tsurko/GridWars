@@ -52,8 +52,15 @@ namespace AssemblyCSharp {
 			while (timers.Count > 0) {
 				Timer timer = timers[0];
 				if (timer.IsReady()) {
-					timer.Send();
-					timers.Remove(timer);
+					try {
+						timer.Send();
+					}
+					catch (Exception e) {
+						throw e;
+					}
+					finally {
+						timers.Remove(timer);
+					}
 				} else {
 					// this timer isn't ready and since queue is sorted we
 					// know the ones after it aren't ready either

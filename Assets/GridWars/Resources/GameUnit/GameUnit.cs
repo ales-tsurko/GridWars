@@ -5,6 +5,8 @@ using System;
 using AssemblyCSharp;
 
 public class GameUnit : NetworkObject {
+	public static string GameUnitVeteranLevelChangedNotification = "GameUnitVeteranLevelChangedNotification";
+
 	public float thrust;
 	public float rotationThrust;
 	public float birthVolume = 1;
@@ -417,8 +419,6 @@ public class GameUnit : NetworkObject {
 		thinkThrottle = new Throttle();
 		thinkThrottle.behaviour = this;
 		thinkThrottle.period = 25;
-
-		spells = new List<Spell>();
 	}
 
 	public override void ClientInit() {
@@ -432,6 +432,8 @@ public class GameUnit : NetworkObject {
 
 	public override void ServerAndClientInit() {
 		base.ServerAndClientInit();
+
+		spells = new List<Spell>();
 
 		instanceId = GetInstanceID();
 
@@ -454,6 +456,10 @@ public class GameUnit : NetworkObject {
 
 		SetVisibleAndEnabled(true); //Don't do this in ServerAndClientJoinedGame as some classes need it setup here
 		gameUnitState.isInGame = true;
+
+		if (releaseZone != null) {
+			releaseZone.hiddenUnit = null;
+		}
 	}
 
 	public override void ClientJoinedGame() {
@@ -682,11 +688,11 @@ public class GameUnit : NetworkObject {
 
 	public int veteranLevel {
 		get {
-			if (serverAndClientJoinedGame) {
-				return gameUnitState.veteranLevel;
+			if (gameUnitState == null) {
+				return 0;
 			}
 			else {
-				return 0;
+				return gameUnitState.veteranLevel;
 			}
 		}
 
@@ -715,6 +721,11 @@ public class GameUnit : NetworkObject {
 
 	void VeteranLevelChanged() {
 		if (veteranLevel != 0) {
+			App.shared.notificationCenter.NewNotification()
+				.SetName(GameUnitVeteranLevelChangedNotification)
+				.SetSender(this)
+				.Post();
+			
 			ShowVeteranLevel();
 		}
 	}
@@ -780,10 +791,22 @@ public class GameUnit : NetworkObject {
 	}
 
 	public void AdjustWeaponsFireRateByFactor(float f) {
-		foreach (Weapon w in Weapons()) {
+        foreach (Weapon w in Weapons()) {
 			w.reloadTimeInSeconds *= 1f/f;
 		}
 	}
+
+    public void AdjustWeaponsClipReloadTimeByFactor(float f){
+        foreach (Weapon w in Weapons()) {
+            w.clipReloadTimeInSeconds *= 1f/f;
+        }
+    }
+
+    public void AdjustFireThrottle(int i){
+        foreach (Weapon w in Weapons()) {
+            w.SetFireThrottle(i);
+        }
+    }
 
 	public void AdjustMaxHitpointsByFactor(float f) {
 		maxHitPoints *= f;
@@ -976,6 +999,11 @@ public class GameUnit : NetworkObject {
 	}
 
 	public virtual void PickTarget() {
+		if (App.shared.battlefield.isPaused) {
+			target = null;
+			return;
+		}
+			
 		if (target != null && target.IsDestroyed()) {
 			target = null;
 		}

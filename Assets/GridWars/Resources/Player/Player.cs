@@ -194,7 +194,9 @@ public class Player : BetterMonoBehaviour {
 		float h = 1f - NpcHandicap() * maxHandicap;
 		Debug.Log("NpcHandicap " + NpcHandicap() + " generationRateAdjustment " + h);
 		fortress.powerSource.generationRateAdjustment = h;
-		fortress.spellSource.generationRateAdjustment = h;
+        if (fortress.spellSource != null) {
+            fortress.spellSource.generationRateAdjustment = h;
+        }
 	}
 			
 	// -----------------------------------------------------------------
@@ -492,8 +494,10 @@ public class Player : BetterMonoBehaviour {
 
 	void TutorialStep() {
 		if (playerNumber == 1 && firstTutorial == null && App.shared.cameraController.initComplete) {
-			firstTutorial = GameObject.Find("TutorialStart");
-			firstTutorial.GetComponent<TutorialPart>().Begin();
+			battlefield.isPaused = true;
+			firstTutorial = Instantiate(Resources.Load<GameObject>("Tutorial/Tutorial"));
+			firstTutorial.transform.parent = battlefield.transform;
+			firstTutorial.transform.FindChild("TutorialStart").GetComponent<TutorialPart>().Begin();
 		}
 	}
 
