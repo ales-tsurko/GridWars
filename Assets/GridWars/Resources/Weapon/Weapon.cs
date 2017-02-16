@@ -449,6 +449,17 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
+	public void AimOnXAndYAxis() {
+		if (target != null) {
+			Transform t = transform;
+			var targetPos = TargetLeadPosition();
+			Vector3 relativePos = targetPos - t.position;
+			Quaternion toRotation = Quaternion.LookRotation(relativePos);
+
+			t.rotation = Quaternion.Lerp(transform.rotation, toRotation, aimRateX);
+		}
+	}
+
 	public void AimOnXAxis() {
 		if (canRotateX()) {
 			float angle = XAngleToTarget(); 
@@ -494,9 +505,12 @@ public class Weapon : MonoBehaviour {
 	// --- Aiming and deciding to fire ------------------
 
 	public void AimIfAble() { 
-					
-		AimOnXAxis();
-		AimOnYAxis();
+		if (canRotateX() && canRotateY()) {
+			AimOnXAndYAxis();
+		} else {
+			AimOnXAxis();
+			AimOnYAxis();
+		}
 
 		ApplyAngleLimits();
 			
