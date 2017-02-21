@@ -94,7 +94,7 @@ public class MainMenuState : AppState {
                     { "playTime", Time.timeSinceLevelLoad }
                 });*/
 
-		Application.OpenURL("http://slack.baremetalgame.com/");
+		Application.OpenURL("https://discordapp.com/invite/qAjsB8K");
 	}
 
     void OptionsClicked(){
