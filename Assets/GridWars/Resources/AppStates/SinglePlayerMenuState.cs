@@ -14,7 +14,7 @@ public class SinglePlayerMenuState : AppState {
 
 	void ShowMenu() {
 		menu.Reset();
-        menu.AddItem(UI.MenuItem("Campaign", PvELadderClicked));  //commented while still adding
+        //menu.AddItem(UI.MenuItem("Campaign", PvELadderClicked));  //commented while still adding
 		menu.AddItem(UI.MenuItem("Player vs AI", PlayerVsCompClicked));
 		menu.AddItem(UI.MenuItem("AI vs AI", CompVsCompClicked));
 		menu.AddItem(UI.MenuItem("Back", Back).SetIsBackItem(true));
