@@ -34,8 +34,13 @@ public class PostGameState : AppState, AppStateOwner {
 		if (battlefield.isPvsAI() && !battlefield.isPvELadder) {
 			if (matchmaker.isConnected) {
 				JSONObject data = new JSONObject();
+
 				data.AddField("didWin", !victoriousPlayer.npcModeOn);
+				data.AddField("npcLevel", battlefield.localPlayer1.opponent.npcLevel);
 				matchmaker.Send("pveGameResult", data);
+
+				victoriousPlayer.DidWin();
+				victoriousPlayer.opponent.DidLose();
 			}
 		}
 	}

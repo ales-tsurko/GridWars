@@ -54,11 +54,13 @@ public class ShowOutcomeState : PostGameSubState {
 		menu.AddItem(UI.MenuItem(title, null, MenuItemType.ButtonTextOnly));
 		if (battlefield.isInternetPVP) {
 			title = "Request Rematch";
-		} else {
+		}
+		else {
 			title = "Rematch!";
-            if (App.shared.battlefield.GetGameType() == GameType.PvELadder && postGameState.victoriousPlayer.isLocal) {
-                title = "Next Level";
-            }
+
+			if (postGameState.victoriousPlayer.isLocal && battlefield.isPvsAI()) {
+				title = "Next Level";
+			}
 		}
 
 		if (showRematch) {

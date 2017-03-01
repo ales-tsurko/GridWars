@@ -10,7 +10,6 @@ public class Prefs {
 		_screenName = "";
 		_accessToken = "";
 		_hasPlayedTutorial = false;
-		_npcHandicap = 1f;
 		_cameraPosition = "MainBackView";
 
 		//will be corrected in App.SetupResolution
@@ -67,19 +66,6 @@ public class Prefs {
 		set {
 			_hasPlayedTutorial = value;
 			PostNotification("hasPlayedTutorial");
-			Save();
-		}
-	}
-
-	public float _npcHandicap;
-	public float npcHandicap {
-		get {
-			return _npcHandicap;
-		}
-
-		set {
-			_npcHandicap = value;
-			PostNotification("npcHandicap");
 			Save();
 		}
 	}

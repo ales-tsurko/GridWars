@@ -12,7 +12,7 @@ public class LeaderboardResultsState : MenuState {
 	protected override void ConfigureMenu() {
 		base.ConfigureMenu();
 
-		menu.AddNewText().SetText("Leaderboard > " + indexState.type + " > " + periodDescription);
+		menu.AddNewText().SetText("Leaderboards > Single Player  > " + periodDescription + ":");
 
 		if (results == null) {
 			menu.AddNewIndicator().SetText("Fetching Results");

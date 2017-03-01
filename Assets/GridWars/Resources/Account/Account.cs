@@ -321,8 +321,7 @@ public class Account {
 			{
 				{ "platform", Application.platform.ToString() },
 				{ "id", id.ToString()},
-				{ "screenName", screenName },
-				{ "handicap", App.shared.prefs.npcHandicap }
+				{ "screenName", screenName }
 			};
 
 			if (opponent != null) {

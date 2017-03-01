@@ -8,7 +8,7 @@ public class LeaderboardIndexMenuState : MenuState {
 	protected override void ConfigureMenu() {
 		base.ConfigureMenu();
 
-		menu.AddNewText().SetText("Leaderboard > " + type);
+		menu.AddNewText().SetText("Leaderboards > Single Player:");
 		menu.AddNewButton().SetText("All Time").SetAction(AllTime);
 		menu.AddNewButton().SetText("Weekly").SetAction(Weekly);
 		menu.AddNewButton().SetText("Daily").SetAction(Daily);
@@ -40,6 +40,6 @@ public class LeaderboardIndexMenuState : MenuState {
 	protected override void Back() {
 		base.Back();
 
-		TransitionTo(new SingleplayerLeaderboardMenuState());
+		TransitionTo(new LeaderboardsMenuState());
 	}
 }

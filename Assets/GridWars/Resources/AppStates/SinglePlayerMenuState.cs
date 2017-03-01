@@ -57,6 +57,9 @@ public class SinglePlayerMenuState : AppState {
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
 
+		battlefield.player1.npcLevel = 1;
+		battlefield.player2.npcLevel = 1;
+
 		/*Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
 			{
 				{ "playTime", Time.timeSinceLevelLoad }

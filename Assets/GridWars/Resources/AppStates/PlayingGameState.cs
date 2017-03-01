@@ -5,6 +5,7 @@ using UnityEngine.Analytics;
 
 public class PlayingGameState : AppState {
 	List<InGameMenu> inGameMenus;
+	UIMenu levelMenu;
 
 	//AppState
 
@@ -46,6 +47,10 @@ public class PlayingGameState : AppState {
 			foreach (var player in app.battlefield.localPlayers) {
 				AddInGameMenu(player);
 			}
+
+			if (app.battlefield.isPvsAI()) {
+				AddLevelMenu();
+			}
 		}
 
 		//primaryInGameMenu.menu.Focus();
@@ -78,6 +83,9 @@ public class PlayingGameState : AppState {
 
 		menu.Show();
 
+		levelMenu.Destroy();
+		levelMenu = null;
+
 		DestroyInGameMenus();
 	}
 
@@ -88,9 +96,6 @@ public class PlayingGameState : AppState {
 		if (BoltNetwork.isServer && battlefield.canCheckGameOver && 
 			battlefield.GameOver()) {
 			Player winner = battlefield.livingPlayers[0];
-			Player loser = winner.EnemyPlayer();
-			winner.DidWin();
-			loser.DidLose();
 			EndGame(winner);
 
 		}
@@ -186,6 +191,15 @@ public class PlayingGameState : AppState {
 		inGameMenu.Setup();
 
 		inGameMenus.Add(inGameMenu);
+	}
+
+	void AddLevelMenu() {
+		levelMenu = UI.Menu();
+
+		levelMenu.anchor = MenuAnchor.TopRight;
+		levelMenu.AddNewText().text = "Level " + battlefield.localPlayer1.opponent.npcLevel + " (NPC POWER " + string.Format("{0:F2}", battlefield.localPlayer1.opponent.npcHandicap) + ")";
+
+		levelMenu.Show();
 	}
 
 	public InGameMenu primaryInGameMenu {

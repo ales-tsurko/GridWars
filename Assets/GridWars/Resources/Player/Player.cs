@@ -11,6 +11,7 @@ public class Player : BetterMonoBehaviour {
 	public float separation = 0.9f;
 	public Material primaryMaterial;
 	public Material secondaryMaterial;
+	public int npcLevel = 1;
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
@@ -158,44 +159,28 @@ public class Player : BetterMonoBehaviour {
 	// --- NPC Handicaping --------------------------------------
 
 	public void DidWin() {
-		if (IsNpcPlayingHuman()) {
-			DecreaseNpcHandicap();
-		}
 	}
 
 	public void DidLose() {
 		if (IsNpcPlayingHuman()) {
-			IncreaseNpcHandicap();
+			npcLevel ++;
 		}
 	}
 
 	public bool IsNpcPlayingHuman() {
 		return npcModeOn && !opponent.npcModeOn;
 	}
-		
-	public void DecreaseNpcHandicap() {
-		SetNpcHandicap(NpcHandicap() + 0.16f);
-	}
 
-	public void IncreaseNpcHandicap() {
-		SetNpcHandicap(NpcHandicap() - 0.16f);
-	}
-
-	public void SetNpcHandicap(float v) {
-		App.shared.prefs.npcHandicap = Mathf.Clamp(v, 0, 1);
-	}
-
-	public float NpcHandicap() {
-		return App.shared.prefs.npcHandicap;
+	public float npcHandicap {
+		get {
+			return 0.5f * Mathf.Pow(1.0718f, npcLevel - 1);
+		}
 	}
 
 	void SetupNpcHandicap() { 
-		float maxHandicap = 0.5f;
-		float h = 1f - NpcHandicap() * maxHandicap;
-		Debug.Log("NpcHandicap " + NpcHandicap() + " generationRateAdjustment " + h);
-		fortress.powerSource.generationRateAdjustment = h;
+		fortress.powerSource.generationRateAdjustment = npcHandicap;
         if (fortress.spellSource != null) {
-            fortress.spellSource.generationRateAdjustment = h;
+			fortress.spellSource.generationRateAdjustment = npcHandicap;
         }
 	}
 			

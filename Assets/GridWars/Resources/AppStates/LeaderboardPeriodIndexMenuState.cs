@@ -11,7 +11,7 @@ public class LeaderboardPeriodIndexMenuState : MenuState {
 	protected override void ConfigureMenu() {
 		base.ConfigureMenu();
 
-		menu.AddNewText().SetText("Leaderboard > " + indexState.type + " > " + periodType);
+		menu.AddNewText().SetText("Leaderboards > " + indexState.type + " > " + periodType);
 
 		if (results == null) {
 			menu.AddNewIndicator().SetText("Fetching Times");
@@ -33,6 +33,7 @@ public class LeaderboardPeriodIndexMenuState : MenuState {
 					s.indexState = indexState;
 					s.periodStart = obj.GetField("start").str;
 					s.periodEnd = obj.GetField("end").str;
+					s.periodDescription = obj.GetField("description").str;
 					TransitionTo(s);
 				});
 			});

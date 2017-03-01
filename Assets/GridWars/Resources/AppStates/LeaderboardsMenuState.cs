@@ -11,7 +11,9 @@ public class LeaderboardsMenuState : MenuState {
 	}
 
 	void Singleplayer() {
-		TransitionTo(new SingleplayerLeaderboardMenuState());
+		var s = new LeaderboardIndexMenuState();
+		s.type = "Level";
+		TransitionTo(s);
 	}
 
 	void Multiplayer() {
