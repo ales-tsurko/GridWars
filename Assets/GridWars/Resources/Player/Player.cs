@@ -11,7 +11,6 @@ public class Player : BetterMonoBehaviour {
 	public float separation = 0.9f;
 	public Material primaryMaterial;
 	public Material secondaryMaterial;
-	public int npcLevel = 1;
 
 	//https://en.wikipedia.org/wiki/Federal_Standard_595_camouflage_colours
 
@@ -158,22 +157,13 @@ public class Player : BetterMonoBehaviour {
 
 	// --- NPC Handicaping --------------------------------------
 
-	public void DidWin() {
-	}
-
-	public void DidLose() {
-		if (IsNpcPlayingHuman()) {
-			npcLevel ++;
-		}
-	}
-
 	public bool IsNpcPlayingHuman() {
 		return npcModeOn && !opponent.npcModeOn;
 	}
 
 	public float npcHandicap {
 		get {
-			return 0.5f * Mathf.Pow(1.0718f, npcLevel - 1);
+			return 0.5f + Mathf.Pow(battlefield.npcLevel - 1, 0.6f)/4.5f;
 		}
 	}
 

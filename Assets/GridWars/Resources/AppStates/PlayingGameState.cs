@@ -83,8 +83,10 @@ public class PlayingGameState : AppState {
 
 		menu.Show();
 
-		levelMenu.Destroy();
-		levelMenu = null;
+		if (levelMenu != null) {
+			levelMenu.Destroy();
+			levelMenu = null;
+		}
 
 		DestroyInGameMenus();
 	}
@@ -197,7 +199,7 @@ public class PlayingGameState : AppState {
 		levelMenu = UI.Menu();
 
 		levelMenu.anchor = MenuAnchor.TopRight;
-		levelMenu.AddNewText().text = "Level " + battlefield.localPlayer1.opponent.npcLevel + " (NPC POWER " + string.Format("{0:F2}", battlefield.localPlayer1.opponent.npcHandicap) + ")";
+		levelMenu.AddNewText().text = "Level " + battlefield.npcLevel + " (NPC POWER " + string.Format("{0:F2}", battlefield.localPlayer1.opponent.npcHandicap) + ")";
 
 		levelMenu.Show();
 	}

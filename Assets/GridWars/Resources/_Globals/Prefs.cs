@@ -6,6 +6,7 @@ public class Prefs {
 	public static string PrefsChangedNotification = "PrefsChangedNotification";
 
 	public Prefs() {
+		_npcLevel = 1;
 		_keyIconsVisible = true;
 		_screenName = "";
 		_accessToken = "";
@@ -16,6 +17,19 @@ public class Prefs {
 		_resolutionHeight = -1;
 		_resolutionWidth = -1;
 		_antialiasingLevel = 4;
+	}
+
+	public int _npcLevel;
+	public int npcLevel {
+		get {
+			return _npcLevel;
+		}
+
+		set {
+			_npcLevel = value;
+			PostNotification("npcLevel");
+			Save();
+		}
 	}
 
 	public bool _keyIconsVisible;

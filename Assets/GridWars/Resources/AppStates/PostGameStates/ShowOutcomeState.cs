@@ -58,8 +58,13 @@ public class ShowOutcomeState : PostGameSubState {
 		else {
 			title = "Rematch!";
 
-			if (postGameState.victoriousPlayer.isLocal && battlefield.isPvsAI()) {
-				title = "Next Level";
+			if (battlefield.isPvsAI()) {
+				if (postGameState.victoriousPlayer.isLocal) {
+					title = "Next Level";
+				}
+				else if (App.shared.battlefield.GetGameType() != GameType.PvELadder) {
+					title = "Continue";
+				}
 			}
 		}
 

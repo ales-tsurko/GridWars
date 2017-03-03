@@ -56,9 +56,8 @@ public class SinglePlayerMenuState : AppState {
 
 		battlefield.player1.isTutorialMode = false;
 		battlefield.player2.isTutorialMode = false;
-
-		battlefield.player1.npcLevel = 1;
-		battlefield.player2.npcLevel = 1;
+		battlefield.npcLevel = App.shared.prefs.npcLevel;
+		App.shared.prefs.npcLevel = Mathf.Max(1, battlefield.npcLevel - 2); //player only gets credit for a win if they finish the game.
 
 		/*Analytics.CustomEvent("PlayerVsCompClicked", new Dictionary<string, object>
 			{

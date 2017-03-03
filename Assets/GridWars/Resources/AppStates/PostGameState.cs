@@ -36,13 +36,20 @@ public class PostGameState : AppState, AppStateOwner {
 				JSONObject data = new JSONObject();
 
 				data.AddField("didWin", !victoriousPlayer.npcModeOn);
-				data.AddField("npcLevel", battlefield.localPlayer1.opponent.npcLevel);
+				data.AddField("npcLevel", battlefield.npcLevel);
 				matchmaker.Send("pveGameResult", data);
-
-				victoriousPlayer.DidWin();
-				victoriousPlayer.opponent.DidLose();
 			}
 		}
+
+		if (victoriousPlayer.npcModeOn) {
+			battlefield.npcLevel = Mathf.Max(1, battlefield.npcLevel - 2);
+
+		}
+		else {
+			battlefield.npcLevel++;
+		}
+
+		App.shared.prefs.npcLevel = battlefield.npcLevel;
 	}
 
 	public override void WillExit() {

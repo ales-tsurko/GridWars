@@ -12,6 +12,7 @@ public class Battlefield : MonoBehaviour {
 	public Vector3 bounds = new Vector3(100f, 10f, 100f);
 	public List<Player> players;
 	public GameUnitCache gameUnitCache;
+	public int npcLevel = -1;
 
 	public bool isPaused;
 
