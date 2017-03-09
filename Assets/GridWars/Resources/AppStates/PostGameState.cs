@@ -42,7 +42,7 @@ public class PostGameState : AppState, AppStateOwner {
 		}
 
 		if (victoriousPlayer.npcModeOn) {
-			battlefield.npcLevel = Mathf.Max(1, battlefield.npcLevel - 2);
+			battlefield.npcLevel = Mathf.Max(1, battlefield.npcLevel - 1);
 
 		}
 		else {
