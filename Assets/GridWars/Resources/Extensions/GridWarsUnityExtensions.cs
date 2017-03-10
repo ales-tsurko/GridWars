@@ -378,6 +378,27 @@ public static class GridWarsUnityExtensions {
 		return self;
 	}
 
+	public static Color ToOrange(this Color self) {
+		self.r = 1f;
+		self.g = 147f/255f;
+		self.b = 0f;
+		return self;
+	}
+
+	public static Color ToIndigo(this Color self) {
+		self.r = 75f/255f;
+		self.g = 0f;
+		self.b = 130f/255f;
+		return self;
+	}
+
+	public static Color ToViolet(this Color self) {
+		self.r = 159f/255f;
+		self.g = 0f;
+		self.b = 1f;
+		return self;
+	}
+
 	public static string ColoredTag(this Color self, string tagBody) {
 		return "<color=#" + ColorUtility.ToHtmlStringRGB(self) + ">" + tagBody + "</color>";
 	}

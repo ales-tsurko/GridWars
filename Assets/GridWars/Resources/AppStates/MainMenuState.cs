@@ -94,25 +94,31 @@ public class MainMenuState : AppState {
 	}
 
 	void MatchmakerReceivedRequestLeaderboard(Notification n) {
-		string leaders = "All time high scores: ";
+		leaderboardMenu = UI.Menu();
+		leaderboardMenu.anchor = MenuAnchor.TopCenter;
+		leaderboardMenu.vMargin = 120f;
+
+		var item = leaderboardMenu.AddNewText();
+		item.innerMargins = new Vector2(0f, 0.5f);
+		item.SetText("top players:");
+		item.rainbowCyclePeriod = 2f;
+		item.UseRainbowStyle();
+
 		var pvpLeaders = pvpLadderResult.GetField("ladder").list;
 
 		if (pvpLeaders.Count > 0) {
-			leaders += pvpLeaders[0].GetField("screenName").str + " (PVP)";
+			item = leaderboardMenu.AddNewText();
+			item.innerMargins = new Vector2(0f, 0.5f);
+			item.SetText(pvpLeaders[0].GetField("screenName").str + " (PVP)");
 		}
 
 		var pveLeaders = (n.data as JSONObject).list;
 		if (pveLeaders.Count > 0) {
-			if (pvpLeaders.Count > 0) {
-				leaders += " & ";
-			}
-			leaders += pveLeaders[0].GetField("screenName").str + " (PVE)";
+			item = leaderboardMenu.AddNewText();
+			item.innerMargins = new Vector2(0f, 0.5f);
+			item.SetText(pveLeaders[0].GetField("screenName").str + " (PVE)");
 		}
 
-		leaderboardMenu = UI.Menu();
-		leaderboardMenu.AddNewText().SetText(Color.yellow.ColoredTag(leaders));
-		leaderboardMenu.anchor = MenuAnchor.BottomCenter;
-		leaderboardMenu.vMargin = 144f;
 		leaderboardMenu.Show();
 	}
 

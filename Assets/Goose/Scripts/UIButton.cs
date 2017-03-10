@@ -13,6 +13,8 @@ public class UIButton : UIElement {
 	public float charactersPerSecond = 10f;
 	public bool doesType = false;
 	public bool wasActivatedByMouse;
+	public bool useRainbowStyle = false;
+	public float rainbowCyclePeriod = 2f;
 
 
 	private bool finishedTyping = false;
@@ -111,11 +113,19 @@ public class UIButton : UIElement {
 
 	public UIButton UseAlertStyle() {
 		this.GetComponent<Animator>().runtimeAnimatorController = alertStyleController;
+		useRainbowStyle = false;
 		return this;
 	}
 
 	public UIButton UseDefaultStyle() {
 		this.GetComponent<Animator>().runtimeAnimatorController = defaultStyleController;
+		useRainbowStyle = false;
+		return this;
+	}
+
+	public UIButton UseRainbowStyle() {
+		this.GetComponent<Animator>().runtimeAnimatorController = null;
+		useRainbowStyle = true;
 		return this;
 	}
 
@@ -338,6 +348,31 @@ public class UIButton : UIElement {
 			}
 
 			SizeToFit();
+		}
+
+		if (useRainbowStyle) {
+			Color[] colors = new Color[] {
+				Color.red,
+				Color.black.ToOrange(),
+				Color.yellow,
+				Color.green,
+				Color.blue,
+				Color.black.ToIndigo(),
+				Color.black.ToViolet()
+
+				//new Color().ToTronTerminalBlue(),
+				//new Color().ToP3Amber()
+			};
+
+			var progress = (Time.time % rainbowCyclePeriod) / rainbowCyclePeriod;
+			var startColorIndex = (int)Mathf.Floor(progress * colors.Length);
+			var endColorIndex = startColorIndex + 1;
+			if (endColorIndex == colors.Length) {
+				endColorIndex = 0;
+			}
+			var lerpProgress = progress * colors.Length - (float)startColorIndex;
+
+			textComponent.color = Color.Lerp(colors[startColorIndex], colors[endColorIndex], lerpProgress);
 		}
 	}
 
