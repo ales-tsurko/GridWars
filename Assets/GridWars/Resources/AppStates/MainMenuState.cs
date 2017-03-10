@@ -4,6 +4,9 @@ using UnityEngine.Analytics;
 using System.Collections.Generic;
 
 public class MainMenuState : AppState {
+	UIMenu leaderboardMenu;
+	JSONObject pvpLadderResult;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
@@ -39,6 +42,16 @@ public class MainMenuState : AppState {
 		menu.AddItem(UI.MenuItem("Quit", Quit));
 		menu.Show();
 
+		if (matchmaker.isConnected) {
+			FetchLeaderboards(null);
+		}
+		else {
+			app.notificationCenter.NewObservation()
+				.SetNotificationName(Matchmaker.MatchmakerConnectedNotification)
+				.SetAction(FetchLeaderboards)
+				.Add();
+		}
+
 		if (_needsInitialFadeIn) {
 			menu.backgroundColor = Color.black;
 			menu.targetBackgroundColor = Color.clear;
@@ -51,8 +64,66 @@ public class MainMenuState : AppState {
 		App.shared.SoundtrackNamed("MenuBackgroundMusic").Play();
 	}
 
+	void FetchLeaderboards(Notification n) {
+		app.notificationCenter.RemoveObserver(this);
+
+		app.notificationCenter.NewObservation()
+			.SetNotificationName(matchmaker.ReceivedMessageNotificationName("requestLadder"))
+			.SetAction(MatchmakerReceivedRequestLadder)
+			.SetSender(matchmaker)
+			.Add();
+
+		matchmaker.Send("requestLadder");
+	}
+
+	void MatchmakerReceivedRequestLadder(Notification n) {
+		pvpLadderResult = n.data as JSONObject;
+
+		app.notificationCenter.NewObservation()
+			.SetNotificationName(matchmaker.ReceivedMessageNotificationName("requestLeaderboard"))
+			.SetAction(MatchmakerReceivedRequestLeaderboard)
+			.SetSender(matchmaker)
+			.Add();
+
+		JSONObject data = new JSONObject();
+
+		data.AddField("type", "Level");
+		data.AddField("start", "1451606400000");
+		data.AddField("end", "4607280000000");
+		matchmaker.Send("requestLeaderboard", data);
+	}
+
+	void MatchmakerReceivedRequestLeaderboard(Notification n) {
+		string leaders = "All time high scores: ";
+		var pvpLeaders = pvpLadderResult.GetField("ladder").list;
+
+		if (pvpLeaders.Count > 0) {
+			leaders += pvpLeaders[0].GetField("screenName").str + " (PVP)";
+		}
+
+		var pveLeaders = (n.data as JSONObject).list;
+		if (pveLeaders.Count > 0) {
+			if (pvpLeaders.Count > 0) {
+				leaders += " & ";
+			}
+			leaders += pveLeaders[0].GetField("screenName").str + " (PVE)";
+		}
+
+		leaderboardMenu = UI.Menu();
+		leaderboardMenu.AddNewText().SetText(Color.yellow.ColoredTag(leaders));
+		leaderboardMenu.anchor = MenuAnchor.BottomCenter;
+		leaderboardMenu.vMargin = 144f;
+		leaderboardMenu.Show();
+	}
+
 	public override void WillExit() {
 		base.WillExit();
+
+		app.notificationCenter.RemoveObserver(this);
+
+		if (leaderboardMenu != null) {
+			leaderboardMenu.Destroy();
+		}
 
 		if (QualitySettings.vSyncCount > 0) {
 			QualitySettings.vSyncCount = 1;

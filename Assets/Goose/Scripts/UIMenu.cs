@@ -117,6 +117,8 @@ public class UIMenu : UIElement {
 		}
 	}
 
+	public float vMargin = 0f;
+
 
 	//public AudioSource audioSource;
 
@@ -278,19 +280,25 @@ public class UIMenu : UIElement {
 			panel.anchorMin = new Vector2(.5f, 1f);
 			panel.anchorMax = new Vector2(.5f, 1f);
 			panel.pivot = new Vector2(0.5f, 0.5f);
-			panel.anchoredPosition = new Vector2(0, -panel.sizeDelta.y/2);
+			panel.anchoredPosition = new Vector2(0, -(panel.sizeDelta.y/2 + vMargin));
 			break;
 		case MenuAnchor.TopLeft:
 			panel.anchorMin = new Vector2(0f, 1f);
 			panel.anchorMax = new Vector2(0f, 1f);
 			panel.pivot = new Vector2(0f, 0.5f);
-			panel.anchoredPosition = new Vector2(18f, -panel.sizeDelta.y/2);
+			panel.anchoredPosition = new Vector2(18f, -(panel.sizeDelta.y/2 + vMargin));
 			break;
 		case MenuAnchor.TopRight:
 			panel.anchorMin = new Vector2(1f, 1f);
 			panel.anchorMax = new Vector2(1f, 1f);
 			panel.pivot = new Vector2(1f, 0.5f);
-			panel.anchoredPosition = new Vector2(-18f, -panel.sizeDelta.y/2);
+			panel.anchoredPosition = new Vector2(-18f, -(panel.sizeDelta.y/2 + vMargin));
+			break;
+		case MenuAnchor.BottomCenter:
+			panel.anchorMin = new Vector2(.5f, 0f);
+			panel.anchorMax = new Vector2(.5f, 0f);
+			panel.pivot = new Vector2(0.5f, 0.5f);
+			panel.anchoredPosition = new Vector2(0, panel.sizeDelta.y/2 + vMargin);
 			break;
 		}
     }
@@ -573,5 +581,5 @@ public class UIMenu : UIElement {
 	}
 }
 
-public enum MenuAnchor { MiddleCenter, TopCenter, TopLeft, TopRight };
+public enum MenuAnchor { MiddleCenter, TopCenter, TopLeft, TopRight, BottomCenter };
 public enum MenuOrientation { Vertical, Horizontal };
