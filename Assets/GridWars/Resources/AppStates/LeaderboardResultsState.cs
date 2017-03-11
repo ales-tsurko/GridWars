@@ -36,9 +36,13 @@ public class LeaderboardResultsState : MenuState {
 			foreach (var obj in results.list) {
 				var text = obj.GetField("description").str;
 				if (obj.GetField("isSelf").b) {
-					text = Color.yellow.ColoredTag(text);
 					foundSelf = true;
+
+					if (i > 0) {
+						text = Color.yellow.ColoredTag(text);
+					}
 				}
+
 				var item = menu.AddNewText();
 				item.SetText(text);
 

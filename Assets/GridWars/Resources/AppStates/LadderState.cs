@@ -52,6 +52,9 @@ public class LadderState : AppState {
 
 		var isRanked = false; 
 
+		menu.AddNewText().SetText("Leaderboards > Multiplayer > All Time:");
+
+		var first = true;
 		foreach (var accountData in accountDataList) {
 			var account = new Account();
 			account.SetFromData(accountData);
@@ -63,12 +66,20 @@ public class LadderState : AppState {
 			var text = account.rank + ". " + account.screenName + " " + account.wins + "-" + account.losses;
 			if (account.id == app.account.id) {
 				isRanked = true;
-				text = Color.yellow.ColoredTag(text);
+				if (!first) {
+					text = Color.yellow.ColoredTag(text);
+				}
 			}
 
-			menu.AddNewText().SetText(text);
+			var item = menu.AddNewText().SetText(text);
 
 			lastRank = account.rank;
+
+			if (first) {
+				item.UseRainbowStyle();
+			}
+
+			first = false;
 		}
 
 		if (!isRanked) {
