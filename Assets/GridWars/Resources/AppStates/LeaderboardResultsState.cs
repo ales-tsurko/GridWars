@@ -31,6 +31,7 @@ public class LeaderboardResultsState : MenuState {
 		}
 		else {
 			var foundSelf = false;
+			int i = 0;
 
 			foreach (var obj in results.list) {
 				var text = obj.GetField("description").str;
@@ -38,7 +39,13 @@ public class LeaderboardResultsState : MenuState {
 					text = Color.yellow.ColoredTag(text);
 					foundSelf = true;
 				}
-				menu.AddNewText().SetText(text);
+				var item = menu.AddNewText();
+				item.SetText(text);
+
+				if (i == 0) {
+					item.UseRainbowStyle();
+				}
+				i++;
 			}
 
 			if (!foundSelf) {
