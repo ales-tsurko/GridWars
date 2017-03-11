@@ -100,28 +100,28 @@ public class MainMenuState : AppState {
 
 		var item = leaderboardMenu.AddNewText();
 		item.innerMargins = new Vector2(0f, 0.5f);
+		item.doesType = true;
 		item.SetText("top players:");
 		item.rainbowCyclePeriod = 2f;
 		//item.UseRainbowStyle();
-		item.doesType = true;
 
 		var pvpLeaders = pvpLadderResult.GetField("ladder").list;
 
 		if (pvpLeaders.Count > 0) {
 			item = leaderboardMenu.AddNewText();
 			item.innerMargins = new Vector2(0f, 0.5f);
+			item.doesType = true;
 			item.SetText(pvpLeaders[0].GetField("screenName").str + " (PVP)");
 			item.UseRainbowStyle();
-			item.doesType = true;
 		}
 
 		var pveLeaders = (n.data as JSONObject).list;
 		if (pveLeaders.Count > 0) {
 			item = leaderboardMenu.AddNewText();
 			item.innerMargins = new Vector2(0f, 0.5f);
+			item.doesType = true;
 			item.SetText(pveLeaders[0].GetField("screenName").str + " (PVE)");
 			item.UseRainbowStyle();
-			item.doesType = true;
 		}
 
 		leaderboardMenu.Show();
