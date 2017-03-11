@@ -103,6 +103,7 @@ public class MainMenuState : AppState {
 		item.SetText("top players:");
 		item.rainbowCyclePeriod = 2f;
 		//item.UseRainbowStyle();
+		item.doesType = true;
 
 		var pvpLeaders = pvpLadderResult.GetField("ladder").list;
 
@@ -111,6 +112,7 @@ public class MainMenuState : AppState {
 			item.innerMargins = new Vector2(0f, 0.5f);
 			item.SetText(pvpLeaders[0].GetField("screenName").str + " (PVP)");
 			item.UseRainbowStyle();
+			item.doesType = true;
 		}
 
 		var pveLeaders = (n.data as JSONObject).list;
@@ -119,6 +121,7 @@ public class MainMenuState : AppState {
 			item.innerMargins = new Vector2(0f, 0.5f);
 			item.SetText(pveLeaders[0].GetField("screenName").str + " (PVE)");
 			item.UseRainbowStyle();
+			item.doesType = true;
 		}
 
 		leaderboardMenu.Show();

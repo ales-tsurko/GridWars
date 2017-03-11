@@ -46,6 +46,7 @@ public class LeaderboardResultsState : MenuState {
 					item.UseRainbowStyle();
 				}
 				i++;
+				//item.shouldType = true;
 			}
 
 			if (!foundSelf) {
