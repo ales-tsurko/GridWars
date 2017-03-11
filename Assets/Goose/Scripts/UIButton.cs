@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using InControl;
 
+using UnityEngine.Assertions;
 
 [System.Serializable]
 public class UIButton : UIElement {
@@ -351,6 +352,7 @@ public class UIButton : UIElement {
 		}
 
 		if (useRainbowStyle) {
+			/*
 			Color[] colors = new Color[] {
 				Color.red,
 				Color.black.ToOrange(),
@@ -363,13 +365,22 @@ public class UIButton : UIElement {
 				//new Color().ToTronTerminalBlue(),
 				//new Color().ToP3Amber()
 			};
+			*/
 
-			var progress = (Time.time % rainbowCyclePeriod) / rainbowCyclePeriod;
-			var startColorIndex = (int)Mathf.Floor(progress * colors.Length);
-			var endColorIndex = startColorIndex + 1;
-			if (endColorIndex == colors.Length) {
-				endColorIndex = 0;
-			}
+
+			// picked these colors to attempt to avoid a double pulse effect
+			Color[] colors = new Color[] {
+				new Color(1.00F, 0.50F, 0.00F, 1F), 
+				new Color(0.50F, 1.00F, 0.00F, 1F), 
+				new Color(0.00F, 1.00F, 0.50F, 1F), 
+				new Color(0.00F, 0.50F, 1.00F, 1F), 
+				new Color(0.50F, 0.00F, 1.00F, 1F), 
+				new Color(1.00F, 0.00F, 0.50F, 1F), 
+			};
+				
+			float progress = (Time.time % rainbowCyclePeriod) / rainbowCyclePeriod;
+			int startColorIndex = (int)Mathf.Floor(progress * colors.Length);
+			int endColorIndex = (startColorIndex + 1) % colors.Length;
 			var lerpProgress = progress * colors.Length - (float)startColorIndex;
 
 			textComponent.color = Color.Lerp(colors[startColorIndex], colors[endColorIndex], lerpProgress);
