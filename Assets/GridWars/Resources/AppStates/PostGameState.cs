@@ -43,10 +43,9 @@ public class PostGameState : AppState, AppStateOwner {
 
 		if (victoriousPlayer.npcModeOn) {
 			battlefield.npcLevel = Mathf.Max(1, battlefield.npcLevel - 1);
-
 		}
 		else {
-			battlefield.npcLevel++;
+			battlefield.npcLevel ++;
 		}
 
 		App.shared.prefs.npcLevel = battlefield.npcLevel;
