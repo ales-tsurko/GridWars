@@ -8,6 +8,7 @@ public class Tank : GroundVehicle {
 
 	public override void Awake() {
 		base.Awake();
+		//Debug.Log("Awake");
 		powerCostPerLevel = new float[] { 4.2f, 4.2f*2.5f, float.MaxValue };
 	}
 

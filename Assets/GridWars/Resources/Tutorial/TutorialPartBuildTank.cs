@@ -11,6 +11,7 @@ public class TutorialPartBuildTank : TutorialPartDelegate {
 			.SetAction(TowerProducedUnit)
 			.Add();
 
+		//Debug.Log("GameUnit.Load<Tank>().PowerCost(0): " + GameUnit.Load<Tank>().PowerCost(0));
 		App.shared.battlefield.player1.powerSource.power = GameUnit.Load<Tank>().PowerCost(0);
 		foreach(var tower in App.shared.battlefield.player1.fortress.towers) {
 			tower.isDisabled = !(tower.unitPrefab.GameUnit() is Tank);

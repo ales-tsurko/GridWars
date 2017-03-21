@@ -465,7 +465,7 @@ public class Player : BetterMonoBehaviour {
 		
 
 	public bool isTutorialMode = false;
-	private GameObject firstTutorial = null;
+	public GameObject firstTutorial = null;
 
 	void TutorialStep() {
 		if (playerNumber == 1 && firstTutorial == null && App.shared.cameraController.initComplete) {

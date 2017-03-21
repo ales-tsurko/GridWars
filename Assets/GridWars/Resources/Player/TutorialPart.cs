@@ -105,6 +105,7 @@ public class TutorialPart : MonoBehaviour {
 
 
 		_textMesh = GameObject.Find("TutorialLabelText").GetComponent<TextMesh>();
+		GameObject.Find("TutorialLabelText").GetComponent<MeshRenderer>().enabled = true;
 
 		Reset();
 

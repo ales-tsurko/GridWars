@@ -52,6 +52,7 @@ public class PlayMenuState : AppState {
 		battlefield.player1.isLocal = false;
 		battlefield.player1.npcModeOn = true;
 		battlefield.player1.isTutorialMode = true;
+		battlefield.player1.firstTutorial = null;
 
 		battlefield.player2.isLocal = false;
 		battlefield.player2.npcModeOn = true;
