@@ -215,6 +215,10 @@ public class UIButton : UIElement {
 
 	public bool isSelected;
 
+	public void SetMenuIndex(int menuIndex) {
+		menu.SetItemIndex(this, menuIndex);
+	}
+
 	protected EventTrigger eventTrigger {
 		get {
 			return GetComponent<EventTrigger>();

@@ -5,17 +5,70 @@ using AssemblyCSharp;
 public class MatchmakerPostAuthState : MatchmakerState {
 	UIButton button;
 
+	int _itemWindowStart = 0;
+	int _itemWindowSize = 5;
+	float _scrollRate = 1 / 0.2f;
+	Timer _scrollTimer;
+	UIButton _serverEmptyButton;
+	UIButton _backButton;
+
 	public override void EnterFrom(AppState state) {
 		base.EnterFrom(state);
 
 		matchmaker.menu.Close();
 		matchmaker.menu.Show();
+
+		App.shared.notificationCenter.NewObservation()
+			.SetNotificationName(UIMenu.UIMenuSelectedItemNotification)
+			.SetAction(MenuItemSelected)
+			.SetSender(matchmaker.menu)
+			.Add();
 	}
 
 	public override void WillExit() {
 		base.WillExit();
 
+		App.shared.notificationCenter.RemoveObserver(this);
+
 		CancelStatusTimer();
+	}
+
+	// Scrolling
+
+	public void MenuItemSelected(Notification n) {
+		if (app.account.connectedAccounts.Count == 0 || _scrollTimer != null) {
+			return;
+		}
+
+		_scrollTimer = App.shared.timerCenter.NewTimer().SetAction(ScrollMenu).SetTimeout(1/_scrollRate).Start();
+	}
+
+	public void ScrollMenu() {
+		//Debug.Log("matchmaker.menu.selectedItemIndex: " + matchmaker.menu.selectedItemIndex);
+
+		_scrollTimer = null;
+
+		int lastItemOffset = 3;
+
+		if (matchmaker.menu.selectedItemIndex == 0 && _itemWindowStart > 0) {
+			//Debug.Log("scrolled up");
+			//Debug.Log("hide: " + Mathf.Min(_itemWindowStart + _itemWindowSize - 1, matchmaker.menu.items.Count - lastItemOffset));
+			matchmaker.menu.items[Mathf.Min(_itemWindowStart + _itemWindowSize - 1, matchmaker.menu.items.Count - lastItemOffset)].Hide();
+			//Debug.Log("show: " + (_itemWindowStart - 1));
+			matchmaker.menu.items[_itemWindowStart - 1].Show();
+			_itemWindowStart--;
+			//Debug.Log("new _itemWindowStart: " + _itemWindowStart);
+		}
+		else if (matchmaker.menu.selectedItemIndex == _itemWindowSize - 1 && _itemWindowStart + _itemWindowSize < matchmaker.menu.items.Count - lastItemOffset + 1) {
+			//Debug.Log("scrolled down");
+			//Debug.Log("hide: " + Mathf.Min(_itemWindowStart));
+			matchmaker.menu.items[_itemWindowStart].Hide();
+			//Debug.Log("show: " + Mathf.Min(_itemWindowStart + _itemWindowSize, matchmaker.menu.items.Count - lastItemOffset));
+			matchmaker.menu.items[Mathf.Min(_itemWindowStart + _itemWindowSize, matchmaker.menu.items.Count - lastItemOffset)].Show();
+			_itemWindowStart++;
+			//Debug.Log("new _itemWindowStart: " + _itemWindowStart);
+
+		}
 	}
 
 	// MatchmakerMenuDelegate
@@ -25,6 +78,7 @@ public class MatchmakerPostAuthState : MatchmakerState {
 
 		matchmaker.menu.Reset();
 		button = matchmaker.menu.AddNewButton();
+		matchmaker.menu.inputWraps = true;
 		UpdateStatus();
 	}
 
@@ -59,44 +113,72 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	public override void ConfigureForOpen() {
 		base.ConfigureForOpen();
 
+		matchmaker.menu.Reset();
+		matchmaker.menu.inputWraps = false;
+
+		app.account.connectedAccounts.ForEach((account) => {
+			AddButtonForAccount(account);
+		});
+
+		_serverEmptyButton = matchmaker.menu.AddNewText().SetText("No one else is online");
+		_serverEmptyButton.Hide();
+
+		_backButton = matchmaker.menu.AddNewButton().SetText("Back").SetAction(matchmaker.menu.Close).SetIsBackItem(true);
+
+		matchmaker.menu.Focus();
+
 		UpdateOpenMenu();
 	}
 
-	void UpdateOpenMenu() {
-		matchmaker.menu.Reset();
+	public void AddButtonForAccount(Account account) {
+		matchmaker.menu.AddNewButton().SetData(account).SetMenuIndex(app.account.connectedAccounts.FindIndex(a => a.id == account.id));
+	}
 
+	void UpdateOpenMenu() {
 		CancelStatusTimer();
 
+		int itemIndex = 0;
+
 		app.account.connectedAccounts.ForEach((account) => {
+			UIButton b = matchmaker.menu.items.Find(i => i.data == account);
+
 			switch (account.status) {
 			case AccountStatus.Available:
-				matchmaker.menu.AddNewButton()
-					.SetText(account.screenName + ": Online: " + Color.yellow.ColoredTag("Send Challenge"))
-					.SetAction(() => { PostGameWithOpponent(account); });
+				b.SetText(account.screenName + ": Online: " + Color.yellow.ColoredTag("Send Challenge"));
+				b.SetAction(() => { PostGameWithOpponent(account); });
 				break;
 			case AccountStatus.Searching:
-				matchmaker.menu.AddNewButton()
-					.SetText(account.screenName + ": Posted Challenge: " + Color.yellow.ColoredTag("Accept Challenge"))
-					.SetAction(() => { PostGameWithOpponent(account); });
+				b.SetText(account.screenName + ": Posted Challenge: " + Color.yellow.ColoredTag("Accept Challenge"));
+				b.SetAction(() => { PostGameWithOpponent(account); });
 				break;
 			case AccountStatus.Playing:
-				matchmaker.menu.AddNewText()
-					.SetText(account.screenName + ": Playing " + account.opponent.screenName);
+				b.SetText(account.screenName + ": Playing " + account.opponent.screenName);
 				break;
 			case AccountStatus.Unavailable:
-				matchmaker.menu.AddNewText()
-					.SetText(account.screenName + ": Busy");
+				b.SetText(account.screenName + ": Busy");
 				break;
 			}
+
+			if (itemIndex < _itemWindowStart || itemIndex >= _itemWindowStart + _itemWindowSize) {
+				//Debug.Log("Hiding " + itemIndex);
+				b.Hide();
+			}
+			else {
+				b.Show();
+			}
+
+			itemIndex ++;
 		});
 
 		if (app.account.connectedAccounts.Count == 0) {
-			matchmaker.menu.AddNewText().SetText("No one else is online");
+			_serverEmptyButton.Show();
+			_backButton.Show();
+			_backButton.Select();
+			//app.timerCenter.NewTimer().SetAction(_backButton.Select).SetTimeout(0.1f).Start(); //Return doesn't work otherwise?
 		}
-
-		matchmaker.menu.AddNewButton().SetText("Back").SetAction(matchmaker.menu.Close).SetIsBackItem(true);
-
-		matchmaker.menu.Focus();
+		else {
+			_serverEmptyButton.Hide();
+		}
 	}
 
 	void PostGameWithOpponent(Account opponent) {
@@ -135,6 +217,20 @@ public class MatchmakerPostAuthState : MatchmakerState {
 		base.HandlePlayerConnected(data);
 
 		if (matchmaker.menu.isOpen) {
+			var accountIndex = app.account.connectedAccounts.FindIndex(a => a.id == data.GetField("id").f);
+			var account = app.account.connectedAccounts[accountIndex];
+
+			AddButtonForAccount(account);
+
+			if (app.account.connectedAccounts.Count > _itemWindowSize) {
+				if (accountIndex <= _itemWindowStart) {
+					_itemWindowStart++;
+				}
+				else if (matchmaker.menu.selectedItemIndex != -1 && accountIndex <= _itemWindowStart + matchmaker.menu.selectedItemIndex) {
+					_itemWindowStart++;
+				}
+			}
+
 			UpdateOpenMenu();
 		}
 		else {
@@ -155,7 +251,26 @@ public class MatchmakerPostAuthState : MatchmakerState {
 	}
 
 	public override void HandlePlayerDisconnected(JSONObject data) {
+		var accountIndex = app.account.connectedAccounts.FindIndex(a => a.id == data.GetField("id").f);
+		var account = app.account.connectedAccounts[accountIndex];
+
+		if (app.account.connectedAccounts.Count > _itemWindowSize) {
+			if (accountIndex <= _itemWindowStart) {
+				_itemWindowStart--;
+			}
+			else if (matchmaker.menu.selectedItemIndex != -1 && accountIndex <= _itemWindowStart + matchmaker.menu.selectedItemIndex) {
+				_itemWindowStart--;
+			}
+		}
+
 		base.HandlePlayerDisconnected(data);
+
+
+		var button = matchmaker.menu.items.Find(i => i.data != null && ((Account)i.data).id == account.id );
+		if (button != null) {
+			matchmaker.menu.DestroyItem(button);
+		}
+
 		UpdateMenu();
 	}
 

@@ -119,6 +119,8 @@ public class UIMenu : UIElement {
 
 	public float vMargin = 0f;
 
+	public bool inputWraps = true;
+
 
 	//public AudioSource audioSource;
 
@@ -160,6 +162,22 @@ public class UIMenu : UIElement {
 		_item.menu = this;
 		_item.isInteractible = isInteractible;
 		ApplyLayout();
+	}
+
+	public void SetItemIndex(UIButton item, int index) {
+		items.Remove(item);
+		items.Insert(index, item);
+		ApplyLayout();
+	}
+
+	public void RemoveItem(UIButton item) {
+		item.Hide();
+		items.Remove(item);
+	}
+
+	public void DestroyItem(UIButton item) {
+		RemoveItem(item);
+		item.Destroy();
 	}
 
     public GameObject AddNewScrollingMenu(string type){
@@ -474,8 +492,11 @@ public class UIMenu : UIElement {
 				}));
 				return;
 			}
-			else {
+			else if (inputWraps) {
 				nextIndex = 0;
+			}
+			else {
+				nextIndex = selectableItems.Count - 1;
 			}
 		}
 		SelectItem(selectableItems[nextIndex]);
@@ -490,8 +511,11 @@ public class UIMenu : UIElement {
 				}));
 				return;
 			}
-			else {
+			else if (inputWraps) {
 				previousIndex = selectableItems.Count - 1;
+			}
+			else {
+				previousIndex = 0;
 			}
 		}
 		SelectItem(selectableItems[previousIndex]);
