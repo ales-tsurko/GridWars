@@ -472,7 +472,7 @@ public class Player : BetterMonoBehaviour {
 			battlefield.isPaused = true;
 			firstTutorial = Instantiate(Resources.Load<GameObject>("Tutorial/Tutorial"));
 			firstTutorial.transform.parent = battlefield.transform;
-			firstTutorial.transform.FindChild("TutorialStart").GetComponent<TutorialPart>().Begin();
+			firstTutorial.transform.Find("TutorialStart").GetComponent<TutorialPart>().Begin();
 		}
 	}
 

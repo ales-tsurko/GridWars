@@ -479,12 +479,12 @@ public class UIButton : UIElement {
     }
 
     public void SetBorderColor (Color _color){
-        Image i = transform.FindChild("Border").GetComponent<Image>();
+        Image i = transform.Find("Border").GetComponent<Image>();
         i.color = _color;
     }
 
 	public UIButton SetTextColor (Color _color){
-        Text t = transform.FindChild("Text").GetComponent<Text>();
+        Text t = transform.Find("Text").GetComponent<Text>();
         t.color = _color;
 		return this;
     }

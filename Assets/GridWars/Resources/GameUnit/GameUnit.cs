@@ -1125,7 +1125,7 @@ public class GameUnit : NetworkObject {
 	//Particles for displaying damage amount to units
 	ParticleSystem smokeDamage;
 	void SetupSmokeDamage () {
-		Transform smokeDamageT = _t.FindChild ("SmokeDamage");
+		Transform smokeDamageT = _t.Find ("SmokeDamage");
 		if (smokeDamageT != null) {
 			smokeDamage = smokeDamageT.GetComponentInChildren<ParticleSystem> ();
 			var main = smokeDamage.main;

@@ -32,7 +32,7 @@ public class Arcade : MonoBehaviour {
 		t.rotation = Quaternion.Lerp(t.rotation, to.rotation, Time.time * speed * 0.8f);
 		t.position = Vector3.Lerp(t.position, to.position, Time.time * speed);
 
-		DynamicGI.UpdateMaterials(meshRenderer);
+		RendererExtensions.UpdateGIMaterials(meshRenderer);
 	}
 		
 }
