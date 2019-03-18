@@ -102,6 +102,7 @@ public static class UI {
 	/// </summary>
 	/// <returns>The canvas.</returns>
 	public static Canvas MainCanvas () {
+        Debug.Log("MainCanvas");
 		if (_mainCanvas == null) {
 			var go = MonoBehaviour.Instantiate (App.shared.LoadGameObject("UI/Canvas"));
 			if (go == null) {

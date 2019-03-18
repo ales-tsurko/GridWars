@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Linq;
 using UnityEngine.Analytics;
+using UnityEngine.UI;
 /*
  *  This is a singleton. Access like this:
  * 
@@ -40,13 +41,13 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Matchmaker matchmaker;
 	public Network network;
 	public Battlefield battlefield;
-	public CameraController cameraController;
+    public CameraController cameraController;
 	public PlayerInputs inputs; //used outside of games
 	public Account account;
 	public ExceptionReporter exceptionReporter;
 	public bool isExiting;
 
-	EnvConfig _config;
+    EnvConfig _config;
 	public EnvConfig config {
 		get {
 			if (_config == null) {
@@ -74,8 +75,8 @@ public class App : MonoBehaviour, AppStateOwner {
 
 	public bool testEndOfGameMode {
 		get {
-			return config.testEndOfGameMode;
-		}
+            return config.testEndOfGameMode;
+        }
 	}
 
 	public static App shared {
@@ -108,15 +109,22 @@ public class App : MonoBehaviour, AppStateOwner {
 		Application.runInBackground = true;
 		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
+        /*
 		menu = UI.Menu();
 		notificationCenter.NewObservation()
 			.SetNotificationName(UIMenu.UIMenuShowedNotification)
 			.SetSender(menu)
 			.SetAction(MenuDidShow)
 			.Add();
+		*/           
 
 		prefs = new Prefs();
 		prefs.Load();
+
+        //arcade
+        prefs.cameraPosition = "TopDownSideView";
+        prefs.hasPlayedTutorial = true;
+        prefs.keyIconsVisible = false;
 
         SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
@@ -132,28 +140,34 @@ public class App : MonoBehaviour, AppStateOwner {
 		account = new Account();
         account.LogEvent("AppStarted");
 
+        /*
 		matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
 		matchmaker.Setup();
 		matchmaker.menu.Hide();
+		*/       
 
 		network = new GameObject().AddComponent<Network>();
 		network.gameObject.name = "Network";
 
-		battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
-		battlefield.AddPlayers();
+        battlefield = GameObject.Find("Battlefield").GetComponent<Battlefield>();
+        battlefield.AddPlayers();
 
-		cameraController = GameObject.FindObjectOfType<CameraController>();
+        cameraController = GameObject.FindObjectOfType<CameraController>();
 		cameraController.enabled = true;
 
 		inputs = new PlayerInputs();
 		inputs.AddControllerBindings();
 		inputs.AddLocalPlayer1KeyBindings();
 
-		var mainMenuState = new MainMenuState();
-		mainMenuState.owner = this;
+
+        //var mainMenuState = new MainMenuState();
+        var mainMenuState = new ArcadeMainMenuState();
+
+        mainMenuState.owner = this;
 		this.state = mainMenuState;
 		mainMenuState.EnterFrom(null);
-	}
+    }
+	
 
 	void HandleException(string message, string stackTrace, LogType type) {
 		if (type == LogType.Exception || type == LogType.Error) {

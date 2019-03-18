@@ -341,11 +341,12 @@ public class GameUnit : NetworkObject {
 		base.Awake();
 		launchDirection = Vector3.forward;
 		isTargetable = true;
-	}
 
-	// Cache
+    }
 
-	public string cacheKey {
+    // Cache
+
+    public string cacheKey {
 		get {
 			return entity.prefabId.ToString();
 		}
@@ -634,12 +635,17 @@ public class GameUnit : NetworkObject {
 			collider.enabled = visibleAndEnabled;
 		}
 
+        /*
 		var rigidBody = GetComponent<Rigidbody>();
 		if (rigidBody != null) {
-			rigidBody.isKinematic = !visibleAndEnabled;
+            if (!visibleAndEnabled) {
+                rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            }
+            rigidBody.isKinematic = !visibleAndEnabled;
 		}
+		*/
 	}
-
+        
 	public virtual Rigidbody rigidBody() {
 		if (body == null) {
 			body = GetComponent<Rigidbody> ();

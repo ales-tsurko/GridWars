@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Player : BetterMonoBehaviour {
 	public static string primaryColorMaterialName = "PrimaryColor";
@@ -476,5 +477,7 @@ public class Player : BetterMonoBehaviour {
 		}
 	}
 
-
+    //arcade
+    public ArcadeInputs arcadeInputs;
+    public PlayerText hudText;
 }

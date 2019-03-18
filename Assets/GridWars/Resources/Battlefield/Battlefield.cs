@@ -216,7 +216,8 @@ public class Battlefield : MonoBehaviour {
 		var preservedGameObjectNames = new List<string>(new string[]{
 			"Main Camera",
 			"Canvas",
-			"Directional Light",
+            "ArcadeCanvas",
+            "Directional Light",
 			"Battlefield",
 			"CameraController",
 			"KeyboardUICanvas",

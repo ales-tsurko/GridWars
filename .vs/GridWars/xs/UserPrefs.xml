@@ -1,30 +1,115 @@
 ﻿<Properties StartupConfiguration="{5FC50280-8D84-AE0F-35B1-5094815D66C6}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GridWars/Resources/GameUnit/GroundBuilding/Tower/Tower.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/GridWars/Resources/AppStates/PostGameStates/PostGameSubState.cs">
     <Files>
-      <File FileName="Assets/Goose/Scripts/UIMenu.cs" Line="178" Column="25" />
-      <File FileName="Assets/Goose/Scripts/UIElement.cs" Line="56" Column="1" />
-      <File FileName="Assets/Goose/Scripts/UIButton.cs" Line="273" Column="29" />
-      <File FileName="Assets/GridWars/Resources/Matchmaker/MatchmakerStates/MatchmakerPostAuthState.cs" Line="62" Column="157" />
-      <File FileName="Assets/GridWars/Resources/_Globals/Timer.cs" Line="70" Column="31" />
-      <File FileName="Assets/InControl/Source/Binding/KeyInfo.cs" Line="54" Column="55" />
-      <File FileName="Assets/GridWars/Resources/Input/PlayerInputs.cs" Line="5" Column="26" />
-      <File FileName="Assets/GridWars/Resources/Player/Player.cs" Line="441" Column="28" />
-      <File FileName="Assets/GridWars/Resources/_Globals/App.cs" Line="157" Column="5" />
+      <File FileName="Assets/GridWars/Resources/AppStates/Arcade/ArcadeMainMenuState.cs" Line="68" Column="26" />
+      <File FileName="Assets/GridWars/Resources/_Globals/App.cs" Line="79" Column="25" />
+      <File FileName="Assets/Goose/Scripts/CameraController.cs" Line="513" Column="25" />
+      <File FileName="Assets/GridWars/Resources/Battlefield/Battlefield.cs" Line="196" Column="7" />
+      <File FileName="Assets/Goose/Scripts/UI.cs" Line="105" Column="18" />
+      <File FileName="Assets/GridWars/Resources/_Globals/AppState.cs" Line="146" Column="23" />
+      <File FileName="Assets/GridWars/Resources/Bolt/Network.cs" Line="17" Column="19" />
+      <File FileName="Assets/GridWars/Resources/Input/PlayerInputs.cs" Line="160" Column="40" />
+      <File FileName="Assets/Goose/Scripts/UIMenu.cs" Line="550" Column="10" />
+      <File FileName="Assets/GridWars/Resources/Input/ArcadeInputs.cs" Line="36" Column="40" />
+      <File FileName="Assets/GridWars/Resources/Player/Player.cs" Line="482" Column="31" />
+      <File FileName="Assets/GridWars/Resources/AppStates/Arcade/ArcadeWaitForOpponentState.cs" Line="27" Column="9" />
+      <File FileName="Assets/GridWars/Resources/AppStates/MainMenuState.cs" Line="188" Column="9" />
+      <File FileName="Assets/GridWars/Resources/AppStates/PlayMenuState.cs" Line="1" Column="1" />
+      <File FileName="Assets/GridWars/Resources/AppStates/SinglePlayerMenuState.cs" Line="67" Column="40" />
+      <File FileName="Assets/GridWars/Resources/AppStates/MultiPlayerMenuState.cs" Line="104" Column="48" />
       <File FileName="Assets/GridWars/Resources/AppStates/BindInputsToPlayersState.cs" Line="55" Column="11" />
-      <File FileName="Assets/GridWars/Resources/AppStates/InGameMenu.cs" Line="152" Column="91" />
-      <File FileName="Assets/GridWars/Resources/AppStates/MainMenuState.cs" Line="33" Column="23" />
-      <File FileName="Assets/GridWars/Resources/GameUnit/GroundBuilding/Tower/Tower.cs" Line="394" Column="20" />
+      <File FileName="Assets/GridWars/Resources/AppStates/WaitForBoltState.cs" Line="53" Column="1" />
+      <File FileName="Assets/GridWars/Resources/AppStates/PlayingGameState.cs" Line="136" Column="14" />
+      <File FileName="Assets/GridWars/Resources/AppStates/MenuState.cs" Line="1" Column="1" />
+      <File FileName="Assets/GridWars/Resources/AppStates/Arcade/ArcadeWaitForBoltState.cs" Line="32" Column="9" />
+      <File FileName="Assets/GridWars/Resources/AppStates/NetworkDelegateState.cs" Line="4" Column="14" />
+      <File FileName="Assets/GridWars/Resources/AppStates/Arcade/ArcadePlayingGameState.cs" Line="15" Column="54" />
+      <File FileName="Assets/GridWars/Resources/AppStates/Arcade/ArcadePostGameState.cs" Line="4" Column="61" />
+      <File FileName="Assets/GridWars/Resources/AppStates/PostGameState.cs" Line="100" Column="2" />
+      <File FileName="Assets/Arcade/UI/PlayerText.cs" Line="26" Column="44" />
+      <File FileName="Assets/Arcade/States/ArcadeMainMenuState.cs" Line="12" Column="31" />
+      <File FileName="Assets/Arcade/States/ArcadePlayingGameState.cs" Line="16" Column="122" />
+      <File FileName="Assets/Arcade/States/ArcadeWaitForOpponentState.cs" Line="75" Column="19" />
+      <File FileName="Assets/Arcade/States/ArcadeWaitForBoltState.cs" Line="26" Column="27" />
+      <File FileName="Assets/Arcade/States/ArcadePostGameState.cs" Line="60" Column="35" />
+      <File FileName="Assets/GridWars/Resources/AppStates/PostGameStates/ShowOutcomeState.cs" Line="85" Column="34" />
+      <File FileName="Assets/GridWars/Resources/_Globals/Prefs.cs" Line="14" Column="18" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/GroundBuilding/Tower/Tower.cs" Line="392" Column="18" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/GameUnit.cs" Line="646" Column="5" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/Projectile/Projectile.cs" Line="37" Column="3" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/Vehicle/GroundVehicle/Tank/Tank.cs" Line="1" Column="1" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/Vehicle/GroundVehicle/GroundVehicle.cs" Line="25" Column="15" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/Vehicle/Vehicle.cs" Line="81" Column="31" />
+      <File FileName="Assets/GridWars/Resources/GameUnit/Projectile/Bullet/Bullet.cs" Line="12" Column="29" />
+      <File FileName="Assets/GridWars/Resources/Fortress/Fortress.cs" Line="69" Column="35" />
+      <File FileName="Assets/GridWars/Resources/Weapon/Weapon.cs" Line="705" Column="52" />
+      <File FileName="Assets/GridWars/Resources/Environment/Scripts/DevConfig.cs" Line="1" Column="1" />
+      <File FileName="Assets/GridWars/Resources/Environment/Scripts/EnvConfig.cs" Line="9" Column="5" />
+      <File FileName="Assets/GridWars/Resources/AppStates/PostGameStates/PostGameSubState.cs" Line="5" Column="23" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="GridWars" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Arcade" expanded="True">
+                <Node name="States" expanded="True" />
+                <Node name="UI" expanded="True" />
+              </Node>
+              <Node name="Goose" expanded="True">
+                <Node name="Scripts" expanded="True" />
+              </Node>
+              <Node name="GridWars" expanded="True">
+                <Node name="Resources" expanded="True">
+                  <Node name="_Globals" expanded="True" />
+                  <Node name="AppStates" expanded="True">
+                    <Node name="PostGameStates" expanded="True">
+                      <Node name="PostGameSubState.cs" selected="True" />
+                    </Node>
+                  </Node>
+                  <Node name="Battlefield" expanded="True" />
+                  <Node name="Bolt" expanded="True" />
+                  <Node name="Environment" expanded="True">
+                    <Node name="Scripts" expanded="True" />
+                  </Node>
+                  <Node name="Fortress" expanded="True" />
+                  <Node name="GameUnit" expanded="True">
+                    <Node name="GroundBuilding" expanded="True">
+                      <Node name="Tower" expanded="True" />
+                    </Node>
+                    <Node name="Projectile" expanded="True">
+                      <Node name="Bullet" expanded="True" />
+                    </Node>
+                    <Node name="Vehicle" expanded="True">
+                      <Node name="GroundVehicle" expanded="True">
+                        <Node name="Tank" expanded="True" />
+                      </Node>
+                    </Node>
+                  </Node>
+                  <Node name="Input" expanded="True" />
+                  <Node name="Matchmaker" expanded="True">
+                    <Node name="MatchmakerStates" expanded="True" />
+                  </Node>
+                  <Node name="Player" expanded="True" />
+                  <Node name="Weapon" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="InControl" expanded="True">
+                <Node name="Source" expanded="True">
+                  <Node name="Binding" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Catchpoint enabled="false" exceptionName="System.Exception" includeSubclasses="True" />
-      <Breakpoint enabled="false" file="/Users/richcollins/projects/games/goose/GW2/GridWars/Assets/GridWars/Resources/Matchmaker/MatchmakerStates/MatchmakerState.cs" relfile="Assets/GridWars/Resources/Matchmaker/MatchmakerStates/MatchmakerState.cs" line="87" column="1" />
-      <Breakpoint file="/Users/richcollins/projects/games/goose/GW2/GridWars/Assets/GridWars/Resources/Tutorial/TutorialPartVet.cs" relfile="Assets/GridWars/Resources/Tutorial/TutorialPartVet.cs" line="17" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

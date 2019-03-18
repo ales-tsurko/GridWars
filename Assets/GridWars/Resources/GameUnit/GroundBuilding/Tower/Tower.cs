@@ -380,16 +380,20 @@ public class Tower : GroundBuilding {
 
 	PlayerAction releaseAction {
 		get {
-			return player.inputs.GetPlayerActionByName(unitPrefab.name);
-		}
+            //return player.inputs.GetPlayerActionByName(unitPrefab.name);
+            //arcase
+            return player.arcadeInputs.GetPlayerActionByName(unitPrefab.name);
+        }
 	}
 
 	public override void QueuePlayerCommands() {
 		base.QueuePlayerCommands();
 
+        /* arcade
 		if (player.inGameMenu == null || player.inGameMenu.isOpen || App.shared.matchmaker.menu.hasFocus) {
 			return;
 		}
+		*/
 
 		if (releaseAction.WasPressed) {
 			ReleaseUnitDown();
