@@ -21,8 +21,9 @@ public class MobileSAM : GroundVehicle {
 
 		foreach(Weapon weapon in Weapons()) {
 			weapon.damageAdjustments.Add(typeof(Tower), 0.2f);
-			weapon.damageAdjustments.Add(typeof(Tank), 0.4f);
-			weapon.SetCanTargetGroundBuildings(true);
+            //weapon.damageAdjustments.Add(typeof(Tank), 0.4f);
+            weapon.damageAdjustments.Add(typeof(Tank), 0.3f);
+            weapon.SetCanTargetGroundBuildings(true);
 		}
 	}
 
