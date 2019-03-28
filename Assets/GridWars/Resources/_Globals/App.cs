@@ -26,6 +26,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Prefs prefs;
 	public AppState state { get; set; }
 	public UIMenu menu;
+    public bool arcadeMode = false;
 
 	NotificationCenter _notificationCenter;
 	public NotificationCenter notificationCenter {
@@ -109,22 +110,24 @@ public class App : MonoBehaviour, AppStateOwner {
 		Application.runInBackground = true;
 		//Profiler.maxNumberOfSamplesPerFrame = 1048576; //Unity bug
 
-        /*
-		menu = UI.Menu();
-		notificationCenter.NewObservation()
-			.SetNotificationName(UIMenu.UIMenuShowedNotification)
-			.SetSender(menu)
-			.SetAction(MenuDidShow)
-			.Add();
-		*/           
+        if (!arcadeMode) {
+            menu = UI.Menu();
+            notificationCenter.NewObservation()
+                .SetNotificationName(UIMenu.UIMenuShowedNotification)
+                .SetSender(menu)
+                .SetAction(MenuDidShow)
+                .Add();
+        }
 
 		prefs = new Prefs();
 		prefs.Load();
 
-        //arcade
-        prefs.cameraPosition = "TopDownSideView";
-        prefs.hasPlayedTutorial = true;
-        prefs.keyIconsVisible = false;
+        if (arcadeMode) {
+            prefs.cameraPosition = "TopDownSideView";
+            prefs.hasPlayedTutorial = true;
+            prefs.keyIconsVisible = false;
+        }
+
 
         SetupResolution();
 		stepCache = new AssemblyCSharp.StepCache();
@@ -140,11 +143,16 @@ public class App : MonoBehaviour, AppStateOwner {
 		account = new Account();
         account.LogEvent("AppStarted");
 
-        /*
-		matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
-		matchmaker.Setup();
-		matchmaker.menu.Hide();
-		*/       
+        matchmaker = GameObject.Find("Matchmaker").GetComponent<Matchmaker>();
+
+        if (arcadeMode) {
+            matchmaker.gameObject.SetActive(false);
+        }
+        else {
+            matchmaker.Setup();
+            matchmaker.menu.Hide();
+            GameObject.Find("ArcadeCanvas").SetActive(false);
+        }
 
 		network = new GameObject().AddComponent<Network>();
 		network.gameObject.name = "Network";
@@ -160,12 +168,15 @@ public class App : MonoBehaviour, AppStateOwner {
 		inputs.AddLocalPlayer1KeyBindings();
 
 
-        //var mainMenuState = new MainMenuState();
-        var mainMenuState = new ArcadeMainMenuState();
+        if (arcadeMode) {
+            this.state = new ArcadeMainMenuState();
+        }
+        else {
+            this.state = new MainMenuState();
+        }
 
-        mainMenuState.owner = this;
-		this.state = mainMenuState;
-		mainMenuState.EnterFrom(null);
+        state.owner = this;
+        state.EnterFrom(null);
     }
 	
 
