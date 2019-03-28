@@ -114,7 +114,13 @@ public class Projectile : GameUnit {
 
 	protected void Explode() {
 		if (!gameObject.IsDestroyed()) {
-			Die();
+            var rb = GetComponent<Rigidbody>();
+            if (rb != null) {
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+                rb.isKinematic = true;
+            }
+
+            Die();
 		}
 	}
 
