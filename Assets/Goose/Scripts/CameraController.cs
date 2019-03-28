@@ -395,10 +395,23 @@ public class CameraController : MonoBehaviour {
 		Vector2 r = Random.insideUnitCircle * 1200f;
 		//mainTargetPos = new Vector3(r.x, 200f + 200f * UnityEngine.Random.value, r.y);
 		mainTargetPos = new Vector3(r.x, 200f, r.y);
-		mainTargetRot = Quaternion.LookRotation(-mainTargetPos); // look at zero
+
+        if (App.shared.arcadeMode)
+        {
+            mainTargetPos = new Vector3(0, 800f, 0);
+        }
+
+        mainTargetRot = Quaternion.LookRotation(-mainTargetPos); // look at zero
 		Vector3 e = mainTargetRot.eulerAngles;
-		e.x = -10;
-		mainTargetRot.eulerAngles = e;
+        if (App.shared.arcadeMode)
+        {
+        }
+        else
+        {
+            e.x = -10;
+
+        }
+        mainTargetRot.eulerAngles = e;
 	}
 
 	public float distanceLerpRatio {
