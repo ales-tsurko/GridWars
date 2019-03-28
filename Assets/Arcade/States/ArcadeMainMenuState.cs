@@ -39,12 +39,12 @@ public class ArcadeMainMenuState : AppState
 
         battlefield.player1.inputs = null;
         battlefield.player1.arcadeInputs = new ArcadeInputs();
-        battlefield.player1.arcadeInputs.isLeftPlayer = true;
+        battlefield.player1.arcadeInputs.player = battlefield.player1;
         battlefield.player1.arcadeInputs.AddBindings();
 
         battlefield.player2.inputs = null;
         battlefield.player2.arcadeInputs = new ArcadeInputs();
-        battlefield.player2.arcadeInputs.isLeftPlayer = false;
+        battlefield.player2.arcadeInputs.player = battlefield.player2;
         battlefield.player2.arcadeInputs.AddBindings();
 
         /*

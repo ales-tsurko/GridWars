@@ -96,7 +96,7 @@ public class TutorialPart : MonoBehaviour {
 		transform.position = transform.position - diff * fractionToTarget;
 
 		App.shared.cameraController.targetPos = transform.position;
-		App.shared.cameraController.targetRot = Quaternion.LookRotation(Target().transform.position - transform.position);
+        App.shared.cameraController.targetRot = transform.rotation;// Quaternion.LookRotation(Target().transform.position - transform.position);
 
 		Vector3 p = Target().transform.position;
 		p.y += yOffset;

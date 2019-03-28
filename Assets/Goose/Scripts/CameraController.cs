@@ -123,8 +123,10 @@ public class CameraController : MonoBehaviour {
 				finalPosition.GetComponent<KeyIconRotation>().rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z + 180);
 
 				finalPosition.transform.position = Vector3.Scale(transform.position, mirrorAxis);
-				finalPosition.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
-			}
+                //disable for arcade
+                //finalPosition.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, 180f, 0f));
+                finalPosition.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, 0f, 0f));
+            }
 			else {
 				finalPosition.GetComponent<KeyIconRotation>().rotation = new Vector3(keyIconRotation.rotation.x, keyIconRotation.rotation.y, keyIconRotation.rotation.z);
 				finalPosition.transform.position = transform.position;
