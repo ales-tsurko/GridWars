@@ -269,7 +269,10 @@ public class CameraController : MonoBehaviour {
 
 
 	public void StartOrbit() {
-		isOrbiting = true;
+        if (!App.shared.arcadeMode)
+        {
+            isOrbiting = true;
+        }
 	}
 
 	public void EndOrbit() {

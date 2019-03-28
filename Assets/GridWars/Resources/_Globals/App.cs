@@ -26,7 +26,7 @@ public class App : MonoBehaviour, AppStateOwner {
 	public Prefs prefs;
 	public AppState state { get; set; }
 	public UIMenu menu;
-    public bool arcadeMode = false;
+    public bool arcadeMode = true;
 
 	NotificationCenter _notificationCenter;
 	public NotificationCenter notificationCenter {
