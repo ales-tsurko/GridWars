@@ -19,15 +19,18 @@ public class ResolutionMenuState : AppState {
     void ShowResolutionOptionsMenu() {
         app.ResetMenu();
 
-		var maxRes = Screen.resolutions[Screen.resolutions.Length - 1];
+        if (Screen.resolutions.Length > 0) {
+            var maxRes = Screen.resolutions[Screen.resolutions.Length - 1];
 
-		foreach (var res in Screen.resolutions) {
-			if (res.width < 1024 || !Mathf.Approximately(maxRes.AspectRatio(), res.AspectRatio())) {
-				continue;
-			}
+            foreach (var res in Screen.resolutions) {
+                if (res.width < 1024 || !Mathf.Approximately(maxRes.AspectRatio(), res.AspectRatio())) {
+                    continue;
+                }
 
-			menu.AddItem(UI.MenuItem(res.MenuString(), ChangeRes).SetData(new ResolutionData(){ resolution = res }));
-		}
+                menu.AddItem(UI.MenuItem(res.MenuString(), ChangeRes).SetData(new ResolutionData(){ resolution = res }));
+            }
+        }
+
 
         menu.AddItem(UI.MenuItem("Back", GoBackToGraphicsMenu));
         menu.Show();
