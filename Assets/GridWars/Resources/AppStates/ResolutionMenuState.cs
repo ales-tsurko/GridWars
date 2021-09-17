@@ -42,11 +42,11 @@ public class ResolutionMenuState : AppState {
     void ChangeRes(){
         ResolutionData _res = menu.selectedItem.data as ResolutionData;
 #if UNITY_ANDROID
-            var width = _res.resolution.height;
-            var height = _res.resolution.width;
+        var width = _res.resolution.height;
+        var height = _res.resolution.width;
 #else
-            var width = _res.resolution.width;
-            var height = _res.resolution.height;
+        var width = _res.resolution.width;
+        var height = _res.resolution.height;
 #endif
         Screen.SetResolution(width, height, Screen.fullScreen);
 		App.shared.prefs.resolution = _res.resolution;

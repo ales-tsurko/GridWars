@@ -1,0 +1,829 @@
+Unity Editor version:    2020.3.18f1 (a7d1c678663c)
+Branch:                  2020.3/staging
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 11.5.2 (Build 20G95)
+Darwin version:          20.6.0
+Architecture:            x86_64
+Running under Rosetta:   YES
+Available memory:        8192 MB
+Using pre-set license
+Pro License: NO
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/MacOS/Unity
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+/Users/alestsurko/Desktop/GridWars
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+58371
+Successfully changed project path to: /Users/alestsurko/Desktop/GridWars
+/Users/alestsurko/Desktop/GridWars
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 101.59 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2020.3.18f1 (a7d1c678663c)
+[Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path /Users/alestsurko/Desktop/GridWars/Assets
+GfxDevice: creating device client; threaded=0
+2021-09-17 19:19:14.090 Unity[69581:1038497] (null) preferred device: Apple M1 (high power)
+2021-09-17 19:19:14.090 Unity[69581:1038497] Metal devices available: 1
+2021-09-17 19:19:14.090 Unity[69581:1038497] 0: Apple M1 (high power)
+2021-09-17 19:19:14.091 Unity[69581:1038497] Using device Apple M1 (high power)
+Initializing Metal device caps: Apple M1
+Initialize mono
+Mono path[0] = '/Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/Managed'
+Mono path[1] = '/Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = '/Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56581
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: /Applications/Unity/Hub/Editor/2020.3.18f1/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: /Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
+Registered in 0.001960 seconds.
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 50.79 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  4.355 seconds
+Domain Reload Profiling:
+	ReloadAssembly (4356ms)
+		BeginReloadAssembly (105ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (3ms)
+		EndReloadAssembly (963ms)
+			LoadAssemblies (103ms)
+			RebuildTransferFunctionScriptingTraits (1ms)
+			SetupTypeCache (193ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (47ms)
+			SetupLoadedEditorAssemblies (554ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (15ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (51ms)
+				BeforeProcessingInitializeOnLoad (31ms)
+				ProcessInitializeOnLoadAttributes (339ms)
+				ProcessInitializeOnLoadMethodAttributes (117ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (1ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.005513 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.78 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.790 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2792ms)
+		BeginReloadAssembly (270ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (33ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (40ms)
+		EndReloadAssembly (2427ms)
+			LoadAssemblies (202ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (377ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (67ms)
+			SetupLoadedEditorAssemblies (1519ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (18ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (131ms)
+				ProcessInitializeOnLoadAttributes (1311ms)
+				ProcessInitializeOnLoadMethodAttributes (56ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (34ms)
+Platform modules already initialized, skipping
+Validating Project structure ... 0.035883 seconds.
+Shader import version has changed; will reimport all shaders...
+Upgrading shader files ...0.060609 seconds.
+Application.AssetDatabase Initial Script Refresh Start
+RefreshInfo: InitialScriptRefreshV2(NoUpdateAssetOptions) scanfilter:  ... 1 filters
+RefreshProfiler: Total: 0.000ms
+Application.AssetDatabase Initial Script Refresh End
+Application.AssetDatabase.Refresh Start
+Application.AssetDatabase.Refresh End
+RefreshInfo: StopAssetImportingV2(ForceSynchronousImport) scanfilter: 
+RefreshProfiler: Total: 0.000ms
+Launching external process: /Applications/Unity/Hub/Editor/2020.3.18f1/Unity.app/Contents/Tools/UnityShaderCompiler
+Launched and connected shader compiler UnityShaderCompiler after 0.04 seconds
+Initializing Unity extensions:
+========================================================================
+Worker process is ready to serve import requests
+Refreshing native plugins compatible for Editor in 0.70 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2799 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 230.0 MB.
+System memory in use after: 229.2 MB.
+
+Unloading 310 unused Assets to reduce memory usage. Loaded Objects now: 3257.
+Total: 4.983917 ms (FindLiveObjects: 0.217333 ms CreateObjectMapping: 0.064958 ms MarkObjects: 4.209792 ms  DeleteObjects: 0.491000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  path: Assets/Example.unity
+  artifactKey: Guid(f0ef4c6684f95ca4a87a0ac4c9aa757a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Example.unity using Guid(f0ef4c6684f95ca4a87a0ac4c9aa757a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8bedddfcf4d85a56cace725bc5d9646d') in 0.017598 seconds 
+  Import took 0.021490 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000279 seconds.
+  path: Assets/BattlefieldWeaponMount.unity
+  artifactKey: Guid(fe75ed26bdc8540d99e2a64e88491b95) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/BattlefieldWeaponMount.unity using Guid(fe75ed26bdc8540d99e2a64e88491b95) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '63aefb23bb1f015f4ebc253f5462cb1d') in 0.001262 seconds 
+  Import took 0.004987 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002717 seconds.
+  path: Assets/GridWars/Resources/Tutorial/Tutorial.prefab
+  artifactKey: Guid(93bd03576213d4c6a8fe5a35f16d4383) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/Tutorial.prefab using Guid(93bd03576213d4c6a8fe5a35f16d4383) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd08684e48ff475f4c71aa3d3e533aa4d') in 1.118663 seconds 
+  Import took 1.122961 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 92.964779 seconds.
+  path: Assets/GridWars/Resources/Tutorial
+  artifactKey: Guid(40f500cc9ef1b40ba8c218037cae6423) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial using Guid(40f500cc9ef1b40ba8c218037cae6423) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f34459f48ef9320f9339bce22c2148a6') in 0.001057 seconds 
+  Import took 0.006926 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 43.339543 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartBase.cs
+  artifactKey: Guid(0f07633e489e7435ab46f76cf7a0ca3d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartBase.cs using Guid(0f07633e489e7435ab46f76cf7a0ca3d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ae94177358c1018950aad6d8be41e699') in 0.273213 seconds 
+  Import took 0.294111 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 5.257200 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartBuildTank.cs
+  artifactKey: Guid(164d68f71514941b69d56e33274ee6d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartBuildTank.cs using Guid(164d68f71514941b69d56e33274ee6d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '614463dc75cc32043292e7a17b1f3e61') in 0.002650 seconds 
+  Import took 0.007316 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.108332 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartBuildTank.cs
+  artifactKey: Guid(164d68f71514941b69d56e33274ee6d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartBuildTank.cs using Guid(164d68f71514941b69d56e33274ee6d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '614463dc75cc32043292e7a17b1f3e61') in 0.002148 seconds 
+  Import took 0.006604 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 14.245053 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartChopper.cs
+  artifactKey: Guid(e848122923f694c698232486156f307c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartChopper.cs using Guid(e848122923f694c698232486156f307c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '21c47c7960b2020d78972b557c0f250d') in 0.002366 seconds 
+  Import took 0.006747 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002756 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartChopper.cs
+  artifactKey: Guid(e848122923f694c698232486156f307c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartChopper.cs using Guid(e848122923f694c698232486156f307c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '21c47c7960b2020d78972b557c0f250d') in 0.002020 seconds 
+  Import took 0.006015 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.533052 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartClosing.cs
+  artifactKey: Guid(4fb7db3f77cd84ddaba71fda700895c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartClosing.cs using Guid(4fb7db3f77cd84ddaba71fda700895c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8330539d401b507e5d301e06146c4e0c') in 0.002912 seconds 
+  Import took 0.008210 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000368 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartClosing.cs
+  artifactKey: Guid(4fb7db3f77cd84ddaba71fda700895c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartClosing.cs using Guid(4fb7db3f77cd84ddaba71fda700895c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8330539d401b507e5d301e06146c4e0c') in 0.002418 seconds 
+  Import took 0.006999 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.201539 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartDelegate.cs
+  artifactKey: Guid(c8f63e8f8d99b4bf9894a3c70578faa1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartDelegate.cs using Guid(c8f63e8f8d99b4bf9894a3c70578faa1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '70509f918865ebebdf35d37aebe07220') in 0.002806 seconds 
+  Import took 0.008486 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.156342 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartPower.cs
+  artifactKey: Guid(05096116a0bd14e76b37f3d41e523485) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartPower.cs using Guid(05096116a0bd14e76b37f3d41e523485) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '932938ef477c007ba9c6b6af9f373eab') in 0.003169 seconds 
+  Import took 0.009176 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000683 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartPower.cs
+  artifactKey: Guid(05096116a0bd14e76b37f3d41e523485) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartPower.cs using Guid(05096116a0bd14e76b37f3d41e523485) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '932938ef477c007ba9c6b6af9f373eab') in 0.002543 seconds 
+  Import took 0.007162 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.092717 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartProduceVet.cs
+  artifactKey: Guid(6330aae69298549c7b2e2704711fc290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartProduceVet.cs using Guid(6330aae69298549c7b2e2704711fc290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cd32858ced45b8fa037d4708100dae3c') in 0.002566 seconds 
+  Import took 0.007656 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000508 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartProduceVet.cs
+  artifactKey: Guid(6330aae69298549c7b2e2704711fc290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartProduceVet.cs using Guid(6330aae69298549c7b2e2704711fc290) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cd32858ced45b8fa037d4708100dae3c') in 0.002120 seconds 
+  Import took 0.006385 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.529195 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartSam.cs
+  artifactKey: Guid(11f31d60083fc4a938959f20c0cda837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartSam.cs using Guid(11f31d60083fc4a938959f20c0cda837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8b50f4ac8554130f51a584998e3314ef') in 0.002850 seconds 
+  Import took 0.008535 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002521 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartSam.cs
+  artifactKey: Guid(11f31d60083fc4a938959f20c0cda837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartSam.cs using Guid(11f31d60083fc4a938959f20c0cda837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8b50f4ac8554130f51a584998e3314ef') in 0.002415 seconds 
+  Import took 0.007427 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 1.476772 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTank.cs
+  artifactKey: Guid(e1853eb3bdb384ab2922175c903ba00e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTank.cs using Guid(e1853eb3bdb384ab2922175c903ba00e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1439a56125ad48757bb507af84acadd0') in 0.005187 seconds 
+  Import took 0.010582 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.001437 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTank.cs
+  artifactKey: Guid(e1853eb3bdb384ab2922175c903ba00e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTank.cs using Guid(e1853eb3bdb384ab2922175c903ba00e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1439a56125ad48757bb507af84acadd0') in 0.002320 seconds 
+  Import took 0.006718 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.725540 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTanker.cs
+  artifactKey: Guid(139c2fefe4af5419aa4003ca1f658745) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTanker.cs using Guid(139c2fefe4af5419aa4003ca1f658745) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1b8bac87cf9c181cfbea1903e97e3877') in 0.003237 seconds 
+  Import took 0.008938 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002401 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTanker.cs
+  artifactKey: Guid(139c2fefe4af5419aa4003ca1f658745) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTanker.cs using Guid(139c2fefe4af5419aa4003ca1f658745) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1b8bac87cf9c181cfbea1903e97e3877') in 0.002348 seconds 
+  Import took 0.007212 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.836645 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTowerLoss.cs
+  artifactKey: Guid(dd24f1ba9c5f24e64b55227e2a0f7245) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTowerLoss.cs using Guid(dd24f1ba9c5f24e64b55227e2a0f7245) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0375f923d0b4f36281fb8ffcef9b10f7') in 0.003624 seconds 
+  Import took 0.009288 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002310 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartTowerLoss.cs
+  artifactKey: Guid(dd24f1ba9c5f24e64b55227e2a0f7245) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartTowerLoss.cs using Guid(dd24f1ba9c5f24e64b55227e2a0f7245) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0375f923d0b4f36281fb8ffcef9b10f7') in 0.002316 seconds 
+  Import took 0.006953 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.091317 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartUnits.cs
+  artifactKey: Guid(680aefaba1a80434ebbb6dc4bf9bf33a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartUnits.cs using Guid(680aefaba1a80434ebbb6dc4bf9bf33a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '382262e5841e9460f68a084992edf9f8') in 0.003086 seconds 
+  Import took 0.008458 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000359 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartUnits.cs
+  artifactKey: Guid(680aefaba1a80434ebbb6dc4bf9bf33a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartUnits.cs using Guid(680aefaba1a80434ebbb6dc4bf9bf33a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '382262e5841e9460f68a084992edf9f8') in 0.002679 seconds 
+  Import took 0.007083 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 3.275789 seconds.
+  path: Assets/GridWars/Resources/Tutorial/TutorialPartVet.cs
+  artifactKey: Guid(ee06497bf0de24f4a94275b84742f837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Tutorial/TutorialPartVet.cs using Guid(ee06497bf0de24f4a94275b84742f837) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4963bda1d0c9c852857fb1026011d40b') in 0.002838 seconds 
+  Import took 0.008404 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 89.288669 seconds.
+  path: Assets/GridWars/Resources/Player/TutorialPart.cs
+  artifactKey: Guid(7c2b30ce68fd74af692ba4e4cb51a3ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Player/TutorialPart.cs using Guid(7c2b30ce68fd74af692ba4e4cb51a3ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '008ff601e80b30a0443018fa69492fd0') in 0.002020 seconds 
+  Import took 0.005817 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.002503 seconds.
+  path: Assets/GridWars/Resources/Player/TutorialPart.cs
+  artifactKey: Guid(7c2b30ce68fd74af692ba4e4cb51a3ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/GridWars/Resources/Player/TutorialPart.cs using Guid(7c2b30ce68fd74af692ba4e4cb51a3ab) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '008ff601e80b30a0443018fa69492fd0') in 0.001824 seconds 
+  Import took 0.005712 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002560 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.85 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.010 seconds
+Domain Reload Profiling:
+	ReloadAssembly (3026ms)
+		BeginReloadAssembly (326ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (52ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (133ms)
+		EndReloadAssembly (2599ms)
+			LoadAssemblies (213ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (377ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (70ms)
+			SetupLoadedEditorAssemblies (1615ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (19ms)
+				SetLoadedEditorAssemblies (2ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (196ms)
+				ProcessInitializeOnLoadAttributes (1345ms)
+				ProcessInitializeOnLoadMethodAttributes (52ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (40ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.78 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 228.1 MB.
+System memory in use after: 228.3 MB.
+
+Unloading 71 unused Assets to reduce memory usage. Loaded Objects now: 3260.
+Total: 5.170458 ms (FindLiveObjects: 0.224125 ms CreateObjectMapping: 0.057917 ms MarkObjects: 4.836084 ms  DeleteObjects: 0.051625 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 15.46 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 65 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 176.3 MB.
+System memory in use after: 176.5 MB.
+
+Unloading 65 unused Assets to reduce memory usage. Loaded Objects now: 3260.
+Total: 15.308542 ms (FindLiveObjects: 0.307583 ms CreateObjectMapping: 0.059375 ms MarkObjects: 14.872834 ms  DeleteObjects: 0.067708 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002930 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.80 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.882 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2883ms)
+		BeginReloadAssembly (328ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (40ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (142ms)
+		EndReloadAssembly (2456ms)
+			LoadAssemblies (209ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (374ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (75ms)
+			SetupLoadedEditorAssemblies (1524ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (17ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (218ms)
+				ProcessInitializeOnLoadAttributes (1242ms)
+				ProcessInitializeOnLoadMethodAttributes (44ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (33ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.76 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 228.7 MB.
+System memory in use after: 228.9 MB.
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 3262.
+Total: 4.429500 ms (FindLiveObjects: 0.174208 ms CreateObjectMapping: 0.053583 ms MarkObjects: 4.126875 ms  DeleteObjects: 0.073916 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 15.77 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 65 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 176.9 MB.
+System memory in use after: 177.1 MB.
+
+Unloading 65 unused Assets to reduce memory usage. Loaded Objects now: 3262.
+Total: 16.694875 ms (FindLiveObjects: 1.548500 ms CreateObjectMapping: 0.058333 ms MarkObjects: 14.989583 ms  DeleteObjects: 0.097083 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003234 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.83 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.018 seconds
+Domain Reload Profiling:
+	ReloadAssembly (3031ms)
+		BeginReloadAssembly (333ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (46ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (113ms)
+		EndReloadAssembly (2586ms)
+			LoadAssemblies (261ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (380ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (68ms)
+			SetupLoadedEditorAssemblies (1605ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (30ms)
+				SetLoadedEditorAssemblies (2ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (192ms)
+				ProcessInitializeOnLoadAttributes (1329ms)
+				ProcessInitializeOnLoadMethodAttributes (50ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (38ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.76 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 229.0 MB.
+System memory in use after: 229.2 MB.
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 3264.
+Total: 6.062208 ms (FindLiveObjects: 0.190750 ms CreateObjectMapping: 0.055250 ms MarkObjects: 5.709708 ms  DeleteObjects: 0.103666 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002577 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 1.20 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.067 seconds
+Domain Reload Profiling:
+	ReloadAssembly (3068ms)
+		BeginReloadAssembly (317ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (52ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (130ms)
+		EndReloadAssembly (2647ms)
+			LoadAssemblies (277ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (394ms)
+			ReleaseScriptCaches (5ms)
+			RebuildScriptCaches (71ms)
+			SetupLoadedEditorAssemblies (1561ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (17ms)
+				SetLoadedEditorAssemblies (1ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (195ms)
+				ProcessInitializeOnLoadAttributes (1299ms)
+				ProcessInitializeOnLoadMethodAttributes (46ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (57ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.82 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 229.2 MB.
+System memory in use after: 229.4 MB.
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 3266.
+Total: 6.391667 ms (FindLiveObjects: 0.327417 ms CreateObjectMapping: 0.104541 ms MarkObjects: 5.732125 ms  DeleteObjects: 0.225250 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003302 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.78 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  2.961 seconds
+Domain Reload Profiling:
+	ReloadAssembly (2962ms)
+		BeginReloadAssembly (319ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (55ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (139ms)
+		EndReloadAssembly (2545ms)
+			LoadAssemblies (200ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (399ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (72ms)
+			SetupLoadedEditorAssemblies (1544ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (17ms)
+				SetLoadedEditorAssemblies (2ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (191ms)
+				ProcessInitializeOnLoadAttributes (1282ms)
+				ProcessInitializeOnLoadMethodAttributes (50ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (35ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.77 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 229.4 MB.
+System memory in use after: 229.6 MB.
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 3268.
+Total: 4.544166 ms (FindLiveObjects: 0.209291 ms CreateObjectMapping: 0.058583 ms MarkObjects: 4.215750 ms  DeleteObjects: 0.059708 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 16.12 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 65 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 177.6 MB.
+System memory in use after: 177.8 MB.
+
+Unloading 65 unused Assets to reduce memory usage. Loaded Objects now: 3268.
+Total: 18.466584 ms (FindLiveObjects: 0.284500 ms CreateObjectMapping: 0.059291 ms MarkObjects: 18.037000 ms  DeleteObjects: 0.084875 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.002572 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image /Users/alestsurko/Desktop/GridWars/Assets/bolt/assemblies/bolt.user.dll
+Native extension for OSXStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 1.11 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  3.028 seconds
+Domain Reload Profiling:
+	ReloadAssembly (3030ms)
+		BeginReloadAssembly (298ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (46ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (123ms)
+		EndReloadAssembly (2630ms)
+			LoadAssemblies (213ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (428ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (68ms)
+			SetupLoadedEditorAssemblies (1527ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (17ms)
+				SetLoadedEditorAssemblies (2ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (210ms)
+				ProcessInitializeOnLoadAttributes (1249ms)
+				ProcessInitializeOnLoadMethodAttributes (46ms)
+				AfterProcessingInitializeOnLoad (1ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (37ms)
+Platform modules already initialized, skipping
+Switching build target platform(2) subTarget(0) extendedPlatform(0) -> platform(13) subTarget(589824) extendedPlatform(0)
+Refreshing native plugins compatible for Editor in 0.75 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 2720 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 229.6 MB.
+System memory in use after: 229.8 MB.
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 3270.
+Total: 4.770500 ms (FindLiveObjects: 0.201167 ms CreateObjectMapping: 0.056500 ms MarkObjects: 4.165000 ms  DeleteObjects: 0.347041 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:graphics/normal-map-encoding: 01000000000000000000000000000000 -> 02000000000000000000000000000000
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Refreshing native plugins compatible for Editor in 15.83 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 65 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 177.8 MB.
+System memory in use after: 178.0 MB.
+
+Unloading 65 unused Assets to reduce memory usage. Loaded Objects now: 3270.
+Total: 17.168291 ms (FindLiveObjects: 0.310583 ms CreateObjectMapping: 0.064667 ms MarkObjects: 16.689542 ms  DeleteObjects: 0.102250 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 

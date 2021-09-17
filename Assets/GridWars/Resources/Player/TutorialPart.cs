@@ -153,7 +153,7 @@ public class TutorialPart : MonoBehaviour {
 
 	void Update() {
 		if (_hasBegun) {
-			if (App.shared.inputs.continueTutorial.WasPressed) {
+			if (App.shared.inputs.continueTutorial.WasPressed || Input.touchCount == 1) {
 				if (counter / countsPerCharacter >= _formattedText.Length && !preventsNext) {
 					_hasBegun = false;
 					App.shared.timerCenter.NewTimer().SetTimeout(0.1f).SetAction(Next).Start();
