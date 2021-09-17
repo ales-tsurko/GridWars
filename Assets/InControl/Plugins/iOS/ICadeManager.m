@@ -1,7 +1,7 @@
 #import <objc/runtime.h>
-#import "iCadeManager.h"
+#import "ICadeManager.h"
 #import "ICadeReaderView.h"
-
+#import "UnityAppController.h"
 
 
 @interface ICadeManager() <ICadeEventDelegate>
@@ -58,7 +58,7 @@
         {
             self.activated = TRUE;
             readerView = [[ICadeReaderView alloc] initWithFrame: CGRectZero];
-            [UnityGetGLView() addSubview: readerView];
+            [GetAppController().rootView addSubview: readerView];
             readerView.active = YES;
             readerView.delegate = self;
             readerView.hidden = NO;
