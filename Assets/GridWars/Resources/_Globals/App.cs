@@ -168,11 +168,25 @@ public class App : MonoBehaviour, AppStateOwner {
 
     void SetupResolution() {
 		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {
-			Screen.SetResolution(prefs.resolution.width, prefs.resolution.height, true); // last arg is bool for fullscreen
+#if UNITY_ANDROID
+            var width = prefs.resolution.height;
+            var height = prefs.resolution.width;
+#else
+            var width = prefs.resolution.width;
+            var height = prefs.resolution.height;
+#endif
+			Screen.SetResolution(width, height, true); // last arg is bool for fullscreen
 		}
         else if (Screen.resolutions.Length > 0) {
             var resolution = Screen.resolutions[Screen.resolutions.Length - 1];
-            Screen.SetResolution(resolution.width, resolution.height, true);
+#if UNITY_ANDROID
+            var width = resolution.height;
+            var height = resolution.width;
+#else
+            var width = resolution.width;
+            var height = resolution.height;
+#endif
+            Screen.SetResolution(width, height, true);
             prefs.resolution = resolution;
         }
 
