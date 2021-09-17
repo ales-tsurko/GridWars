@@ -7,7 +7,7 @@ public class Prefs {
 
 	public Prefs() {
 		_npcLevel = 1;
-		_keyIconsVisible = true;
+		_keyIconsVisible = false;
 		_screenName = "";
 		_accessToken = "";
 		_hasPlayedTutorial = false;

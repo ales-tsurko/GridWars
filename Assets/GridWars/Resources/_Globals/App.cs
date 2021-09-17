@@ -170,11 +170,11 @@ public class App : MonoBehaviour, AppStateOwner {
 		if (new List<Resolution>(Screen.resolutions).Contains(prefs.resolution)) {
 			Screen.SetResolution(prefs.resolution.width, prefs.resolution.height, true); // last arg is bool for fullscreen
 		}
-		else {
-			var resolution = Screen.resolutions[Screen.resolutions.Length - 1];
-			Screen.SetResolution(resolution.width, resolution.height, true);
-			prefs.resolution = resolution;
-		}
+        else if (Screen.resolutions.Length > 0) {
+            var resolution = Screen.resolutions[Screen.resolutions.Length - 1];
+            Screen.SetResolution(resolution.width, resolution.height, true);
+            prefs.resolution = resolution;
+        }
 
 		QualitySettings.antiAliasing = prefs.antialiasingLevel;
     }
